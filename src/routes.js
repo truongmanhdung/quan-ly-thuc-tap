@@ -1,20 +1,16 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-
 import LayoutWebsite from "./layouts/layoutWebsite";
 import LayoutAdmin from "./layouts/layoutAdmin";
-import HomeContainer from "./containers/website/homeContainer";
-import ChartContainer from "./containers/website/ChartContainer";
-import BuyContainer from "./containers/website/BuyContainer";
-import InfoTokenContainer from "./containers/website/InfoTokenContainer";
-const Router = (props) => {
+import Status from "./components/website/import-excel/Status";
+import UpFile from "./components/website/import-excel/UpFile";
+const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<LayoutWebsite />}>
-        <Route index element={<HomeContainer />} />
-        <Route path="/chart" element={<ChartContainer />} />
-        <Route path="/buy" element={<BuyContainer />} />
-        <Route path="/info-token" element={<InfoTokenContainer />} />
+        <Route path="/status" element={<Status />} />
+        <Route path="/up-file" element={<UpFile />} />
+        {/* <Route path="/status" element={<Status />} /> */}
       </Route>
 
       <Route path="admin/*" element={<LayoutAdmin />}>

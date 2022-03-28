@@ -1,0 +1,12 @@
+.logo img {
+    width: 100%;
+    padding: 15px;
+}
+.site-layout-background{
+    background-color: #fff;
+    transition: .5s ease-in;
+    padding: 10px;
+    height: 100vh;
+    overflow-y: auto;
+}
+
