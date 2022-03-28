@@ -1,9 +1,8 @@
 import Router from "./routes";
-import './common/styles/app.css'
+import './common/styles/App.css'
 function App() {
   return (
     <div className="App">
-      import excel
       <Router />
     </div>
   );
