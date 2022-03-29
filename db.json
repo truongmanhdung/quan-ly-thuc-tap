@@ -6660,7 +6660,9 @@
             "majors":"UDPM",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "0",
-            "status_detail": "Sinh viên chưa đủ điều kiện thực tập"
+            "status_detail": "Sinh viên chưa đủ điều kiện thực tập",
+            "user_id":""
+
         },
         {
             "id": 2,
@@ -6673,7 +6675,9 @@
             "majors":"QTDN",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "1",
-            "status_detail": "Sinh viên thực tập không tập chung bị công ty cho nghỉ việc"
+            "status_detail": "Sinh viên thực tập không tập chung bị công ty cho nghỉ việc",
+            "user_id":""
+
         },
         {
             "id": 3,
@@ -6686,7 +6690,9 @@
             "majors":"TKĐH",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "3",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         },
         {
             "id": 4,
@@ -6699,7 +6705,9 @@
             "majors":"QHCC",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "5",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         },
         {
             "id": 5,
@@ -6712,7 +6720,9 @@
             "majors":"TKTW",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "7",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         },
         {
             "id": 6,
@@ -6725,7 +6735,9 @@
             "majors":"LTMT",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "4",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         },
         {
             "id": 7,
@@ -6738,7 +6750,9 @@
             "majors":"TMĐT",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "6",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         },
         {
             "id": 8,
@@ -6750,8 +6764,9 @@
             "internship_industry": "TTS Reactjs",
             "majors":"UDPM",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
-            "status": "7",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status": "2",
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
         }
         ,
         {
@@ -6765,7 +6780,9 @@
             "majors":"TKĐH",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "2",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         }
         ,
         {
@@ -6779,7 +6796,9 @@
             "majors":"QTDN",
             "link_cv": "https://www.topcv.vn/xem-cv/UgMHA1RRUlBYAQ1SVlIFBgYCVAcKBwYPWQBVBgc18a",
             "status": "3",
-            "status_detail": "Đã bị tạch do không đáp ứng như cầu"
+            "status_detail": "Đã bị tạch do không đáp ứng như cầu",
+            "user_id":""
+
         }
     ]
 }
