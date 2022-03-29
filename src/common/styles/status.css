@@ -1,0 +1,53 @@
+.status>h3{
+    border-bottom: 1px solid rgb(214, 214, 214);
+    padding: 10px 0;
+}
+.icon-cv{
+    color: blue;
+}
+.status-fail,.status-not-reached,.status-true,.status-up,.status-successful{
+    font-weight: 600;
+}
+.status-fail>button,.status-not-reached>button,.status-up>button,.status-true>button{
+    background-color: #fff;
+    color: blue;
+    border: 0;
+}
+.status-fail>button:hover,.status-not-reached>button:hover,.status-up>button:hover,.status-true>button:hover{
+    text-decoration: underline;
+}
+.list-status{
+    width: 160px;
+}
+.status-check{
+
+    font-weight: 600;
+    animation: status-check linear 2s infinite;
+    -webkit-animation: status-check linear 2s infinite;
+    -o-animation: status-check linear 2s infinite;
+}
+
+.filter>button{
+    background-color: #ee4d2d;
+    color: #fff;
+    border: 0;
+    padding: 4px 10px;
+    margin: 0 10px;
+    border-radius: 2px;
+}
+.filter>input{
+    margin-left: 10px;
+}
+
+
+@keyframes status-check {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1;
+    }
+}
