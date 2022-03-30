@@ -2,12 +2,17 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LayoutWebsite from "./layouts/layoutWebsite";
 import LayoutAdmin from "./layouts/layoutAdmin";
+import Login from "./containers/website/login/Login";
+import Home from "./containers/website/home/Home";
+import Status from "./components/website/import-excel/Status";
 import UpFile from "./components/website/import-excel/UpFile";
-import Status from "./pages/Status";
+
 const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<LayoutWebsite />}>
+        <Route index element={<Login/>} />
+        <Route path="/home" element={<Home/>} />
         <Route path="/status" element={<Status />} />
         <Route path="/up-file" element={<UpFile />} />
       </Route>

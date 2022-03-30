@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
-import studentReducer from '../features/todoSlide/studentModel'
+import authSlice from "../features/slice/authSlice";
+
 const rootReducer = combineReducers({
-    student: studentReducer
+    auth:authSlice,
 });
 export default rootReducer;

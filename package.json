@@ -17,6 +17,7 @@
         "lodash": "^4.17.21",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-google-login": "^5.2.2",
         "react-hook-form": "^7.22.2",
         "react-icons": "^4.3.1",
         "react-redux": "^7.2.6",
@@ -50,5 +51,8 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+    },
+    "devDependencies": {
+        "dotenv-webpack": "^7.1.0"
     }
 }
