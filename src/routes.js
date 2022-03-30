@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LayoutWebsite from "./layouts/layoutWebsite";
 import LayoutAdmin from "./layouts/layoutAdmin";
-import Status from "./components/website/import-excel/Status";
 import UpFile from "./components/website/import-excel/UpFile";
+import Status from "./pages/Status";
 const Router = () => {
   return (
     <Routes>

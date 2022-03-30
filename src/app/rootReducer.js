@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import  bookSlice  from "../features/todoSlide/todoSlide";
+import studentReducer from '../features/todoSlide/studentModel'
 const rootReducer = combineReducers({
-    books: bookSlice.reducer
+    student: studentReducer
 });
 export default rootReducer;
