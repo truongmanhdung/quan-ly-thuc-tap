@@ -10,6 +10,7 @@ const Status = () => {
     const [studentSearch, setStudentSearch] = useState([])
     const [nameSearch, setNameSearch] = useState('')
     const [chooseIdStudent, setChooseIdStudent] = useState([])
+    const [statusButton, setStatusButton] = useState(true)
     useEffect(() => {
         const listData = async () => {
             const { data: student } = await StudentAPI.getAll()
@@ -65,11 +66,14 @@ const Status = () => {
             if (e.target.checked == true) {
                 setChooseIdStudent([...chooseIdStudent, id])
             } else {
-                setChooseIdStudent( chooseIdStudent.filter(item => item !== id))
+                setChooseIdStudent(chooseIdStudent.filter(item => item !== id))
             }
         }
     }
-    console.log(chooseIdStudent)
+    const chooseStudent = () => {
+        console.log(chooseIdStudent)
+
+    }
 
     const editCv = async (id) => {
         const { data } = await StudentAPI.get(id)
@@ -109,7 +113,7 @@ const Status = () => {
                 </Select>
                 <Input style={{ width: 200 }} placeholder="Tìm kiếm theo tên" onChange={(e) => filterInput(e.target.value)} />
                 {studentSearch.length > 0 && <button onClick={() => deleteFilter()}>Xóa lọc</button>}
-
+                <button onClick={() => chooseStudent()}>Chọn sinh viên</button>
             </div>
             <table>
                 <thead>
@@ -124,6 +128,7 @@ const Status = () => {
                         <th>Ngành thực tập</th>
                         <th>CV</th>
                         <th>Trạng thái</th>
+                        <th>Người review CV</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,6 +169,7 @@ const Status = () => {
 
                                         {item.status == 7 && <span className='status-successful' style={{ color: 'rgb(44, 194, 21)' }}>Đang thực tập</span>}
                                     </td>
+                                    <td>Lê Trọng Đạt</td>
                                 </tr>
                             )
 

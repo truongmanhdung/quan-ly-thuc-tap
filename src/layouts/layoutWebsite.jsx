@@ -18,6 +18,7 @@ function LayoutWebsite() {
   const [userLocatlStorage, setUserLocatlStorage] = useState({})
 
   useEffect(() => {
+    localStorage.setItem('user',JSON.stringify({id:1,name:"Trần Văn Đoàn",avatar:"https://media.tadicdn.com/media/image/s/tdtp/id/610cee400df9386a46462317.jpeg_640x",role:0}))
     setUserLocatlStorage(JSON.parse(localStorage.getItem('user')))
   }, [])
 
@@ -26,16 +27,6 @@ function LayoutWebsite() {
   };
   return (
     <div>
-      <div className="header-layout">
-        <div className="logo" >
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png" alt="" />
-        </div>
-        <div className="name-school">
-          <marquee behavior="alternate">Cao đẳng FPT Polytechnic</marquee>
-        </div>
-      </div>
-
-
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={state} onCollapse={() => onCollapse()}>
 
