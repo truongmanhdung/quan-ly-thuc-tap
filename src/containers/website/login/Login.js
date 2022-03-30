@@ -14,7 +14,6 @@ const Login = () => {
     alert(result);
   };
   const handleLogin = (googleData) => {
-    console.log(googleData)
     dispatch(loginGoogle({token:googleData.tokenId}))
   };
   
