@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import  bookSlice  from "../features/todoSlide/todoSlide";
+import authSlice from "../features/slice/authSlice";
 const rootReducer = combineReducers({
-    books: bookSlice.reducer
+    auth:authSlice,
 });
 export default rootReducer;
