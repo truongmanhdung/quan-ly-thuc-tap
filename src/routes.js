@@ -7,7 +7,7 @@ import Home from "./containers/website/home/Home";
 import Status from "./components/website/import-excel/Status";
 import UpFile from "./components/website/import-excel/UpFile";
 
-const Router = (props) => {
+const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<LayoutWebsite />}>
