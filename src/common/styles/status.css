@@ -1,0 +1,120 @@
+.status>h3{
+    border-bottom: 1px solid rgb(214, 214, 214);
+    padding: 10px 0;
+}
+.icon-cv{
+    color: blue;
+}
+.status-fail,.status-not-reached,.status-true,.status-up,.status-successful{
+    font-weight: 600;
+}
+.status-fail>button,.status-not-reached>button,.status-up>button,.status-true>button{
+    background-color: #fff;
+    color: blue;
+    border: 0;
+}
+.status-fail>button:hover,.status-not-reached>button:hover,.status-up>button:hover,.status-true>button:hover{
+    text-decoration: underline;
+}
+.list-status{
+    width: 160px;
+}
+.status-check{
+
+    font-weight: 600;
+    animation: status-check linear 2s infinite;
+    -webkit-animation: status-check linear 2s infinite;
+    -o-animation: status-check linear 2s infinite;
+}
+
+.filter>button{
+    background-color: #ee4d2d;
+    color: #fff;
+    border: 0;
+    padding: 4px 10px;
+    margin: 0 10px;
+    border-radius: 2px;
+}
+.filter>input{
+    margin-left: 10px;
+}
+.filter>.filter-status{
+    margin-left: 10px;
+}
+.checkbox{
+    width: 50px;
+}
+.checkbox>input{
+    font-size: 3rem;
+}
+.edit-cv{
+    position: fixed;
+    top: 0 ;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    opacity: 0;
+    z-index: 100;
+    visibility:hidden;
+    transform: translateY(-90%);
+    transition: .3s ease-in;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.3);
+}
+.active-cv{
+    visibility: visible;
+    transform: translateY(0);
+    transition: 0.3s ease-in;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+}
+.form-edit-cv{
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    width: 400px;
+}
+.form-edit-cv>h3{
+    border-bottom: 1px solid rgb(214, 214, 214);
+    padding: 10px 0;
+}
+.form-edit-cv>button{
+    margin-top: 20px;
+    background-color: blue;
+    padding: 5px 20px;
+    border-radius: 2px;
+    border: 0;
+    color: white;
+}
+#ediv-cv{
+    display: none;
+}
+
+.input-edit-cv>label>span{
+    margin-right: 20px;
+    color: black;
+}
+.icon-edit-cv{
+    font-size: 2rem;
+    color: yellowgreen !important;
+    cursor: pointer;
+}
+.name{
+    font-size: 1.2rem;
+    color: black;
+}
+@keyframes status-check {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1;
+    }
+}
