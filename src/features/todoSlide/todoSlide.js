@@ -25,6 +25,8 @@ export const bookSlice = createSlice({
 
     },
     extraReducers: (builder) => {
+        console.log("1")
+
         // trường hợp 1: gọi đến action fetchProduct và thành công
         builder.addCase(fetchBooks.fulfilled, (state, action) => {
             console.log("fullfilled action", action.payload);

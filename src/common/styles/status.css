@@ -1,26 +1,37 @@
-.status>h3{
+body{
+    font-family: '';
+}
+.status>h4{
     border-bottom: 1px solid rgb(214, 214, 214);
     padding: 10px 0;
 }
 .icon-cv{
     color: blue;
 }
-.status-fail,.status-not-reached,.status-true,.status-up,.status-successful{
+table td{
+    font-size: 13px;
+    padding:2px!important;
+}
+table td,thead>tr> th{
+    padding:5px 10px!important;
+    text-align: center !important;
+
+}
+.status-fail,.status-not-reached,.status-true,.status-up{
     font-weight: 600;
 }
-.status-fail>button,.status-not-reached>button,.status-up>button,.status-true>button{
+.status-fail>button,.status-not-reached>button,.status-up>button,.status-true>button,.status-check>button{
     background-color: #fff;
     color: blue;
     border: 0;
 }
-.status-fail>button:hover,.status-not-reached>button:hover,.status-up>button:hover,.status-true>button:hover{
+.status-fail>button:hover,.status-not-reached>button:hover,.status-up>button:hover,.status-true>button:hover,.status-check>button:hover{
     text-decoration: underline;
 }
 .list-status{
     width: 160px;
 }
 .status-check{
-
     font-weight: 600;
     animation: status-check linear 2s infinite;
     -webkit-animation: status-check linear 2s infinite;
@@ -40,6 +51,7 @@
 }
 .filter>.filter-status{
     margin-left: 10px;
+    width: 50%;
 }
 .checkbox{
     width: 50px;
@@ -47,7 +59,7 @@
 .checkbox>input{
     font-size: 3rem;
 }
-.edit-cv{
+/* .edit-cv{
     position: fixed;
     top: 0 ;
     left: 0;
@@ -102,7 +114,7 @@
     font-size: 2rem;
     color: yellowgreen !important;
     cursor: pointer;
-}
+} */
 .name{
     font-size: 1.2rem;
     color: black;
@@ -117,4 +129,28 @@
     100% {
         opacity: 1;
     }
+}
+
+table{
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    border: 1px solid #eeeeee;
+    margin-top: 20px;
+}
+table  th,
+table  th,
+table  th {
+    padding: 10px 20px;
+    font-weight: 500;
+    text-align: center;
+    font-size: .9rem;
+    border: 1px solid #eeeeee;
+}
+
+table  tbody td,
+table  tbody td,
+table tbody td {
+    padding: 1rem 0.5rem;
+    border: 1px solid #eeeeee;
 }
