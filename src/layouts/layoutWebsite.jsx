@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Layout, Menu } from 'antd';
-import '../common/styles/layout.css'
+import React, { Children, useEffect, useState } from 'react';
+import { Layout, Menu, Breadcrumb, Row,Col, Button } from 'antd';
 import {
   ProfileOutlined,
   PieChartOutlined,
@@ -16,8 +15,8 @@ import { $ } from '../ultis';
 
 const { Sider } = Layout;
 function LayoutWebsite() {
-  const [state, setState] = useState(false)
-  const [userLocatlStorage, setUserLocatlStorage] = useState({})
+  const [state, setState] = useState(false);
+  const [userLocatlStorage, setUserLocatlStorage] = useState({});
 
   useEffect(() => {
     localStorage.setItem('user', JSON.stringify({ id: 1, name: "Trần Văn Đoàn", email: "doantvph11605@fpt.edu.vn", avatar: "https://media.tadicdn.com/media/image/s/tdtp/id/610cee400df9386a46462317.jpeg_640x", role: 0 }))
@@ -41,7 +40,7 @@ function LayoutWebsite() {
         <Sider collapsible collapsed={state} onCollapse={() => onCollapse()} className="menu">
           <div className="logo-school">
             <div className="logo">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png" alt="" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png" alt="" style={{maxWidth: '100%'}}/>
             </div>
           </div>
 

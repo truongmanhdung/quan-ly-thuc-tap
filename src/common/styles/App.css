@@ -1,0 +1,10 @@
+@font-face {
+    font-family: titleFont;
+    src: url(../fonts/BebasNeue-Regular.ttf);
+}
+
+.App {
+    text-align: center;
+}
+
+
