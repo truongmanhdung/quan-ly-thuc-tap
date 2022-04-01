@@ -2,18 +2,24 @@ import { SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Menu, Dropdown, Button, Avatar } from 'antd';
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { logoutAuth } from '../../features/slice/authSlice';
+import './index.css'
 
 const Rightcontent = () => {
+    const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const logout = () => {
+    dispatch(logoutAuth()).then(res => navigate('/login'))
+   }
     const menu = (
         <Menu  >
             <Menu.Item key='userInfo' >
             <SettingOutlined /> <span>Tài khoản</span>
             </Menu.Item>
             <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-                    2nd menu item
-                </a>
+                <Button type='text' onClick={ logout()}>Đăng xuất</Button>
             </Menu.Item>
             <Menu.Item>
                 <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">

@@ -1,5 +1,5 @@
-import React, { Children, useEffect, useState } from 'react';
-import { Layout, Menu, Breadcrumb, Row,Col, Button } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Menu, Breadcrumb, Row, Col, Button } from 'antd';
 import {
   ProfileOutlined,
   PieChartOutlined,
@@ -7,74 +7,78 @@ import {
   TeamOutlined,
   LoginOutlined,
   FolderViewOutlined,
-  ReadOutlined
+  ReadOutlined,
 } from '@ant-design/icons';
-import 'antd/dist/antd.css'
 import { NavLink, Outlet } from 'react-router-dom';
 import { $ } from '../ultis';
-
+import GlobalHeader from '../components/GlobalHeader.js';
+import styles from './layout.css';
+import { Content } from 'antd/lib/layout/layout';
+import SubMenu from 'antd/lib/menu/SubMenu';
 const { Sider } = Layout;
 function LayoutWebsite() {
   const [state, setState] = useState(false);
-  const [userLocatlStorage, setUserLocatlStorage] = useState({});
-
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify({ id: 1, name: "Trần Văn Đoàn", email: "doantvph11605@fpt.edu.vn", avatar: "https://media.tadicdn.com/media/image/s/tdtp/id/610cee400df9386a46462317.jpeg_640x", role: 0 }))
-    setUserLocatlStorage(JSON.parse(localStorage.getItem('user')))
-  }, [])
 
   const onCollapse = () => {
-    if (state == false) {
-      $(".logo").style.display = "none"
-      setState(true)
-    } else {
-      $(".logo").style.display = "block"
-      setState(false)
-    }
+    setState(!state);
   };
 
   return (
     <div>
-
-      <Layout style={{ minHeight: '100vh' }} >
-        <Sider collapsible collapsed={state} onCollapse={() => onCollapse()} className="menu">
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sider collapsible collapsed={state} onCollapse={() => onCollapse()}>
           <div className="logo-school">
             <div className="logo">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png" alt="" style={{maxWidth: '100%'}}/>
+              <img
+                style={state ? { width: '40%', height: '40%' } : { width: '80%', height: '80%' }}
+                src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png"
+                alt=""
+              />
             </div>
           </div>
 
           <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<PieChartOutlined className='icon-link'/>}>
-              <NavLink to=''>Đăng ký thực tập</NavLink>
+            <SubMenu
+              title="Đăng ký thực tập"
+              key="0"
+              icon={<PieChartOutlined className="icon-link" />}
+              style={{color:'black'}}
+            >
+              <Menu.Item key="7">
+                <NavLink to="/self-registration">Tự đăng ký</NavLink>
+              </Menu.Item>
+              <Menu.Item key="1">
+                <NavLink to="/support-school">Nhà trường hỗ trợ</NavLink>
+              </Menu.Item>
+            </SubMenu>
+            <Menu.Item key="2" icon={<ProfileOutlined className="icon-link" />}>
+              <NavLink to="status">Danh sách đăng ký</NavLink>
             </Menu.Item>
-            <Menu.Item key="2" icon={<ProfileOutlined className='icon-link'/>}>
-              <NavLink to='status'>Danh sách đăng ký</NavLink>
+            <Menu.Item key="3" icon={<TeamOutlined className="icon-link" />}>
+              <NavLink to="up-file">Nhân viên</NavLink>
             </Menu.Item>
-            <Menu.Item key="3" icon={<TeamOutlined className='icon-link'/>}>
-              <NavLink to='up-file'>Nhân viên</NavLink>
+            <Menu.Item key="4" icon={<FolderViewOutlined className="icon-link" />}>
+              <NavLink to="review-cv">Review CV</NavLink>
             </Menu.Item>
-            <Menu.Item key="4" icon={<FolderViewOutlined className='icon-link'/>}>
-              <NavLink to='review-cv'>Review CV</NavLink>
+            <Menu.Item key="5" icon={<ReadOutlined className="icon-link" />}>
+              <NavLink to="review-cv">Review báo cáo</NavLink>
             </Menu.Item>
-            <Menu.Item key="5" icon={<ReadOutlined className='icon-link'/>}>
-              <NavLink to='review-cv'>Review báo cáo</NavLink>
-            </Menu.Item>
-            <Menu.Item key="6" icon={<UploadOutlined className='icon-link'/>}>
-              <NavLink to='up-file'>Up File</NavLink>
-            </Menu.Item>
-            <Menu.Item key="8" icon={<LoginOutlined className='icon-link'/>}>
-              <a >Đăng xuất</a>
+            <Menu.Item key="6" icon={<UploadOutlined className="icon-link" />}>
+              <NavLink to="up-file">Up File</NavLink>
             </Menu.Item>
           </Menu>
         </Sider>
         <Layout className="site-layout">
-          <div className="header-layout">
-              <div className="name">Xin chào : tranvandoan</div>
-          </div>
-          <div className="site-layout-background" >
-            <Outlet />
-          </div>
+          <GlobalHeader onCollapse={onCollapse} state={state} />
+          <Content style={{ margin: '15px 15px', background: 'white' }}>
+            {/* <Breadcrumb style={{ margin: '16px 0' }}>
+              <Breadcrumb.Item>User</Breadcrumb.Item>
+              <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            </Breadcrumb> */}
+            <div style={{ padding: 24, minHeight: 360 }}>
+              <Outlet />
+            </div>
+          </Content>
         </Layout>
       </Layout>
     </div>
