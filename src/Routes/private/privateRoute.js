@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 const Privateroute = ({children}) => {
 
     const {infoUser} = useSelector(state=> state.auth)
-       return Object.keys(infoUser) !== 0 ? children : <Navigate to='/login' />
+       return infoUser !== {} ? children : <Navigate to='/login' />
 }
 
 export default Privateroute;

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
@@ -12,6 +13,13 @@ export const loginGoogle = createAsyncThunk(
   return action
 });
 
+export const logoutAuth = createAsyncThunk(
+  'auth/logoutAuth',
+  async (action) => {
+    const navatigate = useNavigate()
+    return navatigate('/login')
+  }
+)
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -19,11 +27,7 @@ const authSlice = createSlice({
     loading: false,
     messages:"",
   },
-  reducers: {
-    logout(state, action){
-      state.infoUser = {}
-    }
-  },
+  
   extraReducers: (builder) => {
     builder.addCase(loginGoogle.pending, (state) => {
       state.loading = true;
@@ -35,8 +39,10 @@ const authSlice = createSlice({
     builder.addCase(loginGoogle.rejected, (state) => {
       state.messages = "Login google fail";
     });
+    builder.addCase(logoutAuth.fulfilled, (state, action)=> {
+      state.infoUser = undefined
+    })
   },
 });
 
-export const {logoutAuth} = authSlice.actions
 export default authSlice.reducer;
