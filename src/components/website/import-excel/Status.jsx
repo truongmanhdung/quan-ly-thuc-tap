@@ -1,92 +1,159 @@
 import React, { useState, useEffect } from 'react'
 import StudentAPI from '../../../API/StudentAPI'
-import { EyeOutlined, FilePdfOutlined } from '@ant-design/icons'
+import { EyeOutlined } from '@ant-design/icons'
 import '../../../common/styles/status.css'
-import { notification, Select, Input, Checkbox, Row, Col } from 'antd';
-import { $ } from '../../../ultis';
+import { Select, Input, Table } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { getStudent } from '../../../features/StudentSlice/StudentSlice';
+import { getUser } from '../../../features/UserSlice/UserSilce';
+import { Link,useNavigate } from 'react-router-dom';
 const { Option } = Select;
 const Status = () => {
-    const [student, setStudent] = useState([])
+    const dispatch = useDispatch()
+    let navigate = useNavigate();
+
+    const students = useSelector(data => data.students.value);
+    const users = useSelector(data => data.users.value);
     const [studentSearch, setStudentSearch] = useState([])
-    const [nameSearch, setNameSearch] = useState('')
     const [chooseIdStudent, setChooseIdStudent] = useState([])
+
+    const newStudents = (studentSearch.length == 0 ? students : studentSearch)
+
     useEffect(() => {
-        const listData = async () => {
-            const { data: student } = await StudentAPI.getAll()
-            setStudent(student)
-            setStudentSearch([])
-
-        }
-        listData()
+        dispatch(getStudent())
+        dispatch(getUser())
+        setStudentSearch([])
     }, [])
-    // xem cv
-    const showCV = (cv) => {
-        window.open(cv)
-    }
 
-    // ấn chi tiết để xem được chi tiết trạng thái
-    const openDetail = async (id, status) => {
-        const { data: student } = await StudentAPI.getAll()
-        const notificationStudent = student.find(item => item.id == id)
-        notification[status == 'warning' ? 'warning' : 'error']({
-            message: 'Chi tiết',
-            description:
-                `${notificationStudent.status_detail}`,
-        })
-
-    }
 
     // lọc theo ngành
     const filterMajors = async (value) => {
-        const { data: student } = await StudentAPI.getAll()
-        setStudentSearch(student.filter(item => item.majors.toLowerCase().includes(value.toLowerCase())))
+        setStudentSearch(students.filter(item => item.majors.toLowerCase().includes(value.toLowerCase())))
     }
     // lọc theo trạng thái
     const filterStatus = async (value) => {
-        const { data: student } = await StudentAPI.getAll()
-        setStudentSearch(student.filter(item => item.status.toLowerCase().includes(value.toLowerCase())))
+        setStudentSearch(students.filter(item => item.status.toLowerCase().includes(value.toLowerCase())))
     }
-
+    // lọc theo phân loại
+    const filterClassify = async (value) => {
+        setStudentSearch(students.filter(item => item.classify.toLowerCase().includes(value.toLowerCase())))
+    }
+    // tìm kiếm theo tên
+    const filterInput = async (e) => {
+        setStudentSearch(students.filter(item => item.name.toLowerCase().includes(e.toLowerCase())))
+    }
     // xóa tìm kiếm
     const deleteFilter = () => {
         setStudentSearch([])
     }
-    // tìm kiếm theo tên
-    const filterInput = async (e) => {
-        const { data: student } = await StudentAPI.getAll()
-        setStudentSearch(student.filter(item => item.name.toLowerCase().includes(e.toLowerCase())))
-    }
 
+    const columns = [
+        {
+            title: 'MSSV',
+            dataIndex: 'mssv',
+        },
+        {
+            title: 'Họ và Tên',
+            dataIndex: 'name',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+        }
+        ,
+        {
+            title: 'Điện thoại',
+            dataIndex: 'phone',
+        }
+        ,
+        {
+            title: 'Ngành',
+            dataIndex: 'internship_industry',
+        }
+        ,
+        {
+            title: 'Phân loại',
+            dataIndex: 'classify',
+            render: (classify) => classify == 0 ? 'Tự đăng ký' : 'Hỗ trợ',
 
-    const chooseId = (id, e) => {
-        if (chooseIdStudent == []) {
-            setChooseIdStudent(id)
-        } else {
-            if (e.target.checked == true) {
-                setChooseIdStudent([...chooseIdStudent, id])
-            } else {
-                setChooseIdStudent( chooseIdStudent.filter(item => item !== id))
+        },
+        {
+            title: 'CV',
+            dataIndex: 'link_cv',
+            render: (link_cv, student) => student.classify == 1 ? <EyeOutlined className='icon-cv' onClick={() => window.open(link_cv)} /> : '',
+        }
+
+        ,
+        {
+            title: 'Người review',
+            dataIndex: 'user_id',
+            render: (user_id) => users.map(item => user_id == item.id && item.email.slice(0, -11))
+        }
+        ,
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            render: (status, student) => {
+                if (status == 0) {
+                    return <span className='status-fail' style={{ color: 'red' }}>Đã tạch <br /><Link to={`/edit-cv/id=${student.key}`}>Sửa</Link></span>
+                } else if (status == 1) {
+                    return <span className='status-up' style={{ color: 'red' }}>Sửa lại<br /><Link to={`/ed/id=${student.key}`}>Sửa</Link></span>
+                } else if (status == 2) {
+                    return <span className='status-check' style={{ color: 'rgb(255, 106, 0)' }}>Chờ kiểm tra <br /><Link to={`/ed/id=${student.key}`}>Sửa</Link></span>
+                } else if (status == 3) {
+                    return <span className='status-true' style={{ color: 'rgb(44, 194, 21)' }}>Đã kiểm tra <br /><Link to={`/ed/id=${student.key}`}>Sửa</Link></span>
+                }
             }
         }
+
+    ];
+
+    const data = [];
+    for (let i = 0; i < newStudents.length; i++) {
+        data.push({
+            "key": newStudents[i].id,
+            "mssv": newStudents[i].mssv,
+            "name": newStudents[i].name,
+            "email": newStudents[i].email,
+            "phone": newStudents[i].phone,
+            "address": newStudents[i].address,
+            "internship_industry": newStudents[i].internship_industry,
+            "majors": newStudents[i].majors,
+            "link_cv": newStudents[i].link_cv,
+            "status": students[i].status,
+            "status_detail": newStudents[i].status_detail,
+            "user_id": newStudents[i].user_id,
+            "classify": newStudents[i].classify
+        });
     }
-    console.log(chooseIdStudent)
 
-    const editCv = async (id) => {
-        const { data } = await StudentAPI.get(id)
-        $(".name-student").innerHTML = `${data.name}`
-        $(".edit-cv").classList.add('active-cv')
-        window.addEventListener("click", function (e) {
-            if (e.target == $(".edit-cv")) {
-                $(".edit-cv").classList.remove('active-cv')
 
-            }
+
+    const rowSelection = {
+        onChange: (selectedRows) => {
+            setChooseIdStudent(selectedRows)
+        },
+    };
+    const chooseStudent = () => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        const newStudents = []
+        students.filter(item => {
+            chooseIdStudent.map(id => {
+                id == item.id && newStudents.push(item)
+            })
         })
-
+        newStudents.map(item => {
+            StudentAPI.upload(item.id, { ...item, "user_id": `${user.id}` })
+        })
+        alert("Thêm thành công ")
+         navigate("/review-cv");
     }
+
 
     return (
         <div className='status'>
-            <h3>Sinh viên đăng ký thực tập</h3>
+            <h4>Sinh viên đăng ký thực tập</h4>
+
             <div className="filter">
                 <Select style={{ width: 200 }} onChange={filterMajors} placeholder="Lọc theo ngành">
                     <Option value="QTDN">Quản trị doanh nghiệp</Option>
@@ -98,37 +165,50 @@ const Status = () => {
                     <Option value="QHCC">Quan hệ công chúng</Option>
                 </Select>
                 <Select className='filter-status' style={{ width: 200 }} onChange={filterStatus} placeholder="Lọc theo trạng thái">
-                    <Option value="0">Chưa đạt</Option>
-                    <Option value="1">Đã tạch</Option>
-                    <Option value="2">Sửa CV</Option>
-                    <Option value="3">Đang kiểm tra</Option>
-                    <Option value="4">CV đã ổn</Option>
-                    <Option value="5">Đi phỏng vấn</Option>
-                    <Option value="6">Trượt phỏng ấn đang đợi nhà trường chọn doanh nghiệp</Option>
-                    <Option value="7">Đang thực tập</Option>
+                    <Option value="0">Đã tạch</Option>
+                    <Option value="1">Sửa lại</Option>
+                    <Option value="2">Chờ kiểm tra</Option>
+                    <Option value="3">Đã kiểm tra</Option>
+                </Select>
+                <Select className='filter-status' style={{ width: 200 }} onChange={filterClassify} placeholder="Lọc theo phân loại">
+                    <Option value="0">Tự tìm</Option>
+                    <Option value="1">Nhờ nhà trường</Option>
                 </Select>
                 <Input style={{ width: 200 }} placeholder="Tìm kiếm theo tên" onChange={(e) => filterInput(e.target.value)} />
                 {studentSearch.length > 0 && <button onClick={() => deleteFilter()}>Xóa lọc</button>}
-
+                {chooseIdStudent.length > 0 && <button onClick={() => chooseStudent()}>Xác nhận</button>}
             </div>
+
+            <Table
+                rowSelection={{
+                    type: 'checkbox',
+                    ...rowSelection,
+                }}
+                columns={columns}
+                dataSource={data}
+            />
+
+
+
+            {/* 
             <table>
                 <thead>
                     <tr>
                         <th>Chọn</th>
                         <th>STT</th>
-                        <th>Mã sinh viên</th>
+                        <th>MSSV</th>
                         <th>Họ và Tên</th>
                         <th>Email</th>
-                        <th>Số điện thoại</th>
-                        <th>Địa chỉ</th>
-                        <th>Ngành thực tập</th>
+                        <th>Điện thoại</th>
+                        <th>Ngành</th>
                         <th>CV</th>
+                        <th>Phân loại</th>
                         <th>Trạng thái</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        (studentSearch.length == 0 ? student : studentSearch).map((item, index) => {
+                        (studentSearch.length == 0 ? students : studentSearch).map((item, index) => {
 
                             return (
                                 <tr key={index}>
@@ -141,29 +221,23 @@ const Status = () => {
                                     <td>{item.name}</td>
                                     <td>{item.email}</td>
                                     <td>{item.phone}</td>
-                                    <td>{item.address}</td>
                                     <td>{item.internship_industry}</td>
                                     <td>
-                                        <EyeOutlined className='icon-cv' onClick={() => showCV(item.link_cv)} />
+                                        {item.classify == 0 && <EyeOutlined className='icon-cv' onClick={() => window.open(item.link_cv)} />}
                                     </td>
+                                    <td>{item.classify == 0 ? 'Tự đăng ký' : 'Hỗ trợ'}</td>
+
                                     <td className='list-status'>
-                                        {item.status == 0 && <span className='status-not-reached' style={{ color: 'red' }}>Chưa đạt <br /> <button onClick={() => openDetail(item.id, 'warning')}>Chi tiết</button></span>}
+                                        {item.status == 0 && <span className='status-fail' style={{ color: 'red' }}>Đã tạch <br /><button onClick={() => openDetail(item.id, 'error')}>Đã tạch</button></span>}
 
-                                        {item.status == 1 && <span className='status-fail' style={{ color: 'red' }}>Đã tạch <br /><button onClick={() => openDetail(item.id, 'error')}>Đã tạch</button></span>}
-
-                                        {item.status == 2 && <span className='status-up' style={{ color: 'red' }}>Sửa CV <br /><button onClick={() => editCv(item.id, index)}>Sửa</button>
+                                        {item.status == 1 && <span className='status-up' style={{ color: 'red' }}>Sửa lại<br /><button onClick={() => editCv(item.id, index)}>Sửa</button>
 
                                         </span>}
-                                        {item.status == 3 && <span className='status-check' style={{ color: 'rgb(255, 106, 0)' }}>Đang kiểm tra</span>}
+                                        {item.status == 2 && <span className='status-check' style={{ color: 'rgb(255, 106, 0)' }}>Chờ kiểm tra</span>}
 
-                                        {item.status == 4 && <span className='status-true' style={{ color: 'rgb(44, 194, 21)' }}>CV đã ổn <br /><button>Chọn doanh nghiệp</button></span>}
-
-                                        {item.status == 5 && <span className='status-true' style={{ color: 'rgb(44, 194, 21)' }}>Đi phỏng vấn</span>}
-
-                                        {item.status == 6 && <span className='status-fail' style={{ color: 'red' }}>Trượt phỏng ấn đang đợi nhà trường chọn doanh nghiệp<br /><button>Chi tiết</button></span>}
-
-                                        {item.status == 7 && <span className='status-successful' style={{ color: 'rgb(44, 194, 21)' }}>Đang thực tập</span>}
+                                        {item.status == 3 && <span className='status-true' style={{ color: 'rgb(44, 194, 21)' }}>Đã kiểm tra</span>}
                                     </td>
+
                                 </tr>
                             )
 
@@ -172,7 +246,7 @@ const Status = () => {
                 </tbody>
             </table>
 
-            {/* sửa cv */}
+            {/* sửa cv *
 
             <div className="edit-cv " >
                 <div className="form-edit-cv">
@@ -188,7 +262,7 @@ const Status = () => {
 
                     <button>Sửa</button>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
