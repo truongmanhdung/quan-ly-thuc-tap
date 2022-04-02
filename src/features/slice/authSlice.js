@@ -6,9 +6,6 @@ export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
    async (dataForm) => {
   const { data } = await axios.post('http://localhost:8000/api/login-google',dataForm);
-  if(data){
-    localStorage.setItem("token",data.token)
-  }
   return data;
 });
 
@@ -38,9 +35,6 @@ const authSlice = createSlice({
     builder.addCase(loginGoogle.rejected, (state) => {
       state.messages = "Login google fail";
     });
-    builder.addCase(logoutAuth.fulfilled, (state, action)=> {
-      state.infoUser = undefined
-    })
   },
 });
 
