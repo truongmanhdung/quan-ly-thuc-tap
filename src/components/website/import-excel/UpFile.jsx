@@ -3,12 +3,14 @@ import * as XLSX from 'xlsx';
 import { UploadOutlined } from '@ant-design/icons';
 import '../../../common/styles/upfile.css';
 import DataAPI from '../../../API/Data';
+import { useDispatch } from 'react-redux';
+import { insertStudent } from '../../../features/StudentSlice/StudentSlice';
 const UpFile = () => {
   const [data, setData] = useState();
   const [header, setHeader] = useState([]);
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
-
+  const dispatch = useDispatch()
   const importData = (e) => {
     const file = e.target.files[0];
     setNameFile(file.name);
@@ -59,9 +61,10 @@ const UpFile = () => {
       newObject['name'] = item['Họ tên']
       newObject['email'] = item['Email']
       newObject['supplement'] = item['bổ sung']
-      data.push(newObject)
+      newObject['campus_id'] = 
+       data.push(newObject)
     })
-    DataAPI.add({ data: data })
+    dispatch(insertStudent(data))
 
   };
   const submitCole = () => {
