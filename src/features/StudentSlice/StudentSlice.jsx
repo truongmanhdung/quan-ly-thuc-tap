@@ -7,20 +7,44 @@ export const getStudent=createAsyncThunk(
         return student
     }
 )
+export const insertStudent = createAsyncThunk(
+    'student/insertStudent',
+    async (action) => {
+        const {data} = await StudentAPI.add(action)
+        return data
+    }
+)
 const studentSlice=createSlice({
     name:"student",
     initialState:{
-        value:[]
+        listStudent:[],
+        loading: false,
+        error: ''
     },
     reducers:{
         addStudent(state,action){
-            state.value.push(action.payload)
+            state.listStudent.push(action.payload)
         }
     },
     extraReducers:(builder)=>{
         builder.addCase(getStudent.fulfilled,(state,action)=>{
             state.value = action.payload
         })
+        builder.addCase(getStudent.pending, (state, action)=> {
+            state.loading = true
+        })
+        builder.addCase(getStudent.rejected, (state,action) =>{
+            state.error = 'Không thể truy vấn'
+        } )
+        // builder.addCase(insertStudent.fulfilled, (state, action)=>{
+        //     state.listStudent = action.payload
+        // })
+        // builder.addCase(insertStudent.pending, (state, action)=> {
+        //     state.loading = true
+        // })
+        // builder.addCase(insertStudent.rejected, (state, action) => {
+        //     state.error = 'Không đúng định dạng'
+        // })
     }
 })
 export default studentSlice.reducer
