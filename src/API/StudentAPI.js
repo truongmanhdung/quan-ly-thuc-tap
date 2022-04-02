@@ -5,7 +5,7 @@ const StudentAPI = {
         return axiosClient.get(url);
     },
     get(id) {
-        const url = `/students/${id}`;
+        const url = `/student/${id}`;
         return axiosClient.get(url);
     }
     ,
@@ -14,7 +14,7 @@ const StudentAPI = {
         return axiosClient.get(url);
     },
     add(product) {
-        const url = `/students`;
+        const url = `/student`;
         return axiosClient.post(url, product);
     },
     remove(id) {

@@ -19,12 +19,13 @@ const Router = () => {
         {/* <Route index element={<Home/>} /> */}
         <Route path="/support-student" element={<SupportStudent />} />
         <Route path="/proactive-student" element={<ProactiveStudent />} />
-      </Route>
-
-      <Route path="admin/" element={<LayoutWebsite />}>
-        <Route path="sinh-vien/danh-sach-dang-ky" element={<Status />} />
+        <Route path="status" element={<Status />} />
         <Route path="review-cv" element={<ReviewCV />} />
         <Route path="up-file" element={<UpFile />} />
+      </Route>
+
+      <Route path="/admin/" element={<LayoutWebsite />}>
+ 
       </Route>
     </Routes>
   );
