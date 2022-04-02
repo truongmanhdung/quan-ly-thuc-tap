@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import LayoutWebsite from "../layouts/layoutWebsite";
 import LayoutAdmin from "../layouts/layoutAdmin";
 import Login from "../containers/website/login/Login";
-import Home from "../containers/website/home/Home";
 import Status from "../components/website/import-excel/Status";
 import ReviewCV from "../components/website/import-excel/ReviewCV";
 import UpFile from "../components/website/import-excel/UpFile";
@@ -16,7 +15,6 @@ const Router = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Privateroute><LayoutWebsite /></Privateroute>}>
-        {/* <Route index element={<Home/>} /> */}
         <Route path="/support-student" element={<SupportStudent />} />
         <Route path="/proactive-student" element={<ProactiveStudent />} />
       </Route>
