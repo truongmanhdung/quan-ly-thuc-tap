@@ -9,6 +9,7 @@ import Privateroute from "./private/privateRoute";
 import Status from "../pages/import-excel/Status";
 import ReviewCV from "../pages/import-excel/ReviewCV"
 import UpFile from "../pages/import-excel/UpFile";
+import EmployeeManager from "../pages/employee-manager/Employee-Manager";
 const Router = () => {
   return (
     <Routes>
@@ -16,6 +17,7 @@ const Router = () => {
       <Route path="/" element={<Privateroute><LayoutWebsite /></Privateroute>}>
         <Route path="/support-student" element={<SupportStudent />} />
         <Route path="/proactive-student" element={<ProactiveStudent />} />
+        <Route path="/employee-manager" element={<EmployeeManager/>} />
         <Route path="status" element={<Status />} />
         <Route path="review-cv" element={<ReviewCV />} />
         <Route path="up-file" element={<UpFile />} />
