@@ -4,13 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
-   async (action) => {
-  // const { data } = await axios.post('http://localhost:8080/api/login-google',token);
-  // if(data){
-  //   localStorage.setItem("token",data.token)
-  // }
-  // return data;
-  return action
+   async (dataForm) => {
+  const { data } = await axios.post('http://localhost:8000/api/login-google',dataForm);
+  return data;
 });
 
 export const logoutAuth = createAsyncThunk(
@@ -39,9 +35,6 @@ const authSlice = createSlice({
     builder.addCase(loginGoogle.rejected, (state) => {
       state.messages = "Login google fail";
     });
-    builder.addCase(logoutAuth.fulfilled, (state, action)=> {
-      state.infoUser = undefined
-    })
   },
 });
 

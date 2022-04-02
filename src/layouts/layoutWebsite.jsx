@@ -45,10 +45,10 @@ function LayoutWebsite() {
               style={{color:'black'}}
             >
               <Menu.Item key="7">
-                <NavLink to="/self-registration">Tự đăng ký</NavLink>
+                <NavLink to="/proactive-student">Tự đăng ký</NavLink>
               </Menu.Item>
               <Menu.Item key="1">
-                <NavLink to="/support-school">Nhà trường hỗ trợ</NavLink>
+                <NavLink to="/support-student">Nhà trường hỗ trợ</NavLink>
               </Menu.Item>
             </SubMenu>
             <Menu.Item key="2" icon={<ProfileOutlined className="icon-link" />}>

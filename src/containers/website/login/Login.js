@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginGoogle } from "../../../features/slice/authSlice";
 import { Select, Empty } from "antd";
 import { useNavigate } from "react-router";
+import { getListCumpus } from "../../../features/cumpusSlice/cumpusSlice";
 
 const { Option } = Select;
 const dataCumpus = [
@@ -79,20 +80,18 @@ const Login = () => {
   const dispatch = useDispatch();
   const [cumpus,setCumpus] = useState("")
   const navigate = useNavigate()
+  const {listCumpus} = useSelector( state => state.cumpus)
 
   const handleFailure = (result) => {
     alert(result);
   };
 
   const handleLogin = (googleData) => {
-      const data = {
-        token : googleData.accessToken,
-        info : {
-          ...googleData.profileObj,
-          campus_id: cumpus
-        }
+      const dataForm = {
+        token : googleData.tokenId,
+        cumpusId:cumpus
       }
-    dispatch(loginGoogle(data))
+    dispatch(loginGoogle(dataForm))
     .then(res => res && navigate('/'))
     .catch((err)=> console.log(err))
   }
@@ -101,6 +100,9 @@ const Login = () => {
     setCumpus(value)
   };
 
+  useEffect(()=>{
+    dispatch(getListCumpus())
+  },[])
   
   return (
     <div className={styles.login_wrapper}>
@@ -114,8 +116,8 @@ const Login = () => {
           defaultValue="Lựa chọn cơ sở"
           onChange={handleChange}
         >
-          {dataCumpus ? dataCumpus.map( (item,index) => (
-            <Option key={index} value={item.value}>{item.title}</Option>
+          {listCumpus ? listCumpus.map( (item,index) => (
+            <Option key={index} value={item._id}>{item.name}</Option>
           )) : <Empty />}
         </Select>
       </div>
