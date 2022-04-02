@@ -6,6 +6,7 @@ import {
   Button,
   Upload,
 } from 'antd';
+import styles from "./ProactiveStudent.module.css"
 import React, { useState } from 'react';
 const { Option } = Select;
 const dataSelect = [
@@ -65,21 +66,21 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = () => {
+const ProactiveStudent = () => {
 
-  const [linkCV, setLinkCV] = useState()
+  const [linkCV, setLinkCV]= useState()
 
   const [form] = Form.useForm();
 
   const normFile = (e) => {
-    //xử lí ảnh firebase or google drive
+        //xử lí ảnh firebase or google drive
   };
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
     const data = {
       ...values,
       cv: linkCV
-      ///dispatch Redux
+    ///dispatch Redux
     }
   };
 
@@ -88,6 +89,7 @@ const SupportStudent = () => {
       <Form
         {...formItemLayout}
         form={form}
+        className={styles.form}
         name="register"
         onFinish={onFinish}
         initialValues={{
@@ -113,9 +115,7 @@ const SupportStudent = () => {
         >
           <Input
             placeholder='Email'
-            style={{
-              width: '100%',
-            }}
+            
           />
         </Form.Item>
         <Form.Item
@@ -160,12 +160,10 @@ const SupportStudent = () => {
             },
           ]}
         >
-          <Input
+<Input
             placeholder='Số điện thoại'
 
-            style={{
-              width: '100%',
-            }}
+            
           />
         </Form.Item>
 
@@ -181,9 +179,7 @@ const SupportStudent = () => {
         >
           <Input
             placeholder='Địa chỉ'
-            style={{
-              width: '100%',
-            }}
+            
           />
         </Form.Item>
         <Form.Item
@@ -196,7 +192,10 @@ const SupportStudent = () => {
             },
           ]}
         >
-          <Select placeholder="Chọn ngành học">
+          <Select style={{
+             width: '50%',
+             marginLeft: '20px'
+          }} placeholder="Chọn ngành học">
             {
               dataSelect.map((item, index) => (
                 <Option value={item.id} key={index} >{item.title}</Option>
@@ -206,112 +205,32 @@ const SupportStudent = () => {
         </Form.Item>
 
         <Form.Item
-          name="unit"
-          label="Đơn vị thực tập"
+          name="dream"
+          label="Vị trí mong muốn"
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập đơn vị thực tập',
+              message: 'Vui lòng nhập địa chỉ',
             },
           ]}
         >
           <Input
-            placeholder='Đơn vị thực tập/Tên doanh nghiệp'
-            style={{
-              width: '100%',
-            }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="unitAddress"
-          label="Địa chỉ thực tập"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập địa chỉ thực tập',
-            },
-          ]}
-        >
-          <Input
-            placeholder='Đơn vị thực tập/Tên doanh nghiệp'
-            style={{
-              width: '100%',
-            }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="taxCode"
-          label="Mã số thuế"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập Mã số thuế',
-            },
-          ]}
-        >
-          <Input
-            placeholder='Mã số thuế'
-            style={{
-              width: '100%',
-            }}
-          />
-        </Form.Item>
+            placeholder='Vị trí mong muốn'
             
-        <Form.Item
-          name="position"
-          label="Chức vụ người tiếp nhận"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập chức vụ người tiếp nhận sinh viên',
-            },
-          ]}
-        >
-          <Input
-            placeholder='Chức vụ người tiếp nhận'
-            style={{
-              width: '100%',
-            }}
           />
         </Form.Item>
-            
-     
         <Form.Item
-          name="numberEnterprise"
-          label="Số điện thoại doanh nghiệp"
-          rules={[
-            {required: true,
-              message: 'Vui lòng nhập Số điện thoại doanh nghiệp',
-            },
-          ]}
+          name="upload"
+          label="Upload"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
         >
-          <Input
-            placeholder='Số điện thoại doanh nghiệp(VD:Giám đốc, Leader, Hr)'
-            style={{
-              width: '100%',
-            }}
-          />
+          <Upload  name="logo" action="/upload.do" listType="picture">
+            <Button style={{
+             marginLeft: '20px'
+          }} icon={<UploadOutlined />}>Click to upload</Button>
+          </Upload>
         </Form.Item>
-            
-          
-        <Form.Item
-          name="emailEnterprise"
-          label="Email người tiếp nhận"
-          rules={[
-            {
-              required: true,
-              message: 'Vui lòng nhập Email người tiếp nhận',
-            },
-          ]}
-        >
-          <Input
-            placeholder='Email người tiếp nhận'
-            style={{
-              width: '100%',
-            }}
-          />
-        </Form.Item>
-            
 
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
@@ -323,4 +242,5 @@ const SupportStudent = () => {
   );
 }
 
-export default SupportStudent
+export default ProactiveStudent
+  ;

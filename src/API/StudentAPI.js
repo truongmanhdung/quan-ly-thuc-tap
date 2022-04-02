@@ -1,7 +1,7 @@
 import { axiosClient } from "./Link";
 const StudentAPI = {
-    getAll() {
-        const url = `/students`;
+    getAll(page) {
+        const url = `/student?limit=${page.pageSize}&page=${page.page}`;
         return axiosClient.get(url);
     },
     get(id) {
