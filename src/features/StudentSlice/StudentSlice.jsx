@@ -2,9 +2,9 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import StudentAPI from "../../API/StudentAPI";
 export const getStudent=createAsyncThunk(
     "student/getStudent",
-    async ()=>{
-        const {data:student}=await StudentAPI.getAll()
-        return student
+    async (page)=>{
+        const {data}=await StudentAPI.getAll(page)
+        return data
     }
 )
 export const insertStudent = createAsyncThunk(
@@ -17,7 +17,7 @@ export const insertStudent = createAsyncThunk(
 const studentSlice=createSlice({
     name:"student",
     initialState:{
-        listStudent:[],
+        listStudent:{},
         loading: false,
         error: ''
     },
@@ -28,7 +28,8 @@ const studentSlice=createSlice({
     },
     extraReducers:(builder)=>{
         builder.addCase(getStudent.fulfilled,(state,action)=>{
-            state.value = action.payload
+            state.loading=false
+            state.listStudent = action.payload
         })
         builder.addCase(getStudent.pending, (state, action)=> {
             state.loading = true

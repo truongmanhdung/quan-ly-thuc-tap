@@ -28,30 +28,20 @@ export const filterBranch = [
         value: 'QHCC'
     },
 ]
-export const filterStatus = [
-    {
-        title: 'Chưa đạt',
-    }
-    ,
+export const filterStatuss = [
     {
         title: 'Đã tạch',
     },
     {
-        title: 'Sửa CV',
+        title: 'Sửa lại',
     },
     {
-        title: 'Đang kiểm tra',
+        title: 'Đã kiểm tra',
     },
     {
-        title: 'CV đã ổn',
+        title: 'Chờ kiểm tra',
     },
-    {
-        title: 'Đi phỏng vấn',
-    }, {
-        title: 'Trượt phỏng ấn',
-    }, {
-        title: 'Đang thực tập',
-    },
+   
 
 ]
 export const status = [

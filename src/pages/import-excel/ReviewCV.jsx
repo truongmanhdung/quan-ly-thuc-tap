@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import StudentAPI from '../../../API/StudentAPI'
+import StudentAPI from '../../API/StudentAPI';
 import { EyeOutlined, FilePdfOutlined } from '@ant-design/icons'
-import '../../../common/styles/status.css'
+import '../../common/styles/status.css'
 import { notification, Select, Input, Checkbox, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { $ } from '../../../ultis';
-import { getStudent } from '../../../features/StudentSlice/StudentSlice';
+import { getStudent } from '../../features/StudentSlice/StudentSlice';
 const { Option } = Select;
 const ReviewCV = () => {
   const user = JSON.parse(localStorage.getItem('user'))
