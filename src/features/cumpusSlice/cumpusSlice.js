@@ -22,7 +22,6 @@ const cumpusSlice = createSlice({
     builder.addCase(getListCumpus.fulfilled, (state, action) => {
       state.loading = false;
       state.listCumpus = action.payload;
-      console.log( action.payload)
     });
     builder.addCase(getListCumpus.rejected, (state) => {
       state.messages = "Get list cumpus fail";

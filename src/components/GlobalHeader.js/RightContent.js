@@ -1,16 +1,17 @@
-import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { SettingOutlined } from '@ant-design/icons';
 import { Menu, Dropdown, Button, Avatar } from 'antd';
 
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutAuth } from '../../features/slice/authSlice';
+import { useNavigate } from "react-router";
 import './index.css'
 
 const Rightcontent = () => {
-    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const {infoUser} = useSelector( state => state.auth)
-   const logout = () => {
-    dispatch(logoutAuth())
+   const logout = async() => {
+        await localStorage.removeItem('token') 
+        await navigate('/login')
    }
     const menu = (
         <Menu  >
