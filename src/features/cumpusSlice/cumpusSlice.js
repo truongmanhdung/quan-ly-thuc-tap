@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import CumpusApi from '../../API/Cumpus'
 
 export const getListCumpus = createAsyncThunk(
   "cumpus/getListCumpus",
    async () => {
-  const { data } = await axios.get('http://localhost:8000/api/cumpus');
+  const { data } = await CumpusApi.getList();
   return data.cumpusList;
 });
 

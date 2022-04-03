@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import GoogleLogin from "react-google-login";
 import styles from "./Login.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { loginGoogle } from "../../features/slice/authSlice";
+import { loginGoogle } from "../../features/authSlice/authSlice";
 import { Select, Empty } from "antd";
 import { useNavigate } from "react-router";
 import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";

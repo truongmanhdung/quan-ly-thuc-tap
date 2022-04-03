@@ -5,7 +5,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router";
 import './index.css'
-import {logout} from '../../features/slice/authSlice'
+import {logout} from '../../features/authSlice/authSlice'
 
 const Rightcontent = () => {
     const dispatch = useDispatch()
