@@ -15,8 +15,8 @@ const Router = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<Privateroute><LayoutWebsite /></Privateroute>}>
-        <Route path="/support-student" element={<SupportStudent />} />
-        <Route path="/proactive-student" element={<ProactiveStudent />} />
+        <Route path="/support-student" element={<ProactiveStudent />} />
+        <Route path="/proactive-student" element={<SupportStudent />} />  
         <Route path="/employee-manager" element={<EmployeeManager/>} />
         <Route path="status" element={<Status />} />
         <Route path="review-cv" element={<ReviewCV />} />
