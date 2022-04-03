@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Layout, Menu, Breadcrumb, Row, Col, Button } from "antd";
 import {
   ProfileOutlined,
+  UserOutlined,
   PieChartOutlined,
   UploadOutlined,
   TeamOutlined,

@@ -52,7 +52,7 @@ const ProactiveStudent = () => {
     //xử lí ảnh firebase or google drive
   };
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    console.log("Received values of form: ", values);
     const data = {
       ...values,
       cv: linkCV,
@@ -62,9 +62,9 @@ const ProactiveStudent = () => {
    
   };
 
-  useEffect(()=>{
-    dispatch(getListSpecialization())
-  },[])
+  useEffect(() => {
+    dispatch(getListSpecialization());
+  }, []);
 
   return (
     <>
@@ -75,8 +75,8 @@ const ProactiveStudent = () => {
         className={styles.form}
         onFinish={onFinish}
         initialValues={{
-          residence: ['zhejiang', 'hangzhou', 'xihu'],
-          prefix: '86',
+          residence: ["zhejiang", "hangzhou", "xihu"],
+          prefix: "86",
         }}
         scrollToFirstError
       >
@@ -86,14 +86,11 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập mã sinh viên',
+              message: "Vui lòng nhập mã sinh viên",
             },
           ]}
         >
-          <Input
-            placeholder='Mã sinh viên'
-
-          />
+          <Input placeholder="Mã sinh viên" />
         </Form.Item>
 
         <Form.Item
@@ -102,15 +99,12 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập tên',
+              message: "Vui lòng nhập tên",
               whitespace: true,
             },
           ]}
         >
-          <Input
-            placeholder='Họ và tên'
-
-          />
+          <Input placeholder="Họ và tên" />
         </Form.Item>
         <Form.Item
           name="phone"
@@ -118,7 +112,7 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập số điện thoại',
+              message: "Vui lòng nhập số điện thoại",
             },
           ]}
         >
@@ -133,14 +127,11 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập địa chỉ',
+              message: "Vui lòng nhập địa chỉ",
             },
           ]}
         >
-          <Input
-            placeholder='Địa chỉ'
-            
-          />
+          <Input placeholder="Địa chỉ" />
         </Form.Item>
         <Form.Item
           name="majors"
@@ -148,20 +139,23 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng chọn ngành học',
+              message: "Vui lòng chọn ngành học",
             },
           ]
         }
         >
-          <Select style={{
-             width: '50%',
-             marginLeft: '20px'
-          }} placeholder="Chọn ngành học">
-            {
-              listSpecialization.map((item, index) => (
-                <Option value={item._id} key={index} >{item.name}</Option>
-              ))
-            }
+          <Select
+            style={{
+              width: "50%",
+              marginLeft: "20px",
+            }}
+            placeholder="Chọn ngành học"
+          >
+            {filterBranch.map((item, index) => (
+              <Option value={item._id} key={index}>
+                {item.title}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -269,6 +263,6 @@ const ProactiveStudent = () => {
       </Form>
     </>
   );
-}
+};
 
 export default ProactiveStudent
