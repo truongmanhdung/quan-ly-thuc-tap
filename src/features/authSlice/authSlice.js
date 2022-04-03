@@ -1,19 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import AuthApi from '../../API/Auth'
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
   async (dataForm) => {
-    const { data } = await axios.post(
-      "http://localhost:8000/api/login-google",
-      dataForm
-    );
+    const { data } = await AuthApi.login(dataForm)
     return data;
   }
 );
 
 export const logout = createAsyncThunk("auth/logout", async () => {
-  const { data } = await axios.get("http://localhost:8000/api/logout");
+  const { data } = await AuthApi.logout();
   return data;
 });
 

@@ -6,36 +6,11 @@ import {
   Button,
   Upload,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getListSpecialization } from '../../features/specializationSlice/specializationSlice';
 import styles from './SupportStudent.module.css'
 const { Option } = Select;
-const dataSelect = [
-  {
-    id: 1,
-    title: 'Thiết kế website',
-  },
-  {
-    id: 2,
-    title: 'Thiết kế đồ hoạ',
-  },
-  {
-    id: 3,
-    title: 'Digital marketting',
-  },
-  {
-    id: 4,
-    title: 'Marketting Sales',
-  },
-  {
-    id: 5,
-    title: 'Ứng dụng phần mềm',
-  },
-  {
-    id: 6,
-    title: 'Lập trình Mobile',
-  },
-
-]
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -67,10 +42,10 @@ const tailFormItemLayout = {
   },
 };
 const SupportStudent = () => {
-
+  const dispatch = useDispatch()
   const [linkCV, setLinkCV] = useState()
-
   const [form] = Form.useForm();
+  const {listSpecialization} = useSelector( state => state.specialization)
 
   const normFile = (e) => {
     //xử lí ảnh firebase or google drive
@@ -83,6 +58,10 @@ const SupportStudent = () => {
       ///dispatch Redux
     }
   };
+
+  useEffect(()=>{
+    dispatch(getListSpecialization())
+  },[])
 
   return (
     <>
@@ -195,8 +174,8 @@ const SupportStudent = () => {
              marginLeft: '20px'
           }} placeholder="Chọn ngành học">
             {
-              dataSelect.map((item, index) => (
-                <Option value={item.id} key={index} >{item.title}</Option>
+              listSpecialization.map((item, index) => (
+                <Option value={item._id} key={index} >{item.name}</Option>
               ))
             }
           </Select>
