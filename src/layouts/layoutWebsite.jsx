@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Breadcrumb, Row, Col, Button } from 'antd';
+import React, { useState } from "react";
+import { Layout, Menu, Breadcrumb, Row, Col, Button } from "antd";
 import {
   ProfileOutlined,
   PieChartOutlined,
@@ -8,16 +8,19 @@ import {
   LoginOutlined,
   FolderViewOutlined,
   ReadOutlined,
-} from '@ant-design/icons';
-import { NavLink, Outlet } from 'react-router-dom';
-import { $ } from '../ultis';
-import GlobalHeader from '../components/GlobalHeader.js';
-import styles from './layout.css';
-import { Content } from 'antd/lib/layout/layout';
-import SubMenu from 'antd/lib/menu/SubMenu';
+} from "@ant-design/icons";
+import { NavLink, Outlet } from "react-router-dom";
+import { $ } from "../ultis";
+import GlobalHeader from "../components/GlobalHeader.js";
+import styles from "./layout.css";
+import { Content } from "antd/lib/layout/layout";
+import SubMenu from "antd/lib/menu/SubMenu";
+import { useSelector } from "react-redux";
 const { Sider } = Layout;
 function LayoutWebsite() {
   const [state, setState] = useState(false);
+  const { infoUser } = useSelector((state) => state.auth);
+  console.log(infoUser);
 
   const onCollapse = () => {
     setState(!state);
@@ -25,52 +28,77 @@ function LayoutWebsite() {
 
   return (
     <div>
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ minHeight: "100vh" }}>
         <Sider collapsible collapsed={state} onCollapse={() => onCollapse()}>
           <div className="logo-school">
             <div className="logo">
               <img
-                style={state ? { width: '40%', height: '40%' } : { width: '80%', height: '80%' }}
+                style={
+                  state
+                    ? { width: "40%", height: "40%" }
+                    : { width: "80%", height: "80%" }
+                }
                 src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png"
                 alt=""
               />
             </div>
           </div>
 
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <SubMenu
-              title="Đăng ký thực tập"
-              key="0"
-              icon={<PieChartOutlined className="icon-link" />}
-              style={{color:'black'}}
-            >
-              <Menu.Item key="7">
-                <NavLink to="/proactive-student">Tự đăng ký</NavLink>
-              </Menu.Item>
-              <Menu.Item key="1">
-                <NavLink to="/support-student">Nhà trường hỗ trợ</NavLink>
-              </Menu.Item>
-            </SubMenu>
-            <Menu.Item key="2" icon={<ProfileOutlined className="icon-link" />}>
-              <NavLink to="status">Danh sách đăng ký</NavLink>
-            </Menu.Item>
-            <Menu.Item key="3" icon={<TeamOutlined className="icon-link" />}>
-              <NavLink to="employee-manager">Nhân viên</NavLink>
-            </Menu.Item>
-            <Menu.Item key="4" icon={<FolderViewOutlined className="icon-link" />}>
-              <NavLink to="review-cv">Review CV</NavLink>
-            </Menu.Item>
-            <Menu.Item key="5" icon={<ReadOutlined className="icon-link" />}>
-              <NavLink to="review-cv">Review báo cáo</NavLink>
-            </Menu.Item>
-            <Menu.Item key="6" icon={<UploadOutlined className="icon-link" />}>
-              <NavLink to="up-file">Up File</NavLink>
-            </Menu.Item>
+          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+            {infoUser?.isStudent && (
+              <SubMenu
+                title="Đăng ký thực tập"
+                key="0"
+                icon={<PieChartOutlined className="icon-link" />}
+                style={{ color: "black" }}
+              >
+                <Menu.Item key="7">
+                  <NavLink to="/proactive-student">Tự đăng ký</NavLink>
+                </Menu.Item>
+                <Menu.Item key="1">
+                  <NavLink to="/support-student">Nhà trường hỗ trợ</NavLink>
+                </Menu.Item>
+              </SubMenu>
+            )}
+            {infoUser?.isAdmin && (
+              <>
+                <Menu.Item
+                  key="2"
+                  icon={<ProfileOutlined className="icon-link" />}
+                >
+                  <NavLink to="status">Danh sách đăng ký</NavLink>
+                </Menu.Item>
+                <Menu.Item
+                  key="3"
+                  icon={<TeamOutlined className="icon-link" />}
+                >
+                  <NavLink to="employee-manager">Nhân viên</NavLink>
+                </Menu.Item>
+                <Menu.Item
+                  key="4"
+                  icon={<FolderViewOutlined className="icon-link" />}
+                >
+                  <NavLink to="review-cv">Review CV</NavLink>
+                </Menu.Item>
+                <Menu.Item
+                  key="5"
+                  icon={<ReadOutlined className="icon-link" />}
+                >
+                  <NavLink to="review-cv">Review báo cáo</NavLink>
+                </Menu.Item>
+                <Menu.Item
+                  key="6"
+                  icon={<UploadOutlined className="icon-link" />}
+                >
+                  <NavLink to="up-file">Up File</NavLink>
+                </Menu.Item>
+              </>
+            )}
           </Menu>
         </Sider>
         <Layout className="site-layout">
           <GlobalHeader onCollapse={onCollapse} state={state} />
-          <Content style={{ margin: '15px 15px', background: 'white' }}>
+          <Content style={{ margin: "15px 15px", background: "white" }}>
             {/* <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>User</Breadcrumb.Item>
               <Breadcrumb.Item>Bill</Breadcrumb.Item>

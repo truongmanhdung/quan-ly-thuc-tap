@@ -36,7 +36,7 @@ const Login = () => {
   useEffect(()=>{
     dispatch(getListCumpus())
   },[])
-  
+
   return (
     <div className={styles.login_wrapper}>
       <img

@@ -20,6 +20,7 @@ const authSlice = createSlice({
     infoUser: {},
     loading: false,
     messages: "",
+    token:undefined,
   },
 
   extraReducers: (builder) => {
@@ -29,6 +30,7 @@ const authSlice = createSlice({
     builder.addCase(loginGoogle.fulfilled, (state, action) => {
       state.loading = false;
       state.infoUser = action.payload;
+      state.token = action.payload.token;
     });
     builder.addCase(loginGoogle.rejected, (state) => {
       state.messages = "Login google fail";
@@ -38,9 +40,9 @@ const authSlice = createSlice({
     builder.addCase(logout.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(logout.fulfilled, (state) => {
+    builder.addCase(logout.fulfilled, (state,action) => {
       state.loading = false;
-      state.infoUser = undefined;
+      state.token = action.payload.token;
     });
     builder.addCase(logout.rejected, (state) => {
       state.messages = "Logout google fail";
