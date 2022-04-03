@@ -5,14 +5,16 @@ import '../../common/styles/status.css';
 import { Select, Input, Table } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
-import { getUser } from '../../features/UserSlice/UserSilce';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
+import {omit} from 'lodash'
 const { Option } = Select;
+
 const Status = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
+  
   const {
     listStudent: { list, total },
     loading,
@@ -22,40 +24,18 @@ const Status = () => {
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [page, setPage] = useState({
     page: 1,
-    pageSize: 10,
+    limit: 10,
+    campus_id: infoUser.manager.cumpus,
   });
-
+  const [filter, setFiler] = useState({})
   useEffect(() => {
-    dispatch(getStudent(page));
+      const data = {
+          ...page, ...filter
+      }
+      console.log(data)
+    dispatch(getStudent(data));
     setStudentSearch([]);
-  }, [page]);
-
-  // lọc theo ngành
-  const filterMajors = async (value) => {
-    setStudentSearch(
-      list.filter((item) => item.majors.toLowerCase().includes(value.toLowerCase())),
-    );
-  };
-  // lọc theo trạng thái
-  const filterStatus = async (value) => {
-    setStudentSearch(
-      list.filter((item) => item.status.toLowerCase().includes(value.toLowerCase())),
-    );
-  };
-  // lọc theo phân loại
-  const filterClassify = async (value) => {
-    setStudentSearch(
-      list.filter((item) => item.classify.toLowerCase().includes(value.toLowerCase())),
-    );
-  };
-  // tìm kiếm theo tên
-  const filterInput = async (e) => {
-    setStudentSearch(list.filter((item) => item.name.toLowerCase().includes(e.toLowerCase())));
-  };
-  // xóa tìm kiếm
-  const deleteFilter = () => {
-    setStudentSearch([]);
-  };
+  }, [filter, page]);
 
   const columns = [
     {
@@ -78,11 +58,11 @@ const Status = () => {
       title: 'Ngành',
       dataIndex: 'majors',
     },
-    {
-      title: 'Phân loại',
-      dataIndex: 'classify',
-      render: (classify) => (classify == 0 ? 'Tự đăng ký' : 'Hỗ trợ'),
-    },
+    // {
+    //   title: 'Phân loại',
+    //   dataIndex: 'classify',
+    //   render: (classify) => (classify == 0 ? 'Tự đăng ký' : 'Hỗ trợ'),
+    // },
     {
       title: 'CV',
       dataIndex: 'CV',
@@ -137,6 +117,33 @@ const Status = () => {
       },
     },
   ];
+  // lọc theo ngành
+  const filterMajors = async (value) => {
+    setStudentSearch(
+      list.filter((item) => item.majors.toLowerCase().includes(value.toLowerCase())),
+    );
+  };
+  // lọc theo trạng thái
+  const filterStatus = async (value) => {
+    setStudentSearch(
+      list.filter((item) => item.status.toLowerCase().includes(value.toLowerCase())),
+    );
+  };
+  // lọc theo phân loại
+  const filterClassify = async (value) => {
+    setStudentSearch(
+      list.filter((item) => item.classify.toLowerCase().includes(value.toLowerCase())),
+    );
+  };
+  // tìm kiếm theo tên
+  const filterInput = async (e) => {
+    setStudentSearch(list.filter((item) => item.name.toLowerCase().includes(e.toLowerCase())));
+  };
+  // xóa tìm kiếm
+  const deleteFilter = () => {
+    setStudentSearch([]);
+  };
+
 
   const rowSelection = {
     onChange: (selectedRows) => {
@@ -158,24 +165,33 @@ const Status = () => {
     navigate('/review-cv');
   };
 
-  const handleStandardTableChange = (pagination) => {};
+  const handleStandardTableChange = (key, value) => {
+    const newValue = value.length > 0 || value > 0 ? {
+        ...filter,
+        [key]: value
+      }
+      : omit(filter, [key]);
+      setFiler(newValue)
+  };
 
   return (
     <div className="status">
       <h4>Sinh viên đăng ký thực tập</h4>
 
       <div className="filter">
-        <Select style={{ width: 200 }} onChange={filterMajors} placeholder="Lọc theo ngành">
+        <Select style={{ width: 200 }} onChange={val =>handleStandardTableChange('majors', val)} placeholder="Lọc theo ngành">
           {filterBranch.map((item, index) => (
+              <>
             <Option value={item.value} key={index}>
               {item.title}
             </Option>
+            </>
           ))}
         </Select>
         <Select
           className="filter-status"
           style={{ width: 200 }}
-          onChange={filterStatus}
+          onChange={val =>handleStandardTableChange('statusCheck', val)}
           placeholder="Lọc theo trạng thái"
         >
           {filterStatuss.map((item, index) => (
@@ -184,19 +200,19 @@ const Status = () => {
             </Option>
           ))}
         </Select>
-        <Select
+        {/* <Select
           className="filter-status"
           style={{ width: 200 }}
-          onChange={filterClassify}
+          onChange={val =>handleStandardTableChange('classify', val)}
           placeholder="Lọc theo phân loại"
         >
           <Option value="0">Tự tìm</Option>
           <Option value="1">Nhờ nhà trường</Option>
-        </Select>
+        </Select> */}
         <Input
           style={{ width: 200 }}
           placeholder="Tìm kiếm theo tên"
-          onChange={(e) => filterInput(e.target.value)}
+          onChange={val => setTimeout(()=> handleStandardTableChange('name',val.target.value),3000)}
         />
         {studentSearch.length > 0 && <button onClick={() => deleteFilter()}>Xóa lọc</button>}
         {chooseIdStudent.length > 0 && <button onClick={() => chooseStudent()}>Xác nhận</button>}
@@ -209,10 +225,14 @@ const Status = () => {
         }}
         rowKey="id"
         pagination={{
-          pageSize: page.pageSize,
+          pageSize: page.limit,
           total: total,
           onChange: (page, pageSize) => {
-            setPage({ page, pageSize });
+            setPage({
+                page: page,
+                limit: pageSize,
+                campus_id: infoUser.manager.cumpus,
+             });
           },
         }}
         loading={loading}

@@ -1,5 +1,9 @@
 export const filterBranch = [
     {
+        title: 'Tất cả',
+        value: 0
+    },
+    {
         title: 'Quản trị doanh nghiệp',
         value: 'QTDN'
     },
@@ -17,11 +21,11 @@ export const filterBranch = [
     },
     {
         title: 'Lập trình máy trính',
-        value: 'QTDN'
+        value: 'LTMT'
     },
     {
         title: 'Thiết kế Website',
-        value: 'QTDN'
+        value: 'TKTW'
     },
     {
         title: 'Quan hệ công chúng',
@@ -29,6 +33,9 @@ export const filterBranch = [
     },
 ]
 export const filterStatuss = [
+    {
+        title :'Tất cả'
+    },
     {
         title: 'Đã tạch',
     },
@@ -41,7 +48,7 @@ export const filterStatuss = [
     {
         title: 'Chờ kiểm tra',
     },
-   
+  
 
 ]
 export const status = [

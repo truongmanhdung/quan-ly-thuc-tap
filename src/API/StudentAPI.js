@@ -1,7 +1,9 @@
 import { axiosClient } from "./Link";
+import {stringify} from 'qs'
 const StudentAPI = {
     getAll(page) {
-        const url = `/student?limit=${page.pageSize}&page=${page.page}`;
+        console.log(stringify(page));
+        const url = `/student?${stringify(page)}`;
         return axiosClient.get(url);
     },
     get(id) {
@@ -18,6 +20,7 @@ const StudentAPI = {
         return axiosClient.post(url, product);
     },
     remove(id) {
+        
         const url = `/students/${id}`;
         return axiosClient.delete(url);
     },
