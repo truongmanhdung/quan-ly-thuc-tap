@@ -10,6 +10,7 @@ import Status from "../pages/import-excel/Status";
 import ReviewCV from "../pages/import-excel/ReviewCV"
 import UpFile from "../pages/import-excel/UpFile";
 import EmployeeManager from "../pages/employee-manager/Employee-Manager";
+import InfoStudent from "../pages/InfoStudent/infoStudent";
 const Router = () => {
   return (
     <Routes>
@@ -19,6 +20,7 @@ const Router = () => {
         <Route path="/proactive-student" element={<SupportStudent />} />  
         <Route path="/employee-manager" element={<EmployeeManager/>} />
         <Route path="status" element={<Status />} />
+        <Route path="info-student" element={<InfoStudent/>} />
         <Route path="review-cv" element={<ReviewCV />} />
         <Route path="up-file" element={<UpFile />} />
       </Route>
