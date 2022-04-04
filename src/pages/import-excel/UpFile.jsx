@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { UploadOutlined } from '@ant-design/icons';
-import '../../common/styles/upfile.css'
+import '../../common/styles/upfile.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { insertStudent } from '../../features/StudentSlice/StudentSlice';
+import { notification } from 'antd';
+import { useNavigate } from 'react-router-dom';
 const UpFile = () => {
   const [data, setData] = useState();
   const [header, setHeader] = useState([]);
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
-  const dispatch = useDispatch()
-  const {infoUser} = useSelector(state => state.auth)
+  const dispatch = useDispatch();
+  const { infoUser } = useSelector((state) => state.auth);
+  const { loading } = useSelector((state) => state.students);
+  const navigate = useNavigate();
   const importData = (e) => {
     const file = e.target.files[0];
     setNameFile(file.name);
@@ -41,25 +45,40 @@ const UpFile = () => {
     reader.readAsBinaryString(file);
   };
   const submitSave = () => {
-    const data = []
+    const data = [];
     dataNew.map((item) => {
-      const newObject = {}
+      const newObject = {};
       if (infoUser.manager) {
-        newObject['mssv'] = item['MSSV']
-        newObject['name'] = item['Họ tên']
-        newObject['course'] = item['Khóa nhập học']
-        newObject['status'] = item['Trạng thái FA21']
-        newObject['majors'] = item['Ngành FA21']
-        newObject['name'] = item['Họ tên']
-        newObject['email'] = item['Email']
-        newObject['supplement'] = item['bổ sung']
-        newObject['campus_id'] = infoUser.manager.cumpus
-         data.push(newObject)
+        newObject['mssv'] = item['MSSV'];
+        newObject['name'] = item['Họ tên'];
+        newObject['course'] = item['Khóa nhập học'];
+        newObject['status'] = item['Trạng thái FA21'];
+        newObject['majors'] = item['Ngành FA21'];
+        newObject['name'] = item['Họ tên'];
+        newObject['email'] = item['Email'];
+        newObject['supplement'] = item['bổ sung'];
+        newObject['campus_id'] = infoUser.manager.cumpus;
+        data.push(newObject);
       }
-    
-    })
-    dispatch(insertStudent(data))
-
+    });
+    dispatch(insertStudent(data));
+    notifications(loading);
+  };
+  const notifications = (loading) => {
+    if (loading === false) {
+      notification.success({
+        message: 'Thành công',
+        style: {
+          width: 250,
+          height: 60,
+          marginTop: 50,
+          color: '#FFFFFF',
+          background: '#4BB543',
+        },
+        duration: 1.5,
+      });
+      navigate('/status');
+    }
   };
   const submitCole = () => {
     setData();
