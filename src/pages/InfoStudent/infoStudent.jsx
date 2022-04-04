@@ -12,6 +12,7 @@ import {
   Divider,
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { useSelector, useDispatch } from 'react-redux';
 const columns = [
   {
     title: "Doanh nghiệp",
@@ -71,6 +72,7 @@ function InfoStudent(props) {
       );
     },
   };
+  const { infoUser } = useSelector((state) => state.auth);
   const [selectionType, setSelectionType] = useState("checkbox");
   return (
     <div>

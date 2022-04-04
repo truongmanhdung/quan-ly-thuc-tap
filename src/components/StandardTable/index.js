@@ -6,7 +6,9 @@ export default function StandardTable({
     columns,
     dataSource,
     typeRow,
-    scroll
+    scroll,
+    loading,
+    pagination
 }) {
     return (
         <Table
@@ -16,6 +18,9 @@ export default function StandardTable({
             columns={columns}
             dataSource={dataSource}
             bordered
+            loading={loading}
+            pagination={pagination}
+            
         />
     )
 }

@@ -37,15 +37,16 @@ const studentSlice=createSlice({
         builder.addCase(getStudent.rejected, (state,action) =>{
             state.error = 'Không thể truy vấn'
         } )
-        // builder.addCase(insertStudent.fulfilled, (state, action)=>{
-        //     state.listStudent = action.payload
-        // })
-        // builder.addCase(insertStudent.pending, (state, action)=> {
-        //     state.loading = true
-        // })
-        // builder.addCase(insertStudent.rejected, (state, action) => {
-        //     state.error = 'Không đúng định dạng'
-        // })
+        builder.addCase(insertStudent.fulfilled, (state, action)=>{
+            state.loading = false
+            // state.listStudent = action.payload
+        })
+        builder.addCase(insertStudent.pending, (state, action)=> {
+            state.loading = true
+        })
+        builder.addCase(insertStudent.rejected, (state, action) => {
+            state.error = 'Không đúng định dạng'
+        })
     }
 })
 export default studentSlice.reducer

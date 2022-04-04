@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import StudentAPI from '../../API/StudentAPI';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
-import { Select, Input, Table } from 'antd';
+import { Select, Input, Table, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
-import {omit} from 'lodash'
+import { omit } from 'lodash';
 const { Option } = Select;
 
 const Status = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
-  
   const {
     listStudent: { list, total },
     loading,
@@ -24,18 +23,18 @@ const Status = () => {
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [page, setPage] = useState({
     page: 1,
-    limit: 10,
+    limit: 20,
     campus_id: infoUser.manager.cumpus,
   });
-  const [filter, setFiler] = useState({})
+  const [filter, setFiler] = useState({});
   useEffect(() => {
       const data = {
-          ...page, ...filter
+          ...page,
+          ...filter
       }
-      console.log(data)
     dispatch(getStudent(data));
     setStudentSearch([]);
-  }, [filter, page]);
+  }, [page, filter]);
 
   const columns = [
     {
@@ -117,37 +116,13 @@ const Status = () => {
       },
     },
   ];
-  // lọc theo ngành
-  const filterMajors = async (value) => {
-    setStudentSearch(
-      list.filter((item) => item.majors.toLowerCase().includes(value.toLowerCase())),
-    );
-  };
-  // lọc theo trạng thái
-  const filterStatus = async (value) => {
-    setStudentSearch(
-      list.filter((item) => item.status.toLowerCase().includes(value.toLowerCase())),
-    );
-  };
-  // lọc theo phân loại
-  const filterClassify = async (value) => {
-    setStudentSearch(
-      list.filter((item) => item.classify.toLowerCase().includes(value.toLowerCase())),
-    );
-  };
-  // tìm kiếm theo tên
-  const filterInput = async (e) => {
-    setStudentSearch(list.filter((item) => item.name.toLowerCase().includes(e.toLowerCase())));
-  };
   // xóa tìm kiếm
   const deleteFilter = () => {
     setStudentSearch([]);
   };
-
-
   const rowSelection = {
-    onChange: (selectedRows) => {
-      setChooseIdStudent(selectedRows);
+    onChange: (selectedRowKeys, selectedRows) => {
+        setChooseIdStudent(selectedRows)
     },
   };
   const chooseStudent = () => {
@@ -164,35 +139,53 @@ const Status = () => {
     alert('Thêm thành công ');
     navigate('/review-cv');
   };
-
+  
   const handleStandardTableChange = (key, value) => {
-    const newValue = value.length > 0 || value > 0 ? {
-        ...filter,
-        [key]: value
-      }
-      : omit(filter, [key]);
-      setFiler(newValue)
+    const newValue =
+      value.length > 0 || value > 0
+        ? {
+            ...filter,
+            [key]: value,
+          }
+        : omit(filter, [key]);
+    setFiler(newValue);
   };
-
+  const handleSearch = ()=> {
+      const data ={
+          ...page,
+          ...filter
+      }
+      dispatch(getStudent(data))
+  }
   return (
     <div className="status">
       <h4>Sinh viên đăng ký thực tập</h4>
 
       <div className="filter">
-        <Select style={{ width: 200 }} onChange={val =>handleStandardTableChange('majors', val)} placeholder="Lọc theo ngành">
+        <span>Ngành:  </span>
+
+        <Select
+          style={{ width: 200 }}
+          onChange={(val) => handleStandardTableChange('majors', val)}
+          placeholder="Lọc theo ngành"
+        >
           {filterBranch.map((item, index) => (
-              <>
-            <Option value={item.value} key={index}>
-              {item.title}
-            </Option>
+            <>
+              <Option value={item.value} key={index}>
+                {item.title}
+              </Option>
             </>
           ))}
         </Select>
+        <span style={{
+            marginLeft: '30px'
+        }} >Trạng thái:</span>
         <Select
           className="filter-status"
           style={{ width: 200 }}
-          onChange={val =>handleStandardTableChange('statusCheck', val)}
+          onChange={(val) => handleStandardTableChange('statusCheck', val)}
           placeholder="Lọc theo trạng thái"
+          
         >
           {filterStatuss.map((item, index) => (
             <Option value={index} key={index}>
@@ -209,32 +202,37 @@ const Status = () => {
           <Option value="0">Tự tìm</Option>
           <Option value="1">Nhờ nhà trường</Option>
         </Select> */}
+        <span style={{
+            marginLeft: '30px'
+        }}>Tìm Kiếm: </span>
         <Input
           style={{ width: 200 }}
           placeholder="Tìm kiếm theo tên"
-          onChange={val => setTimeout(()=> handleStandardTableChange('name',val.target.value),3000)}
+          onChange={(val) => handleStandardTableChange('name', val.target.value)
+          }
         />
+        <Button onClick={handleSearch}  >Tìm kiếm</Button>
         {studentSearch.length > 0 && <button onClick={() => deleteFilter()}>Xóa lọc</button>}
         {chooseIdStudent.length > 0 && <button onClick={() => chooseStudent()}>Xác nhận</button>}
       </div>
 
       <Table
         rowSelection={{
-          type: 'checkbox',
-          ...rowSelection,
+            type: 'checkbox',
+            ...rowSelection
         }}
-        rowKey="id"
         pagination={{
           pageSize: page.limit,
           total: total,
           onChange: (page, pageSize) => {
             setPage({
-                page: page,
-                limit: pageSize,
-                campus_id: infoUser.manager.cumpus,
-             });
+              page: page,
+              limit: pageSize,
+              campus_id: infoUser.manager.cumpus,
+            });
           },
         }}
+        rowKey='_id'
         loading={loading}
         columns={columns}
         dataSource={list}
