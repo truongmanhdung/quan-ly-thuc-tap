@@ -14,7 +14,6 @@ const Login = () => {
   const [cumpus,setCumpus] = useState("")
   const navigate = useNavigate()
   const {listCumpus} = useSelector( state => state.cumpus)
-
   const handleFailure = (result) => {
     alert(result);
   };

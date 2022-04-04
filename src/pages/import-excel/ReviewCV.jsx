@@ -129,7 +129,7 @@ const ReviewCV = () => {
 
   return (
     <div className='status'>
-      <h4>Sinh viên bạn chọn review CV</h4>
+      <h4>My Work</h4>
 
       <div className="filter">
         <Select style={{ width: 200 }} onChange={val => handleFilter('majors', val)} placeholder="Lọc theo ngành">
@@ -157,6 +157,7 @@ const ReviewCV = () => {
           type: 'checkbox',
           ...rowSelection,
         }}
+        rowKey='_id'
         columns={columns}
         dataSource={data}
       />
