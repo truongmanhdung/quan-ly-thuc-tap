@@ -3,6 +3,8 @@ import { Form, Input, Select, Button, Upload } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import { guardarArchivo } from "../../ultis/uploadFileToDriveCV";
+
 import styles from "./SupportStudent.module.css";
 const { Option } = Select;
 const formItemLayout = {
@@ -37,24 +39,27 @@ const tailFormItemLayout = {
 };
 const SupportStudent = () => {
   const dispatch = useDispatch();
-  const [linkCV, setLinkCV] = useState();
+  const [file, setFile] = useState();
+  const [fileConvert, setFilConvert] = useState();
   const [form] = Form.useForm();
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
 
   const normFile = (e) => {
     //xử lí ảnh firebase or google drive
-    setLinkCV(e.file);
-    console.log("data: ", e.file);
+    setFile(e.file.originFileObj);
+    setFilConvert(e.file.originFileObj);
+    console.log("data: ", e.file.originFileObj);
   };
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log("Received values of form: ", values);
     const data = {
       ...values,
-      cv: linkCV,
       email: infoUser?.student?.email,
       ///dispatch Redux
     };
+    console.log(data);
+    await guardarArchivo(file, fileConvert, data);
   };
 
   useEffect(() => {
