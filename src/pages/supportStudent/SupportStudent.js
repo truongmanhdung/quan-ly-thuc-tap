@@ -1,16 +1,11 @@
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  Upload,
-} from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getListSpecialization } from '../../features/specializationSlice/specializationSlice';
-import styles from './SupportStudent.module.css'
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, Upload } from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import { guardarArchivo } from "../../ultis/uploadFileToDriveCV";
 
+import styles from "./SupportStudent.module.css";
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -43,28 +38,33 @@ const tailFormItemLayout = {
   },
 };
 const SupportStudent = () => {
-  const dispatch = useDispatch()
-  const [linkCV, setLinkCV]= useState()
+  const dispatch = useDispatch();
+  const [file, setFile] = useState();
+  const [fileConvert, setFilConvert] = useState();
   const [form] = Form.useForm();
-  const {listSpecialization} = useSelector( state => state.specialization)
-  const {infoUser} = useSelector( state => state.auth)
+  const { listSpecialization } = useSelector((state) => state.specialization);
+  const { infoUser } = useSelector((state) => state.auth);
 
   const normFile = (e) => {
-        //xử lí ảnh firebase or google drive
+    //xử lí ảnh firebase or google drive
+    setFile(e.file.originFileObj);
+    setFilConvert(e.file.originFileObj);
+    console.log("data: ", e.file.originFileObj);
   };
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+  const onFinish = async (values) => {
+    console.log("Received values of form: ", values);
     const data = {
       ...values,
-      cv: linkCV,
-      email:infoUser?.student?.email
-    ///dispatch Redux
-    }
+      email: infoUser?.student?.email,
+      ///dispatch Redux
+    };
+    console.log(data);
+    await guardarArchivo(file, fileConvert, data);
   };
 
-  useEffect(()=>{
-    dispatch(getListSpecialization())
-  },[])
+  useEffect(() => {
+    dispatch(getListSpecialization());
+  }, []);
 
   return (
     <>
@@ -75,8 +75,8 @@ const SupportStudent = () => {
         name="register"
         onFinish={onFinish}
         initialValues={{
-          residence: ['zhejiang', 'hangzhou', 'xihu'],
-          prefix: '86',
+          residence: ["zhejiang", "hangzhou", "xihu"],
+          prefix: "86",
         }}
         scrollToFirstError
       >
@@ -86,14 +86,11 @@ const SupportStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập mã sinh viên',
+              message: "Vui lòng nhập mã sinh viên",
             },
           ]}
         >
-          <Input
-            placeholder='Mã sinh viên'
-
-          />
+          <Input placeholder="Mã sinh viên" />
         </Form.Item>
 
         <Form.Item
@@ -102,15 +99,12 @@ const SupportStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập tên',
+              message: "Vui lòng nhập tên",
               whitespace: true,
             },
           ]}
         >
-          <Input
-            placeholder='Họ và tên'
-
-          />
+          <Input placeholder="Họ và tên" />
         </Form.Item>
         <Form.Item
           name="phone"
@@ -118,15 +112,11 @@ const SupportStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập số điện thoại',
+              message: "Vui lòng nhập số điện thoại",
             },
           ]}
         >
-<Input
-            placeholder='Số điện thoại'
-
-            
-          />
+          <Input placeholder="Số điện thoại" />
         </Form.Item>
 
         <Form.Item
@@ -135,14 +125,11 @@ const SupportStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập địa chỉ',
+              message: "Vui lòng nhập địa chỉ",
             },
           ]}
         >
-          <Input
-            placeholder='Địa chỉ'
-            
-          />
+          <Input placeholder="Địa chỉ" />
         </Form.Item>
         <Form.Item
           name="majors"
@@ -150,19 +137,22 @@ const SupportStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng chọn ngành học',
+              message: "Vui lòng chọn ngành học",
             },
           ]}
         >
-          <Select style={{
-             width: '50%',
-             marginLeft: '20px'
-          }} placeholder="Chọn ngành học">
-            {
-              listSpecialization.map((item, index) => (
-                <Option value={item._id} key={index} >{item.name}</Option>
-              ))
-            }
+          <Select
+            style={{
+              width: "50%",
+              marginLeft: "20px",
+            }}
+            placeholder="Chọn ngành học"
+          >
+            {listSpecialization.map((item, index) => (
+              <Option value={item._id} key={index}>
+                {item.name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -172,14 +162,11 @@ const SupportStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập địa chỉ',
+              message: "Vui lòng nhập địa chỉ",
             },
           ]}
         >
-          <Input
-            placeholder='Vị trí mong muốn'
-            
-          />
+          <Input placeholder="Vị trí mong muốn" />
         </Form.Item>
         <Form.Item
           name="upload"
@@ -187,10 +174,15 @@ const SupportStudent = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload  name="logo" action="/upload.do" listType="picture">
-            <Button style={{
-             marginLeft: '20px'
-          }} icon={<UploadOutlined />}>Click to upload</Button>
+          <Upload name="logo" action="/upload.do" listType="picture">
+            <Button
+              style={{
+                marginLeft: "20px",
+              }}
+              icon={<UploadOutlined />}
+            >
+              Click to upload
+            </Button>
           </Upload>
         </Form.Item>
 
@@ -202,7 +194,6 @@ const SupportStudent = () => {
       </Form>
     </>
   );
-}
+};
 
-export default SupportStudent
-  ;
+export default SupportStudent;
