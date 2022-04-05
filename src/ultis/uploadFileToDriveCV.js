@@ -19,8 +19,8 @@ function guardarArchivo(files, fileConvert, data) {
     ) //send to Api
       .then((res) => res.json())
       .then((a) => {
-        console.log(a.id);
-        const newData = { ...data, CV: a.id };
+        console.log(a);
+        const newData = { ...data, CV: a.url };
         console.log("newData: ", newData);
         console.log("Convert: ", JSON.stringify(newData));
         RegisterInternAPI.upload(newData)
