@@ -11,30 +11,30 @@ const { Option } = Select;
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [cumpus,setCumpus] = useState("")
-  const navigate = useNavigate()
-  const {listCumpus} = useSelector( state => state.cumpus)
+  const [cumpus, setCumpus] = useState("");
+  const navigate = useNavigate();
+  const { listCumpus } = useSelector((state) => state.cumpus);
   const handleFailure = (result) => {
     alert(result);
   };
 
   const handleLogin = (googleData) => {
-      const dataForm = {
-        token : googleData.tokenId,
-        cumpusId:cumpus
-      }
+    const dataForm = {
+      token: googleData.tokenId,
+      cumpusId: cumpus,
+    };
     dispatch(loginGoogle(dataForm))
-    .then(res => res && navigate('/'))
-    .catch((err)=> console.log(err))
-  }
-
-  const handleChange = (value) => {
-    setCumpus(value)
+      .then((res) => res && navigate("/"))
+      .catch((err) => console.log(err));
   };
 
-  useEffect(()=>{
-    dispatch(getListCumpus())
-  },[])
+  const handleChange = (value) => {
+    setCumpus(value);
+  };
+
+  useEffect(() => {
+    dispatch(getListCumpus());
+  }, []);
 
   return (
     <div className={styles.login_wrapper}>
@@ -48,23 +48,27 @@ const Login = () => {
           defaultValue="Lựa chọn cơ sở"
           onChange={handleChange}
         >
-          {listCumpus ? listCumpus.map( (item,index) => (
-            <Option key={index} value={item._id}>{item.name}</Option>
-          )) : <Empty />}
+          {listCumpus ? (
+            listCumpus.map((item, index) => (
+              <Option key={index} value={item._id}>
+                {item.name}
+              </Option>
+            ))
+          ) : (
+            <Empty />
+          )}
         </Select>
       </div>
       <div className={styles.button_login}>
-              {
-                cumpus !== '' && (
-                  <GoogleLogin
-                  className={styles.button_login}
-                  clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
-                  buttonText="Login With Google"
-                  onSuccess={handleLogin}
-                  onFailure={handleFailure}
-                />
-                )
-              }
+        {cumpus !== "" && (
+          <GoogleLogin
+            className={styles.button_login}
+            clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
+            buttonText="Login With Google"
+            onSuccess={handleLogin}
+            onFailure={handleFailure}
+          />
+        )}
       </div>
     </div>
   );
