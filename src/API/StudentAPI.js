@@ -25,9 +25,13 @@ const StudentAPI = {
     const url = `/students/${id}`;
     return axiosClient.put(url, data);
   },
-  uploadCV(data) {
-    const url = `/intern/support`;
-    return axiosClient.post(url, data);
+  updateReviewerSudent(data) {
+    const url = `/student`;
+    return axiosClient.put(url, data);
+  },
+  listStudentAssReviewer(data) {
+    const url = `/student/reviewer?${data}`;
+    return axiosClient.get(url);
   },
 };
 export default StudentAPI;
