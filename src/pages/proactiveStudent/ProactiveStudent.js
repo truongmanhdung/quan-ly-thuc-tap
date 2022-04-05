@@ -151,11 +151,11 @@ const ProactiveStudent = () => {
             }}
             placeholder="Chọn ngành học"
           >
-            {filterBranch.map((item, index) => (
+            {listSpecialization ? listSpecialization.map((item, index) => (
               <Option value={item._id} key={index}>
                 {item.title}
               </Option>
-            ))}
+            )) : ""}
           </Select>
         </Form.Item>
 

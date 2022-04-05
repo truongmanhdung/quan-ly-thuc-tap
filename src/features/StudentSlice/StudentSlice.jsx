@@ -14,12 +14,27 @@ export const insertStudent = createAsyncThunk(
         return data
     }
 )
+export const updateReviewerListStudent = createAsyncThunk(
+    'student/updateReviewerListStudent',
+    async (dataForm) => {
+        const {data} = await StudentAPI.updateReviewerSudent(dataForm)
+        return data
+    }
+)
+export const getListStudentAssReviewer = createAsyncThunk(
+    'student/updateReviewerListStudent',
+    async (dataForm) => {
+        const {data} = await StudentAPI.listStudentAssReviewer(dataForm)
+        return data
+    }
+)
 const studentSlice=createSlice({
     name:"student",
     initialState:{
         listStudent:{},
         loading: false,
-        error: ''
+        error: '',
+        listStudentAssReviewer:[]
     },
     reducers:{
         addStudent(state,action){
@@ -47,6 +62,28 @@ const studentSlice=createSlice({
         builder.addCase(insertStudent.rejected, (state, action) => {
             state.error = 'Không đúng định dạng'
         })
+        //reviewerListStudent
+        builder.addCase(updateReviewerListStudent.pending, (state, action)=> {
+            state.loading = true
+        })
+        builder.addCase(updateReviewerListStudent.fulfilled,(state,action)=>{
+            state.loading=false
+        })
+        builder.addCase(updateReviewerListStudent.rejected, (state,action) =>{
+            state.error = 'Update reviewer student fail'
+        } )
+        
+        //getListReviewerStudent
+        builder.addCase(getListStudentAssReviewer.pending, (state, action)=> {
+            state.loading = true
+        })
+        builder.addCase(getListStudentAssReviewer.fulfilled,(state,action)=>{
+            state.loading=false
+            state.listStudentAssReviewer = action.payload
+        })
+        builder.addCase(getListStudentAssReviewer.rejected, (state,action) =>{
+            state.error = 'get reviewer student fail'
+        } )
     }
 })
 export default studentSlice.reducer
