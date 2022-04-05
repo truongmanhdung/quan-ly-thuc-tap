@@ -14,12 +14,14 @@ export const insertStudent = createAsyncThunk(
         return data
     }
 )
+
 const studentSlice=createSlice({
     name:"student",
     initialState:{
         listStudent:{},
         loading: false,
-        error: ''
+        error: '',
+        listStudentAssReviewer:[]
     },
     reducers:{
         addStudent(state,action){
@@ -47,6 +49,7 @@ const studentSlice=createSlice({
         builder.addCase(insertStudent.rejected, (state, action) => {
             state.error = 'Không đúng định dạng'
         })
+        
     }
 })
 export default studentSlice.reducer

@@ -5,6 +5,7 @@ import studentSlice from "../features/StudentSlice/StudentSlice";
 import userSlice from "../features/UserSlice/UserSilce";
 import specializationSlice from "../features/specializationSlice/specializationSlice";
 import managerSlice from "../features/managerSlice/managerSlice";
+import reviewerSlice from "../features/reviewerStudent/reviewerSlice";
 const rootReducer = combineReducers(
     {
     students:studentSlice,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers(
     auth: authSlice,
     cumpus:cumpusSlice,
     specialization:specializationSlice,
-    manager: managerSlice
+    manager: managerSlice,
+    reviewer:reviewerSlice
 });
 export default rootReducer;

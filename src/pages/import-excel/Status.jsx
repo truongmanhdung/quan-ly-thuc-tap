@@ -5,6 +5,7 @@ import '../../common/styles/status.css';
 import { Select, Input, Table, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
+import { updateReviewerListStudent } from '../../features/reviewerStudent/reviewerSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
@@ -21,6 +22,7 @@ const Status = () => {
   const users = useSelector((data) => data.users.value);
   const [studentSearch, setStudentSearch] = useState([]);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
+  const [listIdStudent,setListIdStudent] = useState([])
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -122,6 +124,7 @@ const Status = () => {
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
+        setListIdStudent(selectedRowKeys)
         setChooseIdStudent(selectedRows)
     },
   };
@@ -136,6 +139,7 @@ const Status = () => {
     newStudents.map((item) => {
       StudentAPI.upload(item.id, { ...item, user_id: `${user.id}` });
     });
+    dispatch(updateReviewerListStudent({listIdStudent:listIdStudent, email:infoUser?.manager?.email}))
     alert('Thêm thành công ');
     navigate('/review-cv');
   };
