@@ -1,15 +1,10 @@
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  Upload,
-} from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getListSpecialization } from '../../features/specializationSlice/specializationSlice';
-import styles from "./ProactiveStudent.module.css"
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, Upload } from "antd";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import styles from "./ProactiveStudent.module.css";
+
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -42,24 +37,24 @@ const tailFormItemLayout = {
   },
 };
 const ProactiveStudent = () => {
-  const dispatch = useDispatch()
-  const [linkCV, setLinkCV] = useState()
+  const dispatch = useDispatch();
+  const [linkCV, setLinkCV] = useState();
   const [form] = Form.useForm();
-  const {listSpecialization} = useSelector( state => state.specialization)
-  const {infoUser} = useSelector( state => state.auth)
+  const { listSpecialization } = useSelector((state) => state.specialization);
+  const { infoUser } = useSelector((state) => state.auth);
 
   const normFile = (e) => {
     //xử lí ảnh firebase or google drive
+    setLinkCV(e.file);
   };
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
     const data = {
       ...values,
       cv: linkCV,
-      email:infoUser?.student?.email
+      email: infoUser?.student?.email,
       ///dispatch Redux
-    }
-   
+    };
   };
 
   useEffect(() => {
@@ -116,9 +111,7 @@ const ProactiveStudent = () => {
             },
           ]}
         >
-          <Input
-            placeholder='Số điện thoại'
-          />
+          <Input placeholder="Số điện thoại" />
         </Form.Item>
 
         <Form.Item
@@ -141,8 +134,7 @@ const ProactiveStudent = () => {
               required: true,
               message: "Vui lòng chọn ngành học",
             },
-          ]
-        }
+          ]}
         >
           <Select
             style={{
@@ -151,11 +143,11 @@ const ProactiveStudent = () => {
             }}
             placeholder="Chọn ngành học"
           >
-            {filterBranch.map((item, index) => (
+            {/* {filterBranch.map((item, index) => (
               <Option value={item._id} key={index}>
                 {item.title}
               </Option>
-            ))}
+            ))} */}
           </Select>
         </Form.Item>
 
@@ -165,14 +157,11 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập đơn vị thực tập',
+              message: "Vui lòng nhập đơn vị thực tập",
             },
           ]}
         >
-          <Input
-            placeholder='Đơn vị thực tập/Tên doanh nghiệp'
-            
-          />
+          <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
         </Form.Item>
         <Form.Item
           name="unitAddress"
@@ -180,14 +169,11 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập địa chỉ thực tập',
+              message: "Vui lòng nhập địa chỉ thực tập",
             },
           ]}
         >
-          <Input
-            placeholder='Đơn vị thực tập/Tên doanh nghiệp'
-            
-          />
+          <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
         </Form.Item>
         <Form.Item
           name="taxCode"
@@ -195,65 +181,51 @@ const ProactiveStudent = () => {
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập Mã số thuế',
+              message: "Vui lòng nhập Mã số thuế",
             },
           ]}
         >
-          <Input
-            placeholder='Mã số thuế'
-            
-          />
+          <Input placeholder="Mã số thuế" />
         </Form.Item>
-            
+
         <Form.Item
           name="position"
           label="Chức vụ người tiếp nhận"
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập chức vụ người tiếp nhận sinh viên',
+              message: "Vui lòng nhập chức vụ người tiếp nhận sinh viên",
             },
           ]}
         >
-          <Input
-            placeholder='Chức vụ người tiếp nhận'
-            
-          />
+          <Input placeholder="Chức vụ người tiếp nhận" />
         </Form.Item>
-            
-     
+
         <Form.Item
           name="numberEnterprise"
           label="Số điện thoại doanh nghiệp"
           rules={[
-            {required: true,
-              message: 'Vui lòng nhập Số điện thoại doanh nghiệp',
+            {
+              required: true,
+              message: "Vui lòng nhập Số điện thoại doanh nghiệp",
             },
           ]}
         >
-          <Input
-            placeholder='Số điện thoại doanh nghiệp(VD:Giám đốc, Leader, Hr)'
-            
-          />
+          <Input placeholder="Số điện thoại doanh nghiệp(VD:Giám đốc, Leader, Hr)" />
         </Form.Item>
-            
-          
+
         <Form.Item
           name="emailEnterprise"
           label="Email người tiếp nhận"
           rules={[
             {
               required: true,
-              message: 'Vui lòng nhập Email người tiếp nhận',
+              message: "Vui lòng nhập Email người tiếp nhận",
             },
           ]}
         >
-          <Input
-            placeholder='Email người tiếp nhận'
-            
-          />
+          <Input placeholder="Email người tiếp nhận" />
         </Form.Item>
-            
 
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
@@ -265,4 +237,4 @@ const ProactiveStudent = () => {
   );
 };
 
-export default ProactiveStudent
+export default ProactiveStudent;
