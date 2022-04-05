@@ -48,7 +48,7 @@ function LayoutWebsite() {
                   <NavLink to="employee-manager">Nhân viên</NavLink>
                 </Menu.Item>
                 <Menu.Item key="9" icon={<FolderViewOutlined className="icon-link" />}>
-                  <NavLink to="review-cv">My works</NavLink>
+                  <NavLink to="review-cv">Review CV</NavLink>
                 </Menu.Item>
                 <Menu.Item key="7" icon={<UploadOutlined className="icon-link" />}>
                   <NavLink to="up-file">Up File</NavLink>
