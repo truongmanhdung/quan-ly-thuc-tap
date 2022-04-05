@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import * as XLSX from 'xlsx';
-import { UploadOutlined } from '@ant-design/icons';
-import '../../common/styles/upfile.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { insertStudent } from '../../features/StudentSlice/StudentSlice';
-import { notification } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import * as XLSX from "xlsx";
+import { UploadOutlined } from "@ant-design/icons";
+import "../../common/styles/upfile.css";
+import { useDispatch, useSelector } from "react-redux";
+import { insertStudent } from "../../features/StudentSlice/StudentSlice";
+import { notification } from "antd";
+import { useNavigate } from "react-router-dom";
 const UpFile = () => {
   const [data, setData] = useState();
   const [header, setHeader] = useState([]);
   const [dataNew, setDataNew] = useState([]);
-  const [nameFile, setNameFile] = useState('');
+  const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
@@ -21,7 +21,7 @@ const UpFile = () => {
     const reader = new FileReader();
     reader.onload = (event) => {
       const bstr = event.target.result;
-      const wordBook = XLSX.read(bstr, { type: 'binary' });
+      const wordBook = XLSX.read(bstr, { type: "binary" });
       const wordSheetName = wordBook.SheetNames[0];
       const wordSheet = wordBook.Sheets[wordSheetName];
       const fileData = XLSX.utils.sheet_to_json(wordSheet, { header: 1 });
@@ -49,15 +49,15 @@ const UpFile = () => {
     dataNew.map((item) => {
       const newObject = {};
       if (infoUser.manager) {
-        newObject['mssv'] = item['MSSV'];
-        newObject['name'] = item['Họ tên'];
-        newObject['course'] = item['Khóa nhập học'];
-        newObject['status'] = item['Trạng thái FA21'];
-        newObject['majors'] = item['Ngành FA21'];
-        newObject['name'] = item['Họ tên'];
-        newObject['email'] = item['Email'];
-        newObject['supplement'] = item['bổ sung'];
-        newObject['campus_id'] = infoUser.manager.cumpus;
+        newObject["mssv"] = item["MSSV"];
+        newObject["name"] = item["Họ tên"];
+        newObject["course"] = item["Khóa nhập học"];
+        newObject["status"] = item["Trạng thái FA21"];
+        newObject["majors"] = item["Ngành FA21"];
+        newObject["name"] = item["Họ tên"];
+        newObject["email"] = item["Email"];
+        newObject["supplement"] = item["bổ sung"];
+        newObject["campus_id"] = infoUser.manager.cumpus;
         data.push(newObject);
       }
     });
@@ -67,17 +67,17 @@ const UpFile = () => {
   const notifications = (loading) => {
     if (loading === false) {
       notification.success({
-        message: 'Thành công',
+        message: "Thành công",
         style: {
           width: 250,
           height: 60,
           marginTop: 50,
-          color: '#FFFFFF',
-          background: '#4BB543',
+          color: "#FFFFFF",
+          background: "#4BB543",
         },
         duration: 1.5,
       });
-      navigate('/status');
+      navigate("/status");
     }
   };
   const submitCole = () => {
@@ -90,9 +90,9 @@ const UpFile = () => {
       <div className="header">
         <label htmlFor="up-file">
           <div className="button-upfile">
-            {' '}
+            {" "}
             <UploadOutlined className="icon" /> Tải file excel
-          </div>{' '}
+          </div>{" "}
           {nameFile && <span>{nameFile}</span>}
         </label>
         <input type="file" onChange={(e) => importData(e)} id="up-file" />
