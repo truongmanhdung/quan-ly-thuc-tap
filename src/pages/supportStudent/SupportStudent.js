@@ -1,10 +1,9 @@
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Button, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, Upload, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
-import { guardarArchivo } from "../../ultis/uploadFileToDriveCV";
 
 import styles from "./SupportStudent.module.css";
 const { Option } = Select;
@@ -41,15 +40,12 @@ const tailFormItemLayout = {
 const SupportStudent = () => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
-  const [fileConvert, setFilConvert] = useState();
   const [form] = Form.useForm();
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
 
   function guardarArchivo(files, data) {
-    console.log(process.env.GOOGLE_CLIENT_ID);
     var file = files; //the file
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -59,6 +55,7 @@ const SupportStudent = () => {
         dataReq: { data: rawLog, name: file.name, type: file.type },
         fname: "uploadFilesToGoogleDrive",
       }; //preapre info to send to API
+
       fetch(
         `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
         `, //your AppsScript URL
@@ -68,21 +65,20 @@ const SupportStudent = () => {
         .then((a) => {
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
-            .then((res) => {
-              console.log(res);
+            .then(() => {
+              message.success(`Tải dữ liệu thành cồng`);
             })
             .catch((error) => {
-              console.log(error);
+              message.error(`Lỗi gửi form không thành công`);
             });
         })
-        .catch((e) => console.log(e)); // Or Error in console
+        .catch((e) => message.error(`Lỗi gửi form không thành công`)); // Or Error in console
     };
   }
 
   const normFile = (e) => {
     //xử lí ảnh firebase or google drive
     setFile(e.file.originFileObj);
-    console.log("data: ", e.file.originFileObj);
   };
   const onFinish = async (values) => {
     console.log("Received values of form: ", values);
@@ -182,7 +178,7 @@ const SupportStudent = () => {
             placeholder="Chọn ngành học"
           >
             {listSpecialization.map((item, index) => (
-              <Option value={item._id} key={index}>
+              <Option value={item.name} key={index}>
                 {item.name}
               </Option>
             ))}
@@ -207,7 +203,7 @@ const SupportStudent = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload name="logo" action="/upload.do" listType="picture">
+          <Upload name="logo" listType="picture">
             <Button
               style={{
                 marginLeft: "20px",
