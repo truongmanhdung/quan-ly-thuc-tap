@@ -1,9 +1,10 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Button, Upload, message } from "antd";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, Upload, message, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import { guardarArchivo } from "../../ultis/uploadFileToDriveCV";
 
 import styles from "./SupportStudent.module.css";
 const { Option } = Select;
@@ -40,12 +41,18 @@ const tailFormItemLayout = {
 const SupportStudent = () => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
+  const [spin, setSpin] = useState(false);
   const [form] = Form.useForm();
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
 
   function guardarArchivo(files, data) {
-    var file = files; //the file
+    setSpin(true);
+    console.log(process.env.GOOGLE_CLIENT_ID);
+    const file = files; //the file
+    const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
+    `;
+    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -55,29 +62,41 @@ const SupportStudent = () => {
         dataReq: { data: rawLog, name: file.name, type: file.type },
         fname: "uploadFilesToGoogleDrive",
       }; //preapre info to send to API
-
       fetch(
-        `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
-        `, //your AppsScript URL
+        urlGGDriveCV, //your AppsScript URL
         { method: "POST", body: JSON.stringify(dataSend) }
       ) //send to Api
         .then((res) => res.json())
         .then((a) => {
-          const newData = { ...data, CV: a.url };
+          const newData = { ...data, CV: a.name };
           RegisterInternAPI.upload(newData)
-            .then(() => {
-              message.success(`Tải dữ liệu thành cồng`);
+            .then((res) => {
+              message.success("Đăng ký hỗ trợ thực tập thành công");
+              form.resetFields();
             })
             .catch((error) => {
-              message.error(`Lỗi gửi form không thành công`);
+              message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
+              form.resetFields();
             });
+          setSpin(false);
         })
-        .catch((e) => message.error(`Lỗi gửi form không thành công`)); // Or Error in console
+        .catch((e) => {
+          message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
+          form.resetFields();
+          setSpin(false);
+        }); // Or Error in console
     };
   }
 
   const normFile = (e) => {
-    //xử lí ảnh firebase or google drive
+    const valueFile = e.file.originFileObj;
+
+    const isPDF = valueFile.type === "application/pdf";
+
+    if (!isPDF) {
+      form.resetFields();
+      message.error("Vui lòng nhập file đúng định dạng PDF");
+    }
     setFile(e.file.originFileObj);
   };
   const onFinish = async (values) => {
@@ -85,9 +104,9 @@ const SupportStudent = () => {
     const data = {
       ...values,
       email: infoUser?.student?.email,
-      support: 1
       ///dispatch Redux
     };
+    console.log(data);
     await guardarArchivo(file, data);
   };
 
@@ -97,6 +116,7 @@ const SupportStudent = () => {
 
   return (
     <>
+      {spin ? <Spin /> : null}
       <Form
         {...formItemLayout}
         form={form}
@@ -178,7 +198,7 @@ const SupportStudent = () => {
             placeholder="Chọn ngành học"
           >
             {listSpecialization.map((item, index) => (
-              <Option value={item.name} key={index}>
+              <Option value={item._id} key={index}>
                 {item.name}
               </Option>
             ))}
@@ -203,7 +223,7 @@ const SupportStudent = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload name="logo" listType="picture">
+          <Upload name="logo" action="/upload.do" listType="picture">
             <Button
               style={{
                 marginLeft: "20px",
