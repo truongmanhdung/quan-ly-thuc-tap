@@ -4,7 +4,7 @@ import AuthApi from '../../API/Auth'
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
   async (dataForm) => {
-    const { data } = await AuthApi.login(dataForm)
+    const {data} = await AuthApi.login(dataForm)
     return data;
   }
 );
@@ -44,7 +44,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.token = action.payload.token;
     });
-    builder.addCase(logout.rejected, (state) => {
+    builder.addCase(logout.rejected, (state,action) => {
       state.messages = "Logout google fail";
     });
   },

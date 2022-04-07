@@ -21,7 +21,6 @@ const studentSlice=createSlice({
         listStudent:{},
         loading: false,
         error: '',
-        listStudentAssReviewer:[]
     },
     reducers:{
         addStudent(state,action){

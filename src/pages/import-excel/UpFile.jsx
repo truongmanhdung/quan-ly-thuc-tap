@@ -62,7 +62,6 @@ const UpFile = () => {
     dispatch(insertStudent(dataNew));
     notifications(loading);
   };
-console.log(dataNew)
   const notifications = (loading) => {
     if (loading === false) {
       notification.success({

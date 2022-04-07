@@ -85,9 +85,9 @@ const SupportStudent = () => {
     const data = {
       ...values,
       email: infoUser?.student?.email,
+      support: 1
       ///dispatch Redux
     };
-    console.log(data);
     await guardarArchivo(file, data);
   };
 

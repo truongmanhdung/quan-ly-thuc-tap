@@ -30,92 +30,114 @@ const Status = () => {
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
-      const data = {
-          ...page,
-          ...filter
-      }
-    dispatch(getStudent(data));
+    dispatch(getStudent(page));
     setStudentSearch([]);
-  }, [page, filter]);
-
+  }, [page]);
   const columns = [
     {
       title: 'MSSV',
       dataIndex: 'mssv',
+      width:100,
+      fixed: 'left'
     },
     {
       title: 'Họ và Tên',
       dataIndex: 'name',
+      width: 150,
+      fixed: 'left'
     },
     {
       title: 'Email',
       dataIndex: 'email',
+      width: 200
     },
     {
       title: 'Điện thoại',
-      dataIndex: 'phone',
+      dataIndex: 'phoneNumber',
+      width: 160
     },
     {
       title: 'Ngành',
       dataIndex: 'majors',
+      width : 100
     },
-    // {
-    //   title: 'Phân loại',
-    //   dataIndex: 'classify',
-    //   render: (classify) => (classify == 0 ? 'Tự đăng ký' : 'Hỗ trợ'),
-    // },
+    {
+      title: 'Phân loại',
+      dataIndex: 'support',
+      width: 90,
+      render: val => {
+        if (val === 1) {
+          return 'Hỗ trợ'
+        }else if (val === 0) {
+          return 'Tự tìm'
+        }else{
+          return ''
+        }
+      }
+    },
     {
       title: 'CV',
       dataIndex: 'CV',
-      render: (link_cv) =>
-        list.CV ? <EyeOutlined className="icon-cv" onClick={() => window.open(link_cv)} /> : '',
+      width: 50,
+      render: val =>
+        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
+
     },
     {
       title: 'Người review',
-      dataIndex: 'user_id',
-      render: (user_id) => users.map((item) => user_id == item.id && item.email.slice(0, -11)),
+      dataIndex: 'reviewer',  
+      width: 230
+
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'status',
-      render: (status, student) => {
-        if (status == 0) {
+      dataIndex: 'statusCheck',
+      render: status=> {
+        if (status === 0) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
-              Đã tạch <br />
-              <Link to={`/edit-cv/id=${student.key}`}>Sửa</Link>
-            </span>
+            <span className="status-check" style={{ color: 'orange' }}>
+            Chờ kiểm tra <br />
+            <Button >Sửa</Button>
+          </span>
+         
           );
-        } else if (status == 1) {
+        } else if (status === 1) {
           return (
-            <span className="status-up" style={{ color: 'red' }}>
-              Sửa lại
+            <span className="status-up" style={{ color: 'grey' }}>
+              Đang kiểm tra
               <br />
-              <Link to={`/ed/id=${student.key}`}>Sửa</Link>
+              <Button >Sửa</Button>
             </span>
           );
-        } else if (status == 2) {
+        } else if (status === 2) {
           return (
-            <span className="status-check" style={{ color: 'rgb(255, 106, 0)' }}>
-              Chờ kiểm tra <br />
-              <Link to={`/ed/id=${student.key}`}>Sửa</Link>
+            <span className="status-fail" style={{ color: 'green' }}>
+           Nhận Cv <br />
+            <Button >Sửa</Button>
+          </span>
+          );
+        } else if (status === 3) {
+          return (
+            <span className="status-true" style={{ color: 'red' }}>
+              Không đủ Đk <br />
+              <Button >Sửa</Button>
             </span>
           );
-        } else if (status == 3) {
+         
+        } else if (status === 4) {
+          <span className="status-true" style={{ color: 'red' }}>
+          Trượt <br />
+          <Button >Sửa</Button>
+        </span>
+        }else {
           return (
-            <span className="status-true" style={{ color: 'rgb(44, 194, 21)' }}>
-              Đã kiểm tra <br />
-              <Link to={`/ed/id=${student.key}`}>Sửa</Link>
-            </span>
-          );
-        } else {
-          return (
-            <span className="status-true" style={{ color: 'rgb(44, 194, 21)' }}>
+            <span className="status-true" style={{ color: 'red' }}>
               Chưa đăng ký
             </span>
           );
         }
       },
+   
     },
   ];
   // xóa tìm kiếm
@@ -129,16 +151,6 @@ const Status = () => {
     },
   };
   const chooseStudent = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const newStudents = [];
-    list.filter((item) => {
-      chooseIdStudent.map((id) => {
-        id == item.id && newStudents.push(item);
-      });
-    });
-    newStudents.map((item) => {
-      StudentAPI.upload(item.id, { ...item, user_id: `${user.id}` });
-    });
     dispatch(updateReviewerListStudent({listIdStudent:listIdStudent, email:infoUser?.manager?.email}))
     alert('Thêm thành công ');
     navigate('/review-cv');
@@ -216,8 +228,7 @@ const Status = () => {
           }
         />
         <Button onClick={handleSearch}  >Tìm kiếm</Button>
-        {studentSearch.length > 0 && <button onClick={() => deleteFilter()}>Xóa lọc</button>}
-        {chooseIdStudent.length > 0 && <button onClick={() => chooseStudent()}>Xác nhận</button>}
+        {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
       </div>
 
       <Table
@@ -233,6 +244,7 @@ const Status = () => {
               page: page,
               limit: pageSize,
               campus_id: infoUser.manager.cumpus,
+              ...filter
             });
           },
         }}
@@ -240,6 +252,7 @@ const Status = () => {
         loading={loading}
         columns={columns}
         dataSource={list}
+        scroll={{ x: 'calc(700px + 50%)'}}
       />
     </div>
   );
