@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
+import { Table, Tag, Space,notification } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
 import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
-import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 const UpFile = () => {
   const [data, setData] = useState();
@@ -38,32 +38,31 @@ const UpFile = () => {
         });
         rows.push(rowData);
       });
-
-      setDataNew(rows.filter((item, index) => index !== 0));
+      const datas=[]
+      rows.filter((item, index) => index !== 0).map((item) => {
+        const newObject = {};
+        if (infoUser.manager) {
+          newObject["mssv"] = item["MSSV"];
+          newObject["name"] = item["Họ tên"];
+          newObject["course"] = item["Khóa nhập học"];
+          newObject["status"] = item["Trạng thái FA21"];
+          newObject["majors"] = item["Ngành FA21"];
+          newObject["email"] = item["Email"];
+          newObject["supplement"] = item["bổ sung"];
+          newObject["campus_id"] = infoUser.manager.cumpus;
+          datas.push(newObject);
+        }
+      });
+      setDataNew(datas);
       setData(fileData);
     };
     reader.readAsBinaryString(file);
   };
   const submitSave = () => {
-    const data = [];
-    dataNew.map((item) => {
-      const newObject = {};
-      if (infoUser.manager) {
-        newObject["mssv"] = item["MSSV"];
-        newObject["name"] = item["Họ tên"];
-        newObject["course"] = item["Khóa nhập học"];
-        newObject["status"] = item["Trạng thái FA21"];
-        newObject["majors"] = item["Ngành FA21"];
-        newObject["name"] = item["Họ tên"];
-        newObject["email"] = item["Email"];
-        newObject["supplement"] = item["bổ sung"];
-        newObject["campus_id"] = infoUser.manager.cumpus;
-        data.push(newObject);
-      }
-    });
-    dispatch(insertStudent(data));
+    dispatch(insertStudent(dataNew));
     notifications(loading);
   };
+console.log(dataNew)
   const notifications = (loading) => {
     if (loading === false) {
       notification.success({
@@ -84,6 +83,39 @@ const UpFile = () => {
     setData();
     setNameFile();
   };
+
+
+  const columns = [
+
+    {
+      title: 'MSSV',
+      dataIndex: 'mssv',
+    },  {
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'Khóa nhập học',
+      dataIndex: 'course',
+    },
+    {
+      title: 'Trạng thái FA21',
+      dataIndex: 'status',
+    },
+    {
+      title: 'Ngành FA21',
+      dataIndex: 'majors',
+    },
+    {
+      title: 'Bổ sung',
+      dataIndex: 'supplement',
+    },
+  ];
+
   return (
     <div className="up-file">
       <h3>Tải danh sách mới</h3>
@@ -103,21 +135,8 @@ const UpFile = () => {
           </div>
         )}
       </div>
-      {data !== undefined && (
-        <table>
-          <thead></thead>
-          <tbody>
-            {data !== undefined &&
-              data.map((r, i) => (
-                <tr key={i}>
-                  {header.map((c, index) => (
-                    <td key={index}>{r[c.key]}</td>
-                  ))}
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      )}
+      {dataNew.length>=1 && <Table dataSource={dataNew} columns={columns} />}
+      
     </div>
   );
 };
