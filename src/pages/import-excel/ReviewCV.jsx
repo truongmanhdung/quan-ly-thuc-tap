@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
-import StudentAPI from "../../API/StudentAPI";
-import { EyeOutlined } from "@ant-design/icons";
-import "../../common/styles/status.css";
-import { Select, Input, Table, Button } from "antd";
-import { useSelector, useDispatch } from "react-redux";
-import { getStudent } from "../../features/StudentSlice/StudentSlice";
-import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
-import { Link, useNavigate } from "react-router-dom";
-import { filterBranch, filterStatuss } from "../../ultis/selectOption";
-import { omit } from "lodash";
+import React, { useState, useEffect, useCallback } from 'react';
+import StudentAPI from '../../API/StudentAPI';
+import { EyeOutlined } from '@ant-design/icons';
+import '../../common/styles/status.css';
+import { Select, Input, Table, Button } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { getStudent } from '../../features/StudentSlice/StudentSlice';
+import {
+  getListStudentAssReviewer,
+  updateReviewerListStudent,
+} from '../../features/reviewerStudent/reviewerSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { filterBranch, filterStatuss } from '../../ultis/selectOption';
+import { omit } from 'lodash';
 const { Option } = Select;
 
 const ReviewCV = () => {
@@ -16,26 +19,16 @@ const ReviewCV = () => {
   let navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
   const {
-    listStudent: { list, total },
+    listStudentAssReviewer: { total, list },
     loading,
-  } = useSelector((state) => state.students);
-  console.log(list);
-  const [listFilter, setListFilter] = useState(list);
-  useEffect(() => {
-    if (list.length > 0) {
-      setListFilter(
-        list.filter((item) => item.CV !== null && item.CV !== undefined)
-      );
-    }
-  }, [list]);
-  const users = useSelector((data) => data.users.value);
-  const [studentSearch, setStudentSearch] = useState([]);
+  } = useSelector((state) => state.reviewer);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.cumpus,
+    reviewer: infoUser.manager.email,
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
@@ -43,90 +36,104 @@ const ReviewCV = () => {
       ...page,
       ...filter,
     };
-    dispatch(getStudent(data));
-    setStudentSearch([]);
-  }, [page, filter]);
+    dispatch(getListStudentAssReviewer(data));
+  }, [page]);
 
   const columns = [
     {
-      title: "MSSV",
-      dataIndex: "mssv",
+      title: 'MSSV',
+      dataIndex: 'mssv',
+      width: 100,
+      fixed: 'left',
     },
     {
-      title: "Họ và Tên",
-      dataIndex: "name",
+      title: 'Họ và Tên',
+      dataIndex: 'name',
+      width: 150,
+      fixed: 'left',
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: 'Email',
+      dataIndex: 'email',
+      width: 200,
     },
     {
-      title: "Điện thoại",
-      dataIndex: "phone",
+      title: 'Điện thoại',
+      dataIndex: 'phoneNumber',
+      width: 160,
     },
     {
-      title: "Ngành",
-      dataIndex: "majors",
-    },
-
-    {
-      title: "CV",
-      dataIndex: "CV",
-      render: (link_cv) =>
-        list.CV ? (
-          <EyeOutlined
-            className="icon-cv"
-            onClick={() => window.open(link_cv)}
-          />
-        ) : (
-          ""
-        ),
+      title: 'Ngành',
+      dataIndex: 'majors',
+      width: 100,
     },
     {
-      title: "Người review",
-      dataIndex: "user_id",
-      render: (user_id) =>
-        users.map((item) => user_id == item.id && item.email.slice(0, -11)),
+      title: 'Phân loại',
+      dataIndex: 'support',
+      width: 90,
+      render: (val) => {
+        if (val === 1) {
+          return 'Hỗ trợ';
+        } else if (val === 0) {
+          return 'Tự tìm';
+        } else {
+          return '';
+        }
+      },
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      render: (status, student) => {
-        if (status == 0) {
+      title: 'CV',
+      dataIndex: 'CV',
+      width: 50,
+      render: (val) =>
+        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
+    },
+    {
+      title: 'Người review',
+      dataIndex: 'reviewer',
+      width: 230,
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'statusCheck',
+      render: (status) => {
+        if (status === 0) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
-              Đã tạch <br />
-              <Link to={`/edit-cv/id=${student.key}`}>Sửa</Link>
-            </span>
-          );
-        } else if (status == 1) {
-          return (
-            <span className="status-up" style={{ color: "red" }}>
-              Sửa lại
-              <br />
-              <Link to={`/ed/id=${student.key}`}>Sửa</Link>
-            </span>
-          );
-        } else if (status == 2) {
-          return (
-            <span
-              className="status-check"
-              style={{ color: "rgb(255, 106, 0)" }}
-            >
+            <span className="status-check" style={{ color: 'orange' }}>
               Chờ kiểm tra <br />
-              <Link to={`/ed/id=${student.key}`}>Sửa</Link>
+              <Button>Sửa</Button>
             </span>
           );
-        } else if (status == 3) {
+        } else if (status === 1) {
           return (
-            <span className="status-true" style={{ color: "rgb(44, 194, 21)" }}>
-              Đã kiểm tra <br />
-              <Link to={`/ed/id=${student.key}`}>Sửa</Link>
+            <span className="status-up" style={{ color: 'grey' }}>
+              Đang kiểm tra
+              <br />
+              <Button>Sửa</Button>
             </span>
           );
+        } else if (status === 2) {
+          return (
+            <span className="status-fail" style={{ color: 'green' }}>
+              Nhận Cv <br />
+              <Button>Sửa</Button>
+            </span>
+          );
+        } else if (status === 3) {
+          return (
+            <span className="status-true" style={{ color: 'red' }}>
+              Không đủ Đk <br />
+              <Button>Sửa</Button>
+            </span>
+          );
+        } else if (status === 4) {
+          <span className="status-true" style={{ color: 'red' }}>
+            Trượt <br />
+            <Button>Sửa</Button>
+          </span>;
         } else {
           return (
-            <span className="status-true" style={{ color: "rgb(44, 194, 21)" }}>
+            <span className="status-true" style={{ color: 'red' }}>
               Chưa đăng ký
             </span>
           );
@@ -135,35 +142,22 @@ const ReviewCV = () => {
     },
   ];
   // xóa tìm kiếm
-  const deleteFilter = () => {
-    setStudentSearch([]);
-  };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setListIdStudent(selectedRowKeys);
       setChooseIdStudent(selectedRows);
     },
   };
-  const chooseStudent = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const newStudents = [];
-    list.filter((item) => {
-      chooseIdStudent.map((id) => {
-        id == item.id && newStudents.push(item);
-      });
-    });
-    newStudents.map((item) => {
-      StudentAPI.upload(item.id, { ...item, user_id: `${user.id}` });
-    });
+  const chooseStudent = useCallback(() => {
     dispatch(
       updateReviewerListStudent({
         listIdStudent: listIdStudent,
         email: infoUser?.manager?.email,
-      })
+      }),
     );
-    alert("Thêm thành công ");
-    navigate("/review-cv");
-  };
+    alert('Thêm thành công ');
+    navigate('/review-cv');
+  }, [listIdStudent]);
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
@@ -191,7 +185,7 @@ const ReviewCV = () => {
 
         <Select
           style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange("majors", val)}
+          onChange={(val) => handleStandardTableChange('majors', val)}
           placeholder="Lọc theo ngành"
         >
           {filterBranch.map((item, index) => (
@@ -204,7 +198,7 @@ const ReviewCV = () => {
         </Select>
         <span
           style={{
-            marginLeft: "30px",
+            marginLeft: '30px',
           }}
         >
           Trạng thái:
@@ -212,7 +206,7 @@ const ReviewCV = () => {
         <Select
           className="filter-status"
           style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange("statusCheck", val)}
+          onChange={(val) => handleStandardTableChange('statusCheck', val)}
           placeholder="Lọc theo trạng thái"
         >
           {filterStatuss.map((item, index) => (
@@ -224,7 +218,7 @@ const ReviewCV = () => {
         <Select
           className="filter-status"
           style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange("classify", val)}
+          onChange={(val) => handleStandardTableChange('classify', val)}
           placeholder="Lọc theo phân loại"
         >
           <Option value="0">Tự tìm</Option>
@@ -232,47 +226,42 @@ const ReviewCV = () => {
         </Select>
         <span
           style={{
-            marginLeft: "30px",
+            marginLeft: '30px',
           }}
         >
-          Tìm Kiếm:{" "}
+          Tìm Kiếm:{' '}
         </span>
         <Input
           style={{ width: 200 }}
           placeholder="Tìm kiếm theo tên"
-          onChange={(val) =>
-            handleStandardTableChange("name", val.target.value)
-          }
+          onChange={(val) => handleStandardTableChange('name', val.target.value)}
         />
         <Button onClick={handleSearch}>Tìm kiếm</Button>
-        {studentSearch.length > 0 && (
-          <button onClick={() => deleteFilter()}>Xóa lọc</button>
-        )}
-        {chooseIdStudent.length > 0 && (
-          <button onClick={() => chooseStudent()}>Xác nhận</button>
-        )}
+        {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
       </div>
 
       <Table
         rowSelection={{
-          type: "checkbox",
+          type: 'checkbox',
           ...rowSelection,
         }}
         pagination={{
           pageSize: page.limit,
           total: total,
-          onChange: (page, pageSize) => {
+          onChange: (pages, pageSize) => {
             setPage({
-              page: page,
+              ...page,
+              page: pages,
               limit: pageSize,
-              campus_id: infoUser.manager.cumpus,
+              ...filter,
             });
           },
         }}
         rowKey="_id"
         loading={loading}
         columns={columns}
-        dataSource={listFilter}
+        dataSource={list}
+        scroll={{ x: 'calc(700px + 50%)' }}
       />
     </div>
   );

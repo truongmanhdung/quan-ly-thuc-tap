@@ -26,9 +26,9 @@ const Router = () => {
       >
         <Route path="/support-student" element={<SupportStudent />} />
         <Route path="/proactive-student" element={<ProactiveStudent />} />
-        {/* <Route path="/support-student" element={<Proa
+
         <Route path="info-student" element={<InfoStudent />} />
-        {/* admin */}
+
         <Route
           path="/employee-manager"
           element={

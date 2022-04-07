@@ -33,9 +33,9 @@ table td,thead>tr> th{
 }
 .status-check{
     font-weight: 600;
-    animation: status-check linear 2s infinite;
-    -webkit-animation: status-check linear 2s infinite;
-    -o-animation: status-check linear 2s infinite;
+    animation: status-check linear 0.4s infinite;
+    -webkit-animation: status-check linear 0.4s infinite;
+    -o-animation: status-check linear 0.4s infinite;
 }
 
 .filter>button{
