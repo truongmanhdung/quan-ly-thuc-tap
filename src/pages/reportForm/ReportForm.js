@@ -12,6 +12,7 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import ReportFormAPI from "../../API/ReportFormAPI";
 
 import styles from "./ReportForm.module.css";
 
@@ -54,12 +55,29 @@ const ReportForm = () => {
   console.log("inforUser: ", infoUser);
 
   const mssv = infoUser.student.mssv;
+  const cv = infoUser.student.CV;
   const datePicker = (date, dateString) => {
     setStartDate(dateString);
   };
   const onFinish = async (values) => {
-    const newData = { ...values, internshipTime: startDate, mssv: mssv };
-    console.log("Received values of form: ", newData);
+    setSpin(true);
+    try {
+      if (!cv) {
+        message.error("Vui lòng nộp CV trước khi nộp báo cáo!");
+        setSpin(false);
+        return;
+      }
+
+      const newData = { ...values, internshipTime: startDate, mssv: mssv };
+      const result = await ReportFormAPI.uploadReport(newData);
+      console.log(result);
+      message.success(result.data.message);
+      form.resetFields();
+    } catch (error) {
+      const dataErr = await error.response.data;
+      message.error(dataErr.message);
+    }
+    setSpin(false);
   };
 
   return (
