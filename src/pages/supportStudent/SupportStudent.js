@@ -74,9 +74,15 @@ const SupportStudent = () => {
               message.success("Đăng ký hỗ trợ thực tập thành công");
               form.resetFields();
             })
-            .catch((error) => {
-              message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
-              form.resetFields();
+            .catch(async (err) => {
+              const dataErr = await err.response.data;
+              if (!dataErr.status) {
+                message.error(`${dataErr}`);
+                form.resetFields();
+                console.log("error: ", err.response.data);
+              } else {
+                message.error(`${dataErr.message}`);
+              }
             });
           setSpin(false);
         })
