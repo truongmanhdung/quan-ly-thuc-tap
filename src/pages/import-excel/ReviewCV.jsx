@@ -22,12 +22,10 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-  console.log({
-    listStudentAssReviewer: { total, list },
-    loading,
-  })
+
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
+  const [status, setStatus] = useState({})
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -182,19 +180,15 @@ const ReviewCV = () => {
   };
 
 
-
   const actionOnchange = (value) => {
     switch (value) {
       case 'assgin':
-        dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+        // dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+        setStatus([])
         alert('Thêm thành công ');
         break;
       case 'edit':
-        // const selectStatus=(value)=>{
-        //   console.log(value)
-        // }
-        console.log({ listIdStudent: listIdStudent, status: 2 })
-
+        setStatus([{ listIdStudent: listIdStudent, email: infoUser?.manager?.email }])
         break;
 
       default:
@@ -202,6 +196,9 @@ const ReviewCV = () => {
     }
   }
 
+  const selectStatus = (value) => {
+    console.log({ listIdStudent: listIdStudent, email: infoUser?.manager?.email })
+  }
 
   return (
     <div className="status">
@@ -268,9 +265,9 @@ const ReviewCV = () => {
           <>
             <Select
               className="filter-status"
-              style={{ width: 200 }}
+              style={{ width: 100 }}
               onChange={actionOnchange}
-              placeholder="Lọc theo trạng thái"
+              placeholder="Chọn"
             >
               <Option value='assgin'>
                 Kéo việc
@@ -279,11 +276,36 @@ const ReviewCV = () => {
                 Sửa lại
               </Option>
             </Select>
-          
+
+
+
+            <Button>Xác nhận</Button>
           </>
 
         }
       </div>
+
+      {
+        status.length >= 1 && <Select
+          className="filter-status"
+          style={{ width: 150 }}
+          onChange={(e) => selectStatus(e)}
+          placeholder="Chọn trạng thái"
+        >
+          <Option value='0'>
+            Chưa đăng ký
+          </Option>
+          <Option value='1' >
+            Chờ kiểm tra
+          </Option>
+          <Option value='2' >
+            Sửa lại
+          </Option>
+          <Option value='3' >
+            Đã nhận
+          </Option>
+        </Select>
+      }
 
       <Table
         rowSelection={{
