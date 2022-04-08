@@ -12,6 +12,7 @@ import EmployeeManager from "../pages/employee-manager/Employee-Manager";
 import InfoStudent from "../pages/InfoStudent/infoStudent";
 import Privateadmin from "./private/privateAdmin";
 import Notfound from "../pages/404/404";
+import ReportForm from "../pages/reportForm/ReportForm";
 const Router = () => {
   return (
     <Routes>
@@ -28,6 +29,7 @@ const Router = () => {
         <Route path="/proactive-student" element={<ProactiveStudent />} />
 
         <Route path="info-student" element={<InfoStudent />} />
+        <Route path="report-form" element={<ReportForm />} />
 
         <Route
           path="/employee-manager"
