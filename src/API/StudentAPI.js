@@ -34,9 +34,5 @@ const StudentAPI = {
     const url = `/review?${stringify(data)}`;
     return axiosClient.get(url);
   },
-  listStudentAssReviewForm(data){
-    const url = `/reivewForm/${stringify(data)}`
-    return axiosClient.get(url)
-  }
 };
 export default StudentAPI;

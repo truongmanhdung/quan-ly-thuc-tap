@@ -21,8 +21,7 @@ const reviewerSlice = createSlice({
     name: "reviewer",
     initialState: {
         loading: false,
-        listStudentAssReviewer: [],
-
+        listStudentAssReviewer: []
     },
     reducers: {
     },
