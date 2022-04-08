@@ -7,19 +7,20 @@ import {
   TeamOutlined,
   FolderViewOutlined,
   ReadOutlined,
+  SlidersOutlined,
 } from '@ant-design/icons';
 import { NavLink, Outlet } from 'react-router-dom';
 import GlobalHeader from '../components/GlobalHeader.js';
 import styles from './layout.css';
 import { Content } from 'antd/lib/layout/layout';
 import { useSelector } from 'react-redux';
+import SubMenu from 'antd/lib/menu/SubMenu';
 const { Sider } = Layout;
 function LayoutWebsite() {
   const [state, setState] = useState(false);
   const {
     infoUser: { isAdmin },
   } = useSelector((state) => state.auth);
-  console.log(isAdmin);
   const onCollapse = () => {
     setState(!state);
   };
@@ -47,9 +48,19 @@ function LayoutWebsite() {
                 <Menu.Item key="5" icon={<TeamOutlined className="icon-link" />}>
                   <NavLink to="employee-manager">Nhân viên</NavLink>
                 </Menu.Item>
-                <Menu.Item key="9" icon={<FolderViewOutlined className="icon-link" />}>
+                <SubMenu icon={<SlidersOutlined />} title='My Work' key='sub1' >
+                <Menu.Item key="9">
                   <NavLink to="review-cv">Review CV</NavLink>
                 </Menu.Item>
+                <Menu.Item key="11">
+                  <NavLink to="review-form">Review Biểu mẫu</NavLink>
+                </Menu.Item>
+                <Menu.Item key="10">
+                  <NavLink to="review-cv">Review Báo cáo</NavLink>
+                </Menu.Item>
+
+                </SubMenu>
+                
                 <Menu.Item key="7" icon={<UploadOutlined className="icon-link" />}>
                   <NavLink to="up-file">Up File</NavLink>
                 </Menu.Item>

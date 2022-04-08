@@ -5,13 +5,14 @@ import Login from "../pages/login/Login";
 import SupportStudent from "../pages/supportStudent/SupportStudent";
 import ProactiveStudent from "../pages/proactiveStudent/ProactiveStudent";
 import Privateroute from "./private/privateRoute";
-import Status from "../pages/import-excel/Status";
-import ReviewCV from "../pages/import-excel/ReviewCV";
+import Status from "../pages/status/Status";
+import ReviewCV from "../pages/mywork/ReviewCV";
 import UpFile from "../pages/import-excel/UpFile";
 import EmployeeManager from "../pages/employee-manager/Employee-Manager";
 import InfoStudent from "../pages/InfoStudent/infoStudent";
 import Privateadmin from "./private/privateAdmin";
 import Notfound from "../pages/404/404";
+import Reviewform from "../pages/mywork/Reviewform";
 const Router = () => {
   return (
     <Routes>
@@ -52,6 +53,10 @@ const Router = () => {
               <ReviewCV />
             </Privateadmin>
           }
+        />
+        <Route
+        path="review-form"
+        element={<Reviewform /> }
         />
         <Route
           path="up-file"
