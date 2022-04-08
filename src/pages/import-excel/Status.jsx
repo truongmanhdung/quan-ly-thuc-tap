@@ -22,7 +22,7 @@ const Status = () => {
   const users = useSelector((data) => data.users.value);
   const [studentSearch, setStudentSearch] = useState([]);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
-  const [listIdStudent,setListIdStudent] = useState([])
+  const [listIdStudent, setListIdStudent] = useState([])
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -37,7 +37,7 @@ const Status = () => {
     {
       title: 'MSSV',
       dataIndex: 'mssv',
-      width:100,
+      width: 100,
       fixed: 'left'
     },
     {
@@ -59,7 +59,7 @@ const Status = () => {
     {
       title: 'Ngành',
       dataIndex: 'majors',
-      width : 100
+      width: 100
     },
     {
       title: 'Phân loại',
@@ -68,9 +68,9 @@ const Status = () => {
       render: val => {
         if (val === 1) {
           return 'Hỗ trợ'
-        }else if (val === 0) {
+        } else if (val === 0) {
           return 'Tự tìm'
-        }else{
+        } else {
           return ''
         }
       }
@@ -85,21 +85,21 @@ const Status = () => {
     },
     {
       title: 'Người review',
-      dataIndex: 'reviewer',  
+      dataIndex: 'reviewer',
       width: 230
 
     },
     {
       title: 'Trạng thái',
       dataIndex: 'statusCheck',
-      render: status=> {
+      render: status => {
         if (status === 0) {
           return (
             <span className="status-check" style={{ color: 'orange' }}>
-            Chờ kiểm tra <br />
-            <Button >Sửa</Button>
-          </span>
-         
+              Chờ kiểm tra <br />
+              <Button >Sửa</Button>
+            </span>
+
           );
         } else if (status === 1) {
           return (
@@ -112,9 +112,9 @@ const Status = () => {
         } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: 'green' }}>
-           Nhận Cv <br />
-            <Button >Sửa</Button>
-          </span>
+              Nhận Cv <br />
+              <Button >Sửa</Button>
+            </span>
           );
         } else if (status === 3) {
           return (
@@ -123,13 +123,13 @@ const Status = () => {
               <Button >Sửa</Button>
             </span>
           );
-         
+
         } else if (status === 4) {
           <span className="status-true" style={{ color: 'red' }}>
-          Trượt <br />
-          <Button >Sửa</Button>
-        </span>
-        }else {
+            Trượt <br />
+            <Button >Sửa</Button>
+          </span>
+        } else {
           return (
             <span className="status-true" style={{ color: 'red' }}>
               Chưa đăng ký
@@ -137,7 +137,7 @@ const Status = () => {
           );
         }
       },
-   
+
     },
   ];
   // xóa tìm kiếm
@@ -146,33 +146,48 @@ const Status = () => {
   };
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-        setListIdStudent(selectedRowKeys)
-        setChooseIdStudent(selectedRows)
+      setListIdStudent(selectedRowKeys)
+      setChooseIdStudent(selectedRows)
     },
   };
-  const chooseStudent = () => {
-    dispatch(updateReviewerListStudent({listIdStudent:listIdStudent, email:infoUser?.manager?.email}))
-    alert('Thêm thành công ');
-    navigate('/review-cv');
-  };
-  
+ 
   const handleStandardTableChange = (key, value) => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
-  const handleSearch = ()=> {
-      const data ={
-          ...page,
-          ...filter
-      }
-      dispatch(getStudent(data))
+  const handleSearch = () => {
+    const data = {
+      ...page,
+      ...filter
+    }
+    dispatch(getStudent(data))
   }
+
+  
+  const actionOnchange = (value) => {
+    switch (value) {
+      case 'assgin':
+        dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+        alert('Thêm thành công ');
+        navigate('/review-cv');
+        break;
+      case 'edit':
+        
+        console.log({ listIdStudent: listIdStudent, email: infoUser?.manager?.email })
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
   return (
     <div className="status">
       <h4>Sinh viên đăng ký thực tập</h4>
@@ -194,14 +209,14 @@ const Status = () => {
           ))}
         </Select>
         <span style={{
-            marginLeft: '30px'
+          marginLeft: '30px'
         }} >Trạng thái:</span>
         <Select
           className="filter-status"
           style={{ width: 200 }}
           onChange={(val) => handleStandardTableChange('statusCheck', val)}
           placeholder="Lọc theo trạng thái"
-          
+
         >
           {filterStatuss.map((item, index) => (
             <Option value={index} key={index}>
@@ -209,17 +224,9 @@ const Status = () => {
             </Option>
           ))}
         </Select>
-        {/* <Select
-          className="filter-status"
-          style={{ width: 200 }}
-          onChange={val =>handleStandardTableChange('classify', val)}
-          placeholder="Lọc theo phân loại"
-        >
-          <Option value="0">Tự tìm</Option>
-          <Option value="1">Nhờ nhà trường</Option>
-        </Select> */}
+
         <span style={{
-            marginLeft: '30px'
+          marginLeft: '30px'
         }}>Tìm Kiếm: </span>
         <Input
           style={{ width: 200 }}
@@ -228,13 +235,27 @@ const Status = () => {
           }
         />
         <Button onClick={handleSearch}  >Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
+        {chooseIdStudent.length > 0 &&
+          <Select
+            className="filter-status"
+            style={{ width: 200 }}
+            onChange={actionOnchange}
+            placeholder="Lọc theo trạng thái"
+          >
+            <Option value='assgin'>
+              Kéo việc
+            </Option>
+            <Option value='edit' >
+              Sửa lại
+            </Option>
+          </Select>
+        }
       </div>
 
       <Table
         rowSelection={{
-            type: 'checkbox',
-            ...rowSelection
+          type: 'checkbox',
+          ...rowSelection
         }}
         pagination={{
           pageSize: page.limit,
@@ -252,7 +273,7 @@ const Status = () => {
         loading={loading}
         columns={columns}
         dataSource={list}
-        scroll={{ x: 'calc(700px + 50%)'}}
+        scroll={{ x: 'calc(700px + 50%)' }}
       />
     </div>
   );

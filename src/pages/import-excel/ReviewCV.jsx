@@ -22,6 +22,10 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
+  console.log({
+    listStudentAssReviewer: { total, list },
+    loading,
+  })
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
@@ -163,9 +167,9 @@ const ReviewCV = () => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -176,6 +180,29 @@ const ReviewCV = () => {
     };
     dispatch(getStudent(data));
   };
+
+
+
+  const actionOnchange = (value) => {
+    switch (value) {
+      case 'assgin':
+        dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+        alert('Thêm thành công ');
+        break;
+      case 'edit':
+        // const selectStatus=(value)=>{
+        //   console.log(value)
+        // }
+        console.log({ listIdStudent: listIdStudent, status: 2 })
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
+
   return (
     <div className="status">
       <h4>Review CV</h4>
@@ -237,7 +264,25 @@ const ReviewCV = () => {
           onChange={(val) => handleStandardTableChange('name', val.target.value)}
         />
         <Button onClick={handleSearch}>Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
+        {chooseIdStudent.length > 0 &&
+          <>
+            <Select
+              className="filter-status"
+              style={{ width: 200 }}
+              onChange={actionOnchange}
+              placeholder="Lọc theo trạng thái"
+            >
+              <Option value='assgin'>
+                Kéo việc
+              </Option>
+              <Option value='edit' >
+                Sửa lại
+              </Option>
+            </Select>
+          
+          </>
+
+        }
       </div>
 
       <Table
