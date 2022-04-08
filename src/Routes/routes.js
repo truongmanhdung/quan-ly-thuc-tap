@@ -13,6 +13,7 @@ import InfoStudent from "../pages/InfoStudent/infoStudent";
 import Privateadmin from "./private/privateAdmin";
 import Notfound from "../pages/404/404";
 import ReportForm from "../pages/reportForm/ReportForm";
+import Formrp from "../pages/form/Form";
 const Router = () => {
   return (
     <Routes>
@@ -30,6 +31,7 @@ const Router = () => {
 
         <Route path="info-student" element={<InfoStudent />} />
         <Route path="report-form" element={<ReportForm />} />
+        <Route path="report" element={<Formrp />} />
 
         <Route
           path="/employee-manager"
