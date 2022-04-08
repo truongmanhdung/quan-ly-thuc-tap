@@ -197,9 +197,12 @@ const ReviewCV = () => {
   }
 
   const selectStatus = (value) => {
-    console.log({ listIdStudent: listIdStudent, email: infoUser?.manager?.email })
+    setStatus([{ listIdStudent: listIdStudent, email: infoUser?.manager?.email, status: value }])
   }
 
+  const comfirm = () => {
+    console.log(status)
+  }
   return (
     <div className="status">
       <h4>Review CV</h4>
@@ -262,9 +265,12 @@ const ReviewCV = () => {
         />
         <Button onClick={handleSearch}>Tìm kiếm</Button>
         {chooseIdStudent.length > 0 &&
-          <>
+          <div className='comfirm'>
+            <span>
+              Lựa chọn:
+            </span>
             <Select
-              className="filter-status"
+              className="comfirm-click"
               style={{ width: 100 }}
               onChange={actionOnchange}
               placeholder="Chọn"
@@ -277,35 +283,36 @@ const ReviewCV = () => {
               </Option>
             </Select>
 
+            {
+              status.length >= 1 && <Select
+                className="upload-status"
+                style={{ width: 150 }}
+                onChange={(e) => selectStatus(e)}
+                placeholder="Chọn trạng thái"
+              >
+                <Option value='0'>
+                  Chưa đăng ký
+                </Option>
+                <Option value='1' >
+                  Chờ kiểm tra
+                </Option>
+                <Option value='2' >
+                  Sửa lại
+                </Option>
+                <Option value='3' >
+                  Đã nhận
+                </Option>
+              </Select>
+            }
 
-
-            <Button>Xác nhận</Button>
-          </>
+            <Button onClick={() => comfirm()}>Xác nhận</Button>
+          </div>
 
         }
+
       </div>
 
-      {
-        status.length >= 1 && <Select
-          className="filter-status"
-          style={{ width: 150 }}
-          onChange={(e) => selectStatus(e)}
-          placeholder="Chọn trạng thái"
-        >
-          <Option value='0'>
-            Chưa đăng ký
-          </Option>
-          <Option value='1' >
-            Chờ kiểm tra
-          </Option>
-          <Option value='2' >
-            Sửa lại
-          </Option>
-          <Option value='3' >
-            Đã nhận
-          </Option>
-        </Select>
-      }
+
 
       <Table
         rowSelection={{

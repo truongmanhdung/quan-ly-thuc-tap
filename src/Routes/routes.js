@@ -13,7 +13,7 @@ import InfoStudent from "../pages/InfoStudent/infoStudent";
 import Privateadmin from "./private/privateAdmin";
 import Notfound from "../pages/404/404";
 import Reviewform from "../pages/mywork/Reviewform";
-
+import ReportForm from "../pages/reportForm/ReportForm"
 const Router = () => {
   return (
     <Routes>
