@@ -6,13 +6,17 @@ import {
   Button,
   Upload,
   message,
+  Link,
   Spin,
   Space,
   DatePicker,
+  Anchor,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
+
+import StudentAPI from "../../API/StudentAPI";
 
 import styles from "./ReportForm.module.css";
 
@@ -49,25 +53,22 @@ const tailFormItemLayout = {
 };
 const ReportForm = () => {
   const [spin, setSpin] = useState(false);
+  const [linkForm, setLinkForm] = useState(false);
   const [startDate, setStartDate] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
   console.log("inforUser: ", infoUser);
 
   const mssv = infoUser.student.mssv;
-  const cv = infoUser.student.CV;
-  const datePicker = (date, dateString) => {
-    setStartDate(dateString);
+  const lForm = infoUser.student.form;
+  const datePicker = (date) => {
+    setStartDate(date);
+    console.log(date._d);
   };
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
-      if (!cv) {
-        message.error("Vui lòng nộp CV trước khi nộp báo cáo!");
-        setSpin(false);
-        return;
-      }
-
       const newData = { ...values, internshipTime: startDate, mssv: mssv };
       const result = await ReportFormAPI.uploadReport(newData);
       console.log(result);
@@ -145,6 +146,15 @@ const ReportForm = () => {
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
             Submit
+          </Button>
+          <Button
+            style={{
+              margin: "0 5px 0",
+            }}
+            type="link"
+            href={lForm}
+          >
+            Xem biểu mẫu
           </Button>
         </Form.Item>
       </Form>

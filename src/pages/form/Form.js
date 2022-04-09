@@ -1,12 +1,20 @@
 import { UploadOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Button, Upload, message, Spin } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import RegisterInternAPI from "../../API/RegisterInternAPI";
-import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import {
+  Form,
+  Input,
+  Button,
+  Upload,
+  message,
+  Spin,
+  Space,
+  DatePicker,
+} from "antd";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import ReportFormAPI from "../../API/ReportFormAPI";
 
-import styles from "./SupportStudent.module.css";
-const { Option } = Select;
+import styles from "./Form.module.css";
+
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -37,19 +45,23 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = () => {
-  const dispatch = useDispatch();
-  const [file, setFile] = useState();
+const Formrp = () => {
   const [spin, setSpin] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [file, setFile] = useState();
   const [form] = Form.useForm();
-  const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
+  console.log("inforUser: ", infoUser);
+  const mssv = infoUser.student.mssv;
+  const datePicker = (date, dateString) => {
+    setStartDate(date._d);
+    console.log(date);
+  };
 
   function guardarArchivo(files, data) {
-    setSpin(true);
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
-    `;
+     `;
 
     console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
@@ -62,17 +74,15 @@ const SupportStudent = () => {
         fname: "uploadFilesToGoogleDrive",
       }; //preapre info to send to API
       fetch(
-        `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
-    `, //your AppsScript URL
+        urlGGDriveCV, //your AppsScript URL
         { method: "POST", body: JSON.stringify(dataSend) }
       ) //send to Api
         .then((res) => res.json())
         .then((a) => {
-          const newData = { ...data, CV: a.url };
+          const newData = { ...data, form: a.url };
           console.log(newData);
-          RegisterInternAPI.upload(newData)
+          ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              console.log(res);
               message.success("Đăng ký hỗ trợ thực tập thành công");
               form.resetFields();
             })
@@ -97,30 +107,29 @@ const SupportStudent = () => {
   }
 
   const normFile = (e) => {
-    const valueFile = e.file.originFileObj;
+    const valueFile = e.file.originFileObj.type;
+    console.log(valueFile);
+    const isJPEG = valueFile === "image/jpeg";
 
-    const isPDF = valueFile.type === "application/pdf";
-
-    if (!isPDF) {
+    if (!isJPEG) {
       form.resetFields();
-      message.error("Vui lòng nhập file đúng định dạng PDF");
+      message.error("Vui lòng nhập file đúng định dạng PNG hoặc JPEG");
     }
+
     setFile(e.file.originFileObj);
   };
-  const onFinish = async (values) => {
-    console.log("Received values of form: ", values);
-    const data = {
-      ...values,
-      email: infoUser?.student?.email,
-      ///dispatch Redux
-    };
-    console.log(data);
-    await guardarArchivo(file, data);
-  };
 
-  useEffect(() => {
-    dispatch(getListSpecialization());
-  }, []);
+  const onFinish = async (values) => {
+    setSpin(true);
+    try {
+      const newData = { ...values, mssv: mssv, internshipTime: startDate };
+      await guardarArchivo(file, newData);
+    } catch (error) {
+      const dataErr = await error.response.data;
+      message.error(dataErr.message);
+    }
+    console.log(values);
+  };
 
   return (
     <>
@@ -138,92 +147,38 @@ const SupportStudent = () => {
         scrollToFirstError
       >
         <Form.Item
-          name="user_code"
-          label="Mã sinh viên"
+          name="nameCompany"
+          label="Tên doanh nghiệp"
           rules={[
             {
               required: true,
-              message: "Vui lòng nhập mã sinh viên",
+              message: "Vui lòng nhập tên doanh nghiệp",
             },
           ]}
         >
-          <Input placeholder="Mã sinh viên" />
+          <Input placeholder="Tên doanh nghiệp" />
+        </Form.Item>
+        <Form.Item
+          name="attitudePoint"
+          label="Mã số thuế"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập mã số thuế của doanh nghiệp",
+            },
+          ]}
+        >
+          <Input placeholder="Nhập mã số thuế doanh nghiệp" />
         </Form.Item>
 
         <Form.Item
-          name="name"
-          label="Họ và Tên"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập tên",
-              whitespace: true,
-            },
-          ]}
+          name="internshipTime"
+          label="Thời gian bắt đầu thực tập"
+          // rules={[{}]}
         >
-          <Input placeholder="Họ và tên" />
-        </Form.Item>
-        <Form.Item
-          name="phone"
-          label="Số điện thoại"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập số điện thoại",
-            },
-          ]}
-        >
-          <Input placeholder="Số điện thoại" />
-        </Form.Item>
-
-        <Form.Item
-          name="address"
-          label="Địa chỉ"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập địa chỉ",
-            },
-          ]}
-        >
-          <Input placeholder="Địa chỉ" />
-        </Form.Item>
-        <Form.Item
-          name="majors"
-          label="Ngành học"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn ngành học",
-            },
-          ]}
-        >
-          <Select
-            style={{
-              width: "50%",
-              marginLeft: "20px",
-            }}
-            placeholder="Chọn ngành học"
-          >
-            {listSpecialization.map((item, index) => (
-              <Option value={item._id} key={index}>
-                {item.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          name="dream"
-          label="Vị trí mong muốn"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập địa chỉ",
-            },
-          ]}
-        >
-          <Input placeholder="Vị trí mong muốn" />
+          <Space direction="vertical">
+            <DatePicker onChange={datePicker} placeholder="Bắt đầu thực tập" />
+          </Space>
         </Form.Item>
         <Form.Item
           name="upload"
@@ -233,19 +188,18 @@ const SupportStudent = () => {
         >
           <Upload name="logo" action="/upload.do" listType="picture">
             <Button
-              style={{
-                marginLeft: "20px",
-              }}
+              //     style={{
+              //       marginLeft: "20px",
+              //     }}
               icon={<UploadOutlined />}
             >
               Click to upload
             </Button>
           </Upload>
         </Form.Item>
-
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
-            Register
+            Submit
           </Button>
         </Form.Item>
       </Form>
@@ -253,4 +207,4 @@ const SupportStudent = () => {
   );
 };
 
-export default SupportStudent;
+export default Formrp;

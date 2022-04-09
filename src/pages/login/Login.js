@@ -24,7 +24,7 @@ const Login = () => {
       cumpusId: cumpus,
     };
     dispatch(loginGoogle(dataForm))
-      .then((res) => res.payload.isAdmin ? navigate('/status') : navigate('/info-student') )
+      .then((res) => res && navigate("/"))
       .catch((err) => console.log(err));
   };
 
