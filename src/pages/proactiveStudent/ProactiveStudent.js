@@ -1,5 +1,4 @@
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
-import { Form, Input, Select, Button, Upload } from "antd";
+import { Form, Input, Select, Button } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
@@ -43,12 +42,8 @@ const ProactiveStudent = () => {
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
 
-  const normFile = (e) => {
-    //xử lí ảnh firebase or google drive
-    setLinkCV(e.file);
-  };
+
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
     const data = {
       ...values,
       cv: linkCV,

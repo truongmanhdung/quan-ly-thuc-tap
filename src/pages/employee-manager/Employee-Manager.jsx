@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { notification, Select, Input, Checkbox, Table } from 'antd';
+import React, { useEffect,} from 'react'
+import {  Select, Input,Table } from 'antd';
 import { Option } from 'antd/lib/mentions';
-import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchManager } from '../../features/managerSlice/managerSlice';
 import { getListCumpus } from '../../features/cumpusSlice/cumpusSlice';
@@ -97,7 +95,7 @@ function EmployeeManager(props) {
         
       </div>
           <Table
-           rowkey="id"
+           rowkey="_id"
         rowSelection={{
           type: 'checkbox',
           ...rowSelection,
