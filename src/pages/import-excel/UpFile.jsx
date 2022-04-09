@@ -8,7 +8,6 @@ import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
 const UpFile = () => {
   const [data, setData] = useState();
-  const [header, setHeader] = useState([]);
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
@@ -27,8 +26,6 @@ const UpFile = () => {
       const fileData = XLSX.utils.sheet_to_json(wordSheet, { header: 1 });
       fileData.splice(0, 1);
       const headers = fileData[0];
-      const heads = headers.map((head, index) => ({ title: head, key: index }));
-      setHeader(heads);
 
       const rows = [];
       fileData.forEach((item) => {
@@ -38,7 +35,7 @@ const UpFile = () => {
         });
         rows.push(rowData);
       });
-      const datas=[]
+      let datas=[]
       rows.filter((item, index) => index !== 0).map((item) => {
         const newObject = {};
         if (infoUser.manager) {
@@ -134,7 +131,7 @@ const UpFile = () => {
           </div>
         )}
       </div>
-      {dataNew.length>=1 && <Table dataSource={dataNew} columns={columns} />}
+      {dataNew.length>=1 && <Table rowKey='mssv' dataSource={dataNew} columns={columns} />}
       
     </div>
   );

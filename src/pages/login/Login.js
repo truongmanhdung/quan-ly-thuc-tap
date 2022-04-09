@@ -38,7 +38,7 @@ const Login = () => {
 
   return (
     <div className={styles.login_wrapper}>
-<img className={styles.logo} src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png" />
+<img alt="diep" className={styles.logo} src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png" />
 
       <div>
         <Select

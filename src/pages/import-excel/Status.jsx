@@ -18,7 +18,6 @@ const Status = () => {
     listStudent: { list, total },
     loading,
   } = useSelector((state) => state.students);
-  const [studentSearch, setStudentSearch] = useState([]);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent,setListIdStudent] = useState([])
   const [page, setPage] = useState({
@@ -29,7 +28,6 @@ const Status = () => {
   const [filter, setFiler] = useState({});
   useEffect(() => {
     dispatch(getStudent(page));
-    setStudentSearch([]);
   }, [page]);
   const columns = [
     {
