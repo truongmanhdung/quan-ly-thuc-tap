@@ -7,6 +7,8 @@ import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
   getListStudentAssReviewer,
   updateReviewerListStudent,
+  updateStatusListStudent,
+  uploadStudent
 } from '../../features/reviewerStudent/reviewerSlice';
 import {  useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
@@ -21,14 +23,18 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
+
+
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
+  const [status, setStatus] = useState({})
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.cumpus,
     reviewer: infoUser.manager.email,
   });
+
   const [filter, setFiler] = useState({});
   useEffect(() => {
     const data = {
@@ -162,9 +168,9 @@ const ReviewCV = () => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -175,6 +181,48 @@ const ReviewCV = () => {
     };
     dispatch(getStudent(data));
   };
+
+
+  const actionOnchange = (value) => {
+    switch (value) {
+      case 'assgin':
+        dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+        setStatus([])
+        alert('Thêm thành công ');
+        break;
+      case 'edit':
+        setStatus({ listIdStudent: listIdStudent, email: infoUser?.manager?.email })
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  const selectStatus = (value) => {
+    setStatus({ listIdStudent: listIdStudent, email: infoUser?.manager?.email, status: value })
+  }
+
+  const comfirm = () => {
+    const newStudent = []
+    list.filter(item => {
+      status.listIdStudent.map(id => {
+        item._id == id && newStudent.push({ ...item, statusCheck: status.status })
+      })
+    })
+
+    const dataNew = list.map(el => {
+      var found = newStudent.find(s => s._id === el._id);
+      if (found) {
+        el = Object.assign({}, el, found);
+      }
+      return el;
+    });
+
+    dispatch(updateStatusListStudent(status))
+    dispatch(uploadStudent(dataNew))
+    setChooseIdStudent([])
+  }
   return (
     <div className="status">
       <h4>Review CV</h4>
@@ -236,8 +284,61 @@ const ReviewCV = () => {
           onChange={(val) => handleStandardTableChange('name', val.target.value)}
         />
         <Button onClick={handleSearch}>Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
+        {chooseIdStudent.length > 0 &&
+          <div className='comfirm'>
+            <span>
+              Lựa chọn:
+            </span>
+            <Select
+              className="comfirm-click"
+              style={{ width: 100 }}
+              onChange={actionOnchange}
+              placeholder="Chọn"
+            >
+              <Option value='assgin'>
+                Kéo việc
+              </Option>
+              <Option value='edit' >
+                Sửa lại
+              </Option>
+            </Select>
+
+            {
+              Object.keys(status).length >= 1 && <Select
+                className="upload-status"
+                style={{ width: 150 }}
+                onChange={(e) => selectStatus(e)}
+                placeholder="Chọn trạng thái"
+              >
+                <Option value='0'>
+                  Chờ kiểm tra
+                </Option>
+                <Option value='1' >
+                  Đang kiểm tra
+                </Option>
+                <Option value='2' >
+                  Đã nhận
+                </Option>
+                <Option value='3' >
+                  Không đủ điều
+                </Option>
+                <Option value='4' >
+                  Trượt
+                </Option>
+                <Option value='5' >
+                  Chưa đăng ký
+                </Option>
+              </Select>
+            }
+
+            <Button onClick={() => comfirm()}>Xác nhận</Button>
+          </div>
+
+        }
+
       </div>
+
+
 
       <Table
         rowSelection={{

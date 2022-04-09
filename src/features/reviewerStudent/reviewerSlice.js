@@ -16,14 +16,23 @@ export const updateReviewerListStudent = createAsyncThunk(
         return data
     }
 )
+export const updateStatusListStudent = createAsyncThunk(
+    'student/updateStatusListStudent',
+    async (dataForm) => {
+        const { data } = await StudentAPI.updateStatusSudent(dataForm)
+        return data
+    }
+)
 
 const reviewerSlice = createSlice({
     name: "reviewer",
     initialState: {
-        loading: false,
-        listStudentAssReviewer: []
+        listStudentAssReviewer: {}
     },
     reducers: {
+        uploadStudent(state, action) {
+            state.listStudentAssReviewer.list = action.payload
+        }
     },
     extraReducers: (builder) => {
         //reviewerListStudent
@@ -36,7 +45,16 @@ const reviewerSlice = createSlice({
         builder.addCase(updateReviewerListStudent.rejected, (state, action) => {
             state.error = 'Update reviewer student fail'
         })
-
+        //UpdateStatusStudent
+        builder.addCase(updateStatusListStudent.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(updateStatusListStudent.fulfilled, (state, action) => {
+            state.loading = false
+        })
+        builder.addCase(updateStatusListStudent.rejected, (state, action) => {
+            state.error = 'Update reviewer student fail'
+        })
         //getListReviewerStudent
         builder.addCase(getListStudentAssReviewer.pending, (state, action) => {
             state.loading = true
@@ -50,4 +68,5 @@ const reviewerSlice = createSlice({
         })
     }
 })
+export const {uploadStudent}=reviewerSlice.actions
 export default reviewerSlice.reducer
