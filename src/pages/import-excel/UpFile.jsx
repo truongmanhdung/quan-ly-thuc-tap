@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { Table, Tag, Space,notification } from 'antd';
+import { Table,notification } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
 import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";

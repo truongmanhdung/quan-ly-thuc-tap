@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import StudentAPI from '../../API/StudentAPI';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
 import { Select, Input, Table, Button } from 'antd';
@@ -9,7 +8,7 @@ import {
   getListStudentAssReviewer,
   updateReviewerListStudent,
 } from '../../features/reviewerStudent/reviewerSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 const { Option } = Select;

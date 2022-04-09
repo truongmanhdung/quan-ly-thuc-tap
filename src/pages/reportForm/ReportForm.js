@@ -1,26 +1,20 @@
-import { UploadOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
   Select,
   Button,
-  Upload,
   message,
-  Link,
   Spin,
   Space,
   DatePicker,
-  Anchor,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
 
-import StudentAPI from "../../API/StudentAPI";
 
 import styles from "./ReportForm.module.css";
 
-const { Option } = Select;
 const formItemLayout = {
   labelCol: {
     xs: {

@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Layout, Menu, Breadcrumb, Row, Col, Button } from "antd";
+import { Layout, Menu} from "antd";
 import {
   ProfileOutlined,
   UserOutlined,
   UploadOutlined,
   TeamOutlined,
   FolderViewOutlined,
-  ReadOutlined,
 } from "@ant-design/icons";
 import { NavLink, Outlet } from "react-router-dom";
 import GlobalHeader from "../components/GlobalHeader.js";
@@ -19,7 +18,6 @@ function LayoutWebsite() {
   const {
     infoUser: { isAdmin },
   } = useSelector((state) => state.auth);
-  console.log(isAdmin);
   const onCollapse = () => {
     setState(!state);
   };
