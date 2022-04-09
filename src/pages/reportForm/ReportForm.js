@@ -47,17 +47,14 @@ const tailFormItemLayout = {
 };
 const ReportForm = () => {
   const [spin, setSpin] = useState(false);
-  const [linkForm, setLinkForm] = useState(false);
   const [startDate, setStartDate] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log("inforUser: ", infoUser);
 
   const mssv = infoUser.student.mssv;
   const lForm = infoUser.student.form;
   const datePicker = (date) => {
     setStartDate(date);
-    console.log(date._d);
   };
 
   const onFinish = async (values) => {
