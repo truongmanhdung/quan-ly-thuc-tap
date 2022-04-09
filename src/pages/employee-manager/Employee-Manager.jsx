@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { notification, Select, Input, Checkbox, Table } from 'antd';
+import React, { useEffect,} from 'react'
+import {  Select, Input,Table } from 'antd';
 import { Option } from 'antd/lib/mentions';
-import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchManager } from '../../features/managerSlice/managerSlice';
 import { getListCumpus } from '../../features/cumpusSlice/cumpusSlice';
 function EmployeeManager(props) {
   const dispatch = useDispatch()
-  const {infoUser} = useSelector(state => state.users)
   const {listManager} = useSelector(state => state.manager)
   const {listCumpus} = useSelector(state => state.cumpus)
   useEffect(() => {
@@ -59,11 +56,11 @@ function EmployeeManager(props) {
       dataIndex: 'status',
       render: (status) => {
         function ji() {
-          if (status == 0) {
+          if (status === 0) {
             return <span className='status-suscess' style={{ color: 'green' }}>Đang đi làm <br /></span>
-          } else if (status == 1) {
+          } else if (status === 1) {
             return <span className='status-failed' style={{ color: 'red' }}>Đã nghỉ việc<br /><button>Sửa</button></span>
-          } else if (status == 2) {
+          } else if (status === 2) {
             return <span className='status-check' style={{ color: 'rgb(255, 106, 0)' }}>Có việc bận <br/><button>Sửa</button></span>
           } 
         }
@@ -97,7 +94,7 @@ function EmployeeManager(props) {
         
       </div>
           <Table
-           rowkey="id"
+           rowkey="_id"
         rowSelection={{
           type: 'checkbox',
           ...rowSelection,

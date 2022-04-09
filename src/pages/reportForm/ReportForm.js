@@ -1,26 +1,20 @@
-import { UploadOutlined } from "@ant-design/icons";
 import {
   Form,
   Input,
   Select,
   Button,
-  Upload,
   message,
-  Link,
   Spin,
   Space,
   DatePicker,
-  Anchor,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
 
-import StudentAPI from "../../API/StudentAPI";
 
 import styles from "./ReportForm.module.css";
 
-const { Option } = Select;
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -53,17 +47,14 @@ const tailFormItemLayout = {
 };
 const ReportForm = () => {
   const [spin, setSpin] = useState(false);
-  const [linkForm, setLinkForm] = useState(false);
   const [startDate, setStartDate] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log("inforUser: ", infoUser);
 
   const mssv = infoUser.student.mssv;
   const lForm = infoUser.student.form;
   const datePicker = (date) => {
     setStartDate(date);
-    console.log(date._d);
   };
 
   const onFinish = async (values) => {

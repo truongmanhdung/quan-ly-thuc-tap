@@ -48,8 +48,6 @@ const SupportStudent = () => {
   function guardarArchivo(files, data) {
     setSpin(true);
     const file = files; //the file
-    const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
-    `;
 
     console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
@@ -114,7 +112,6 @@ const SupportStudent = () => {
       email: infoUser?.student?.email,
       ///dispatch Redux
     };
-    console.log(data);
     await guardarArchivo(file, data);
   };
 

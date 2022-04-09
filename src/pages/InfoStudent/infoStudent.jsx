@@ -1,18 +1,10 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React from "react";
 import {
-  Layout,
-  Menu,
-  Breadcrumb,
   Row,
   Col,
-  Button,
   Table,
-  Radio,
-  Divider,
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { useSelector, useDispatch } from 'react-redux';
 const columns = [
   {
     title: "Doanh nghiệp",
@@ -63,17 +55,16 @@ const data = [
   },
 ]; // rowSelection object indicates the need for row selection
 function InfoStudent(props) {
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-  };
-  const { infoUser } = useSelector((state) => state.auth);
-  const [selectionType, setSelectionType] = useState("checkbox");
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(
+  //       `selectedRowKeys: ${selectedRowKeys}`,
+  //       "selectedRows: ",
+  //       selectedRows
+  //     );
+  //   },
+  // };
+
   return (
     <div>
       <Row>
@@ -93,6 +84,7 @@ function InfoStudent(props) {
           <h4>Chọn công ty</h4>
           <div>
             <Table
+            rowKey='title'
               columns={columns}
               dataSource={data}
             />
