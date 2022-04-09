@@ -4,7 +4,6 @@ import StudentAPI from "../../API/StudentAPI";
 export const getListStudentAssReviewer = createAsyncThunk(
     'reviewer/getListStudentAssReviewer',
     async (dataForm) => {
-        console.log(dataForm)
         const { data } = await StudentAPI.listStudentAssReviewer(dataForm)
         return data
     }
@@ -28,11 +27,12 @@ export const updateStatusListStudent = createAsyncThunk(
 const reviewerSlice = createSlice({
     name: "reviewer",
     initialState: {
-        loading: false,
-        listStudentAssReviewer: [],
-
+        listStudentAssReviewer: {}
     },
     reducers: {
+        uploadStudent(state, action) {
+            state.listStudentAssReviewer.list = action.payload
+        }
     },
     extraReducers: (builder) => {
         //reviewerListStudent
@@ -68,4 +68,5 @@ const reviewerSlice = createSlice({
         })
     }
 })
+export const {uploadStudent}=reviewerSlice.actions
 export default reviewerSlice.reducer

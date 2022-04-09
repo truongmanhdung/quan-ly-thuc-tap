@@ -30,6 +30,7 @@ const StudentAPI = {
     return axiosClient.put(url, data);
   },
   updateStatusSudent(data) {
+    console.log(data,"đâsdsa")
     const url = `/student/status`;
     return axiosClient.put(url, data);
   },
@@ -38,9 +39,5 @@ const StudentAPI = {
     const url = `/review?${stringify(data)}`;
     return axiosClient.get(url);
   },
-  listStudentAssReviewForm(data){
-    const url = `/reivewForm/${stringify(data)}`
-    return axiosClient.get(url)
-  }
 };
 export default StudentAPI;

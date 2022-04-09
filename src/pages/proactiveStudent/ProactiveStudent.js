@@ -152,7 +152,7 @@ const ProactiveStudent = () => {
         </Form.Item>
 
         <Form.Item
-          name="nameCompany"
+          name="unit"
           label="Đơn vị thực tập"
           rules={[
             {
@@ -164,7 +164,7 @@ const ProactiveStudent = () => {
           <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
         </Form.Item>
         <Form.Item
-          name="addressCompany"
+          name="unitAddress"
           label="Địa chỉ thực tập"
           rules={[
             {
@@ -176,7 +176,7 @@ const ProactiveStudent = () => {
           <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
         </Form.Item>
         <Form.Item
-          name="postCode"
+          name="taxCode"
           label="Mã số thuế"
           rules={[
             {
@@ -202,7 +202,7 @@ const ProactiveStudent = () => {
         </Form.Item>
 
         <Form.Item
-          name="phoneNumberCompany"
+          name="numberEnterprise"
           label="Số điện thoại doanh nghiệp"
           rules={[
             {
