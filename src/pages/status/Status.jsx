@@ -5,7 +5,7 @@ import '../../common/styles/status.css';
 import { Select, Input, Table, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
-import { updateReviewerListStudent } from '../../features/reviewerStudent/reviewerSlice';
+import { updateReviewerListStudent, updateStatusListStudent } from '../../features/reviewerStudent/reviewerSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
@@ -178,9 +178,8 @@ const Status = () => {
         navigate('/review-cv');
         break;
       case 'edit':
-        
-        console.log({ listIdStudent: listIdStudent, email: infoUser?.manager?.email })
-
+        dispatch(updateStatusListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email, status: '3' }))
+        console.log()
         break;
 
       default:
@@ -242,10 +241,10 @@ const Status = () => {
             onChange={actionOnchange}
             placeholder="Lọc theo trạng thái"
           >
-            <Option value='assgin'>
+            <Option value='assgin' key="1">
               Kéo việc
             </Option>
-            <Option value='edit' >
+            <Option value='edit'key="2" >
               Sửa lại
             </Option>
           </Select>

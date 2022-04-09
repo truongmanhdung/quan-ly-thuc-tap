@@ -29,6 +29,10 @@ const StudentAPI = {
     const url = `/student`;
     return axiosClient.put(url, data);
   },
+  updateStatusSudent(data) {
+    const url = `/student/status`;
+    return axiosClient.put(url, data);
+  },
   listStudentAssReviewer(data) {
 
     const url = `/review?${stringify(data)}`;

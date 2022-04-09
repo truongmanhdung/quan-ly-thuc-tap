@@ -8,6 +8,7 @@ import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
   getListStudentAssReviewer,
   updateReviewerListStudent,
+  updateStatusListStudent,
 } from '../../features/reviewerStudent/reviewerSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
@@ -22,7 +23,10 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-
+  console.log({
+    listStudentAssReviewer: { total, list },
+    loading,
+  })
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [status, setStatus] = useState({})
@@ -32,6 +36,7 @@ const ReviewCV = () => {
     campus_id: infoUser.manager.cumpus,
     reviewer: infoUser.manager.email,
   });
+
   const [filter, setFiler] = useState({});
   useEffect(() => {
     const data = {
@@ -183,7 +188,7 @@ const ReviewCV = () => {
   const actionOnchange = (value) => {
     switch (value) {
       case 'assgin':
-        // dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+        dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
         setStatus([])
         alert('Thêm thành công ');
         break;
@@ -201,7 +206,7 @@ const ReviewCV = () => {
   }
 
   const comfirm = () => {
-    console.log(status)
+    dispatch(updateStatusListStudent(status[0]))
   }
   return (
     <div className="status">

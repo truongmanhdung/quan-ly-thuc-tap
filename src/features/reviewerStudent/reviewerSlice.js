@@ -4,6 +4,7 @@ import StudentAPI from "../../API/StudentAPI";
 export const getListStudentAssReviewer = createAsyncThunk(
     'reviewer/getListStudentAssReviewer',
     async (dataForm) => {
+        console.log(dataForm)
         const { data } = await StudentAPI.listStudentAssReviewer(dataForm)
         return data
     }
@@ -13,6 +14,13 @@ export const updateReviewerListStudent = createAsyncThunk(
     'student/updateReviewerListStudent',
     async (dataForm) => {
         const { data } = await StudentAPI.updateReviewerSudent(dataForm)
+        return data
+    }
+)
+export const updateStatusListStudent = createAsyncThunk(
+    'student/updateStatusListStudent',
+    async (dataForm) => {
+        const { data } = await StudentAPI.updateStatusSudent(dataForm)
         return data
     }
 )
@@ -37,7 +45,16 @@ const reviewerSlice = createSlice({
         builder.addCase(updateReviewerListStudent.rejected, (state, action) => {
             state.error = 'Update reviewer student fail'
         })
-
+        //UpdateStatusStudent
+        builder.addCase(updateStatusListStudent.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(updateStatusListStudent.fulfilled, (state, action) => {
+            state.loading = false
+        })
+        builder.addCase(updateStatusListStudent.rejected, (state, action) => {
+            state.error = 'Update reviewer student fail'
+        })
         //getListReviewerStudent
         builder.addCase(getListStudentAssReviewer.pending, (state, action) => {
             state.loading = true
