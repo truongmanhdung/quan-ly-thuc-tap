@@ -54,9 +54,8 @@ const Formrp = () => {
   console.log("inforUser: ", infoUser);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
-  const datePicker = (date) => {
+  const datePicker = (date, dateString) => {
     setStartDate(date._d);
-    console.log(date);
   };
 
   function guardarArchivo(files, data) {
@@ -128,7 +127,7 @@ const Formrp = () => {
         ...values,
         mssv: mssv,
         email: email,
-        internshipTime: startDate,
+        internShipTime: startDate,
       };
       await guardarArchivo(file, newData);
     } catch (error) {

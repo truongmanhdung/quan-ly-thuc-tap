@@ -1,13 +1,4 @@
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  message,
-  Spin,
-  Space,
-  DatePicker,
-} from "antd";
+import { Form, Input, Button, message, Spin, Space, DatePicker } from "antd";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
@@ -53,8 +44,8 @@ const ReportForm = () => {
   const mssv = infoUser.student.mssv;
   const email = infoUser.student.email;
   const lForm = infoUser.student.form;
-  const datePicker = (date) => {
-    setStartDate(date);
+  const datePicker = (date, dateString) => {
+    setStartDate(date._d);
   };
 
   const onFinish = async (values) => {
@@ -62,7 +53,7 @@ const ReportForm = () => {
     try {
       const newData = {
         ...values,
-        internshipTime: startDate,
+        internShipTime: startDate,
         mssv: mssv,
         email: email,
       };
