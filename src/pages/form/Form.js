@@ -53,7 +53,8 @@ const Formrp = () => {
   const { infoUser } = useSelector((state) => state.auth);
   console.log("inforUser: ", infoUser);
   const mssv = infoUser.student.mssv;
-  const datePicker = (date, dateString) => {
+  const email = infoUser?.student?.email;
+  const datePicker = (date) => {
     setStartDate(date._d);
     console.log(date);
   };
@@ -83,13 +84,14 @@ const Formrp = () => {
           console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              message.success("Đăng ký hỗ trợ thực tập thành công");
+              console.log(newData);
+              message.success(res.data.message);
               form.resetFields();
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
               if (!dataErr.status) {
-                message.error(`${dataErr}`);
+                message.error(`${dataErr.message}`);
                 form.resetFields();
                 console.log("error: ", err.response.data);
               } else {
@@ -122,7 +124,12 @@ const Formrp = () => {
   const onFinish = async (values) => {
     setSpin(true);
     try {
-      const newData = { ...values, mssv: mssv, internshipTime: startDate };
+      const newData = {
+        ...values,
+        mssv: mssv,
+        email: email,
+        internshipTime: startDate,
+      };
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;

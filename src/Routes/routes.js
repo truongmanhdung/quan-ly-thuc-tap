@@ -12,7 +12,7 @@ import EmployeeManager from "../pages/employee-manager/Employee-Manager";
 import InfoStudent from "../pages/InfoStudent/infoStudent";
 import Privateadmin from "./private/privateAdmin";
 import Notfound from "../pages/404/404";
-import ReportForm from "../pages/reportForm/ReportForm";
+import ReportForm from "../pages/report/ReportForm";
 import Formrp from "../pages/form/Form";
 const Router = () => {
   return (

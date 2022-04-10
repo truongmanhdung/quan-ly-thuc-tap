@@ -77,7 +77,7 @@ const SupportStudent = () => {
             .catch(async (err) => {
               const dataErr = await err.response.data;
               if (!dataErr.status) {
-                message.error(`${dataErr}`);
+                message.error(`${dataErr.message}`);
                 form.resetFields();
                 console.log("error: ", err.response.data);
               } else {

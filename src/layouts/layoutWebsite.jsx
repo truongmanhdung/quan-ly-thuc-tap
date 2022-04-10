@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Menu} from "antd";
+import { Layout, Menu } from "antd";
 import {
   ProfileOutlined,
   UserOutlined,
@@ -9,9 +9,10 @@ import {
 } from "@ant-design/icons";
 import { NavLink, Outlet } from "react-router-dom";
 import GlobalHeader from "../components/GlobalHeader.js";
-import styles from "./layout.css";
 import { Content } from "antd/lib/layout/layout";
 import { useSelector } from "react-redux";
+import "./layout.css";
+
 const { Sider } = Layout;
 function LayoutWebsite() {
   const [state, setState] = useState(false);
