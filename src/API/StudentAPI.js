@@ -23,20 +23,23 @@ const StudentAPI = {
   },
   upload(id, data) {
     const url = `/students/${id}`;
-    return axiosClient.put(url, data);
+    return axiosClient.patch(url, data);
   },
   updateReviewerSudent(data) {
     const url = `/student`;
-    return axiosClient.put(url, data);
+    return axiosClient.patch(url, data);
   },
   updateStatusSudent(data) {
     console.log(data,"đâsdsa")
     const url = `/student/status`;
-    return axiosClient.put(url, data);
+    return axiosClient.patch(url, data);
   },
   listStudentAssReviewer(data) {
-
     const url = `/review?${stringify(data)}`;
+    return axiosClient.get(url);
+  },
+  listStudentForm(data) {
+    const url = `/student/reviewform?${stringify(data)}`;
     return axiosClient.get(url);
   },
 };
