@@ -1,6 +1,7 @@
-import { Form, Input, Select, Button } from "antd";
+import { Form, Input, Select, Button, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import RegisterInternAPI from "../../API/RegisterInternAPI";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
 import styles from "./ProactiveStudent.module.css";
 
@@ -37,19 +38,27 @@ const tailFormItemLayout = {
 };
 const ProactiveStudent = () => {
   const dispatch = useDispatch();
-  const [linkCV, setLinkCV] = useState();
   const [form] = Form.useForm();
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
 
-
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const data = {
       ...values,
-      cv: linkCV,
+      mssv: infoUser?.student?.mssv,
       email: infoUser?.student?.email,
       ///dispatch Redux
     };
+    console.log(data);
+    try {
+      const result = await RegisterInternAPI.uploadProactive(data);
+      console.log(result);
+      message.success(result.data.message);
+      form.resetFields();
+    } catch (error) {
+      const dataErr = await error.response.data.message;
+      message.error(dataErr);
+    }
   };
 
   useEffect(() => {
@@ -138,11 +147,13 @@ const ProactiveStudent = () => {
             }}
             placeholder="Chọn ngành học"
           >
-            {listSpecialization ? listSpecialization.map((item, index) => (
-              <Option value={item._id} key={index}>
-                {item.title}
-              </Option>
-            )) : ""}
+            {listSpecialization
+              ? listSpecialization.map((item, index) => (
+                  <Option value={item.name} key={index}>
+                    {item.title}
+                  </Option>
+                ))
+              : ""}
           </Select>
         </Form.Item>
 
@@ -168,7 +179,7 @@ const ProactiveStudent = () => {
             },
           ]}
         >
-          <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
+          <Input placeholder="Địa chỉ đơn vị thực tập" />
         </Form.Item>
         <Form.Item
           name="taxCode"

@@ -1,7 +1,7 @@
 import { axiosClient } from "./Link";
 const ReportFormAPI = {
   uploadReport(data) {
-    const url = `/report-form`;
+    const url = `/report`;
     return axiosClient.patch(url, data);
   },
   uploadForm(data) {

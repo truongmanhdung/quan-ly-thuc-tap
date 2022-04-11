@@ -1,17 +1,7 @@
-import {
-  Form,
-  Input,
-  Select,
-  Button,
-  message,
-  Spin,
-  Space,
-  DatePicker,
-} from "antd";
+import { Form, Input, Button, message, Spin, Space, DatePicker } from "antd";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
-
 
 import styles from "./ReportForm.module.css";
 
@@ -50,19 +40,25 @@ const ReportForm = () => {
   const [startDate, setStartDate] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-
+  console.log(infoUser);
   const mssv = infoUser.student.mssv;
+  const email = infoUser.student.email;
   const lForm = infoUser.student.form;
-  const datePicker = (date) => {
-    setStartDate(date);
+  const datePicker = (date, dateString) => {
+    setStartDate(date._d);
   };
 
   const onFinish = async (values) => {
     setSpin(true);
     try {
-      const newData = { ...values, internshipTime: startDate, mssv: mssv };
+      const newData = {
+        ...values,
+        internShipTime: startDate,
+        mssv: mssv,
+        email: email,
+      };
       const result = await ReportFormAPI.uploadReport(newData);
-      console.log(result);
+      console.log(newData);
       message.success(result.data.message);
       form.resetFields();
     } catch (error) {
