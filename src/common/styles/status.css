@@ -17,15 +17,15 @@ table td,thead>tr> th{
     text-align: center !important;
 
 }
-.status-fail,.status-not-reached,.status-true,.status-up{
+.status-fail,.status-up{
     font-weight: 600;
 }
-.status-fail>button,.status-not-reached>button,.status-up>button,.status-true>button,.status-check>button{
+.status-fail>button,.status-up>button{
     background-color: #fff;
     color: blue;
     border: 0;
 }
-.status-fail>button:hover,.status-not-reached>button:hover,.status-up>button:hover,.status-true>button:hover,.status-check>button:hover{
+.status-fail>button:hover,.status-up>button:hover{
     text-decoration: underline;
 }
 .list-status{
@@ -33,9 +33,9 @@ table td,thead>tr> th{
 }
 .status-check{
     font-weight: 600;
-    animation: status-check linear 0.4s infinite;
-    -webkit-animation: status-check linear 0.4s infinite;
-    -o-animation: status-check linear 0.4s infinite;
+    animation: status-check linear 1.5s infinite;
+    -webkit-animation: status-check linear 1.5s infinite;
+    -o-animation: status-check linear 1.5s infinite;
 }
 
 .filter>button{
@@ -82,7 +82,7 @@ table td,thead>tr> th{
         opacity: 1;
     }
     50% {
-        opacity: 0.3;
+        opacity: 0.5;
     }
     100% {
         opacity: 1;

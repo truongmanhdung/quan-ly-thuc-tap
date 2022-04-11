@@ -12,6 +12,8 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 const { Option } = Select;
 
 const Reviewform = () => {
@@ -22,9 +24,6 @@ const Reviewform = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-
-  
-
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
@@ -66,83 +65,34 @@ const Reviewform = () => {
       width: 160,
     },
     {
-      title: 'Ngành',
-      dataIndex: 'majors',
+      title: 'Tên công ty',
+      dataIndex: 'nameCompany',
+      width: 180,
+    },
+    {
+      title: 'Mã số thuế',
+      dataIndex: 'postCode',
       width: 100,
     },
     {
-      title: 'Phân loại',
-      dataIndex: 'support',
-      width: 90,
-      render: (val) => {
-        if (val === 1) {
-          return 'Hỗ trợ';
-        } else if (val === 0) {
-          return 'Tự tìm';
-        } else {
-          return '';
-        }
-      },
-    },
-    {
-      title: 'CV',
-      dataIndex: 'CV',
-      width: 50,
+      title: 'Biểu mẫu',
+      dataIndex: 'form',
+      width: 100,
       render: (val) =>
-        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
+        val ? <EyeOutlined className="icon-cv" /> : '',
     },
     {
       title: 'Người review',
       dataIndex: 'reviewer',
-      width: 230,
+      render: (reviewer) => reviewer.slice(0, -11),
+      width: 200,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'statusCheck',
-      render: (status) => {
-        if (status === 0) {
-          return (
-            <span className="status-check" style={{ color: 'orange' }}>
-              Chờ kiểm tra <br />
-              <Button>Sửa</Button>
-            </span>
-          );
-        } else if (status === 1) {
-          return (
-            <span className="status-up" style={{ color: 'grey' }}>
-              Đang kiểm tra
-              <br />
-              <Button>Sửa</Button>
-            </span>
-          );
-        } else if (status === 2) {
-          return (
-            <span className="status-fail" style={{ color: 'green' }}>
-              Nhận Cv <br />
-              <Button>Sửa</Button>
-            </span>
-          );
-        } else if (status === 3) {
-          return (
-            <span className="status-true" style={{ color: 'red' }}>
-              Không đủ Đk <br />
-              <Button>Sửa</Button>
-            </span>
-          );
-        } else if (status === 4) {
-          <span className="status-true" style={{ color: 'red' }}>
-            Trượt <br />
-            <Button>Sửa</Button>
-          </span>;
-        } else {
-          return (
-            <span className="status-true" style={{ color: 'red' }}>
-              Chưa đăng ký
-            </span>
-          );
-        }
-      },
+      title: 'Ngày bắt đầu',
+      dataIndex: 'internshipTime',
+      width: 230,
     },
+
   ];
   // xóa tìm kiếm
   const rowSelection = {
@@ -159,16 +109,15 @@ const Reviewform = () => {
       }),
     );
     alert('Thêm thành công ');
-    navigate('/review-cv');
   }, [listIdStudent]);
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -179,11 +128,42 @@ const Reviewform = () => {
     };
     dispatch(getStudent(data));
   };
+
+
+  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
+
+  const exportToCSV = (list) => {
+    const newData = []
+
+    list.filter(item => {
+      const newObject = {};
+      newObject["MSSV"] = item["mssv"];
+      newObject["Họ tên"] = item["name"];
+      newObject["Email"] = item["email"];
+      newObject["Số điện thoại"] = item["phone"];
+      newObject["Tên công ty"] = item["nameCompany"];
+      newObject["Mã số thuế"] = item["postCode"];
+      newObject["Biểu mẫu"] = item["report"];
+      newData.push(newObject);
+    });
+
+    const ws = XLSX.utils.json_to_sheet(newData);
+    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileExtension);
+  }
+
+
   return (
     <div className="status">
       <h4>Review CV</h4>
-
+      <Button variant="warning" onClick={(e) => exportToCSV(list)}>Export</Button>
+      <br />
+      <br />
       <div className="filter">
+
         <span>Ngành: </span>
 
         <Select
@@ -192,11 +172,9 @@ const Reviewform = () => {
           placeholder="Lọc theo ngành"
         >
           {filterBranch.map((item, index) => (
-            <>
-              <Option value={item.value} key={index}>
-                {item.title}
-              </Option>
-            </>
+            <Option value={item.value} key={index}>
+              {item.title}
+            </Option>
           ))}
         </Select>
         <span
@@ -217,15 +195,6 @@ const Reviewform = () => {
               {item.title}
             </Option>
           ))}
-        </Select>
-        <Select
-          className="filter-status"
-          style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange('classify', val)}
-          placeholder="Lọc theo phân loại"
-        >
-          <Option value="0">Tự tìm</Option>
-          <Option value="1">Nhờ nhà trường</Option>
         </Select>
         <span
           style={{

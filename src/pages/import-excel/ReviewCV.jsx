@@ -13,14 +13,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
-import { DatePicker, Space } from "antd";
 
-const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const ReviewCV = () => {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
   const {
     listStudentAssReviewer: { total, list },
@@ -102,20 +99,21 @@ const ReviewCV = () => {
     {
       title: "Người review",
       dataIndex: "reviewer",
+      render: (reviewer) => reviewer.slice(0, -11),
       width: 230,
     },
     {
       title: "Trạng thái",
       dataIndex: "statusCheck",
       render: (status) => {
-        if (status === 0) {
+        if (status === "0") {
           return (
             <span className="status-check" style={{ color: "orange" }}>
               Chờ kiểm tra <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === 1) {
+        } else if (status === "1") {
           return (
             <span className="status-up" style={{ color: "grey" }}>
               Đang kiểm tra
@@ -123,21 +121,21 @@ const ReviewCV = () => {
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === 2) {
+        } else if (status === "2") {
           return (
             <span className="status-fail" style={{ color: "green" }}>
               Nhận Cv <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === 3) {
+        } else if (status === "3") {
           return (
             <span className="status-true" style={{ color: "red" }}>
               Không đủ Đk <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === 4) {
+        } else if (status === "4") {
           <span className="status-true" style={{ color: "red" }}>
             Trượt <br />
             <Button>Sửa</Button>
@@ -159,16 +157,6 @@ const ReviewCV = () => {
       setChooseIdStudent(selectedRows);
     },
   };
-  const chooseStudent = useCallback(() => {
-    dispatch(
-      updateReviewerListStudent({
-        listIdStudent: listIdStudent,
-        email: infoUser?.manager?.email,
-      })
-    );
-    alert("Thêm thành công ");
-    navigate("/review-cv");
-  }, [listIdStudent]);
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
@@ -241,23 +229,23 @@ const ReviewCV = () => {
     dispatch(uploadStudent(dataNew));
     setChooseIdStudent([]);
   };
+
   return (
     <div className="status">
       <h4>Review CV</h4>
 
       <div className="filter">
         <span>Ngành: </span>
+
         <Select
           style={{ width: 200 }}
           onChange={(val) => handleStandardTableChange("majors", val)}
           placeholder="Lọc theo ngành"
         >
           {filterBranch.map((item, index) => (
-            <>
-              <Option value={item.value} key={index}>
-                {item.title}
-              </Option>
-            </>
+            <Option value={item.value} key={index + 1}>
+              {item.title}
+            </Option>
           ))}
         </Select>
         <span
@@ -285,8 +273,12 @@ const ReviewCV = () => {
           onChange={(val) => handleStandardTableChange("classify", val)}
           placeholder="Lọc theo phân loại"
         >
-          <Option value="0">Tự tìm</Option>
-          <Option value="1">Nhờ nhà trường</Option>
+          <Option value="0" key="1">
+            Tự tìm
+          </Option>
+          <Option value="1" key="2">
+            Nhờ nhà trường
+          </Option>
         </Select>
         <span
           style={{
@@ -312,8 +304,12 @@ const ReviewCV = () => {
               onChange={actionOnchange}
               placeholder="Chọn"
             >
-              <Option value="assgin">Kéo việc</Option>
-              <Option value="edit">Sửa lại</Option>
+              <Option value="assgin" key="1">
+                Kéo việc
+              </Option>
+              <Option value="edit" key="2">
+                Sửa lại
+              </Option>
             </Select>
 
             {Object.keys(status).length >= 1 && (
@@ -323,25 +319,30 @@ const ReviewCV = () => {
                 onChange={(e) => selectStatus(e)}
                 placeholder="Chọn trạng thái"
               >
-                <Option value="0">Chờ kiểm tra</Option>
-                <Option value="1">Đang kiểm tra</Option>
-                <Option value="2">Đã nhận</Option>
-                <Option value="3">Không đủ điều</Option>
-                <Option value="4">Trượt</Option>
-                <Option value="5">Chưa đăng ký</Option>
+                <Option value="0" key="0">
+                  Chờ kiểm tra
+                </Option>
+                <Option value="1" key="1">
+                  Đang kiểm tra
+                </Option>
+                <Option value="2" key="2">
+                  Đã nhận
+                </Option>
+                <Option value="3" key="3">
+                  Không đủ điều
+                </Option>
+                <Option value="4" key="4">
+                  Trượt
+                </Option>
+                <Option value="5" key="5">
+                  Chưa đăng ký
+                </Option>
               </Select>
             )}
 
             <Button onClick={() => comfirm()}>Xác nhận</Button>
           </div>
         )}
-      </div>
-      <div className="mt-2 filter">
-        <h4>Chọn ngày</h4>
-        <Space direction="vertical" size={12}>
-          <RangePicker />
-        </Space>
-        <Button className="btn btn-danger ms-5">Xác nhận</Button>
       </div>
 
       <Table

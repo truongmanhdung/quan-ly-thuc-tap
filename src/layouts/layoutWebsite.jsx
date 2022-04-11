@@ -63,6 +63,12 @@ function LayoutWebsite() {
                   <NavLink to="review-cv">Review CV</NavLink>
                 </Menu.Item>
                 <Menu.Item
+                  key="10"
+                  icon={<FolderViewOutlined className="icon-link" />}
+                >
+                  <NavLink to="review-form">Review biểu mẫu</NavLink>
+                </Menu.Item>
+                <Menu.Item
                   key="7"
                   icon={<UploadOutlined className="icon-link" />}
                 >
