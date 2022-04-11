@@ -13,6 +13,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
+import { DatePicker, Space } from "antd";
+
+const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const ReviewCV = () => {
@@ -244,7 +247,6 @@ const ReviewCV = () => {
 
       <div className="filter">
         <span>Ngành: </span>
-
         <Select
           style={{ width: 200 }}
           onChange={(val) => handleStandardTableChange("majors", val)}
@@ -333,6 +335,13 @@ const ReviewCV = () => {
             <Button onClick={() => comfirm()}>Xác nhận</Button>
           </div>
         )}
+      </div>
+      <div className="mt-2 filter">
+        <h4>Chọn ngày</h4>
+        <Space direction="vertical" size={12}>
+          <RangePicker />
+        </Space>
+        <Button className="btn btn-danger ms-5">Xác nhận</Button>
       </div>
 
       <Table
