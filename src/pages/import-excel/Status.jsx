@@ -83,6 +83,7 @@ const Status = () => {
     {
       title: 'Người review',
       dataIndex: 'reviewer',
+      render: (reviewer) => reviewer.slice(0, -11),
       width: 230
 
     },
@@ -92,7 +93,7 @@ const Status = () => {
       render: status => {
         if (status === 0) {
           return (
-            <span className="status-check" style={{ color: 'orange' }}>
+            <span className="status-fail" style={{ color: 'orange' }}>
               Chờ kiểm tra <br />
               <Button >Sửa</Button>
             </span>
@@ -115,20 +116,20 @@ const Status = () => {
           );
         } else if (status === 3) {
           return (
-            <span className="status-true" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Không đủ Đk <br />
               <Button >Sửa</Button>
             </span>
           );
 
         } else if (status === 4) {
-          <span className="status-true" style={{ color: 'red' }}>
+          <span className="status-fail" style={{ color: 'red' }}>
             Trượt <br />
             <Button >Sửa</Button>
           </span>
         } else {
           return (
-            <span className="status-true" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Chưa đăng ký
             </span>
           );
