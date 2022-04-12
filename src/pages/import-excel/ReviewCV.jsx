@@ -10,7 +10,6 @@ import {
   updateStatusListStudent,
   uploadStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { useNavigate } from "react-router-dom";
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
 
@@ -31,9 +30,7 @@ const ReviewCV = () => {
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.cumpus,
-    reviewer: infoUser.manager.email,
   });
-
   const [filter, setFiler] = useState({});
   useEffect(() => {
     const data = {
@@ -41,7 +38,7 @@ const ReviewCV = () => {
       ...filter,
     };
     dispatch(getListStudentAssReviewer(data));
-  }, [page]);
+  }, [page, dispatch]);
 
   const columns = [
     {
@@ -99,21 +96,20 @@ const ReviewCV = () => {
     {
       title: "Người review",
       dataIndex: "reviewer",
-      render: (reviewer) => reviewer.slice(0, -11),
       width: 230,
     },
     {
       title: "Trạng thái",
       dataIndex: "statusCheck",
       render: (status) => {
-        if (status === "0") {
+        if (status === 0) {
           return (
             <span className="status-check" style={{ color: "orange" }}>
               Chờ kiểm tra <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "1") {
+        } else if (status === 1) {
           return (
             <span className="status-up" style={{ color: "grey" }}>
               Đang kiểm tra
@@ -121,21 +117,21 @@ const ReviewCV = () => {
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "2") {
+        } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: "green" }}>
               Nhận Cv <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "3") {
+        } else if (status === 3) {
           return (
             <span className="status-true" style={{ color: "red" }}>
               Không đủ Đk <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "4") {
+        } else if (status === 4) {
           <span className="status-true" style={{ color: "red" }}>
             Trượt <br />
             <Button>Sửa</Button>
@@ -209,24 +205,7 @@ const ReviewCV = () => {
   };
 
   const comfirm = () => {
-    const newStudent = [];
-    list.filter((item) => {
-      status.listIdStudent.map((id) => {
-        item._id == id &&
-          newStudent.push({ ...item, statusCheck: status.status });
-      });
-    });
-
-    const dataNew = list.map((el) => {
-      var found = newStudent.find((s) => s._id === el._id);
-      if (found) {
-        el = Object.assign({}, el, found);
-      }
-      return el;
-    });
-
     dispatch(updateStatusListStudent(status));
-    dispatch(uploadStudent(dataNew));
     setChooseIdStudent([]);
   };
 
@@ -362,7 +341,7 @@ const ReviewCV = () => {
             });
           },
         }}
-        rowKey="_id"
+        rowKey={val => val._id}
         loading={loading}
         columns={columns}
         dataSource={list}
