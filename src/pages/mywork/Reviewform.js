@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
   getListStudentAssReviewer,
+  listStudentForm,
   updateReviewerListStudent,
 } from '../../features/reviewerStudent/reviewerSlice';
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ const Reviewform = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
+  console.log(list);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
@@ -38,7 +40,7 @@ const Reviewform = () => {
       ...page,
       ...filter,
     };
-    dispatch(getListStudentAssReviewer(data));
+    dispatch(listStudentForm(data));
   }, [page]);
 
   const columns = [
@@ -158,7 +160,7 @@ const Reviewform = () => {
 
   return (
     <div className="status">
-      <h4>Review CV</h4>
+      <h4>Review biểu mẫu</h4>
       <Button variant="warning" onClick={(e) => exportToCSV(list)}>Export</Button>
       <br />
       <br />

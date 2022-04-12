@@ -23,7 +23,6 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [status, setStatus] = useState({});
@@ -31,9 +30,7 @@ const ReviewCV = () => {
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.cumpus,
-    reviewer: infoUser.manager.email,
   });
-
   const [filter, setFiler] = useState({});
   useEffect(() => {
     const data = {
@@ -99,21 +96,20 @@ const ReviewCV = () => {
     {
       title: "Người review",
       dataIndex: "reviewer",
-      render: (reviewer) => reviewer.slice(0, -11),
       width: 230,
     },
     {
       title: "Trạng thái",
       dataIndex: "statusCheck",
       render: (status) => {
-        if (status === "0") {
+        if (status === 0) {
           return (
             <span className="status-check" style={{ color: "orange" }}>
               Chờ kiểm tra <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "1") {
+        } else if (status ===1) {
           return (
             <span className="status-up" style={{ color: "grey" }}>
               Đang kiểm tra
@@ -121,21 +117,21 @@ const ReviewCV = () => {
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "2") {
+        } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: "green" }}>
               Nhận Cv <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "3") {
+        } else if (status === 3) {
           return (
             <span className="status-true" style={{ color: "red" }}>
               Không đủ Đk <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "4") {
+        } else if (status === 4) {
           <span className="status-true" style={{ color: "red" }}>
             Trượt <br />
             <Button>Sửa</Button>
