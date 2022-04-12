@@ -38,7 +38,7 @@ const StudentAPI = {
     return axiosClient.get(url);
   },
   listStudentForm(data) {
-    const url = `/student/reviewform?${stringify(data)}`;
+    const url = `/reivewForm?${stringify(data)}`;
     return axiosClient.get(url);
   },
 };
