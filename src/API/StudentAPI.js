@@ -30,7 +30,6 @@ const StudentAPI = {
     return axiosClient.patch(url, data);
   },
   updateStatusSudent(data) {
-    console.log(data,"đâsdsa")
     const url = `/student/status`;
     return axiosClient.patch(url, data);
   },

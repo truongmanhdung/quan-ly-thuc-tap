@@ -4,9 +4,7 @@ import StudentAPI from "../../API/StudentAPI";
 export const uploadCv = createAsyncThunk(
   "supportStudent/uploadCv",
    async (action) => {
-    // console.log(action);
   const {data} = await StudentAPI.uploadCVApi(action)
-  console.log(data);
 });
 
 const supportStudentSlice = createSlice({

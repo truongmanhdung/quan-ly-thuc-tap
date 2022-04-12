@@ -1,4 +1,4 @@
-import { SettingOutlined } from '@ant-design/icons';
+import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu, Dropdown, Button, Avatar } from 'antd';
 
 import React from 'react';
@@ -18,15 +18,10 @@ const Rightcontent = () => {
     const menu = (
         <Menu  >
             <Menu.Item key='userInfo' >
-            <SettingOutlined /> <span>Tài khoản</span>
+            <Button type='text' icon={ <SettingOutlined />} > Tài khoản  </Button>
             </Menu.Item>
             <Menu.Item>
-                <Button type='text' onClick={handleLogout}>Đăng xuất</Button>
-            </Menu.Item>
-            <Menu.Item>
-                <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-                    3rd menu item
-                </a>
+                <Button icon={<LogoutOutlined />}  type='text' onClick={handleLogout}>Đăng xuất</Button>
             </Menu.Item>
         </Menu>
     );

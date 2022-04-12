@@ -3,7 +3,7 @@ import GoogleLogin from "react-google-login";
 import styles from "./Login.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { loginGoogle } from "../../features/authSlice/authSlice";
-import { Select, Empty } from "antd";
+import { Select, Empty, message } from "antd";
 import { useNavigate } from "react-router";
 import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
 
@@ -24,10 +24,13 @@ const Login = () => {
       cumpusId: cumpus,
     };
     dispatch(loginGoogle(dataForm))
-      .then((res) => res && navigate("/"))
-      .catch((err) => console.log(err));
+      .then((res) => res  && redirect(res))
+      .catch((err) => err && message.error("Đăng nhập thất bại") );
   };
-
+  const redirect = ({ payload: { isAdmin } }) => {
+    message.success('Đăng nhập thành công')
+    return isAdmin ? navigate('/status') : navigate('/info-student')
+  }
   const handleChange = (value) => {
     setCumpus(value);
   };
@@ -38,7 +41,7 @@ const Login = () => {
 
   return (
     <div className={styles.login_wrapper}>
-<img alt="diep" className={styles.logo} src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png" />
+      <img alt="diep" className={styles.logo} src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png" />
 
       <div>
         <Select
