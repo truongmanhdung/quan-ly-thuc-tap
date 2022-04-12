@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as XLSX from "xlsx";
-import { Table,notification } from 'antd';
+import { Table, notification } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const UpFile = () => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
@@ -35,29 +36,39 @@ const UpFile = () => {
         });
         rows.push(rowData);
       });
-      let datas=[]
-      rows.filter((item, index) => index !== 0).map((item) => {
-        const newObject = {};
-        if (infoUser.manager) {
-          newObject["mssv"] = item["MSSV"];
-          newObject["name"] = item["Họ tên"];
-          newObject["course"] = item["Khóa nhập học"];
-          newObject["status"] = item["Trạng thái FA21"];
-          newObject["majors"] = item["Ngành FA21"];
-          newObject["email"] = item["Email"];
-          newObject["supplement"] = item["bổ sung"];
-          newObject["campus_id"] = infoUser.manager.cumpus;
-          datas.push(newObject);
-        }
-      });
+      let datas = [];
+      rows
+        .filter((item, index) => index !== 0)
+        .map((item) => {
+          const newObject = {};
+          if (infoUser.manager) {
+            newObject["mssv"] = item["MSSV"];
+            newObject["name"] = item["Họ tên"];
+            newObject["course"] = item["Khóa nhập học"];
+            newObject["status"] = item["Trạng thái FA21"];
+            newObject["majors"] = item["Ngành FA21"];
+            newObject["email"] = item["Email"];
+            newObject["supplement"] = item["bổ sung"];
+            newObject["campus_id"] = infoUser.manager.cumpus;
+            datas.push(newObject);
+          }
+        });
       setDataNew(datas);
       setData(fileData);
     };
     reader.readAsBinaryString(file);
   };
   const submitSave = () => {
-    dispatch(insertStudent(dataNew));
-    notifications(loading);
+    const listId = [];
+    dataNew.forEach((item) => {
+      listId.push(item.mssv);
+    });
+    console.log(listId);
+    axios
+      .post("http://localhost:8000/api//student/update", { listId: listId })
+      .then((res) => console.log(res.data));
+    // dispatch(insertStudent(dataNew));
+    // notifications(loading);
   };
   const notifications = (loading) => {
     if (loading === false) {
@@ -80,35 +91,34 @@ const UpFile = () => {
     setNameFile();
   };
 
-
   const columns = [
-
     {
-      title: 'MSSV',
-      dataIndex: 'mssv',
-    },  {
-      title: 'Name',
-      dataIndex: 'name',
+      title: "MSSV",
+      dataIndex: "mssv",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: "Name",
+      dataIndex: "name",
     },
     {
-      title: 'Khóa nhập học',
-      dataIndex: 'course',
+      title: "Email",
+      dataIndex: "email",
     },
     {
-      title: 'Trạng thái FA21',
-      dataIndex: 'status',
+      title: "Khóa nhập học",
+      dataIndex: "course",
     },
     {
-      title: 'Ngành FA21',
-      dataIndex: 'majors',
+      title: "Trạng thái FA21",
+      dataIndex: "status",
     },
     {
-      title: 'Bổ sung',
-      dataIndex: 'supplement',
+      title: "Ngành FA21",
+      dataIndex: "majors",
+    },
+    {
+      title: "Bổ sung",
+      dataIndex: "supplement",
     },
   ];
 
@@ -131,8 +141,9 @@ const UpFile = () => {
           </div>
         )}
       </div>
-      {dataNew.length>=1 && <Table rowKey='mssv' dataSource={dataNew} columns={columns} />}
-      
+      {dataNew.length >= 1 && (
+        <Table rowKey="mssv" dataSource={dataNew} columns={columns} />
+      )}
     </div>
   );
 };
