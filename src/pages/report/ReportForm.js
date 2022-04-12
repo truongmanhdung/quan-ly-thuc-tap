@@ -52,7 +52,6 @@ const ReportForm = () => {
   const [startDate, setStartDate] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log(infoUser);
   const mssv = infoUser.student.mssv;
   const email = infoUser.student.email;
   const lForm = infoUser.student.form;

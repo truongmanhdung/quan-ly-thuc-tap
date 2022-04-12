@@ -51,7 +51,6 @@ const Formrp = () => {
   const [file, setFile] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log("inforUser: ", infoUser);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const datePicker = (date, dateString) => {
@@ -80,10 +79,8 @@ const Formrp = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
-          console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              console.log(newData);
               message.success(res.data.message);
               form.resetFields();
             })
@@ -92,7 +89,6 @@ const Formrp = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }

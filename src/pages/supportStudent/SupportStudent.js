@@ -50,7 +50,6 @@ const SupportStudent = () => {
     setSpin(true);
     const file = files; //the file
 
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -68,10 +67,8 @@ const SupportStudent = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, CV: a.url };
-          console.log(newData);
           RegisterInternAPI.upload(newData)
             .then((res) => {
-              console.log(res);
               message.success("Đăng ký hỗ trợ thực tập thành công");
               form.resetFields();
             })
@@ -80,7 +77,6 @@ const SupportStudent = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }
