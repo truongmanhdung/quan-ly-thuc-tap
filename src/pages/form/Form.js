@@ -51,7 +51,6 @@ const Formrp = () => {
   const [file, setFile] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log("inforUser: ", infoUser);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const datePicker = (date, dateString) => {
@@ -63,7 +62,6 @@ const Formrp = () => {
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
      `;
 
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -80,10 +78,8 @@ const Formrp = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
-          console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              console.log(newData);
               message.success(res.data.message);
               form.resetFields();
             })
@@ -92,7 +88,6 @@ const Formrp = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }
@@ -109,7 +104,6 @@ const Formrp = () => {
 
   const normFile = (e) => {
     const valueFile = e.file.originFileObj.type;
-    console.log(valueFile);
     const isJPEG = valueFile === "image/jpeg";
 
     if (!isJPEG) {
@@ -134,7 +128,6 @@ const Formrp = () => {
       const dataErr = await error.response.data;
       message.error(dataErr.message);
     }
-    console.log(values);
   };
 
   return (

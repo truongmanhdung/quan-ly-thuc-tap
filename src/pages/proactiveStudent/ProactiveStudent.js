@@ -49,10 +49,8 @@ const ProactiveStudent = () => {
       email: infoUser?.student?.email,
       ///dispatch Redux
     };
-    console.log(data);
     try {
       const result = await RegisterInternAPI.uploadProactive(data);
-      console.log(result);
       message.success(result.data.message);
       form.resetFields();
     } catch (error) {
