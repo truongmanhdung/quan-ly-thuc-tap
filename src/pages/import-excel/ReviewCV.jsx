@@ -23,7 +23,7 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-
+console.log(list)
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [status, setStatus] = useState({});
@@ -106,14 +106,14 @@ const ReviewCV = () => {
       title: "Trạng thái",
       dataIndex: "statusCheck",
       render: (status) => {
-        if (status === "0") {
+        if (status === 0) {
           return (
             <span className="status-check" style={{ color: "orange" }}>
               Chờ kiểm tra <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "1") {
+        } else if (status === 1) {
           return (
             <span className="status-up" style={{ color: "grey" }}>
               Đang kiểm tra
@@ -121,21 +121,21 @@ const ReviewCV = () => {
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "2") {
+        } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: "green" }}>
               Nhận Cv <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "3") {
+        } else if (status === 3) {
           return (
             <span className="status-true" style={{ color: "red" }}>
               Không đủ Đk <br />
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status === "4") {
+        } else if (status === 4) {
           <span className="status-true" style={{ color: "red" }}>
             Trượt <br />
             <Button>Sửa</Button>
@@ -213,7 +213,7 @@ const ReviewCV = () => {
     list.filter((item) => {
       status.listIdStudent.map((id) => {
         item._id == id &&
-          newStudent.push({ ...item, statusCheck: status.status });
+          newStudent.push({ ...item, statusCheck: Number(status.status) });
       });
     });
 

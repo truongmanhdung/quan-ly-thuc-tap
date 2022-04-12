@@ -83,7 +83,6 @@ const Status = () => {
     {
       title: 'Người review',
       dataIndex: 'reviewer',
-      render: (reviewer) => reviewer.slice(0, -11),
       width: 230
 
     },
