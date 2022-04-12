@@ -1,5 +1,6 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Form, Input, Select, Button, Upload, message, Spin } from "antd";
+import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
@@ -106,13 +107,23 @@ const SupportStudent = () => {
     setFile(e.file.originFileObj);
   };
   const onFinish = async (values) => {
-    console.log("Received values of form: ", values);
-    const data = {
-      ...values,
-      email: infoUser?.student?.email,
-      ///dispatch Redux
-    };
-    await guardarArchivo(file, data);
+    try {
+      const compare = values.user_code === infoUser?.student?.mssv;
+
+      if (!compare) {
+        message.error("Vui lòng nhập đúng mã sinh viên của bạn");
+      } else {
+        const data = {
+          ...values,
+          email: infoUser?.student?.email,
+          ///dispatch Redux
+        };
+        await guardarArchivo(file, data);
+      }
+    } catch (error) {
+      const dataErr = await error.response.data.message;
+      message.error(dataErr);
+    }
   };
 
   useEffect(() => {
@@ -203,7 +214,7 @@ const SupportStudent = () => {
             placeholder="Chọn ngành học"
           >
             {listSpecialization.map((item, index) => (
-              <Option value={item._id} key={index}>
+              <Option value={item.name} key={index}>
                 {item.name}
               </Option>
             ))}
@@ -224,7 +235,7 @@ const SupportStudent = () => {
         </Form.Item>
         <Form.Item
           name="upload"
-          label="Upload"
+          label="Upload file PDF"
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
@@ -239,7 +250,6 @@ const SupportStudent = () => {
             </Button>
           </Upload>
         </Form.Item>
-
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
             Register
