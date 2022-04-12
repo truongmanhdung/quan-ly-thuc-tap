@@ -69,6 +69,12 @@ function LayoutWebsite() {
                   <NavLink to="review-form">Review biểu mẫu</NavLink>
                 </Menu.Item>
                 <Menu.Item
+                  key="11"
+                  icon={<FolderViewOutlined className="icon-link" />}
+                >
+                  <NavLink to="form-register">Thời gian đăng ký</NavLink>
+                </Menu.Item>
+                <Menu.Item
                   key="12"
                   icon={<FolderViewOutlined className="icon-link" />}
                 >

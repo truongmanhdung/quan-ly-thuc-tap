@@ -15,6 +15,7 @@ import Notfound from "../pages/404/404";
 import ReportForm from "../pages/report/ReportForm";
 import Formrp from "../pages/form/Form";
 import Reviewform from "../pages/mywork/Reviewform";
+import Formtimepicker from "../pages/form-timepicker/formtimepicker";
 import ReviewReport from "../pages/mywork/ReviewReport";
 const Router = () => {
   return (
@@ -48,6 +49,14 @@ const Router = () => {
           element={
             <Privateadmin>
               <Status />
+            </Privateadmin>
+          }
+        />
+        <Route
+          path="form-register"
+          element={
+            <Privateadmin>
+              <Formtimepicker />
             </Privateadmin>
           }
         />

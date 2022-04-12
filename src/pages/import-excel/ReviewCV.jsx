@@ -37,6 +37,7 @@ const ReviewCV = () => {
       ...page,
       ...filter,
     };
+    setChooseIdStudent([])
     dispatch(getListStudentAssReviewer(data));
   }, [page, dispatch]);
 
