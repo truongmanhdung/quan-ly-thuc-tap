@@ -10,7 +10,6 @@ import {
   updateStatusListStudent,
   uploadStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { useNavigate } from "react-router-dom";
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
 
@@ -39,7 +38,7 @@ const ReviewCV = () => {
       ...filter,
     };
     dispatch(getListStudentAssReviewer(data));
-  }, [page]);
+  }, [page, dispatch]);
 
   const columns = [
     {
@@ -206,24 +205,7 @@ const ReviewCV = () => {
   };
 
   const comfirm = () => {
-    const newStudent = [];
-    list.filter((item) => {
-      status.listIdStudent.map((id) => {
-        item._id == id &&
-          newStudent.push({ ...item, statusCheck: Number(status.status) });
-      });
-    });
-
-    const dataNew = list.map((el) => {
-      var found = newStudent.find((s) => s._id === el._id);
-      if (found) {
-        el = Object.assign({}, el, found);
-      }
-      return el;
-    });
-
     dispatch(updateStatusListStudent(status));
-    dispatch(uploadStudent(dataNew));
     setChooseIdStudent([]);
   };
 
@@ -359,7 +341,7 @@ const ReviewCV = () => {
             });
           },
         }}
-        rowKey="_id"
+        rowKey={val => val._id}
         loading={loading}
         columns={columns}
         dataSource={list}

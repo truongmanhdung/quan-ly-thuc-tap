@@ -40,7 +40,10 @@ export const listStudentReport = createAsyncThunk(
 const reviewerSlice = createSlice({
     name: "reviewer",
     initialState: {
-        listStudentAssReviewer: {}
+        listStudentAssReviewer: {
+            list: [],
+            total: 0
+        }
     },
     reducers: {
         uploadStudent(state, action) {
@@ -64,6 +67,7 @@ const reviewerSlice = createSlice({
         })
         builder.addCase(updateStatusListStudent.fulfilled, (state, action) => {
             state.loading = false
+            // state.listStudentAssReviewer.list += action.payload
         })
         builder.addCase(updateStatusListStudent.rejected, (state, action) => {
             state.error = 'Update reviewer student fail'
