@@ -23,6 +23,7 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
+
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [status, setStatus] = useState({});
@@ -109,7 +110,7 @@ const ReviewCV = () => {
               <Button>Sửa</Button>
             </span>
           );
-        } else if (status ===1) {
+        } else if (status === 1) {
           return (
             <span className="status-up" style={{ color: "grey" }}>
               Đang kiểm tra
@@ -209,7 +210,7 @@ const ReviewCV = () => {
     list.filter((item) => {
       status.listIdStudent.map((id) => {
         item._id == id &&
-          newStudent.push({ ...item, statusCheck: status.status });
+          newStudent.push({ ...item, statusCheck: Number(status.status) });
       });
     });
 

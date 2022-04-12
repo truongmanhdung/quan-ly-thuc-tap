@@ -30,6 +30,13 @@ export const listStudentForm = createAsyncThunk(
         return data
     }
 )
+export const listStudentReport = createAsyncThunk(
+    'student/listStudentReport',
+    async (dataForm) => {
+        const { data } = await StudentAPI.listStudentReport(dataForm)
+        return data
+    }
+)
 const reviewerSlice = createSlice({
     name: "reviewer",
     initialState: {
@@ -81,6 +88,17 @@ const reviewerSlice = createSlice({
             state.listStudentAssReviewer = action.payload
         })
         builder.addCase(listStudentForm.rejected, (state, action) => {
+            state.error = 'get reviewer student fail'
+        })
+        //list Student report
+        builder.addCase(listStudentReport.pending, (state, action) => {
+            state.loading = true
+        })
+        builder.addCase(listStudentReport.fulfilled, (state, action) => {
+            state.loading = false
+            state.listStudentAssReviewer = action.payload
+        })
+        builder.addCase(listStudentReport.rejected, (state, action) => {
             state.error = 'get reviewer student fail'
         })
     }

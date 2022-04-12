@@ -15,6 +15,7 @@ import Notfound from "../pages/404/404";
 import ReportForm from "../pages/report/ReportForm";
 import Formrp from "../pages/form/Form";
 import Reviewform from "../pages/mywork/Reviewform";
+import ReviewReport from "../pages/mywork/ReviewReport";
 const Router = () => {
   return (
     <Routes>
@@ -63,6 +64,14 @@ const Router = () => {
           element={
             <Privateadmin>
               <Reviewform />
+            </Privateadmin>
+          }
+        />
+        <Route
+          path="review-report"
+          element={
+            <Privateadmin>
+              <ReviewReport />
             </Privateadmin>
           }
         />

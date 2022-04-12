@@ -146,7 +146,7 @@ const Reviewform = () => {
       newObject["Số điện thoại"] = item["phone"];
       newObject["Tên công ty"] = item["nameCompany"];
       newObject["Mã số thuế"] = item["postCode"];
-      newObject["Biểu mẫu"] = item["report"];
+      newObject["Biểu mẫu"] = item["form"];
       newData.push(newObject);
     });
 

@@ -85,8 +85,8 @@ const Status = () => {
     {
       title: 'Người review',
       dataIndex: 'reviewer',
-      render: (val) => val,
-      width: 230,
+      width: 230
+
     },
     {
       title: 'Trạng thái',
