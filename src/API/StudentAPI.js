@@ -42,5 +42,9 @@ const StudentAPI = {
     const url = `/student/reviewform?${stringify(data)}`;
     return axiosClient.get(url);
   },
+  listStudentReport(data) {
+    const url = `/student/reviewreport?${stringify(data)}`;
+    return axiosClient.get(url);
+  },
 };
 export default StudentAPI;

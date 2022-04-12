@@ -144,7 +144,7 @@ const Reviewform = () => {
       newObject["Số điện thoại"] = item["phone"];
       newObject["Tên công ty"] = item["nameCompany"];
       newObject["Mã số thuế"] = item["postCode"];
-      newObject["Biểu mẫu"] = item["report"];
+      newObject["Biểu mẫu"] = item["form"];
       newData.push(newObject);
     });
 
@@ -158,7 +158,7 @@ const Reviewform = () => {
 
   return (
     <div className="status">
-      <h4>Review CV</h4>
+      <h4>Review biểu mẫu</h4>
       <Button variant="warning" onClick={(e) => exportToCSV(list)}>Export</Button>
       <br />
       <br />
