@@ -54,7 +54,8 @@ const Formrp = () => {
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const datePicker = (date, dateString) => {
-    setStartDate(date._d);
+    setStartDate(new Date(date._d).getTime());
+    console.log(new Date(date._d).getTime());
   };
 
   function guardarArchivo(files, data) {
@@ -104,14 +105,18 @@ const Formrp = () => {
 
   const normFile = (e) => {
     const valueFile = e.file.originFileObj.type;
-    const isJPEG = valueFile === "image/jpeg";
+    const isFile = valueFile;
 
-    if (!isJPEG) {
+    if (
+      isFile === "image/jpeg" ||
+      isFile === "image/jpg" ||
+      isFile === "image/png"
+    ) {
+      setFile(e.file.originFileObj);
+    } else {
       form.resetFields();
-      message.error("Vui lòng nhập file đúng định dạng PNG hoặc JPEG");
+      message.error("Vui lòng nhập file đúng định dạng PNG-JPEG-JPG");
     }
-
-    setFile(e.file.originFileObj);
   };
 
   const onFinish = async (values) => {
@@ -181,19 +186,12 @@ const Formrp = () => {
         </Form.Item>
         <Form.Item
           name="upload"
-          label="Upload"
+          label="Upload image"
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
           <Upload name="logo" action="/upload.do" listType="picture">
-            <Button
-              //     style={{
-              //       marginLeft: "20px",
-              //     }}
-              icon={<UploadOutlined />}
-            >
-              Click to upload
-            </Button>
+            <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
