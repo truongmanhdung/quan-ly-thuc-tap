@@ -1,5 +1,6 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Form, Input, Select, Button, Upload, message, Spin } from "antd";
+import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
@@ -49,7 +50,6 @@ const SupportStudent = () => {
     setSpin(true);
     const file = files; //the file
 
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -67,10 +67,8 @@ const SupportStudent = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, CV: a.url };
-          console.log(newData);
           RegisterInternAPI.upload(newData)
             .then((res) => {
-              console.log(res);
               message.success("Đăng ký hỗ trợ thực tập thành công");
               form.resetFields();
             })
@@ -79,7 +77,6 @@ const SupportStudent = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }
@@ -106,13 +103,23 @@ const SupportStudent = () => {
     setFile(e.file.originFileObj);
   };
   const onFinish = async (values) => {
-    console.log("Received values of form: ", values);
-    const data = {
-      ...values,
-      email: infoUser?.student?.email,
-      ///dispatch Redux
-    };
-    await guardarArchivo(file, data);
+    try {
+      const compare = values.user_code === infoUser?.student?.mssv;
+
+      if (!compare) {
+        message.error("Vui lòng nhập đúng mã sinh viên của bạn");
+      } else {
+        const data = {
+          ...values,
+          email: infoUser?.student?.email,
+          ///dispatch Redux
+        };
+        await guardarArchivo(file, data);
+      }
+    } catch (error) {
+      const dataErr = await error.response.data.message;
+      message.error(dataErr);
+    }
   };
 
   useEffect(() => {
@@ -203,7 +210,7 @@ const SupportStudent = () => {
             placeholder="Chọn ngành học"
           >
             {listSpecialization.map((item, index) => (
-              <Option value={item._id} key={index}>
+              <Option value={item.name} key={index}>
                 {item.name}
               </Option>
             ))}
@@ -224,7 +231,7 @@ const SupportStudent = () => {
         </Form.Item>
         <Form.Item
           name="upload"
-          label="Upload"
+          label="Upload file PDF"
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
@@ -239,7 +246,6 @@ const SupportStudent = () => {
             </Button>
           </Upload>
         </Form.Item>
-
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
             Register

@@ -23,7 +23,7 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-console.log(list)
+
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [status, setStatus] = useState({});
@@ -31,9 +31,7 @@ console.log(list)
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.cumpus,
-    reviewer: infoUser.manager.email,
   });
-
   const [filter, setFiler] = useState({});
   useEffect(() => {
     const data = {
@@ -99,7 +97,6 @@ console.log(list)
     {
       title: "Người review",
       dataIndex: "reviewer",
-      render: (reviewer) => reviewer.slice(0, -11),
       width: 230,
     },
     {

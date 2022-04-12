@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { Table,notification } from 'antd';
+import { Table,notification, message } from 'antd';
 import { UploadOutlined } from "@ant-design/icons";
 import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ const UpFile = () => {
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
-  const { infoUser } = useSelector((state) => state.auth);
+  const { infoUser:{manager} } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
   const navigate = useNavigate();
   const importData = (e) => {
@@ -38,7 +38,7 @@ const UpFile = () => {
       let datas=[]
       rows.filter((item, index) => index !== 0).map((item) => {
         const newObject = {};
-        if (infoUser.manager) {
+        if (manager) {
           newObject["mssv"] = item["MSSV"];
           newObject["name"] = item["Họ tên"];
           newObject["course"] = item["Khóa nhập học"];
@@ -46,7 +46,7 @@ const UpFile = () => {
           newObject["majors"] = item["Ngành FA21"];
           newObject["email"] = item["Email"];
           newObject["supplement"] = item["bổ sung"];
-          newObject["campus_id"] = infoUser.manager.cumpus;
+          newObject["campus_id"] = manager.campus_id;
           datas.push(newObject);
         }
       });
@@ -56,22 +56,12 @@ const UpFile = () => {
     reader.readAsBinaryString(file);
   };
   const submitSave = () => {
-    dispatch(insertStudent(dataNew));
-    notifications(loading);
+    dispatch(insertStudent(dataNew)).then(res => notifications(res.payload))
+    
   };
-  const notifications = (loading) => {
-    if (loading === false) {
-      notification.success({
-        message: "Thành công",
-        style: {
-          width: 250,
-          height: 60,
-          marginTop: 50,
-          color: "#FFFFFF",
-          background: "#4BB543",
-        },
-        duration: 1.5,
-      });
+  const notifications = (payload) => {
+    if ( loading === false && payload !== undefined) {
+      message.success("Thành công");
       navigate("/status");
     }
   };
@@ -131,7 +121,7 @@ const UpFile = () => {
           </div>
         )}
       </div>
-      {dataNew.length>=1 && <Table rowKey='mssv' dataSource={dataNew} columns={columns} />}
+      {dataNew.length>=1 && <Table loading={loading} rowKey='mssv' dataSource={dataNew} columns={columns} />}
       
     </div>
   );

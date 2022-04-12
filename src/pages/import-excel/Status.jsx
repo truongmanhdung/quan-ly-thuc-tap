@@ -4,7 +4,10 @@ import '../../common/styles/status.css';
 import { Select, Input, Table, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
-import { updateReviewerListStudent, updateStatusListStudent } from '../../features/reviewerStudent/reviewerSlice';
+import {
+  updateReviewerListStudent,
+  updateStatusListStudent,
+} from '../../features/reviewerStudent/reviewerSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
@@ -20,7 +23,7 @@ const Status = () => {
     loading,
   } = useSelector((state) => state.students);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
-  const [listIdStudent, setListIdStudent] = useState([])
+  const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -35,50 +38,49 @@ const Status = () => {
       title: 'MSSV',
       dataIndex: 'mssv',
       width: 100,
-      fixed: 'left'
+      fixed: 'left',
     },
     {
       title: 'Họ và Tên',
       dataIndex: 'name',
       width: 150,
-      fixed: 'left'
+      fixed: 'left',
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      width: 200
+      width: 200,
     },
     {
       title: 'Điện thoại',
       dataIndex: 'phoneNumber',
-      width: 160
+      width: 160,
     },
     {
       title: 'Ngành',
       dataIndex: 'majors',
-      width: 100
+      width: 100,
     },
     {
       title: 'Phân loại',
       dataIndex: 'support',
       width: 90,
-      render: val => {
+      render: (val) => {
         if (val === 1) {
-          return 'Hỗ trợ'
+          return 'Hỗ trợ';
         } else if (val === 0) {
-          return 'Tự tìm'
+          return 'Tự tìm';
         } else {
-          return ''
+          return '';
         }
-      }
+      },
     },
     {
       title: 'CV',
       dataIndex: 'CV',
       width: 50,
-      render: val =>
+      render: (val) =>
         val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
-
     },
     {
       title: 'Người review',
@@ -89,43 +91,41 @@ const Status = () => {
     {
       title: 'Trạng thái',
       dataIndex: 'statusCheck',
-      render: status => {
+      render: (status) => {
         if (status === 0) {
           return (
             <span className="status-fail" style={{ color: 'orange' }}>
               Chờ kiểm tra <br />
-              <Button >Sửa</Button>
+              <Button>Sửa</Button>
             </span>
-
           );
         } else if (status === 1) {
           return (
             <span className="status-up" style={{ color: 'grey' }}>
               Đang kiểm tra
               <br />
-              <Button >Sửa</Button>
+              <Button>Sửa</Button>
             </span>
           );
         } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: 'green' }}>
               Nhận Cv <br />
-              <Button >Sửa</Button>
+              <Button>Sửa</Button>
             </span>
           );
         } else if (status === 3) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
               Không đủ Đk <br />
-              <Button >Sửa</Button>
+              <Button>Sửa</Button>
             </span>
           );
-
         } else if (status === 4) {
           <span className="status-fail" style={{ color: 'red' }}>
             Trượt <br />
-            <Button >Sửa</Button>
-          </span>
+            <Button>Sửa</Button>
+          </span>;
         } else {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
@@ -134,14 +134,13 @@ const Status = () => {
           );
         }
       },
-
     },
   ];
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      setListIdStudent(selectedRowKeys)
-      setChooseIdStudent(selectedRows)
+      setListIdStudent(selectedRowKeys);
+      setChooseIdStudent(selectedRows);
     },
   };
 
@@ -149,33 +148,34 @@ const Status = () => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-          ...filter,
-          [key]: value,
-        }
+            ...filter,
+            [key]: value,
+          }
         : omit(filter, [key]);
     setFiler(newValue);
   };
   const handleSearch = () => {
     const data = {
       ...page,
-      ...filter
-    }
-    dispatch(getStudent(data))
-  }
-
+      ...filter,
+    };
+    dispatch(getStudent(data));
+  };
 
   const comfirm = () => {
-    dispatch(updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }))
+    dispatch(
+      updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }),
+    );
     alert('Thêm thành công ');
     navigate('/review-cv');
-  }
+  };
 
   return (
     <div className="status">
       <h4>Sinh viên đăng ký thực tập</h4>
 
       <div className="filter">
-        <span>Ngành:  </span>
+        <span>Ngành: </span>
 
         <Select
           style={{ width: 200 }}
@@ -190,15 +190,18 @@ const Status = () => {
             </>
           ))}
         </Select>
-        <span style={{
-          marginLeft: '30px'
-        }} >Trạng thái:</span>
+        <span
+          style={{
+            marginLeft: '30px',
+          }}
+        >
+          Trạng thái:
+        </span>
         <Select
           className="filter-status"
           style={{ width: 200 }}
           onChange={(val) => handleStandardTableChange('statusCheck', val)}
           placeholder="Lọc theo trạng thái"
-
         >
           {filterStatuss.map((item, index) => (
             <Option value={index} key={index}>
@@ -207,24 +210,26 @@ const Status = () => {
           ))}
         </Select>
 
-        <span style={{
-          marginLeft: '30px'
-        }}>Tìm Kiếm: </span>
+        <span
+          style={{
+            marginLeft: '30px',
+          }}
+        >
+          Tìm Kiếm:{' '}
+        </span>
         <Input
           style={{ width: 200 }}
           placeholder="Tìm kiếm theo tên"
-          onChange={(val) => handleStandardTableChange('name', val.target.value)
-          }
+          onChange={(val) => handleStandardTableChange('name', val.target.value)}
         />
-        <Button onClick={handleSearch}  >Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>
-        }
+        <Button onClick={handleSearch}>Tìm kiếm</Button>
+        {chooseIdStudent.length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>}
       </div>
 
       <Table
         rowSelection={{
           type: 'checkbox',
-          ...rowSelection
+          ...rowSelection,
         }}
         pagination={{
           pageSize: page.limit,
@@ -234,11 +239,11 @@ const Status = () => {
               page: page,
               limit: pageSize,
               campus_id: infoUser.manager.cumpus,
-              ...filter
+              ...filter,
             });
           },
         }}
-        rowKey='_id'
+        rowKey="_id"
         loading={loading}
         columns={columns}
         dataSource={list}

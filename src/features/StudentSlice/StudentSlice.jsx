@@ -30,7 +30,6 @@ const studentSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getStudent.fulfilled, (state, action) => {
             state.loading = false
-            console.log(action.payload)
             state.listStudent = action.payload
         })
         builder.addCase(getStudent.pending, (state, action) => {
@@ -41,7 +40,7 @@ const studentSlice = createSlice({
         })
         builder.addCase(insertStudent.fulfilled, (state, action) => {
             state.loading = false
-            // state.listStudent = action.payload
+            state.listStudent += action.payload
         })
         builder.addCase(insertStudent.pending, (state, action) => {
             state.loading = true

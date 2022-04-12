@@ -43,18 +43,22 @@ const ProactiveStudent = () => {
   const { infoUser } = useSelector((state) => state.auth);
 
   const onFinish = async (values) => {
-    const data = {
-      ...values,
-      mssv: infoUser?.student?.mssv,
-      email: infoUser?.student?.email,
-      ///dispatch Redux
-    };
-    console.log(data);
     try {
-      const result = await RegisterInternAPI.uploadProactive(data);
-      console.log(result);
-      message.success(result.data.message);
-      form.resetFields();
+      const compare = values.user_code === infoUser?.student?.mssv;
+      if (!compare) {
+        message.error("Vui lòng nhập đúng mã sinh viên của bạn");
+      } else {
+        const data = {
+          ...values,
+          mssv: infoUser?.student?.mssv,
+          email: infoUser?.student?.email,
+          ///dispatch Redux
+        };
+        const result = await RegisterInternAPI.uploadProactive(data);
+        console.log(result);
+        message.success(result.data.message);
+        form.resetFields();
+      }
     } catch (error) {
       const dataErr = await error.response.data.message;
       message.error(dataErr);

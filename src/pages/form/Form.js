@@ -51,11 +51,11 @@ const Formrp = () => {
   const [file, setFile] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log("inforUser: ", infoUser);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const datePicker = (date, dateString) => {
-    setStartDate(date._d);
+    setStartDate(new Date(date._d).getTime());
+    console.log(new Date(date._d).getTime());
   };
 
   function guardarArchivo(files, data) {
@@ -63,7 +63,6 @@ const Formrp = () => {
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
      `;
 
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -80,10 +79,8 @@ const Formrp = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
-          console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              console.log(newData);
               message.success(res.data.message);
               form.resetFields();
             })
@@ -92,7 +89,6 @@ const Formrp = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }
@@ -109,15 +105,18 @@ const Formrp = () => {
 
   const normFile = (e) => {
     const valueFile = e.file.originFileObj.type;
-    console.log(valueFile);
-    const isJPEG = valueFile === "image/jpeg";
+    const isFile = valueFile;
 
-    if (!isJPEG) {
+    if (
+      isFile === "image/jpeg" ||
+      isFile === "image/jpg" ||
+      isFile === "image/png"
+    ) {
+      setFile(e.file.originFileObj);
+    } else {
       form.resetFields();
-      message.error("Vui lòng nhập file đúng định dạng PNG hoặc JPEG");
+      message.error("Vui lòng nhập file đúng định dạng PNG-JPEG-JPG");
     }
-
-    setFile(e.file.originFileObj);
   };
 
   const onFinish = async (values) => {
@@ -134,7 +133,6 @@ const Formrp = () => {
       const dataErr = await error.response.data;
       message.error(dataErr.message);
     }
-    console.log(values);
   };
 
   return (
@@ -188,19 +186,12 @@ const Formrp = () => {
         </Form.Item>
         <Form.Item
           name="upload"
-          label="Upload"
+          label="Upload image"
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
           <Upload name="logo" action="/upload.do" listType="picture">
-            <Button
-              //     style={{
-              //       marginLeft: "20px",
-              //     }}
-              icon={<UploadOutlined />}
-            >
-              Click to upload
-            </Button>
+            <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
