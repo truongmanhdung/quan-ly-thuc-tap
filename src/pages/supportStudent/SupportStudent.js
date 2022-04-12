@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
-
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import Countdown from 'react-countdown';
 import styles from "./SupportStudent.module.css";
 const { Option } = Select;
 const formItemLayout = {
@@ -42,6 +43,8 @@ const SupportStudent = () => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
   const [spin, setSpin] = useState(false);
+  const {time} = useSelector((state) => state.time);
+  console.log(time);
   const [form] = Form.useForm();
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { infoUser } = useSelector((state) => state.auth);
@@ -124,10 +127,23 @@ const SupportStudent = () => {
 
   useEffect(() => {
     dispatch(getListSpecialization());
+    dispatch(getTimeForm(2))
   }, []);
-
+  const Completionist = () => <span>You are good to go!</span>;
+  console.log(time.endTime - time.startTime);
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a completed state
+      return <Completionist />;
+    } else {
+      // Render a countdown
+      return <span>{hours}:{minutes}:{seconds}</span>;
+    }
+  };
+  console.log(Date.now() + 5000);
   return (
     <>
+      <Countdown date={Date.now() + time.endTime - time.startTime} renderer={renderer} />
       {spin ? <Spin /> : null}
       <Form
         {...formItemLayout}
