@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import StudentAPI from '../../API/StudentAPI';
-import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
 import { Select, Input, Table, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
-    getListStudentAssReviewer,
+    listStudentReport,
     updateReviewerListStudent,
 } from '../../features/reviewerStudent/reviewerSlice';
-import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 import * as FileSaver from 'file-saver';
@@ -18,7 +15,6 @@ const { Option } = Select;
 
 const ReviewReport = () => {
     const dispatch = useDispatch();
-    let navigate = useNavigate();
     const { infoUser } = useSelector((state) => state.auth);
     const {
         listStudentAssReviewer: { total, list },
@@ -38,7 +34,7 @@ const ReviewReport = () => {
             ...page,
             ...filter,
         };
-        dispatch(getListStudentAssReviewer(data));
+        dispatch(listStudentReport(data));
     }, [page]);
 
     const columns = [
@@ -84,42 +80,30 @@ const ReviewReport = () => {
             title: 'Trạng thái',
             dataIndex: 'statusCheck',
             render: status => {
-                if (status === 0) {
+                if (status === 5) {
                     return (
                         <span className="status-fail" style={{ color: 'orange' }}>
-                            Chờ kiểm tra <br />
-                            <Button >Sửa</Button>
+                            Đang thực tập
                         </span>
-
                     );
-                } else if (status === 1) {
+                } else if (status === 6) {
                     return (
                         <span className="status-up" style={{ color: 'grey' }}>
-                            Đang kiểm tra
-                            <br />
-                            <Button >Sửa</Button>
+                            Chờ kiểm tra
                         </span>
                     );
-                } else if (status === 2) {
+                } else if (status === 7) {
                     return (
                         <span className="status-fail" style={{ color: 'green' }}>
-                            Nhận Cv <br />
-                            <Button >Sửa</Button>
+                            Hoàn thành
                         </span>
-                    );
-                } else if (status === 3) {
-                    return (
-                        <span className="status-fail" style={{ color: 'red' }}>
-                            Không đủ Đk <br />
-                            <Button >Sửa</Button>
-                        </span>
-                    );
-
-                } else if (status === 4) {
-                    <span className="status-fail" style={{ color: 'red' }}>
-                        Trượt <br />
-                        <Button >Sửa</Button>
-                    </span>
+                    )}
+                    else if (status === 8) {
+                        return (
+                            <span className="status-fail" style={{ color: 'green' }}>
+                                Sửa lại
+                            </span>
+                        );
                 } else {
                     return (
                         <span className="status-fail" style={{ color: 'red' }}>
