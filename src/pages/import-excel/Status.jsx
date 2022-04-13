@@ -95,30 +95,25 @@ const Status = () => {
         if (status === 0) {
           return (
             <span className="status-fail" style={{ color: 'orange' }}>
-              Chờ kiểm tra <br />
-              <Button>Sửa</Button>
+              Chờ kiểm tra 
             </span>
           );
         } else if (status === 1) {
           return (
             <span className="status-up" style={{ color: 'grey' }}>
               Đang kiểm tra
-              <br />
-              <Button>Sửa</Button>
             </span>
           );
         } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: 'green' }}>
               Nhận Cv <br />
-              <Button>Sửa</Button>
             </span>
           );
         } else if (status === 3) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
               Không đủ Đk <br />
-              <Button>Sửa</Button>
             </span>
           );
         } else if (status === 4) {
