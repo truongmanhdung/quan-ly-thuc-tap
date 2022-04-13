@@ -107,8 +107,9 @@ const SupportStudent = () => {
   };
   const onFinish = async (values) => {
     try {
-      const compare = values.user_code === infoUser?.student?.mssv;
-
+      const useCode = values.user_code;
+      const studentMssv = infoUser?.student?.mssv;
+      const compare = useCode.toLowerCase() === studentMssv.toLowerCase();
       if (!compare) {
         message.error("Vui lòng nhập đúng mã sinh viên của bạn");
       } else {
