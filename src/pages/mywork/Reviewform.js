@@ -94,6 +94,32 @@ const Reviewform = () => {
       dataIndex: 'internshipTime',
       width: 230,
     },
+    {
+      title: "Trạng thái",
+      dataIndex: "statusCheck",
+      width: 130,
+      render: (status) => {
+        if (status === 2) {
+          return (
+            <span className="status-check" style={{ color: "orange" }}>
+              Chờ kiểm tra <br />
+            </span>
+          );
+        } else if (status === 5) {
+          return (
+            <span className="status-true" style={{ color: "red" }}>
+              Đã nhận <br />
+            </span>
+          );
+        } else {
+          return (
+            <span className="status-true" style={{ color: "red" }}>
+              Chưa đăng ký
+            </span>
+          );
+        }
+      },
+    },
 
   ];
   // xóa tìm kiếm
@@ -157,10 +183,9 @@ const Reviewform = () => {
     FileSaver.saveAs(data, fileExtension);
   }
 
-
   return (
     <div className="status">
-      <h4>Review biểu mẫu</h4>
+      <h4>Review biên bản</h4>
       <Button variant="warning" onClick={(e) => exportToCSV(list)}>Export</Button>
       <br />
       <br />
