@@ -42,7 +42,7 @@ const StudentAPI = {
     return axiosClient.get(url);
   },
   listStudentReport(data) {
-    const url = `/student/reviewreport?${stringify(data)}`;
+    const url = `/reivewReport?${stringify(data)}`;
     return axiosClient.get(url);
   },
 };
