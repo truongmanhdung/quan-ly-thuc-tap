@@ -47,6 +47,7 @@ const UpFile = () => {
           newObject["email"] = item["Email"];
           newObject["supplement"] = item["bổ sung"];
           newObject["campus_id"] = manager.campus_id;
+          newObject["statusCheck"] = 10
           datas.push(newObject);
         }
       });
