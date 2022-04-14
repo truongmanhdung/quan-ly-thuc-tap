@@ -16,6 +16,6 @@ const rootReducer = combineReducers(
     specialization:specializationSlice,
     manager: managerSlice,
     reviewer:reviewerSlice,
-    times: timeDateSlice
+    time: timeDateSlice
 });
 export default rootReducer;

@@ -9,9 +9,11 @@ import {
   DatePicker,
   Upload,
 } from "antd";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
+import CountDownCustorm from "../../components/CountDownCustorm";
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 
 import styles from "./ReportForm.module.css";
 
@@ -47,6 +49,7 @@ const tailFormItemLayout = {
 };
 
 const ReportForm = () => {
+  const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [file, setFile] = useState();
   const [startDate, setStartDate] = useState();
@@ -55,6 +58,7 @@ const ReportForm = () => {
   const mssv = infoUser.student.mssv;
   const email = infoUser.student.email;
   const lForm = infoUser.student.form;
+  const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
     setStartDate(date._d);
   };
@@ -124,6 +128,9 @@ const ReportForm = () => {
       message.error("Vui lòng nhập file đúng định dạng PDF hoặc .docx");
     }
   };
+  useEffect(() => {
+    dispatch(getTimeForm(4));
+  }, []);
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -144,93 +151,102 @@ const ReportForm = () => {
     setSpin(false);
   };
 
+  const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
   return (
     <>
       {spin ? <Spin /> : null}
-      <Form
-        {...formItemLayout}
-        form={form}
-        className={styles.form}
-        name="register"
-        onFinish={onFinish}
-        initialValues={{
-          residence: ["zhejiang", "hangzhou", "xihu"],
-          prefix: "86",
-        }}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="nameCompany"
-          label="Tên doanh nghiệp"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập tên doanh nghiệp",
-            },
-          ]}
+      {check && <CountDownCustorm time={time} />}
+      {check ? (
+        <Form
+          {...formItemLayout}
+          form={form}
+          className={styles.form}
+          name="register"
+          onFinish={onFinish}
+          initialValues={{
+            residence: ["zhejiang", "hangzhou", "xihu"],
+            prefix: "86",
+          }}
+          scrollToFirstError
         >
-          <Input placeholder="Tên doanh nghiệp" />
-        </Form.Item>
-
-        <Form.Item
-          name="internshipTime"
-          label="Thời gian thực tập"
-          // rules={[{}]}
-        >
-          <Space direction="vertical">
-            <DatePicker onChange={datePicker} placeholder="Bắt đầu thực tập" />
-          </Space>
-        </Form.Item>
-        <Form.Item
-          name="attitudePoint"
-          label="Điểm thái độ"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập điểm thái độ",
-            },
-          ]}
-        >
-          <Input placeholder="Nhập điểm thái độ thực tập" />
-        </Form.Item>
-
-        <Form.Item
-          name="resultScore"
-          label="Điểm kết quả"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập điểm kết quả thực tập",
-            },
-          ]}
-        >
-          <Input placeholder="Nhập điểm kết quả thực tập" />
-        </Form.Item>
-        <Form.Item
-          name="upload"
-          label="Upload Docx hoặc PDF"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-        >
-          <Upload name="logo" action="/upload.do" listType="picture">
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-          <Button
-            style={{
-              margin: "0 5px 0",
-            }}
-            type="link"
-            href={lForm}
+          <Form.Item
+            name="nameCompany"
+            label="Tên doanh nghiệp"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên doanh nghiệp",
+              },
+            ]}
           >
-            Xem biểu mẫu
-          </Button>
-        </Form.Item>
-      </Form>
+            <Input placeholder="Tên doanh nghiệp" />
+          </Form.Item>
+
+          <Form.Item
+            name="internshipTime"
+            label="Thời gian thực tập"
+            // rules={[{}]}
+          >
+            <Space direction="vertical">
+              <DatePicker
+                onChange={datePicker}
+                placeholder="Bắt đầu thực tập"
+              />
+            </Space>
+          </Form.Item>
+          <Form.Item
+            name="attitudePoint"
+            label="Điểm thái độ"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập điểm thái độ",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập điểm thái độ thực tập" />
+          </Form.Item>
+
+          <Form.Item
+            name="resultScore"
+            label="Điểm kết quả"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập điểm kết quả thực tập",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập điểm kết quả thực tập" />
+          </Form.Item>
+          <Form.Item
+            name="upload"
+            label="Upload Docx hoặc PDF"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload name="logo" action="/upload.do" listType="picture">
+              <Button icon={<UploadOutlined />}>Click to upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+            <Button
+              style={{
+                margin: "0 5px 0",
+              }}
+              type="link"
+              href={lForm}
+            >
+              Xem biểu mẫu
+            </Button>
+          </Form.Item>
+        </Form>
+      ) : (
+        <p>Chưa đến thời gian nộp báo cáo</p>
+      )}
     </>
   );
 };
