@@ -41,7 +41,7 @@ const Formtimepicker = (props) => {
       <Row>
         <Col span={8}>
           <Radio.Group onChange={onChange} value={value}>
-            {times.length > 0 && times.map((item) => (
+            {times?.length > 0 && times.map((item) => (
               <Radio value={item.typeNumber} key={item._id}>{item.typeName}</Radio>
             ))}
             

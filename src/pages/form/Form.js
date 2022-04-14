@@ -142,7 +142,7 @@ const Formrp = () => {
       message.error(dataErr.message);
     }
   };
-  const check = time.endTime > new Date().getTime();
+  const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
   return (
     <>
       {spin ? <Spin /> : null}
@@ -214,7 +214,7 @@ const Formrp = () => {
           </Form.Item>
         </Form>
       ) : (
-        <p>Thời gian đăng ký đã hết</p>
+        <p>Bạn phải nộp cv rồi mới đến biểu mẫu</p>
       )}
     </>
   );
