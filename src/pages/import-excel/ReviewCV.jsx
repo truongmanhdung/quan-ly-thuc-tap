@@ -267,7 +267,7 @@ const ReviewCV = () => {
             <span>Lựa chọn:</span>
             <Select
               className="comfirm-click"
-              style={{ width: 100 }}
+              style={{ width: 170 }}
               onChange={actionOnchange}
               placeholder="Chọn"
             >
@@ -275,7 +275,7 @@ const ReviewCV = () => {
                 Kéo việc
               </Option>
               <Option value="edit" key="2">
-                Sửa lại
+                Cập nhật trạng thái
               </Option>
             </Select>
 
