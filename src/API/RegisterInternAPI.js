@@ -1,7 +1,6 @@
 import { axiosClient } from "./Link";
 const RegisterInternAPI = {
   upload(data) {
-    console.log(data)
     const url = `/intern/support`;
     return axiosClient.patch(url, data);
   },

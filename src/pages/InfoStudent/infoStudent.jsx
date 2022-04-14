@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Row, Col, Table } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TextArea from "antd/lib/input/TextArea";
+import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
+import StudentAPI from "../../API/StudentAPI";
 const columns = [
   {
     title: "Doanh nghiệp",
@@ -47,9 +49,14 @@ const data = [
   },
 ]; // rowSelection object indicates the need for row selection
 function InfoStudent(props) {
+  const dispatch = useDispatch();
+  const { student } = useSelector((state) => state.cumpus);
   const { infoUser } = useSelector((state) => state.auth);
-  console.log(infoUser);
-  const isRegister = infoUser?.student?.typeRegister;
+  useEffect(() => {
+    dispatch(getStudentId(infoUser.student.mssv));
+  }, []);
+  console.log(student);
+  const isRegister = student?.support;
   // const rowSelection = {
   //   onChange: (selectedRowKeys, selectedRows) => {
   //     console.log(
@@ -68,10 +75,10 @@ function InfoStudent(props) {
             <h4>Thông tin đăng ký</h4>
           </div>
           <div className="border-top mt-3 pt-2">
-            <p>Họ và tên : {infoUser?.student?.name}</p>
-            <p>Ngành : {infoUser?.student?.majors}</p>
-            <p>Khóa học : {infoUser?.student?.course}</p>
-            <p>Email : {infoUser?.student?.email}</p>
+            <p>Họ và tên : {student?.name}</p>
+            <p>Ngành : {student?.majors}</p>
+            <p>Khóa học : {student?.course}</p>
+            <p>Email : {student?.email}</p>
             <p>
               Lựa chọn :{" "}
               {isRegister === 0
