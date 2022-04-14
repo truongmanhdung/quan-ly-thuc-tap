@@ -7,6 +7,10 @@ const TimeApi = {
     getTimeForm(data){
         const url = `/settime/${data}`;
         return axiosClient.get(url);
+    },
+    getListTime(){
+        const url = `/settime`;
+        return axiosClient.get(url);
     }
 };
 export default TimeApi;

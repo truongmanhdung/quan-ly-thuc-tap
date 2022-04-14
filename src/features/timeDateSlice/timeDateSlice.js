@@ -9,6 +9,14 @@ export const upTimeDate = createAsyncThunk(
   }
 );
 
+export const getListTime = createAsyncThunk(
+  "times/getListTime",
+  async (action) => {
+    const { data } = await TimeApi.getListTime(action);
+    return await data.time;
+  }
+);
+
 export const getTimeForm = createAsyncThunk(
   "times/getTimeForm",
   async (action) => {
@@ -19,15 +27,21 @@ export const getTimeForm = createAsyncThunk(
 const userSlice = createSlice({
   name: "time",
   initialState: {
-    time: {},
+    formTime: {
+      time: {},
+      times: []
+    },
   },
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(getListTime.fulfilled, (state, action) => {
+      state.formTime.times = action.payload;
+    });
     builder.addCase(upTimeDate.fulfilled, (state, action) => {
-      state.time = action.payload;
+      state.formTime.time = action.payload;
     });
     builder.addCase(getTimeForm.fulfilled, (state, action) => {
-      state.time = action.payload;
+      state.formTime.time = action.payload;
     });
   },
 });

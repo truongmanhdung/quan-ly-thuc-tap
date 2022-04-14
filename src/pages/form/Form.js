@@ -9,9 +9,11 @@ import {
   Space,
   DatePicker,
 } from "antd";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
+import CountDownCustorm from "../../components/CountDownCustorm";
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 
 import styles from "./Form.module.css";
 
@@ -46,6 +48,7 @@ const tailFormItemLayout = {
   },
 };
 const Formrp = () => {
+  const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [startDate, setStartDate] = useState();
   const [file, setFile] = useState();
@@ -53,10 +56,15 @@ const Formrp = () => {
   const { infoUser } = useSelector((state) => state.auth);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
+  const dispatch = useDispatch()
   const datePicker = (date, dateString) => {
     setStartDate(new Date(date._d).getTime());
-    console.log(new Date(date._d).getTime());
+    
   };
+
+  useEffect(() => {
+    dispatch(getTimeForm(3));
+  }, []);
 
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -134,72 +142,80 @@ const Formrp = () => {
       message.error(dataErr.message);
     }
   };
-
+  const check = time.endTime > new Date().getTime();
   return (
     <>
       {spin ? <Spin /> : null}
-      <Form
-        {...formItemLayout}
-        form={form}
-        className={styles.form}
-        name="register"
-        onFinish={onFinish}
-        initialValues={{
-          residence: ["zhejiang", "hangzhou", "xihu"],
-          prefix: "86",
-        }}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="nameCompany"
-          label="Tên doanh nghiệp"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập tên doanh nghiệp",
-            },
-          ]}
+      {check && <CountDownCustorm time={time} />}
+      {check ? (
+        <Form
+          {...formItemLayout}
+          form={form}
+          className={styles.form}
+          name="register"
+          onFinish={onFinish}
+          initialValues={{
+            residence: ["zhejiang", "hangzhou", "xihu"],
+            prefix: "86",
+          }}
+          scrollToFirstError
         >
-          <Input placeholder="Tên doanh nghiệp" />
-        </Form.Item>
-        <Form.Item
-          name="attitudePoint"
-          label="Mã số thuế"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mã số thuế của doanh nghiệp",
-            },
-          ]}
-        >
-          <Input placeholder="Nhập mã số thuế doanh nghiệp" />
-        </Form.Item>
+          <Form.Item
+            name="nameCompany"
+            label="Tên doanh nghiệp"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên doanh nghiệp",
+              },
+            ]}
+          >
+            <Input placeholder="Tên doanh nghiệp" />
+          </Form.Item>
+          <Form.Item
+            name="attitudePoint"
+            label="Mã số thuế"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mã số thuế của doanh nghiệp",
+              },
+            ]}
+          >
+            <Input placeholder="Nhập mã số thuế doanh nghiệp" />
+          </Form.Item>
 
-        <Form.Item
-          name="internshipTime"
-          label="Thời gian bắt đầu thực tập"
-          // rules={[{}]}
-        >
-          <Space direction="vertical">
-            <DatePicker onChange={datePicker} placeholder="Bắt đầu thực tập" />
-          </Space>
-        </Form.Item>
-        <Form.Item
-          name="upload"
-          label="Upload image"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-        >
-          <Upload name="logo" action="/upload.do" listType="picture">
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            name="internshipTime"
+            label="Thời gian bắt đầu thực tập"
+            // rules={[{}]}
+          >
+            <Space direction="vertical">
+              <DatePicker
+                onChange={datePicker}
+                placeholder="Bắt đầu thực tập"
+              />
+            </Space>
+          </Form.Item>
+          <Form.Item
+            name="upload"
+            label="Upload image"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload name="logo" action="/upload.do" listType="picture">
+              <Button icon={<UploadOutlined />}>Click to upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      ) : (
+        <p>Thời gian đăng ký đã hết</p>
+      )}
     </>
   );
 };
