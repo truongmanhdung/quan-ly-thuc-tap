@@ -6,26 +6,24 @@ import { Select, Input, Table, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
-  getListStudentAssReviewer,
   listStudentForm,
   updateReviewerListStudent,
+  updateStatusListStudent
 } from '../../features/reviewerStudent/reviewerSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
-import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
 const { Option } = Select;
 
 const Reviewform = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
+  const [status, setStatus] = useState({});
   const {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-  console.log(list);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
@@ -107,7 +105,7 @@ const Reviewform = () => {
           );
         } else if (status === 5) {
           return (
-            <span className="status-true" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: "green" }}>
               Đã nhận <br />
             </span>
           );
@@ -129,15 +127,6 @@ const Reviewform = () => {
       setChooseIdStudent(selectedRows);
     },
   };
-  const chooseStudent = useCallback(() => {
-    dispatch(
-      updateReviewerListStudent({
-        listIdStudent: listIdStudent,
-        email: infoUser?.manager?.email,
-      }),
-    );
-    alert('Thêm thành công ');
-  }, [listIdStudent]);
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
@@ -156,39 +145,45 @@ const Reviewform = () => {
     };
     dispatch(getStudent(data));
   };
+    const actionOnchange = (value) => {
+      switch (value) {
+        case 'assgin':
+          dispatch(
+            updateReviewerListStudent({
+              listIdStudent: listIdStudent,
+              email: infoUser?.manager?.email,
+            }),
+          );
+          setStatus([]);
+          alert('Thêm thành công ');
+          break;
+        case 'edit':
+          setStatus({
+            listIdStudent: listIdStudent,
+            email: infoUser?.manager?.email,
+          });
+          break;
 
+        default:
+          break;
+      }
+    };
+    const selectStatus = (value) => {
+      setStatus({
+        listIdStudent: listIdStudent,
+        email: infoUser?.manager?.email,
+        status: value,
+      });
+    };
 
-  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  const fileExtension = '.xlsx';
-
-  const exportToCSV = (list) => {
-    const newData = []
-
-    list.filter(item => {
-      const newObject = {};
-      newObject["MSSV"] = item["mssv"];
-      newObject["Họ tên"] = item["name"];
-      newObject["Email"] = item["email"];
-      newObject["Số điện thoại"] = item["phone"];
-      newObject["Tên công ty"] = item["nameCompany"];
-      newObject["Mã số thuế"] = item["postCode"];
-      newObject["Biểu mẫu"] = item["form"];
-      newData.push(newObject);
-    });
-
-    const ws = XLSX.utils.json_to_sheet(newData);
-    const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileExtension);
-  }
-
+    const comfirm = () => {
+      dispatch(updateStatusListStudent(status));
+      setChooseIdStudent([]);
+    };
   return (
     <div className="status">
       <h4>Review biên bản</h4>
-      <Button variant="warning" onClick={(e) => exportToCSV(list)}>Export</Button>
-      <br />
-      <br />
+
       <div className="filter">
 
         <span>Ngành: </span>
@@ -236,7 +231,42 @@ const Reviewform = () => {
           onChange={(val) => handleStandardTableChange('name', val.target.value)}
         />
         <Button onClick={handleSearch}>Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
+        {chooseIdStudent.length > 0 && (
+          <div className="comfirm">
+            <span>Lựa chọn:</span>
+            <Select
+              className="comfirm-click"
+              style={{ width: 170 }}
+              onChange={actionOnchange}
+              placeholder="Chọn"
+            >
+              <Option value="assgin" key="1">
+                Kéo việc
+              </Option>
+              <Option value="edit" key="2">
+                Câp nhật trạng thái
+              </Option>
+            </Select>
+
+            {Object.keys(status).length >= 1 && (
+              <Select
+                className="upload-status"
+                style={{ width: 150 }}
+                onChange={(e) => selectStatus(e)}
+                placeholder="Chọn trạng thái"
+              >
+                <Option value="2" key="1">
+                  Chờ kiểm tra
+                </Option>
+                <Option value="5" key="5">
+                  Đã nhận
+                </Option>
+              </Select>
+            )}
+
+            <Button onClick={() => comfirm()}>Xác nhận</Button>
+          </div>
+        )}
       </div>
 
       <Table

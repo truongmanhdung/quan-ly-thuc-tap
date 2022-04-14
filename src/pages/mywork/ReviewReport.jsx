@@ -6,6 +6,7 @@ import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
     listStudentReport,
     updateReviewerListStudent,
+    updateStatusListStudent
 } from '../../features/reviewerStudent/reviewerSlice';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
@@ -21,6 +22,7 @@ const ReviewReport = () => {
         loading,
     } = useSelector((state) => state.reviewer);
     const [chooseIdStudent, setChooseIdStudent] = useState([]);
+    const [status, setStatus] = useState({});
     const [listIdStudent, setListIdStudent] = useState([]);
     const [page, setPage] = useState({
         page: 1,
@@ -75,7 +77,7 @@ const ReviewReport = () => {
             dataIndex: 'report',
             width: 100,
         },
-        
+
         {
             title: 'Trạng thái',
             dataIndex: 'statusCheck',
@@ -97,13 +99,14 @@ const ReviewReport = () => {
                         <span className="status-fail" style={{ color: 'green' }}>
                             Hoàn thành
                         </span>
-                    )}
-                    else if (status === 8) {
-                        return (
-                            <span className="status-fail" style={{ color: 'green' }}>
-                                Sửa lại
-                            </span>
-                        );
+                    )
+                }
+                else if (status === 8) {
+                    return (
+                        <span className="status-fail" style={{ color: 'green' }}>
+                            Sửa lại
+                        </span>
+                    );
                 } else {
                     return (
                         <span className="status-fail" style={{ color: 'red' }}>
@@ -177,6 +180,43 @@ const ReviewReport = () => {
     }
 
 
+
+    const actionOnchange = (value) => {
+        switch (value) {
+            case 'assgin':
+                dispatch(
+                    updateReviewerListStudent({
+                        listIdStudent: listIdStudent,
+                        email: infoUser?.manager?.email,
+                    }),
+                );
+                setStatus([]);
+                alert('Thêm thành công ');
+                break;
+            case 'edit':
+                setStatus({
+                    listIdStudent: listIdStudent,
+                    email: infoUser?.manager?.email,
+                });
+                break;
+
+            default:
+                break;
+        }
+    };
+    const selectStatus = (value) => {
+        setStatus({
+            listIdStudent: listIdStudent,
+            email: infoUser?.manager?.email,
+            status: value,
+        });
+    };
+
+    const comfirm = () => {
+        dispatch(updateStatusListStudent(status));
+        setChooseIdStudent([]);
+    };
+
     return (
         <div className="status">
             <h4>Review biểu mẫu</h4>
@@ -230,7 +270,49 @@ const ReviewReport = () => {
                     onChange={(val) => handleStandardTableChange('name', val.target.value)}
                 />
                 <Button onClick={handleSearch}>Tìm kiếm</Button>
-                {chooseIdStudent.length > 0 && <Button onClick={() => chooseStudent()}>Xác nhận</Button>}
+                {chooseIdStudent.length > 0 && (
+
+                    <div className="comfirm">
+                        <span>Lựa chọn:</span>
+                        <Select
+                            className="comfirm-click"
+                            style={{ width: 170 }}
+                            onChange={actionOnchange}
+                            placeholder="Chọn"
+                        >
+                            <Option value="assgin" key="1">
+                                Kéo việc
+                            </Option>
+                            <Option value="edit" key="2">
+                                Cập nhật trạng thái
+                            </Option>
+                        </Select>
+
+                        {Object.keys(status).length >= 1 && (
+                            <Select
+                                className="upload-status"
+                                style={{ width: 150 }}
+                                onChange={(e) => selectStatus(e)}
+                                placeholder="Chọn trạng thái"
+                            >
+                                <Option value="5" key="1">
+                                    Đang thực tập
+                                </Option>
+                                <Option value="6" key="5">
+                                    Chờ kiểm tra
+                                </Option>
+                                <Option value="7" key="5">
+                                    Hoàn thành 
+                                </Option>
+                                <Option value="8" key="5">
+                                    Sửa lại
+                                </Option>
+                            </Select>
+                        )}
+
+                        <Button onClick={() => comfirm()}>Xác nhận</Button>
+                    </div>
+                )}
             </div>
 
             <Table
