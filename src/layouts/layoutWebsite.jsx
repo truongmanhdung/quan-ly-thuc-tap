@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Menu } from 'antd';
 import {
   ProfileOutlined,
@@ -14,16 +14,27 @@ import { Content } from 'antd/lib/layout/layout';
 import { useSelector } from 'react-redux';
 import './layout.css';
 import SubMenu from 'antd/lib/menu/SubMenu';
+import { getCookie, removeCookie, STORAGEKEY } from '../ultis/storage.js';
+import jwt_decode from 'jwt-decode';
+import { setAuthHeader } from '../API/Link.js';
 
 const { Sider } = Layout;
 function LayoutWebsite() {
+  const accessToken = getCookie(STORAGEKEY.ACCESS_TOKEN)
   const [state, setState] = useState(false);
-  const {
-    infoUser: { isAdmin },
-  } = useSelector((state) => state.auth);
+  const { infoUser: { isAdmin } } = useSelector((state) => state.auth);
   const onCollapse = () => {
     setState(!state);
   };
+  
+  useEffect(()=>{
+    if (accessToken) {
+      const currentTime = Date.now() / 1000
+      const decoded = jwt_decode(accessToken)
+      if (currentTime > decoded.exp) removeCookie(STORAGEKEY.ACCESS_TOKEN)
+      setAuthHeader(accessToken)
+    }
+  },[accessToken])
 
   return (
     <div>
@@ -50,22 +61,22 @@ function LayoutWebsite() {
                 </Menu.Item> */}
 
                 <SubMenu key="sub1" icon={<UnorderedListOutlined />} title="Reviews">
-                <Menu.Item key="9" >
-                  <NavLink to="review-cv"> CV</NavLink>
-                </Menu.Item>
-                <Menu.Item key="10" >
-                  <NavLink to="review-form">Biên bản</NavLink>
-                </Menu.Item>
-                <Menu.Item key="12" >
-                  <NavLink to="review-report">Báo cáo</NavLink>
-                </Menu.Item>
+                  <Menu.Item key="9" >
+                    <NavLink to="review-cv"> CV</NavLink>
+                  </Menu.Item>
+                  <Menu.Item key="10" >
+                    <NavLink to="review-form">Biên bản</NavLink>
+                  </Menu.Item>
+                  <Menu.Item key="12" >
+                    <NavLink to="review-report">Báo cáo</NavLink>
+                  </Menu.Item>
                 </SubMenu>
 
-                
+
                 <Menu.Item key="11" icon={<FolderViewOutlined className="icon-link" />}>
                   <NavLink to="form-register">Thời gian đăng ký</NavLink>
                 </Menu.Item>
-              
+
                 <Menu.Item key="7" icon={<UploadOutlined className="icon-link" />}>
                   <NavLink to="up-file">Up File</NavLink>
                 </Menu.Item>
