@@ -99,7 +99,7 @@ function LayoutWebsite() {
                   <NavLink to="/support-student">Đăng ký thực tập</NavLink>
                 </Menu.Item>
                 <Menu.Item key="5">
-                  <NavLink to="report">Biểu mẫu</NavLink>
+                  <NavLink to="report">Biên bản</NavLink>
                 </Menu.Item>
                 <Menu.Item key="4">
                   <NavLink to="/report-form">Báo cáo</NavLink>
