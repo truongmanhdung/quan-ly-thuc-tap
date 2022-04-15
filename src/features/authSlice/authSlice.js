@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthApi from '../../API/Auth'
-import { setCookie, STORAGEKEY } from "../../ultis/storage";
+import { removeCookie, setCookie, STORAGEKEY } from "../../ultis/storage";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
@@ -15,6 +15,9 @@ export const loginGoogle = createAsyncThunk(
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   const { data } = await AuthApi.logout();
+  if(data){
+    removeCookie(STORAGEKEY.ACCESS_TOKEN)
+  }
   return data;
 });
 
