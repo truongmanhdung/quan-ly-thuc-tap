@@ -27,7 +27,7 @@ const Status = () => {
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.cumpus,
+    campus_id: infoUser.manager.campus_id,
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
@@ -85,8 +85,7 @@ const Status = () => {
     {
       title: 'Người review',
       dataIndex: 'reviewer',
-      width: 230
-
+      width: 230,
     },
     {
       title: 'Trạng thái',
@@ -95,32 +94,64 @@ const Status = () => {
         if (status === 0) {
           return (
             <span className="status-fail" style={{ color: 'orange' }}>
-              Chờ kiểm tra 
+              Chờ kiểm tra
             </span>
           );
         } else if (status === 1) {
           return (
             <span className="status-up" style={{ color: 'grey' }}>
-              Đang kiểm tra
+              Sửa lại CV
             </span>
           );
         } else if (status === 2) {
           return (
-            <span className="status-fail" style={{ color: 'green' }}>
-              Nhận Cv <br />
+            <span className="status-fail" style={{ color: 'red' }}>
+              Nhận CV
             </span>
           );
-        } else if (status === 3) {
+        }
+        else if (status === 3) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Không đủ Đk <br />
+              Trượt
             </span>
           );
-        } else if (status === 4) {
-          <span className="status-fail" style={{ color: 'red' }}>
-            Trượt <br />
-            <Button>Sửa</Button>
-          </span>;
+        }  else if (status === 4) {
+          return (
+            <span className="status-fail" style={{ color: 'red' }}>
+              Đã nộp biên bản <br />
+            </span>
+          );
+        } else if (status === 5) {
+          return (
+            <span className="status-fail" style={{ color: 'red' }}>
+              Sửa biên bản <br />
+            </span>
+          );
+        } else if (status === 6) {
+          return (
+            <span className="status-fail" style={{ color: 'red' }}>
+             Đang thực tập <br />
+            </span>
+          );
+        } else if (status === 7) {
+          return (
+            <span className="status-fail" style={{ color: 'red' }}>
+              Đã nộp báo cáo <br />
+            </span>
+          );
+        } else if (status === 8) {
+          return (
+            <span className="status-fail" style={{ color: 'red' }}>
+              Sửa báo cáo <br />
+            </span>
+          );
+        } else if (status === 9) {
+          return (
+            <span className="status-fail" style={{ color: 'red' }}>
+              Hoàn thành <br />
+            </span>
+          );
         } else {
           return (
             <span className="status-fail" style={{ color: 'red' }}>

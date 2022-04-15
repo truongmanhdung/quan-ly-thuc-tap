@@ -12,6 +12,7 @@ import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { statusConfigReport } from '../../ultis/constConfig';
 const { Option } = Select;
 
 const ReviewReport = () => {
@@ -81,42 +82,77 @@ const ReviewReport = () => {
         {
             title: 'Trạng thái',
             dataIndex: 'statusCheck',
-            render: status => {
-                if (status === 5) {
-                    return (
-                        <span className="status-fail" style={{ color: 'orange' }}>
-                            Đang thực tập
-                        </span>
-                    );
-                } else if (status === 6) {
-                    return (
-                        <span className="status-up" style={{ color: 'grey' }}>
-                            Chờ kiểm tra
-                        </span>
-                    );
-                } else if (status === 7) {
-                    return (
-                        <span className="status-fail" style={{ color: 'green' }}>
-                            Hoàn thành
-                        </span>
-                    )
-                }
-                else if (status === 8) {
-                    return (
-                        <span className="status-fail" style={{ color: 'green' }}>
-                            Sửa lại
-                        </span>
-                    );
-                } else {
-                    return (
-                        <span className="status-fail" style={{ color: 'red' }}>
-                            Chưa đăng ký
-                        </span>
-                    );
-                }
+            render: (status) => {
+              if (status === 0) {
+                return (
+                  <span className="status-fail" style={{ color: 'orange' }}>
+                    Chờ kiểm tra
+                  </span>
+                );
+              } else if (status === 1) {
+                return (
+                  <span className="status-up" style={{ color: 'grey' }}>
+                    Sửa lại CV
+                  </span>
+                );
+              } else if (status === 2) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Nhận CV
+                  </span>
+                );
+              }
+              else if (status === 3) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Trượt
+                  </span>
+                );
+              }  else if (status === 4) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Đã nộp biên bản <br />
+                  </span>
+                );
+              } else if (status === 5) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Sửa biên bản <br />
+                  </span>
+                );
+              } else if (status === 6) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                   Đang thực tập <br />
+                  </span>
+                );
+              } else if (status === 7) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Đã nộp báo cáo <br />
+                  </span>
+                );
+              } else if (status === 8) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Sửa báo cáo <br />
+                  </span>
+                );
+              } else if (status === 9) {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Hoàn thành <br />
+                  </span>
+                );
+              } else {
+                return (
+                  <span className="status-fail" style={{ color: 'red' }}>
+                    Chưa đăng ký
+                  </span>
+                );
+              }
             },
-            width: 100,
-        }
+          },
     ];
     // xóa tìm kiếm
     const rowSelection = {
@@ -295,18 +331,11 @@ const ReviewReport = () => {
                                 onChange={(e) => selectStatus(e)}
                                 placeholder="Chọn trạng thái"
                             >
-                                <Option value="5" key="1">
-                                    Đang thực tập
-                                </Option>
-                                <Option value="6" key="5">
-                                    Chờ kiểm tra
-                                </Option>
-                                <Option value="7" key="5">
-                                    Hoàn thành 
-                                </Option>
-                                <Option value="8" key="5">
-                                    Sửa lại
-                                </Option>
+                                {statusConfigReport.map((item,index)=> (
+                                      <Option value={item.value} key={index}>
+                                          {item.title}
+                                  </Option>
+                                ))}
                             </Select>
                         )}
 

@@ -39,16 +39,17 @@ const UpFile = () => {
       rows.filter((item, index) => index !== 0).map((item) => {
         const newObject = {};
         if (manager) {
-          newObject["mssv"] = item["MSSV"];
-          newObject["name"] = item["Họ tên"];
-          newObject["course"] = item["Khóa nhập học"];
-          newObject["status"] = item["Trạng thái FA21"];
-          newObject["majors"] = item["Ngành FA21"];
-          newObject["email"] = item["Email"];
-          newObject["supplement"] = item["bổ sung"];
-          newObject["campus_id"] = manager.campus_id;
-          newObject["statusCheck"] = 10
-          datas.push(newObject);
+          if (item["MSSV"]!== undefined) {
+            newObject["mssv"] = item["MSSV"];
+            newObject["name"] = item["Họ tên"];
+            newObject["course"] = item["Khóa nhập học"];
+            newObject["status"] = item["Trạng thái FA21"];
+            newObject["majors"] = item["Ngành FA21"];
+            newObject["email"] = item["Email"];
+            newObject["supplement"] = item["bổ sung"];
+            newObject["campus_id"] = manager.campus_id;
+          }
+          Object.keys(newObject).length >0 && datas.push(newObject);
         }
       });
       setDataNew(datas);
@@ -56,6 +57,7 @@ const UpFile = () => {
     };
     reader.readAsBinaryString(file);
   };
+
   const submitSave = () => {
     dispatch(insertStudent(dataNew)).then(res => notifications(res.payload))
     
@@ -67,7 +69,7 @@ const UpFile = () => {
     }
   };
   const submitCole = () => {
-    setData();
+    setDataNew([]);
     setNameFile();
   };
 

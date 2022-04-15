@@ -11,6 +11,7 @@ import {
 } from '../../features/reviewerStudent/reviewerSlice';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
+import { statusConfigCV } from '../../ultis/constConfig';
 
 const { Option } = Select;
 
@@ -21,7 +22,6 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [status, setStatus] = useState({});
@@ -100,35 +100,25 @@ const ReviewCV = () => {
       render: (status) => {
         if (status === 0) {
           return (
-            <span className="status-check" style={{ color: 'orange' }}>
-              Chờ kiểm tra <br />
+            <span className="status-fail" style={{ color: 'orange' }}>
+              Chờ kiểm tra
             </span>
           );
         } else if (status === 1) {
           return (
-            <span className="status-check" style={{ color: 'orange' }}>
-            Sửa lại
-          </span>
-          )
+            <span className="status-up" style={{ color: 'grey' }}>
+              Sửa lại CV
+            </span>
+          );
         } else if (status === 2) {
           return (
-            <span className="status-fail" style={{ color: 'green' }}>
-              Nhận Cv <br />
+            <span className="status-fail" style={{ color: 'red' }}>
+              Nhận CV
             </span>
           );
-        } else if (status === 3) {
-          return (
-            <span className="status-true" style={{ color: 'red' }}>
-              Không đủ Đk <br />
-            </span>
-          );
-        } else if (status === 4) {
-          <span className="status-true" style={{ color: 'red' }}>
-            Trượt <br />
-          </span>;
         } else {
           return (
-            <span className="status-true" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Chưa đăng ký
             </span>
           );
@@ -285,19 +275,13 @@ const ReviewCV = () => {
                 style={{ width: 150 }}
                 onChange={(e) => selectStatus(e)}
                 placeholder="Chọn trạng thái"
-              >
-                <Option value="1" key="1">
-                  Sửa lại
+              >{
+                statusConfigCV.map((item, index) => (
+                  <Option value={item.value} key={index}>
+                      {item.title}
                 </Option>
-                <Option value="2" key="2">
-                  Đã nhận
-                </Option>
-                <Option value="3" key="3">
-                  Không đủ điều kiện
-                </Option>
-                <Option value="4" key="4">
-                  Trượt
-                </Option>
+                ))
+              }
               </Select>
             )}
 
