@@ -66,32 +66,46 @@ const reviewerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateStatusListStudent.fulfilled, (state, action) => {
+      console.log("actiob dsdadsadsa", action.payload.status);
       const dataArr = [];
-      action.payload.listStudentChangeStatus.forEach((item) => {
-        state.listStudentAssReviewer.list.forEach((data) => {
+      console.log(action.payload.listStudentChangeStatus);
+
+      state.listStudentAssReviewer.list.forEach((data) => {
+        action.payload.listStudentChangeStatus.forEach((item) => {
           if (data.mssv !== item.mssv) {
+            console.log(data.mssv);
             dataArr.push(data);
           }
         });
       });
       if (
-        state.listStudentAssReviewer.list.length ===
-          action.payload.listStudentChangeStatus.length &&
-        action.payload.status !== "2"
-      ) {
-        state.listStudentAssReviewer.list =
-          action.payload.listStudentChangeStatus;
-      } else if (
-        action.payload.status === "2" &&
+        (action.payload.status === 2 ||
+          action.payload.status === 1 ||
+          action.payload.status === 3 ||
+          action.payload.status === 6 ||
+          action.payload.status === 9) &&
         state.listStudentAssReviewer.list.length ===
           action.payload.listStudentChangeStatus.length
       ) {
         state.listStudentAssReviewer.list = [];
-      }else if(action.payload.status === "2" && state.listStudentAssReviewer.list.length >
-      action.payload.listStudentChangeStatus.length){
-        state.listStudentAssReviewer.list = dataArr
-      }
-      else {
+      } else if (
+        (action.payload.status === 2 ||
+          action.payload.status === 1 ||
+          action.payload.status === 3 ||
+          action.payload.status === 6 ||
+          action.payload.status === 9) &&
+        state.listStudentAssReviewer.list.length >
+          action.payload.listStudentChangeStatus.length
+      ) {
+        const listMssv = [];
+        action.payload.listStudentChangeStatus.forEach((item) => {
+          listMssv.push(item.mssv);
+        });
+        state.listStudentAssReviewer.list =
+          state.listStudentAssReviewer.list.filter(
+            (item) => !listMssv.includes(item.mssv)
+          );
+      } else {
         state.listStudentAssReviewer.list =
           action.payload.listStudentChangeStatus.concat(dataArr);
       }
