@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Layout, Menu } from "antd";
-import { Layout, Menu } from 'antd';
 import {
   ProfileOutlined,
   UserOutlined,
