@@ -119,6 +119,7 @@ const SupportStudent = () => {
       const data = {
         ...values,
         support: value,
+        typeNumber: 2,
         email: infoUser?.student?.email,
         ///dispatch Redux
       };
@@ -147,15 +148,14 @@ const SupportStudent = () => {
     dispatch(getStudentId(infoUser.student.mssv));
   }, []);
 
-  console.log(student);
   const check = time.endTime > new Date().getTime();
-  const checkForm = student.statusCheck === 10;
+  const isCheck = student.statusCheck === 10;
   return (
     <>
       {check && <CountDownCustorm time={time} />}
       {spin ? <Spin /> : null}
       {check ? (
-        checkForm ? (
+        isCheck ? (
           <Form
             {...formItemLayout}
             form={form}

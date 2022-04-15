@@ -56,10 +56,9 @@ const Formrp = () => {
   const { infoUser } = useSelector((state) => state.auth);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
     setStartDate(new Date(date._d).getTime());
-    
   };
 
   useEffect(() => {
