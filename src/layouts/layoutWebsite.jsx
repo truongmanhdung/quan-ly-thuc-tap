@@ -31,9 +31,6 @@ function LayoutWebsite() {
 
   useEffect(() => {
     if (accessToken) {
-      const currentTime = Date.now() / 1000;
-      const decoded = jwt_decode(accessToken);
-      if (currentTime > decoded.exp) removeCookie(STORAGEKEY.ACCESS_TOKEN);
       setAuthHeader(accessToken);
     }
   }, [accessToken]);

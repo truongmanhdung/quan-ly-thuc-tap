@@ -31,7 +31,7 @@ const Router = () => {
         <Route path="/support-student" element={<SupportStudent />} />
 
         <Route path="info-student" element={<InfoStudent />} />
-        <Route path="report-form" element={<ReportForm />} />
+        {/* <Route path="report-form" element={<ReportForm />} /> */}
         <Route path="report" element={<Formrp />} />
 
         <Route
