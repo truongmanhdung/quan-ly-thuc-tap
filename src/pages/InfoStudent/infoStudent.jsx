@@ -54,7 +54,7 @@ function InfoStudent(props) {
   const { infoUser } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
+  }, [dispatch]);
   console.log(student);
   const isRegister = student?.support;
 

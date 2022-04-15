@@ -60,13 +60,13 @@ const Formrp = () => {
   const email = infoUser?.student?.email;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
-    setStartDate(new Date(date._d).getTime());
+    setStartDate(date._d);
   };
 
   useEffect(() => {
     dispatch(getTimeForm(3));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [dispatch]);
+  }, [student]);
 
   function guardarArchivo(files, data) {
     console.log(files);

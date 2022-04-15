@@ -90,7 +90,6 @@ const ReportForm = () => {
           console.log(newData);
           ReportFormAPI.uploadReport(newData)
             .then((res) => {
-              console.log(newData);
               message.success(res.data.message);
               form.resetFields();
             })
@@ -133,7 +132,7 @@ const ReportForm = () => {
   useEffect(() => {
     dispatch(getTimeForm(4));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
+  }, [student]);
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -146,7 +145,6 @@ const ReportForm = () => {
         typeNumber: 1,
         email: email,
       };
-
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
