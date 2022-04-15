@@ -119,7 +119,7 @@ const SupportStudent = () => {
       const data = {
         ...values,
         support: value,
-        typeNumber: 2,
+        typeNumber: 1,
         email: infoUser?.student?.email,
         ///dispatch Redux
       };

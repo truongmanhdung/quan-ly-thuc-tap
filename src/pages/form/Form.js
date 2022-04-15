@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
+import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 
 import styles from "./Form.module.css";
@@ -54,6 +55,7 @@ const Formrp = () => {
   const [file, setFile] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
+  const { student } = useSelector((state) => state.cumpus);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const dispatch = useDispatch();
@@ -63,9 +65,11 @@ const Formrp = () => {
 
   useEffect(() => {
     dispatch(getTimeForm(3));
-  }, []);
+    dispatch(getStudentId(infoUser.student.mssv));
+  }, [dispatch]);
 
   function guardarArchivo(files, data) {
+    console.log(files);
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
      `;
@@ -89,6 +93,7 @@ const Formrp = () => {
           console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
+              console.log(newData);
               message.success(res.data.message);
               form.resetFields();
             })
@@ -134,10 +139,9 @@ const Formrp = () => {
         ...values,
         mssv: mssv,
         email: email,
-        typeNumber: 3,
+        typeNumber: 1,
         internshipTime: startDate,
       };
-      console.log(newData);
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
@@ -145,75 +149,81 @@ const Formrp = () => {
     }
   };
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
+  const isCheck = student.form;
   return (
     <>
       {spin ? <Spin /> : null}
       {check && <CountDownCustorm time={time} />}
       {check ? (
-        <Form
-          {...formItemLayout}
-          form={form}
-          className={styles.form}
-          name="register"
-          onFinish={onFinish}
-          initialValues={{
-            residence: ["zhejiang", "hangzhou", "xihu"],
-            prefix: "86",
-          }}
-          scrollToFirstError
-        >
-          <Form.Item
-            name="nameCompany"
-            label="Tên doanh nghiệp"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập tên doanh nghiệp",
-              },
-            ]}
+        isCheck ? (
+          "Bạn đã nộp biên bản thành công"
+        ) : (
+          <Form
+            {...formItemLayout}
+            form={form}
+            className={styles.form}
+            name="register"
+            onFinish={onFinish}
+            initialValues={{
+              residence: ["zhejiang", "hangzhou", "xihu"],
+              prefix: "86",
+            }}
+            scrollToFirstError
           >
-            <Input placeholder="Tên doanh nghiệp" />
-          </Form.Item>
-          <Form.Item
-            name="attitudePoint"
-            label="Mã số thuế"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập mã số thuế của doanh nghiệp",
-              },
-            ]}
-          >
-            <Input placeholder="Nhập mã số thuế doanh nghiệp" />
-          </Form.Item>
+            <Form.Item
+              name="nameCompany"
+              label="Tên doanh nghiệp"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên doanh nghiệp",
+                },
+              ]}
+            >
+              <Input placeholder="Tên doanh nghiệp" />
+            </Form.Item>
+            <Form.Item
+              name="taxCode"
+              label="Mã số thuế"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập mã số thuế của doanh nghiệp",
+                },
+              ]}
+            >
+              <Input placeholder="Nhập mã số thuế doanh nghiệp" />
+            </Form.Item>
 
-          <Form.Item
-            name="internshipTime"
-            label="Thời gian bắt đầu thực tập"
-            // rules={[{}]}
-          >
-            <Space direction="vertical">
-              <DatePicker
-                onChange={datePicker}
-                placeholder="Bắt đầu thực tập"
-              />
-            </Space>
-          </Form.Item>
-          <Form.Item
-            label="Upload image"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-          >
-            <Upload name="logo" action="/upload.do" listType="picture">
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
-            </Upload>
-          </Form.Item>
-          <Form.Item {...tailFormItemLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
+            <Form.Item
+              name="internshipTime"
+              label="Thời gian bắt đầu thực tập"
+              // rules={[{}]}
+            >
+              <Space direction="vertical">
+                <DatePicker
+                  onChange={datePicker}
+                  placeholder="Bắt đầu thực tập"
+                />
+              </Space>
+            </Form.Item>
+            <Form.Item
+              name="upload"
+              label="Upload image"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+            >
+              <Upload name="logo" action="/upload.do" listType="picture">
+                <Button icon={<UploadOutlined />}>Click to upload</Button>
+              </Upload>
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        )
       ) : (
         <p>Bạn phải nộp cv rồi mới đến biểu mẫu</p>
       )}
