@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthApi from '../../API/Auth'
+import { setCookie, STORAGEKEY } from "../../ultis/storage";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
   async (dataForm) => {
-    const {data} = await AuthApi.login(dataForm)
+    const { data } = await AuthApi.login(dataForm)
+    if (data?.accessToken) {
+      setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
+    }
     return data;
   }
 );
@@ -20,7 +24,7 @@ const authSlice = createSlice({
     infoUser: {},
     loading: false,
     messages: "",
-    token:undefined,
+    token: undefined,
   },
 
   extraReducers: (builder) => {
@@ -40,11 +44,11 @@ const authSlice = createSlice({
     builder.addCase(logout.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(logout.fulfilled, (state,action) => {
+    builder.addCase(logout.fulfilled, (state, action) => {
       state.loading = false;
       state.token = action.payload.token;
     });
-    builder.addCase(logout.rejected, (state,action) => {
+    builder.addCase(logout.rejected, (state, action) => {
       state.messages = "Logout google fail";
     });
   },

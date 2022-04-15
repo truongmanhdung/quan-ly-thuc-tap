@@ -6,3 +6,7 @@ export const axiosClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+export const setAuthHeader = (accessToken) => {
+  axiosClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+}
