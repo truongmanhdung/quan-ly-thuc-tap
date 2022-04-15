@@ -57,15 +57,6 @@ function InfoStudent(props) {
   }, []);
   console.log(student);
   const isRegister = student?.support;
-  // const rowSelection = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(
-  //       `selectedRowKeys: ${selectedRowKeys}`,
-  //       "selectedRows: ",
-  //       selectedRows
-  //     );
-  //   },
-  // };
 
   return (
     <div>
