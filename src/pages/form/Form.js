@@ -86,6 +86,7 @@ const Formrp = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
+          console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
               message.success(res.data.message);
@@ -133,8 +134,10 @@ const Formrp = () => {
         ...values,
         mssv: mssv,
         email: email,
-        internShipTime: startDate,
+        typeNumber: 3,
+        internshipTime: startDate,
       };
+      console.log(newData);
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
@@ -197,7 +200,6 @@ const Formrp = () => {
             </Space>
           </Form.Item>
           <Form.Item
-            name="upload"
             label="Upload image"
             valuePropName="fileList"
             getValueFromEvent={normFile}

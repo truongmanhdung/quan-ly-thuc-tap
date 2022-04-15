@@ -146,7 +146,7 @@ const SupportStudent = () => {
     dispatch(getListSpecialization());
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
+  }, [dispatch]);
 
   const check = time.endTime > new Date().getTime();
   const isCheck = student.statusCheck === 10;
