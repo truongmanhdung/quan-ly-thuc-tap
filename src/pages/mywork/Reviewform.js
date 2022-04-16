@@ -218,10 +218,10 @@ const Reviewform = () => {
       }
     };
     const selectStatus = (value) => {
-      console.log(value);
         if (value ===1) {
           let id =[]
-            listIdStudent.filter(item => item.support === 1).map(item => id.push(item._id))
+            chooseIdStudent.filter(item => item.support === 1).map(item => id.push(item._id))
+            console.log(id);
             setStatus({
               listIdStudent: id,
               email: infoUser?.manager?.email,
