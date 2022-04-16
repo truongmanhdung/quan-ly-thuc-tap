@@ -1,5 +1,21 @@
 .site-layout-background{
     background: white;
      padding: 0;
-     height: 100px 
+     height: 70px ;
+}
+.logo-mobile{
+    margin-top: -15px;
+}
+.icon-menu-mb{
+    font-size: 1.4rem;
+    opacity: .5;
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: 1px solid rgb(113, 113, 113);
+}
+.icon-account{
+    font-size: 1.6rem;
+    opacity: .5;
+    border-radius: 5px;
+    padding: 5px;
 }

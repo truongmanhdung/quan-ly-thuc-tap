@@ -29,7 +29,9 @@ function LayoutWebsite() {
   return (
     <div>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider collapsible collapsed={state} className="layout-sider" onCollapse={() => onCollapse()}>
+        {
+          window.innerWidth >1024 ?
+          <Sider collapsible collapsed={state} className="layout-sider" onCollapse={() => onCollapse()}>
           <div className="logo-school">
             <div className="logo">
               <img
@@ -105,9 +107,12 @@ function LayoutWebsite() {
             )}
           </Menu>
         </Sider>
+        :""
+        }
+       
         <Layout className="site-layout">
           <GlobalHeader onCollapse={onCollapse} state={state} />
-          <Content style={{ margin: "15px 15px", background: "white" }}>
+          <Content style={{ margin: "10px 10px", background: "white" }}>
             <div style={{ padding: 24, minHeight: 360 }}>
               <Outlet />
             </div>

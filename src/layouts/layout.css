@@ -13,9 +13,9 @@ body::-webkit-scrollbar {
 }
 
 
-.logo-school {
+/* .logo-school {
     border-bottom: 1px solid rgb(228, 228, 228);
-}
+} */
 
 .logo {
     position: relative;
@@ -45,7 +45,7 @@ body::-webkit-scrollbar {
 
 
 
-
+/* 
 ul {
     background-color: #fff !important;
 }
@@ -62,19 +62,17 @@ ul>li a:hover {
 
 .icon-link {
     color: rgb(76, 76, 76) !important;
-}
+} */
 
 .ant-menu-item-selected {
     background-color: #fff !important;
 }
-@media (max-width:1024px) {
-    /* .logo-school{
-        display: none;
-    } */
+/* @media (max-width:1024px) {
+    
 }
 @media (min-width:739px) and (max-width:1023px) {
     .layout-sider {
-        display: none !important;
+        display: none ;
     }
 }
 
@@ -83,10 +81,13 @@ ul>li a:hover {
         display: none ;
     }
     .logo>img{
-        width: 80% !important;
+        width: 80% ;
     }
     .view-account{
         display: none;
+    }
+    .site-layout-background{
+        height: 70px;
     }
 }
 
@@ -96,8 +97,16 @@ ul>li a:hover {
     }
     .logo>img{
         width: 80% !important;
+        margin-top: 0;
+    }
+    .icon-menu-mb{
+        margin-top: 0;   
     }
     .view-account{
         display: none;
     }
-}
+    .site-layout-background{
+        height: 70px ;
+    }
+
+} */

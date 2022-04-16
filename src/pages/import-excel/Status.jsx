@@ -116,7 +116,7 @@ const Status = () => {
               Trượt
             </span>
           );
-        }  else if (status === 4) {
+        } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
               Đã nộp biên bản <br />
@@ -131,7 +131,7 @@ const Status = () => {
         } else if (status === 6) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-             Đang thực tập <br />
+              Đang thực tập <br />
             </span>
           );
         } else if (status === 7) {
@@ -174,9 +174,9 @@ const Status = () => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -200,57 +200,61 @@ const Status = () => {
     <div className="status">
       <h4>Sinh viên đăng ký thực tập</h4>
 
-      <div className="filter">
-        <span>Ngành: </span>
+      {
+        window.innerWidth > 1024 &&
+        <div className="filter">
+          <span>Ngành: </span>
 
-        <Select
-          style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange('majors', val)}
-          placeholder="Lọc theo ngành"
-        >
-          {filterBranch.map((item, index) => (
-            <>
-              <Option value={item.value} key={index}>
+          <Select
+            style={{ width: 200 }}
+            onChange={(val) => handleStandardTableChange('majors', val)}
+            placeholder="Lọc theo ngành"
+          >
+            {filterBranch.map((item, index) => (
+              <>
+                <Option value={item.value} key={index}>
+                  {item.title}
+                </Option>
+              </>
+            ))}
+          </Select>
+          <span
+            style={{
+              marginLeft: '30px',
+            }}
+          >
+            Trạng thái:
+          </span>
+          <Select
+            className="filter-status"
+            style={{ width: 200 }}
+            onChange={(val) => handleStandardTableChange('statusCheck', val)}
+            placeholder="Lọc theo trạng thái"
+          >
+            {filterStatuss.map((item, index) => (
+              <Option value={index} key={index}>
                 {item.title}
               </Option>
-            </>
-          ))}
-        </Select>
-        <span
-          style={{
-            marginLeft: '30px',
-          }}
-        >
-          Trạng thái:
-        </span>
-        <Select
-          className="filter-status"
-          style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange('statusCheck', val)}
-          placeholder="Lọc theo trạng thái"
-        >
-          {filterStatuss.map((item, index) => (
-            <Option value={index} key={index}>
-              {item.title}
-            </Option>
-          ))}
-        </Select>
+            ))}
+          </Select>
 
-        <span
-          style={{
-            marginLeft: '30px',
-          }}
-        >
-          Tìm Kiếm:{' '}
-        </span>
-        <Input
-          style={{ width: 200 }}
-          placeholder="Tìm kiếm theo tên"
-          onChange={(val) => handleStandardTableChange('name', val.target.value)}
-        />
-        <Button onClick={handleSearch}>Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>}
-      </div>
+          <span
+            style={{
+              marginLeft: '30px',
+            }}
+          >
+            Tìm Kiếm:{' '}
+          </span>
+          <Input
+            style={{ width: 200 }}
+            placeholder="Tìm kiếm theo tên"
+            onChange={(val) => handleStandardTableChange('name', val.target.value)}
+          />
+          <Button onClick={handleSearch}>Tìm kiếm</Button>
+          {chooseIdStudent.length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>}
+        </div>
+      }
+
 
       <Table
         rowSelection={{
