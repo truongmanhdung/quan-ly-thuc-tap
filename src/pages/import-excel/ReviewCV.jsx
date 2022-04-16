@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
-import { Select, Input, Table, Button } from 'antd';
+import { Select, Input, Table, Button, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
@@ -155,14 +155,19 @@ const ReviewCV = () => {
   const actionOnchange = (value) => {
     switch (value) {
       case 'assgin':
-        dispatch(
-          updateReviewerListStudent({
-            listIdStudent: listIdStudent,
-            email: infoUser?.manager?.email,
-          }),
-        );
-        setStatus([]);
-        alert('Thêm thành công ');
+        try {
+          dispatch(
+            updateReviewerListStudent({
+              listIdStudent: listIdStudent,
+              email: infoUser?.manager?.email,
+            }),
+          );
+          setStatus([]);
+            message.success("Thành công")
+        } catch (error) {
+          message.error("Thất bại")
+        }
+     
         break;
       case 'edit':
         setStatus({
@@ -285,7 +290,7 @@ const ReviewCV = () => {
               </Select>
             )}
 
-            <Button onClick={() => comfirm()}>Xác nhận</Button>
+{Object.keys(status).length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>}
           </div>
         )}
       </div>
