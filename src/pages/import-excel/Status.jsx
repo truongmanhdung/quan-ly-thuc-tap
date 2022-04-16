@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { EyeOutlined } from '@ant-design/icons';
-import '../../common/styles/status.css';
-import { Select, Input, Table, Button } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
-import { getStudent } from '../../features/StudentSlice/StudentSlice';
+import React, { useState, useEffect } from "react";
+import { EyeOutlined } from "@ant-design/icons";
+import "../../common/styles/status.css";
+import { Select, Input, Table, Button, Row, Col } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import {
   updateReviewerListStudent,
   updateStatusListStudent,
-} from '../../features/reviewerStudent/reviewerSlice';
-import { Link, useNavigate } from 'react-router-dom';
+} from "../../features/reviewerStudent/reviewerSlice";
+import { Link, useNavigate } from "react-router-dom";
 
-import { filterBranch, filterStatuss } from '../../ultis/selectOption';
-import { omit } from 'lodash';
+import { filterBranch, filterStatuss } from "../../ultis/selectOption";
+import { omit } from "lodash";
+import UpFile from "./UpFile";
 const { Option } = Select;
 
 const Status = () => {
@@ -35,126 +36,129 @@ const Status = () => {
   }, [page]);
   const columns = [
     {
-      title: 'MSSV',
-      dataIndex: 'mssv',
+      title: "MSSV",
+      dataIndex: "mssv",
       width: 100,
-      fixed: 'left',
+      fixed: "left",
     },
     {
-      title: 'Họ và Tên',
-      dataIndex: 'name',
+      title: "Họ và Tên",
+      dataIndex: "name",
       width: 150,
-      fixed: 'left',
+      fixed: "left",
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: "Email",
+      dataIndex: "email",
       width: 200,
     },
     {
-      title: 'Điện thoại',
-      dataIndex: 'phoneNumber',
+      title: "Điện thoại",
+      dataIndex: "phoneNumber",
       width: 160,
     },
     {
-      title: 'Ngành',
-      dataIndex: 'majors',
+      title: "Ngành",
+      dataIndex: "majors",
       width: 100,
     },
     {
-      title: 'Phân loại',
-      dataIndex: 'support',
+      title: "Phân loại",
+      dataIndex: "support",
       width: 90,
       render: (val) => {
         if (val === 1) {
-          return 'Hỗ trợ';
+          return "Hỗ trợ";
         } else if (val === 0) {
-          return 'Tự tìm';
+          return "Tự tìm";
         } else {
-          return '';
+          return "";
         }
       },
     },
     {
-      title: 'CV',
-      dataIndex: 'CV',
+      title: "CV",
+      dataIndex: "CV",
       width: 50,
       render: (val) =>
-        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
+        val ? (
+          <EyeOutlined className="icon-cv" onClick={() => window.open(val)} />
+        ) : (
+          ""
+        ),
     },
     {
-      title: 'Người review',
-      dataIndex: 'reviewer',
+      title: "Người review",
+      dataIndex: "reviewer",
       width: 230,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'statusCheck',
+      title: "Trạng thái",
+      dataIndex: "statusCheck",
       render: (status) => {
         if (status === 0) {
           return (
-            <span className="status-fail" style={{ color: 'orange' }}>
+            <span className="status-fail" style={{ color: "orange" }}>
               Chờ kiểm tra
             </span>
           );
         } else if (status === 1) {
           return (
-            <span className="status-up" style={{ color: 'grey' }}>
+            <span className="status-up" style={{ color: "grey" }}>
               Sửa lại CV
             </span>
           );
         } else if (status === 2) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Nhận CV
             </span>
           );
-        }
-        else if (status === 3) {
+        } else if (status === 3) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Trượt
             </span>
           );
-        }  else if (status === 4) {
+        } else if (status === 4) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Đã nộp biên bản <br />
             </span>
           );
         } else if (status === 5) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Sửa biên bản <br />
             </span>
           );
         } else if (status === 6) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
-             Đang thực tập <br />
+            <span className="status-fail" style={{ color: "red" }}>
+              Đang thực tập <br />
             </span>
           );
         } else if (status === 7) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Đã nộp báo cáo <br />
             </span>
           );
         } else if (status === 8) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Sửa báo cáo <br />
             </span>
           );
         } else if (status === 9) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Hoàn thành <br />
             </span>
           );
         } else {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Chưa đăng ký
             </span>
           );
@@ -190,22 +194,27 @@ const Status = () => {
 
   const comfirm = () => {
     dispatch(
-      updateReviewerListStudent({ listIdStudent: listIdStudent, email: infoUser?.manager?.email }),
+      updateReviewerListStudent({
+        listIdStudent: listIdStudent,
+        email: infoUser?.manager?.email,
+      })
     );
-    alert('Thêm thành công ');
-    navigate('/review-cv');
+    alert("Thêm thành công ");
+    navigate("/review-cv");
   };
 
   return (
     <div className="status">
-      <h4>Sinh viên đăng ký thực tập</h4>
-
+      <div className="flex-header">
+        <h4>Sinh viên đăng ký thực tập</h4>
+        <UpFile />
+      </div>
       <div className="filter">
         <span>Ngành: </span>
 
         <Select
           style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange('majors', val)}
+          onChange={(val) => handleStandardTableChange("majors", val)}
           placeholder="Lọc theo ngành"
         >
           {filterBranch.map((item, index) => (
@@ -218,7 +227,7 @@ const Status = () => {
         </Select>
         <span
           style={{
-            marginLeft: '30px',
+            marginLeft: "30px",
           }}
         >
           Trạng thái:
@@ -226,7 +235,7 @@ const Status = () => {
         <Select
           className="filter-status"
           style={{ width: 200 }}
-          onChange={(val) => handleStandardTableChange('statusCheck', val)}
+          onChange={(val) => handleStandardTableChange("statusCheck", val)}
           placeholder="Lọc theo trạng thái"
         >
           {filterStatuss.map((item, index) => (
@@ -238,23 +247,27 @@ const Status = () => {
 
         <span
           style={{
-            marginLeft: '30px',
+            marginLeft: "30px",
           }}
         >
-          Tìm Kiếm:{' '}
+          Tìm Kiếm:{" "}
         </span>
         <Input
           style={{ width: 200 }}
           placeholder="Tìm kiếm theo tên"
-          onChange={(val) => handleStandardTableChange('name', val.target.value)}
+          onChange={(val) =>
+            handleStandardTableChange("name", val.target.value)
+          }
         />
         <Button onClick={handleSearch}>Tìm kiếm</Button>
-        {chooseIdStudent.length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>}
+        {chooseIdStudent.length > 0 && (
+          <Button onClick={() => comfirm()}>Xác nhận</Button>
+        )}
       </div>
 
       <Table
         rowSelection={{
-          type: 'checkbox',
+          type: "checkbox",
           ...rowSelection,
         }}
         pagination={{
@@ -273,7 +286,7 @@ const Status = () => {
         loading={loading}
         columns={columns}
         dataSource={list}
-        scroll={{ x: 'calc(700px + 50%)' }}
+        scroll={{ x: "calc(700px + 50%)" }}
       />
     </div>
   );
