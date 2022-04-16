@@ -1,6 +1,14 @@
 body{
     font-family: '';
 }
+.flex-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(214, 214, 214);
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
 .status>h4{
     border-bottom: 1px solid rgb(214, 214, 214);
     padding: 10px 0;

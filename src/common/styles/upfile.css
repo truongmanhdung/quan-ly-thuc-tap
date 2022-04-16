@@ -3,7 +3,9 @@
     border-bottom: 1px solid rgb(214, 214, 214);
     padding: 10px 0;
 }
-
+.span-upload-name{
+    margin: 0 10px;
+}
 #up-file{
     display: none;
 }

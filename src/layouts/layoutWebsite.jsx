@@ -79,13 +79,6 @@ function LayoutWebsite() {
                 >
                   <NavLink to="form-register">Thời gian đăng ký</NavLink>
                 </Menu.Item>
-
-                <Menu.Item
-                  key="7"
-                  icon={<UploadOutlined className="icon-link" />}
-                >
-                  <NavLink to="up-file">Up File</NavLink>
-                </Menu.Item>
               </>
             ) : (
               <>
