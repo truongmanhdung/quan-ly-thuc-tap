@@ -132,7 +132,7 @@ const ReportForm = () => {
   useEffect(() => {
     dispatch(getTimeForm(4));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [student]);
+  }, []);
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -142,7 +142,7 @@ const ReportForm = () => {
         ...values,
         internShipTime: startDate,
         mssv: mssv,
-        typeNumber: 1,
+        typeNumber: 2,
         email: email,
       };
       await guardarArchivo(file, newData);
@@ -154,16 +154,13 @@ const ReportForm = () => {
   };
 
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
-  const isCheck = student.report;
-  console.log(isCheck);
+  const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
   return (
     <>
       {spin ? <Spin /> : null}
       {check && <CountDownCustorm time={time} />}
       {check ? (
         isCheck ? (
-          "Bạn đã nộp báo cáo thành công"
-        ) : (
           <Form
             {...formItemLayout}
             form={form}
@@ -251,6 +248,8 @@ const ReportForm = () => {
               </Button>
             </Form.Item>
           </Form>
+        ) : (
+          "Bạn đã nộp báo cáo thành công"
         )
       ) : (
         <p>Chưa đến thời gian nộp báo cáo</p>

@@ -54,8 +54,7 @@ function InfoStudent(props) {
   const { infoUser } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [dispatch]);
-  console.log(student);
+  }, []);
   const isRegister = student?.support;
 
   return (
@@ -66,10 +65,10 @@ function InfoStudent(props) {
             <h4>Thông tin đăng ký</h4>
           </div>
           <div className="border-top mt-3 pt-2">
-            <p>Họ và tên : {student?.name}</p>
-            <p>Ngành : {student?.majors}</p>
-            <p>Khóa học : {student?.course}</p>
-            <p>Email : {student?.email}</p>
+            <p>Họ và tên : {student.name}</p>
+            <p>Ngành : {student.majors}</p>
+            <p>Khóa học : {student.course}</p>
+            <p>Email : {student.email}</p>
             <p>
               Lựa chọn :{" "}
               {isRegister === 0

@@ -53,7 +53,6 @@ const SupportStudent = () => {
   const { infoUser } = useSelector((state) => state.auth);
 
   function guardarArchivo(files, data) {
-    setSpin(true);
     const file = files; //the file
 
     var reader = new FileReader(); //this for convert to Base64
@@ -75,16 +74,19 @@ const SupportStudent = () => {
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
-              message.success("Đăng ký hỗ trợ thực tập thành công");
+              console.log(res);
+              message.success(res.data.message);
               form.resetFields();
+              setSpin(false);
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
-                form.resetFields();
+                setSpin(false);
               } else {
                 message.error(`${dataErr.message}`);
+                setSpin(false);
               }
             });
           setSpin(false);
@@ -103,12 +105,12 @@ const SupportStudent = () => {
     const isPDF = valueFile.type === "application/pdf";
 
     if (!isPDF) {
-      form.resetFields();
       message.error("Vui lòng nhập file đúng định dạng PDF");
     }
     setFile(e.file.originFileObj);
   };
   const onFinish = async (values) => {
+    setSpin(true);
     try {
       const useCode = values.user_code;
       const studentMssv = infoUser?.student?.mssv;
@@ -119,22 +121,23 @@ const SupportStudent = () => {
       const data = {
         ...values,
         support: value,
-        typeNumber: 1,
+        typeNumber: 2,
         email: infoUser?.student?.email,
         ///dispatch Redux
       };
 
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
-        message.error(resData.data.message);
+        message.success(resData.data.message);
         form.resetFields();
+        setSpin(false);
       } else {
         await guardarArchivo(file, data);
-        form.resetFields();
       }
     } catch (error) {
       const dataErr = await error.response.data.message;
       message.error(dataErr);
+      setSpin(false);
     }
   };
 
@@ -146,10 +149,11 @@ const SupportStudent = () => {
     dispatch(getListSpecialization());
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [student]);
+  }, []);
 
   const check = time.endTime > new Date().getTime();
-  const isCheck = student.statusCheck === 10;
+  const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
+  console.log(student);
   return (
     <>
       {check && <CountDownCustorm time={time} />}

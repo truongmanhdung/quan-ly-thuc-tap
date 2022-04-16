@@ -56,6 +56,7 @@ const Formrp = () => {
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
   const { student } = useSelector((state) => state.cumpus);
+  console.log(infoUser, student.statusCheck);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const Formrp = () => {
   useEffect(() => {
     dispatch(getTimeForm(3));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [student]);
+  }, []);
 
   function guardarArchivo(files, data) {
     console.log(files);
@@ -139,7 +140,7 @@ const Formrp = () => {
         ...values,
         mssv: mssv,
         email: email,
-        typeNumber: 1,
+        typeNumber: 2,
         internshipTime: startDate,
       };
       await guardarArchivo(file, newData);
@@ -149,15 +150,14 @@ const Formrp = () => {
     }
   };
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
-  const isCheck = student.form;
+  console.log(check);
+  const isCheck = student.statusCheck === 2 || student.statusCheck === 5;
   return (
     <>
       {spin ? <Spin /> : null}
       {check && <CountDownCustorm time={time} />}
       {check ? (
         isCheck ? (
-          "Bạn đã nộp biên bản thành công"
-        ) : (
           <Form
             {...formItemLayout}
             form={form}
@@ -223,9 +223,13 @@ const Formrp = () => {
               </Button>
             </Form.Item>
           </Form>
+        ) : student.statusCheck === 3 ? (
+          "CV của bạn trượt không đủ điều kiện nộp báo cáo!"
+        ) : (
+          "Bạn đã nộp biên bản thành công"
         )
       ) : (
-        <p>Bạn phải nộp cv rồi mới đến biểu mẫu</p>
+        <p>Bạn phải nộp cv rồi mới đến biên bản</p>
       )}
     </>
   );
