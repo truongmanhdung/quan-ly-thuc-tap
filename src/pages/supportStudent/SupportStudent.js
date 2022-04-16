@@ -53,7 +53,6 @@ const SupportStudent = () => {
   const { infoUser } = useSelector((state) => state.auth);
 
   function guardarArchivo(files, data) {
-    setSpin(true);
     const file = files; //the file
 
     var reader = new FileReader(); //this for convert to Base64
@@ -75,16 +74,19 @@ const SupportStudent = () => {
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
-              message.success("Đăng ký hỗ trợ thực tập thành công");
+              console.log(res);
+              message.success(res.data.message);
               form.resetFields();
+              setSpin(false);
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
-                form.resetFields();
+                setSpin(false);
               } else {
                 message.error(`${dataErr.message}`);
+                setSpin(false);
               }
             });
           setSpin(false);
@@ -103,12 +105,12 @@ const SupportStudent = () => {
     const isPDF = valueFile.type === "application/pdf";
 
     if (!isPDF) {
-      form.resetFields();
       message.error("Vui lòng nhập file đúng định dạng PDF");
     }
     setFile(e.file.originFileObj);
   };
   const onFinish = async (values) => {
+    setSpin(true);
     try {
       const useCode = values.user_code;
       const studentMssv = infoUser?.student?.mssv;
@@ -119,21 +121,23 @@ const SupportStudent = () => {
       const data = {
         ...values,
         support: value,
+        typeNumber: 2,
         email: infoUser?.student?.email,
         ///dispatch Redux
       };
 
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
-        message.error(resData.data.message);
+        message.success(resData.data.message);
         form.resetFields();
+        setSpin(false);
       } else {
         await guardarArchivo(file, data);
-        form.resetFields();
       }
     } catch (error) {
       const dataErr = await error.response.data.message;
       message.error(dataErr);
+      setSpin(false);
     }
   };
 
@@ -147,134 +151,135 @@ const SupportStudent = () => {
     dispatch(getStudentId(infoUser.student.mssv));
   }, []);
 
-  console.log(student);
   const check = time.endTime > new Date().getTime();
-  const checkForm = student.statusCheck === 10;
+  const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
+  console.log(student);
   return (
     <>
       {check && <CountDownCustorm time={time} />}
       {spin ? <Spin /> : null}
-      {check ? (
-        checkForm ? (
-          <Form
-            {...formItemLayout}
-            form={form}
-            className={styles.form}
-            name="register"
-            onFinish={onFinish}
-            initialValues={{
-              residence: ["zhejiang", "hangzhou", "xihu"],
-              prefix: "86",
-            }}
-            scrollToFirstError
-          >
-            <Form.Item
-              name="user_code"
-              label="Mã sinh viên"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập mã sinh viên",
-                },
-              ]}
-            >
-              <Input placeholder="Mã sinh viên" />
-            </Form.Item>
-
-            <Form.Item
-              name="name"
-              label="Họ và Tên"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập tên",
-                  whitespace: true,
-                },
-              ]}
-            >
-              <Input placeholder="Họ và tên" />
-            </Form.Item>
-            <Form.Item
-              name="phone"
-              label="Số điện thoại"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập số điện thoại",
-                },
-              ]}
-            >
-              <Input placeholder="Số điện thoại" />
-            </Form.Item>
-
-            <Form.Item
-              name="address"
-              label="Địa chỉ"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập địa chỉ",
-                },
-              ]}
-            >
-              <Input placeholder="Địa chỉ" />
-            </Form.Item>
-            <Form.Item
-              name="majors"
-              label="Ngành học"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn ngành học",
-                },
-              ]}
-            >
-              <Select
-                style={{
-                  width: "50%",
-                  marginLeft: "20px",
-                }}
-                placeholder="Chọn ngành học"
-              >
-                {listSpecialization.map((item, index) => (
-                  <Option value={item.name} key={index}>
-                    {item.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="dream"
-              label="Vị trí mong muốn"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập địa chỉ",
-                },
-              ]}
-            >
-              <Input placeholder="Vị trí mong muốn" />
-            </Form.Item>
-            <Form.Item name="support" label="Kiểu đăng ký">
-              <Radio.Group onChange={onChange} defaultValue={value}>
-                <Radio value={1}>Nhà trường hỗ trợ</Radio>
-                <Radio value={0}>Tự tìm nới thực tập</Radio>
-              </Radio.Group>
-            </Form.Item>
-            {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
-            <Form.Item {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Đăng ký
-              </Button>
-            </Form.Item>
-          </Form>
+      {/* {check ? (
+        isCheck ? (
+        
         ) : (
           "Bạn đã đăng ký thông tin thực tập thành công"
         )
       ) : (
         <p>Thời gian đăng ký đã hết</p>
-      )}
+      )} */}
+      <Form
+        {...formItemLayout}
+        form={form}
+        className={styles.form}
+        name="register"
+        onFinish={onFinish}
+        initialValues={{
+          residence: ["zhejiang", "hangzhou", "xihu"],
+          prefix: "86",
+        }}
+        scrollToFirstError
+      >
+        <Form.Item
+          name="user_code"
+          label="Mã sinh viên"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập mã sinh viên",
+            },
+          ]}
+        >
+          <Input placeholder="Mã sinh viên" />
+        </Form.Item>
+
+        <Form.Item
+          name="name"
+          label="Họ và Tên"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập tên",
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input placeholder="Họ và tên" />
+        </Form.Item>
+        <Form.Item
+          name="phone"
+          label="Số điện thoại"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập số điện thoại",
+            },
+          ]}
+        >
+          <Input placeholder="Số điện thoại" />
+        </Form.Item>
+
+        <Form.Item
+          name="address"
+          label="Địa chỉ"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+            },
+          ]}
+        >
+          <Input placeholder="Địa chỉ" />
+        </Form.Item>
+        <Form.Item
+          name="majors"
+          label="Ngành học"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn ngành học",
+            },
+          ]}
+        >
+          <Select
+            style={{
+              width: "50%",
+              marginLeft: "20px",
+            }}
+            placeholder="Chọn ngành học"
+          >
+            {listSpecialization.map((item, index) => (
+              <Option value={item.name} key={index}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="dream"
+          label="Vị trí mong muốn"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập địa chỉ",
+            },
+          ]}
+        >
+          <Input placeholder="Vị trí mong muốn" />
+        </Form.Item>
+        <Form.Item name="support" label="Kiểu đăng ký">
+          <Radio.Group onChange={onChange} defaultValue={value}>
+            <Radio value={1}>Nhà trường hỗ trợ</Radio>
+            <Radio value={0}>Tự tìm nới thực tập</Radio>
+          </Radio.Group>
+        </Form.Item>
+        {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit">
+            Đăng ký
+          </Button>
+        </Form.Item>
+      </Form>
     </>
   );
 };

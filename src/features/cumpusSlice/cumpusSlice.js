@@ -19,7 +19,7 @@ const cumpusSlice = createSlice({
   name: "cumpus",
   initialState: {
     listCumpus: [],
-    studentById: {},
+    student: {},
     loading: false,
   },
 

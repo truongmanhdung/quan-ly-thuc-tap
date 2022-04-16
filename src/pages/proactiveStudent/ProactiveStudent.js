@@ -59,7 +59,6 @@ const ProactiveStudent = () => {
           ///dispatch Redux
         };
         const result = await RegisterInternAPI.uploadProactive(data);
-        console.log(result);
         message.success(result.data.message);
         form.resetFields();
       }

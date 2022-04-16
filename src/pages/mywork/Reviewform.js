@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import StudentAPI from '../../API/StudentAPI';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
-import { Select, Input, Table, Button } from 'antd';
+import { Select, Input, Table, Button, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import {
@@ -84,7 +84,7 @@ const Reviewform = () => {
     {
       title: 'Người review',
       dataIndex: 'reviewer',
-      render: (reviewer) => reviewer.slice(0, -11),
+      render: val => val && val.slice(0, -11),
       width: 200,
     },
     {
@@ -197,14 +197,19 @@ const Reviewform = () => {
     const actionOnchange = (value) => {
       switch (value) {
         case 'assgin':
-          dispatch(
-            updateReviewerListStudent({
-              listIdStudent: listIdStudent,
-              email: infoUser?.manager?.email,
-            }),
-          );
-          setStatus([]);
-          alert('Thêm thành công ');
+          try {
+            dispatch(
+              updateReviewerListStudent({
+                listIdStudent: listIdStudent,
+                email: infoUser?.manager?.email,
+              }),
+            );
+            setStatus([]);
+            message.success("Thành công")
+  
+          } catch (error) {
+            message.error("Thất bại")
+          }
           break;
         case 'edit':
           setStatus({
@@ -218,10 +223,10 @@ const Reviewform = () => {
       }
     };
     const selectStatus = (value) => {
-      console.log(value);
         if (value ===1) {
           let id =[]
-            listIdStudent.filter(item => item.support === 1).map(item => id.push(item._id))
+            chooseIdStudent.filter(item => item.support === 1).map(item => id.push(item._id))
+            console.log(id);
             setStatus({
               listIdStudent: id,
               email: infoUser?.manager?.email,
@@ -326,7 +331,7 @@ const Reviewform = () => {
               </Select>
             )}
 
-            <Button onClick={() => comfirm()}>Xác nhận</Button>
+           {Object.keys(status).length > 0 &&  <Button onClick={() => comfirm()}>Xác nhận</Button>}
           </div>
         )}
       </div>
