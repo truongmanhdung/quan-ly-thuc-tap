@@ -79,7 +79,7 @@ const Reviewform = () => {
       dataIndex: 'form',
       width: 100,
       render: (val) =>
-        val ? <EyeOutlined className="icon-cv" /> : '',
+        val ? <Button type='text' icon={<EyeOutlined className="icon-cv" /> } onClick={ () => window.open(val)} />: '',
     },
     {
       title: 'Người review',

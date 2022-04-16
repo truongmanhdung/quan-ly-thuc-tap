@@ -13,6 +13,7 @@ import { omit } from 'lodash';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { statusConfigReport } from '../../ultis/constConfig';
+import { EyeOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 const ReviewReport = () => {
@@ -77,6 +78,8 @@ const ReviewReport = () => {
       title: 'Báo cáo',
       dataIndex: 'report',
       width: 100,
+      render: (val) =>
+        val ? <Button type='text' icon={<EyeOutlined className="icon-cv" /> } onClick={ () => window.open(val)} />: '',
     },
 
     {
