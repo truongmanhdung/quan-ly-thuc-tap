@@ -155,6 +155,7 @@ const ReportForm = () => {
 
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
   const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
+  console.log(isCheck);
   return (
     <>
       {spin ? <Spin /> : null}
