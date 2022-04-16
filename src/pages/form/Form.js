@@ -150,8 +150,9 @@ const Formrp = () => {
     }
   };
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
-  console.log(check);
+  console.log(student.statusCheck);
   const isCheck = student.statusCheck === 2 || student.statusCheck === 5;
+  console.log(check);
   return (
     <>
       {spin ? <Spin /> : null}
@@ -223,8 +224,6 @@ const Formrp = () => {
               </Button>
             </Form.Item>
           </Form>
-        ) : student.statusCheck === 3 ? (
-          "CV của bạn trượt không đủ điều kiện nộp báo cáo!"
         ) : (
           "Bạn đã nộp biên bản thành công"
         )
