@@ -82,7 +82,8 @@ const reviewerSlice = createSlice({
         (action.payload.status === 2 ||
           action.payload.status === 1 ||
           action.payload.status === 3 ||
-          action.payload.status === 6) &&
+          action.payload.status === 6 ||
+          action.payload.status === 5) &&
         state.listStudentAssReviewer.list.length ===
           action.payload.listStudentChangeStatus.length
       ) {
@@ -91,7 +92,8 @@ const reviewerSlice = createSlice({
         (action.payload.status === 2 ||
           action.payload.status === 1 ||
           action.payload.status === 3 ||
-          action.payload.status === 6) &&
+          action.payload.status === 6 ||
+          action.payload.status === 5) &&
         state.listStudentAssReviewer.list.length >
           action.payload.listStudentChangeStatus.length
       ) {
