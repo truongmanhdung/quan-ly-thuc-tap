@@ -64,9 +64,11 @@ ul>li a:hover {
     color: rgb(76, 76, 76) !important;
 } */
 
-.ant-menu-item-selected {
+.ant-menu-item-selected,.ant-table-cell {
     background-color: #fff !important;
 }
+
+
 /* @media (max-width:1024px) {
     
 }

@@ -56,7 +56,6 @@ const Formrp = () => {
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
   const { student } = useSelector((state) => state.cumpus);
-  console.log(infoUser, student.statusCheck);
   const mssv = infoUser.student.mssv;
   const email = infoUser?.student?.email;
   const dispatch = useDispatch();
@@ -70,7 +69,6 @@ const Formrp = () => {
   }, []);
 
   function guardarArchivo(files, data) {
-    console.log(files);
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
      `;
@@ -91,10 +89,8 @@ const Formrp = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
-          console.log(newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              console.log(newData);
               message.success(res.data.message);
               form.resetFields();
             })
@@ -149,10 +145,9 @@ const Formrp = () => {
       message.error(dataErr.message);
     }
   };
-  const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
-  console.log(student.statusCheck);
-  const isCheck = student.statusCheck === 2 || student.statusCheck === 5;
-  console.log(check);
+  const check = time.endTime > new Date().getTime() && infoUser?.student?.CV !== null;
+
+  const isCheck =student && student.statusCheck === 2 || student.statusCheck === 5;
   return (
     <>
       {spin ? <Spin /> : null}

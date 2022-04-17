@@ -39,7 +39,7 @@ const Formtimepicker = (props) => {
     <div>
       <h3>Chọn thời gian hoạt động của form</h3>
       <Row>
-        <Col span={8}>
+        <Col xs={24} sm={16} md={16} lg={16} xl={12}>
           <Radio.Group onChange={onChange} value={value}>
             {times?.length > 0 && times.map((item) => (
               <Radio value={item.typeNumber} key={item._id}>{item.typeName}</Radio>
@@ -47,15 +47,14 @@ const Formtimepicker = (props) => {
             
           </Radio.Group>
         </Col>
-        <Col span={8}>
-          <RangePicker
+        <Col xs={24} sm={8} md={8} lg={8} xl={12}>
+        <RangePicker
             onChange={onSetDatePicker}
             renderExtraFooter={() => "extra footer"}
             showTime
+            style={{marginTop:10}}
           />
-        </Col>
-        <Col span={8}>
-          <Button onClick={onSaveTime} type="primary">
+          <Button style={{marginTop:10}} onClick={onSaveTime} type="primary">
             Đặt thời gian
           </Button>
         </Col>

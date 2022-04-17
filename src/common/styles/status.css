@@ -1,44 +1,66 @@
-body{
+body {
     font-family: '';
 }
-.status>h4{
+
+.flex-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(214, 214, 214);
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+.status>h4 {
     border-bottom: 1px solid rgb(214, 214, 214);
     padding: 10px 0;
 }
-.icon-cv{
+
+.icon-cv {
     color: blue;
 }
-table td{
+
+table td {
     font-size: 13px;
-    padding:2px!important;
+    padding: 2px !important;
 }
-table td,thead>tr> th{
-    padding:5px 10px!important;
+
+table td,
+thead>tr>th {
+    padding: 5px 10px !important;
     text-align: center !important;
 
 }
-.status-fail,.status-up{
+
+.status-fail,
+.status-up {
     font-weight: 600;
 }
-.status-fail>button,.status-up>button{
+
+.status-fail>button,
+.status-up>button {
     background-color: #fff;
     color: blue;
     border: 0;
 }
-.status-fail>button:hover,.status-up>button:hover{
+
+.status-fail>button:hover,
+.status-up>button:hover {
     text-decoration: underline;
 }
-.list-status{
+
+.list-status {
     width: 160px;
 }
-.status-check{
+
+.status-check {
     font-weight: 600;
     animation: status-check linear 1.5s infinite;
     -webkit-animation: status-check linear 1.5s infinite;
     -o-animation: status-check linear 1.5s infinite;
 }
 
-.filter>button{
+.filter>button {
     background-color: #ee4d2d;
     color: #fff;
     border: 0;
@@ -46,59 +68,81 @@ table td,thead>tr> th{
     margin: 0 10px;
     border-radius: 2px;
 }
-.filter>input{
+
+.filter>input {
     margin-left: 10px;
 }
-.filter>.filter-status{
+
+.filter>.filter-status {
     margin-left: 10px;
     width: 50%;
 }
-.checkbox{
+
+.checkbox {
     width: 50px;
 }
-.checkbox>input{
+
+.checkbox>input {
     font-size: 3rem;
 }
-.comfirm{
+
+.comfirm {
     margin-top: 20px;
     padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.comfirm>button{
+
+.comfirm>button {
     background-color: #ee4d2d;
     color: #fff;
 }
-.comfirm-click{
+
+.comfirm-click {
     margin-right: 10px;
 }
-.name{
+
+.name {
     font-size: 1.2rem;
     color: black;
 }
-.upload-status{
+
+.upload-status {
     margin: 0 10px 0 0;
 }
+
+.search {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 @keyframes status-check {
     0% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
+
     100% {
         opacity: 1;
     }
 }
 
-table{
+table {
     width: 100%;
     text-align: center;
     border-collapse: collapse;
     border: 1px solid #eeeeee;
     margin-top: 20px;
 }
-table  th,
-table  th,
-table  th {
+
+table th,
+table th,
+table th {
     padding: 10px 20px;
     font-weight: 500;
     text-align: center;
@@ -106,9 +150,71 @@ table  th {
     border: 1px solid #eeeeee;
 }
 
-table  tbody td,
-table  tbody td,
+table tbody td,
+table tbody td,
 table tbody td {
     padding: 1rem 0.5rem;
     border: 1px solid #eeeeee;
+}
+
+.list-detail {
+    text-align: left;
+    margin: 0;
+    border-bottom: 1px solid rgb(237, 237, 237);
+}
+
+@media (min-width:739px) and (max-width:1023px) {
+
+    table th,
+    table th,
+    table th {
+        padding: 5px 10px !important;
+        font-size: 1.1rem !important;
+    }
+
+    table tbody td,
+    table tbody td,
+    table tbody td {
+        padding: 5px 10px;
+        font-size: 1rem;
+    }
+}
+
+@media (min-width:539px) and (max-width:739px) {
+
+    table th,
+    table th,
+    table th {
+        padding: 5px 10px !important;
+        font-size: .9rem !important;
+    }
+
+    table tbody td,
+    table tbody td,
+    table tbody td {
+        padding: 5px 10px;
+        font-size: .7rem;
+    }
+}
+
+@media (max-width:538px) {
+
+    table th,
+    table th,
+    table th {
+        padding: 5px 10px !important;
+        font-size: 12px !important;
+    }
+
+    table tbody td,
+    table tbody td,
+    table tbody td {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .comfirm {
+        display: block;
+    }
+
 }

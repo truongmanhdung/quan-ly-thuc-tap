@@ -77,13 +77,6 @@ function LayoutWebsite() {
                 >
                   <NavLink to="form-register">Thời gian đăng ký</NavLink>
                 </Menu.Item>
-
-                <Menu.Item
-                  key="7"
-                  icon={<UploadOutlined className="icon-link" />}
-                >
-                  <NavLink to="up-file">Up File</NavLink>
-                </Menu.Item>
               </>
             ) : (
               <>
@@ -113,7 +106,7 @@ function LayoutWebsite() {
         <Layout className="site-layout">
           <GlobalHeader onCollapse={onCollapse} state={state} />
           <Content style={{ margin: "10px 10px", background: "white" }}>
-            <div style={{ padding: 24, minHeight: 360 }}>
+            <div style={{ padding: 15, minHeight: 360 }}>
               <Outlet />
             </div>
           </Content>

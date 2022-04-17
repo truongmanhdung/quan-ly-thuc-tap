@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { Table,notification, message } from 'antd';
+import { Table, notification, message, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,9 @@ const UpFile = () => {
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
-  const { infoUser:{manager} } = useSelector((state) => state.auth);
+  const {
+    infoUser: { manager },
+  } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
   const navigate = useNavigate();
   const importData = (e) => {
@@ -35,23 +37,25 @@ const UpFile = () => {
         });
         rows.push(rowData);
       });
-      let datas=[]
-      rows.filter((item, index) => index !== 0).map((item) => {
-        const newObject = {};
-        if (manager) {
-          if (item["MSSV"]!== undefined) {
-            newObject["mssv"] = item["MSSV"];
-            newObject["name"] = item["Họ tên"];
-            newObject["course"] = item["Khóa nhập học"];
-            newObject["status"] = item["Trạng thái FA21"];
-            newObject["majors"] = item["Ngành FA21"];
-            newObject["email"] = item["Email"];
-            newObject["supplement"] = item["bổ sung"];
-            newObject["campus_id"] = manager.campus_id;
+      let datas = [];
+      rows
+        .filter((item, index) => index !== 0)
+        .map((item) => {
+          const newObject = {};
+          if (manager) {
+            if (item["MSSV"] !== undefined) {
+              newObject["mssv"] = item["MSSV"];
+              newObject["name"] = item["Họ tên"];
+              newObject["course"] = item["Khóa nhập học"];
+              newObject["status"] = item["Trạng thái FA21"];
+              newObject["majors"] = item["Ngành FA21"];
+              newObject["email"] = item["Email"];
+              newObject["supplement"] = item["bổ sung"];
+              newObject["campus_id"] = manager.campus_id;
+            }
+            Object.keys(newObject).length > 0 && datas.push(newObject);
           }
-          Object.keys(newObject).length >0 && datas.push(newObject);
-        }
-      });
+        });
       setDataNew(datas);
       setData(fileData);
     };
@@ -59,11 +63,10 @@ const UpFile = () => {
   };
 
   const submitSave = () => {
-    dispatch(insertStudent(dataNew)).then(res => notifications(res.payload))
-    
+    dispatch(insertStudent(dataNew)).then((res) => notifications(res.payload));
   };
   const notifications = (payload) => {
-    if ( loading === false && payload !== undefined) {
+    if (loading === false && payload !== undefined) {
       message.success("Thành công");
       navigate("/status");
     }
@@ -73,59 +76,22 @@ const UpFile = () => {
     setNameFile();
   };
 
-
-  const columns = [
-
-    {
-      title: 'MSSV',
-      dataIndex: 'mssv',
-    },  {
-      title: 'Name',
-      dataIndex: 'name',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-    },
-    {
-      title: 'Khóa nhập học',
-      dataIndex: 'course',
-    },
-    {
-      title: 'Trạng thái FA21',
-      dataIndex: 'status',
-    },
-    {
-      title: 'Ngành FA21',
-      dataIndex: 'majors',
-    },
-    {
-      title: 'Bổ sung',
-      dataIndex: 'supplement',
-    },
-  ];
-
   return (
-    <div className="up-file">
-      <h3>Tải danh sách mới</h3>
-      <div className="header">
-        <label htmlFor="up-file">
-          <div className="button-upfile">
-            {" "}
-            <UploadOutlined className="icon" /> Tải file excel
-          </div>{" "}
-          {nameFile && <span>{nameFile}</span>}
-        </label>
-        <input type="file" onChange={(e) => importData(e)} id="up-file" />
-        {data && (
-          <div className="button_save">
-            <button onClick={() => submitSave()}>Lưu</button>
-            <button onClick={() => submitCole()}>Hủy</button>
-          </div>
-        )}
-      </div>
-      {dataNew.length>=1 && <Table loading={loading} rowKey='mssv' dataSource={dataNew} columns={columns} />}
-      
+    <div className="header">
+      <label htmlFor="up-file">
+        <div className="button-upfile">
+          {" "}
+          <UploadOutlined className="icon" /> Tải file excel
+        </div>{" "}
+        {nameFile && dataNew.length > 0 && <span className="span-upload-name">{nameFile}</span>}
+      </label>
+      <input type="file" onChange={(e) => importData(e)} id="up-file" />
+      {data && dataNew.length > 0 && (
+        <div className="button">
+          <Button style={{marginRight: 10}} onClick={() => submitSave()} type="primary">Lưu</Button>
+          <Button onClick={() => submitCole()} type="danger">Huỷ</Button>
+        </div>
+      )}
     </div>
   );
 };

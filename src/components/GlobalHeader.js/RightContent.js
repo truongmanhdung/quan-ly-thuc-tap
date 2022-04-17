@@ -33,11 +33,11 @@ const Rightcontent = () => {
 
     const [visible, setVisible] = useState(false)
 
-    const showDrawer = () => {
+    const showMenuMobile = () => {
         setVisible(true);
     };
 
-    const onClose = () => {
+    const onCloseMenuMobile = () => {
         setVisible(false);
     };
 
@@ -60,24 +60,28 @@ const Rightcontent = () => {
 
             {
                 window.innerWidth > 1024 &&
-                    <div className='view-account' style={{
-                        marginLeft: 'auto',
-                        paddingRight: '25px',
-                        marginTop: "20px"
-                    }} >
-                        <Dropdown overlay={menu} placement="bottomLeft" arrow>
-                            <span>
-                                <Avatar size={44} src={infoUser.picture} />  <span>{infoUser.name}</span>
-                            </span>
-                        </Dropdown>
-                    </div>
+                <div className='view-account' style={{
+                    marginLeft: 'auto',
+                    paddingRight: '25px',
+                    marginTop: "20px"
+                }} >
+                    <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                        <span>
+                            <Avatar size={44} src={infoUser.picture} />  <span>{infoUser.name}</span>
+                        </span>
+                    </Dropdown>
+                </div>
             }
 
             {
                 window.innerWidth <= 1024 ? <div className='mobile'>
-                    <MenuOutlined className='icon-menu-mb' onClick={showDrawer} />
-                    <i class="fas far-ellipsis-alt"></i>
-                    <Drawer title="Danh mục" width={250} placement="right" onClose={onClose} visible={visible} >
+                    <MenuOutlined className='icon-menu-mb' onClick={showMenuMobile} />
+                    <Drawer width={250} placement="right" onClose={onCloseMenuMobile} visible={visible} >
+
+                        <div className='info-user'>
+                            <Avatar size={44} src={infoUser.picture} />  <span>{infoUser.name}</span>
+                        </div>
+
                         <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
                             {isAdmin ? (
                                 <>
@@ -109,12 +113,12 @@ const Rightcontent = () => {
                                     >
                                         <NavLink onClick={offMenuMoble} to="form-register">Thời gian đăng ký</NavLink>
                                     </Menu.Item>
-
                                     <Menu.Item
                                         key="7"
-                                        icon={<UploadOutlined className="icon-link" />}
+                                        icon={<LogoutOutlined className="icon-link" />}
                                     >
-                                        <NavLink to="up-file">Up File</NavLink>
+                                        <Button style={{ padding: 0 }} type='text' onClick={handleLogout}>Đăng xuất</Button>
+
                                     </Menu.Item>
                                 </>
                             ) : (
@@ -139,6 +143,7 @@ const Rightcontent = () => {
                             )}
                         </Menu>
                     </Drawer>
+                 
                 </div>
                     : ""
             }

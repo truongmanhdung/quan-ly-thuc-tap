@@ -7,7 +7,7 @@ import './index.css'
 const GlobalHeader = () => {
     return (
         <>
-            <Header className="site-layout-background"  >
+            <Header className="site-layout-background" >
                 <Row style={{padding :"0 10px"}}>
                     <Col span={6}>
                         {
@@ -15,7 +15,7 @@ const GlobalHeader = () => {
                                 <div className="logo-school logo-mobile">
                                     <div className="logo">
                                         <img
-                                            style={{ width: "80%", height: "80%",marginTop:10 }}
+                                            style={{ width: "70%", height: "70%",marginTop:10 }}
                                             src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png"
                                             alt=""
                                         />
