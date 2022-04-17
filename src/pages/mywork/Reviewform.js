@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import StudentAPI from '../../API/StudentAPI';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
 import { Select, Input, Table, Button, message } from 'antd';
@@ -10,7 +9,6 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent
 } from '../../features/reviewerStudent/reviewerSlice';
-import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 import { statusConfigForm } from '../../ultis/constConfig';
@@ -20,6 +18,7 @@ const Reviewform = () => {
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const [status, setStatus] = useState({});
+  const [type, setType] = useState(false)
   const {
     listStudentAssReviewer: { total, list },
     loading,
@@ -29,8 +28,7 @@ const Reviewform = () => {
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.cumpus,
-    reviewer: infoUser.manager.email,
+    campus_id: infoUser.manager.campus_id,
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
@@ -39,7 +37,7 @@ const Reviewform = () => {
       ...filter,
     };
     dispatch(listStudentForm(data));
-  }, [page]);
+  }, [page,infoUser]);
 
   const columns = [
     {
@@ -79,7 +77,7 @@ const Reviewform = () => {
       dataIndex: 'form',
       width: 100,
       render: (val) =>
-        val ? <Button type='text' icon={<EyeOutlined className="icon-cv" /> } onClick={ () => window.open(val)} />: '',
+        val ? <Button type='text' icon={<EyeOutlined className="icon-cv" />} onClick={() => window.open(val)} /> : '',
     },
     {
       title: 'Người review',
@@ -122,7 +120,7 @@ const Reviewform = () => {
               Trượt
             </span>
           );
-        }  else if (status === 4) {
+        } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
               Đã nộp biên bản <br />
@@ -137,7 +135,7 @@ const Reviewform = () => {
         } else if (status === 6) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-             Đang thực tập <br />
+              Đang thực tập <br />
             </span>
           );
         } else if (status === 7) {
@@ -194,58 +192,75 @@ const Reviewform = () => {
     };
     dispatch(getStudent(data));
   };
-    const actionOnchange = (value) => {
-      switch (value) {
-        case 'assgin':
-          try {
-            dispatch(
-              updateReviewerListStudent({
-                listIdStudent: listIdStudent,
-                email: infoUser?.manager?.email,
-              }),
-            );
-            setStatus([]);
-            message.success("Thành công")
-  
-          } catch (error) {
-            message.error("Thất bại")
-          }
-          break;
-        case 'edit':
-          setStatus({
-            listIdStudent: listIdStudent,
-            email: infoUser?.manager?.email,
-          });
-          break;
-
-        default:
-          break;
-      }
-    };
-    const selectStatus = (value) => {
-        if (value ===1) {
-          let id =[]
-            chooseIdStudent.filter(item => item.support === 1).map(item => id.push(item._id))
-            console.log(id);
-            setStatus({
-              listIdStudent: id,
+  const actionOnchange = (value) => {
+    switch (value) {
+      case 'assgin':
+        try {
+          dispatch(
+            updateReviewerListStudent({
+              listIdStudent: listIdStudent,
               email: infoUser?.manager?.email,
-              status: value,
-            });
-        }else{
-          setStatus({
-            listIdStudent: listIdStudent,
-            email: infoUser?.manager?.email,
-            status: value,
-          });
-        }
-   
-    };
+            }),
+          );
+          setChooseIdStudent([]);
+          message.success("Thành công")
 
-    const comfirm = () => {
+        } catch (error) {
+          message.error("Thất bại")
+        }
+        break;
+      case 'edit':
+        setType(true)
+        break;
+
+      default:
+        break;
+    }
+  };
+  const selectStatus = value => {
+    if (value === 1) {
+      let id = []
+      chooseIdStudent.filter(item => item.form === null && item.support === 1).map(item => id.push(item._id))
+      if (chooseIdStudent.length === id.length) {
+        setStatus({
+          listIdStudent: id,
+          email: infoUser?.manager?.email,
+          status: value,
+        });
+      } else {
+        message.error("Không thể hoàn CV sinh viên đã nộp biên bản và tự tìm")
+        setChooseIdStudent([])
+        setType(false)
+      }
+    } else {
+      let ids = []
+      chooseIdStudent.filter(item => item.form !== null).map(item => ids.push(item._id))
+      if (chooseIdStudent.length === ids.length) {
+        setStatus({
+          listIdStudent: ids,
+          email: infoUser?.manager?.email,
+          status: value,
+        });
+      } else {
+        message.error("Không thể thay đổi trạng thái sinh viên chưa nộp biên bản")
+        setChooseIdStudent([])
+        setType(false)
+      }
+
+    }
+
+  }
+
+  const comfirm = () => {
+    try {
       dispatch(updateStatusListStudent(status));
       setChooseIdStudent([]);
-    };
+      message.success("Thành công")
+    } catch (error) {
+      message.error("Thất bại")
+    }
+
+  };
   return (
     <div className="status">
       <h4>Review biên bản</h4>
@@ -314,7 +329,7 @@ const Reviewform = () => {
               </Option>
             </Select>
 
-            {Object.keys(status).length >= 1 && (
+            {type && (
               <Select
                 className="upload-status"
                 style={{ width: 150 }}
@@ -325,13 +340,13 @@ const Reviewform = () => {
                   statusConfigForm.map((item, index) => (
                     <Option value={item.value} key={index}>
                       {item.title}
-                  </Option>
+                    </Option>
                   ))
                 }
               </Select>
             )}
 
-           {Object.keys(status).length > 0 &&  <Button onClick={() => comfirm()}>Xác nhận</Button>}
+            {Object.keys(status).length > 0 && <Button onClick={() => comfirm()}>Xác nhận</Button>}
           </div>
         )}
       </div>

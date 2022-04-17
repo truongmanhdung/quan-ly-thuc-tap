@@ -69,8 +69,6 @@ const ReportForm = () => {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
      `;
-
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -87,7 +85,6 @@ const ReportForm = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, report: a.url };
-          console.log(newData);
           ReportFormAPI.uploadReport(newData)
             .then((res) => {
               message.success(res.data.message);
@@ -115,7 +112,6 @@ const ReportForm = () => {
 
   const normFile = (e) => {
     const valueFile = e.file.originFileObj.type;
-    console.log(valueFile);
     const isFile = valueFile;
 
     if (
@@ -155,7 +151,6 @@ const ReportForm = () => {
 
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
   const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
-  console.log(isCheck);
   return (
     <>
       {spin ? <Spin /> : null}

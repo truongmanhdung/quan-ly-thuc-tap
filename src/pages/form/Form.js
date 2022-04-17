@@ -148,6 +148,7 @@ const Formrp = () => {
   const check = time.endTime > new Date().getTime() && infoUser?.student?.CV !== null;
 
   const isCheck =student && student.statusCheck === 2 || student.statusCheck === 5;
+
   return (
     <>
       {spin ? <Spin /> : null}
