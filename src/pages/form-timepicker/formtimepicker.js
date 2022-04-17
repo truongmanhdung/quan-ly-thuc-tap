@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Button, Col, DatePicker, Radio, Row } from "antd";
+import { Button, Col, DatePicker, message, Radio, Row, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getListTime,
@@ -9,8 +9,7 @@ import {
 
 const Formtimepicker = (props) => {
   const { RangePicker } = DatePicker;
-  const { times } = useSelector((state) => state.time.formTime);
-  console.log(times);
+  const { formTime: {times}, loading } = useSelector((state) => state.time);
   const [value, setValue] = useState(1);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();
@@ -33,11 +32,17 @@ const Formtimepicker = (props) => {
       startTime: startTime,
       endTime: endTime,
     };
+    try {
     dispatch(upTimeDate(timeObject));
+      message.success("Thành công")
+    } catch (error) {
+      message.error("Thất bại")
+    }
   };
   return (
     <div>
       <h3>Chọn thời gian hoạt động của form</h3>
+      <Spin spinning={loading}  >
       <Row>
         <Col span={8}>
           <Radio.Group onChange={onChange} value={value}>
@@ -60,6 +65,7 @@ const Formtimepicker = (props) => {
           </Button>
         </Col>
       </Row>
+      </Spin>
     </div>
   );
 };

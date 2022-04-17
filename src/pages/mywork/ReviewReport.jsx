@@ -26,11 +26,11 @@ const ReviewReport = () => {
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [status, setStatus] = useState({});
   const [listIdStudent, setListIdStudent] = useState([]);
+  const [type, setType] = useState(false);
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.cumpus,
-    reviewer: infoUser.manager.email,
+    campus_id: infoUser.manager.campus_id,
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
@@ -39,7 +39,7 @@ const ReviewReport = () => {
       ...filter,
     };
     dispatch(listStudentReport(data));
-  }, [page]);
+  }, [page, infoUser]);
 
   const columns = [
     {
@@ -79,7 +79,15 @@ const ReviewReport = () => {
       dataIndex: 'report',
       width: 100,
       render: (val) =>
-        val ? <Button type='text' icon={<EyeOutlined className="icon-cv" /> } onClick={ () => window.open(val)} />: '',
+        val ? (
+          <Button
+            type="text"
+            icon={<EyeOutlined className="icon-cv" />}
+            onClick={() => window.open(val)}
+          />
+        ) : (
+          ''
+        ),
     },
 
     {
@@ -220,25 +228,22 @@ const ReviewReport = () => {
   const actionOnchange = (value) => {
     switch (value) {
       case 'assgin':
-          try {
-            dispatch(
-                updateReviewerListStudent({
-                  listIdStudent: listIdStudent,
-                  email: infoUser?.manager?.email,
-                }),
-              );
-              setStatus([]);
-              message.success("Thành công")
-          } catch (error) {
-              message.error("Thất bại")
-          }
+        try {
+          dispatch(
+            updateReviewerListStudent({
+              listIdStudent: listIdStudent,
+              email: infoUser?.manager?.email,
+            }),
+          );
+          setStatus([]);
+          message.success('Thành công');
+        } catch (error) {
+          message.error('Thất bại');
+        }
 
         break;
       case 'edit':
-        setStatus({
-          listIdStudent: listIdStudent,
-          email: infoUser?.manager?.email,
-        });
+        setType(true);
         break;
 
       default:
@@ -246,16 +251,39 @@ const ReviewReport = () => {
     }
   };
   const selectStatus = (value) => {
-    setStatus({
-      listIdStudent: listIdStudent,
-      email: infoUser?.manager?.email,
-      status: value,
-    });
+    let id = []
+    if (value !== 5) {
+      chooseIdStudent.filter(item => item.report !== null).map(item => id.push(item._id))
+      if (id.length === chooseIdStudent.length) {
+      setStatus({
+        listIdStudent: listIdStudent,
+        email: infoUser?.manager?.email,
+        status: value,
+      });
+      setType(false)
+      }else{
+        message.error("Chưa nộp báo cáo")
+        setChooseIdStudent([])
+        setType(false)
+      }
+    }else{
+      setStatus({
+        listIdStudent: listIdStudent,
+        email: infoUser?.manager?.email,
+        status: value,
+      });
+    }
   };
 
   const comfirm = () => {
-    dispatch(updateStatusListStudent(status));
-    setChooseIdStudent([]);
+    try {
+      dispatch(updateStatusListStudent(status));
+      setChooseIdStudent([]);
+      message.success("Thành công")
+    } catch (error) {
+      message.error("Thất bại")
+    }
+
   };
 
   return (
@@ -329,7 +357,7 @@ const ReviewReport = () => {
               </Option>
             </Select>
 
-            {Object.keys(status).length >= 1 && (
+            {type && (
               <Select
                 className="upload-status"
                 style={{ width: 150 }}

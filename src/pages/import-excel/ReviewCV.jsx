@@ -28,7 +28,7 @@ const ReviewCV = () => {
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.cumpus,
+    campus_id: infoUser.manager.campus_id,
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
@@ -38,7 +38,7 @@ const ReviewCV = () => {
     };
     setChooseIdStudent([]);
     dispatch(getListStudentAssReviewer(data));
-  }, [page, dispatch]);
+  }, [page, infoUser]);
 
   const columns = [
     {
@@ -190,8 +190,14 @@ const ReviewCV = () => {
   };
 
   const comfirm = () => {
-    dispatch(updateStatusListStudent(status));
-    setChooseIdStudent([]);
+    try {
+      dispatch(updateStatusListStudent(status))
+      setChooseIdStudent([]);
+      message.success("Thành công")
+    } catch (error) {
+      message.error("Thất bại")
+    }
+
   };
 
   return (

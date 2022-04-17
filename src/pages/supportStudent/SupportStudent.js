@@ -123,6 +123,7 @@ const SupportStudent = () => {
         support: value,
         typeNumber: 2,
         email: infoUser?.student?.email,
+        typeNumber: time.typeNumber
         ///dispatch Redux
       };
 
@@ -153,7 +154,6 @@ const SupportStudent = () => {
 
   const check = time.endTime > new Date().getTime();
   const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
-  console.log(student);
   return (
     <>
       {check && <CountDownCustorm time={time} />}
