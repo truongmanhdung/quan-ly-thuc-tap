@@ -74,7 +74,6 @@ const SupportStudent = () => {
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
-              console.log(res);
               message.success(res.data.message);
               form.resetFields();
               setSpin(false);
@@ -109,6 +108,7 @@ const SupportStudent = () => {
     }
     setFile(e.file.originFileObj);
   };
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -118,14 +118,16 @@ const SupportStudent = () => {
       if (!compare) {
         message.error("Vui lòng nhập đúng mã sinh viên của bạn");
       }
+
+      const supportForm = values.support === 0 ? 0 : 1;
+
       const data = {
         ...values,
         support: value,
         email: infoUser?.student?.email,
-        typeNumber: time.typeNumber,
+        typeNumber: supportForm,
         ///dispatch Redux
       };
-
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
