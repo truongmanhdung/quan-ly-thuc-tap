@@ -10,7 +10,7 @@ import {
 const Formtimepicker = (props) => {
   const { RangePicker } = DatePicker;
   const { formTime: {times}, loading } = useSelector((state) => state.time);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState(0);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();
   const onChange = (e) => {

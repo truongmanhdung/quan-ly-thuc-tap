@@ -64,10 +64,10 @@ const Formrp = () => {
   };
 
   useEffect(() => {
-    dispatch(getTimeForm(3));
+    dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
-
+  }, [infoUser]);
+  console.log(time);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
