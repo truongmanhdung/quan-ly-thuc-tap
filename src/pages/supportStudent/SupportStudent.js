@@ -10,6 +10,7 @@ import CountDownCustorm from "../../components/CountDownCustorm";
 import Proactive from "./Proactive";
 import Support from "./Support";
 import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
+import { optionsMajors } from "../../ultis/selectOption";
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -48,7 +49,6 @@ const SupportStudent = () => {
   const [spin, setSpin] = useState(false);
   const { time, loading } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
-  const { listSpecialization } = useSelector((state) => state.specialization);
   const { student } = useSelector((state) => state.cumpus);
   const { infoUser } = useSelector((state) => state.auth);
 
@@ -74,7 +74,6 @@ const SupportStudent = () => {
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
-              console.log(res);
               message.success(res.data.message);
               form.resetFields();
               setSpin(false);
@@ -109,6 +108,7 @@ const SupportStudent = () => {
     }
     setFile(e.file.originFileObj);
   };
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -118,15 +118,16 @@ const SupportStudent = () => {
       if (!compare) {
         message.error("Vui lòng nhập đúng mã sinh viên của bạn");
       }
+
+      const supportForm = values.support === 0 ? 0 : 1;
+
       const data = {
         ...values,
         support: value,
-        typeNumber: 2,
         email: infoUser?.student?.email,
-        typeNumber: time.typeNumber,
+        typeNumber: supportForm,
         ///dispatch Redux
       };
-
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
@@ -251,9 +252,9 @@ const SupportStudent = () => {
                     }}
                     placeholder="Chọn ngành học"
                   >
-                    {listSpecialization.map((item, index) => (
-                      <Option value={item.name} key={index}>
-                        {item.name}
+                    {optionsMajors.map((item, index) => (
+                      <Option value={item.value} key={index}>
+                        {item.title}
                       </Option>
                     ))}
                   </Select>

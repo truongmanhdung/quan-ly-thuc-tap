@@ -64,7 +64,6 @@ const ReportForm = () => {
   const datePicker = (date, dateString) => {
     setStartDate(date._d);
   };
-  console.log(time);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
@@ -95,7 +94,6 @@ const ReportForm = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }
@@ -149,7 +147,7 @@ const ReportForm = () => {
     setSpin(false);
   };
 
-  const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
+  const check = time.endTime > new Date().getTime() && student?.CV;
   const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
   return (
     <>
