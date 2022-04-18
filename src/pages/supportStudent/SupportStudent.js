@@ -46,7 +46,7 @@ const SupportStudent = () => {
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
-  const { time } = useSelector((state) => state.time.formTime);
+  const { time, loading } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
   const { listSpecialization } = useSelector((state) => state.specialization);
   const { student } = useSelector((state) => state.cumpus);
@@ -123,7 +123,7 @@ const SupportStudent = () => {
         support: value,
         typeNumber: 2,
         email: infoUser?.student?.email,
-        typeNumber: time.typeNumber
+        typeNumber: time.typeNumber,
         ///dispatch Redux
       };
 
@@ -148,138 +148,143 @@ const SupportStudent = () => {
 
   useEffect(() => {
     dispatch(getListSpecialization());
-    dispatch(getTimeForm(2));
+    dispatch(getTimeForm(value));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
+  }, [value, dispatch, infoUser]);
 
-  const check = time.endTime > new Date().getTime();
+  const check =
+    time.endTime > new Date().getTime() &&
+    (student.statusCheck === 10 || student.statusCheck === 1);
   const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
   return (
     <>
-      {check && <CountDownCustorm time={time} />}
-      {spin ? <Spin /> : null}
-      {/* {check ? (
-        isCheck ? (
-        
-        ) : (
-          "Bạn đã đăng ký thông tin thực tập thành công"
-        )
+      {loading ? (
+        <Spin />
       ) : (
-        <p>Thời gian đăng ký đã hết</p>
-      )} */}
-      <Form
-        {...formItemLayout}
-        form={form}
-        className={styles.form}
-        name="register"
-        onFinish={onFinish}
-        initialValues={{
-          residence: ["zhejiang", "hangzhou", "xihu"],
-          prefix: "86",
-        }}
-        scrollToFirstError
-      >
-        <Form.Item
-          name="user_code"
-          label="Mã sinh viên"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mã sinh viên",
-            },
-          ]}
-        >
-          <Input placeholder="Mã sinh viên" />
-        </Form.Item>
-
-        <Form.Item
-          name="name"
-          label="Họ và Tên"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập tên",
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input placeholder="Họ và tên" />
-        </Form.Item>
-        <Form.Item
-          name="phone"
-          label="Số điện thoại"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập số điện thoại",
-            },
-          ]}
-        >
-          <Input placeholder="Số điện thoại" />
-        </Form.Item>
-
-        <Form.Item
-          name="address"
-          label="Địa chỉ"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập địa chỉ",
-            },
-          ]}
-        >
-          <Input placeholder="Địa chỉ" />
-        </Form.Item>
-        <Form.Item
-          name="majors"
-          label="Ngành học"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn ngành học",
-            },
-          ]}
-        >
-          <Select
-            style={{
-              width: "50%",
-              marginLeft: "20px",
+        <>
+          {check && <CountDownCustorm time={time} />}
+          <Form
+            {...formItemLayout}
+            form={form}
+            className={styles.form}
+            name="register"
+            onFinish={onFinish}
+            initialValues={{
+              residence: ["zhejiang", "hangzhou", "xihu"],
+              prefix: "86",
             }}
-            placeholder="Chọn ngành học"
+            scrollToFirstError
           >
-            {listSpecialization.map((item, index) => (
-              <Option value={item.name} key={index}>
-                {item.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+            <Form.Item name="support" label="Kiểu đăng ký">
+              <Radio.Group onChange={onChange} defaultValue={value}>
+                <Radio value={1}>Nhà trường hỗ trợ</Radio>
+                <Radio value={0}>Tự tìm nới thực tập</Radio>
+              </Radio.Group>
+            </Form.Item>
 
-        <Form.Item
-          name="dream"
-          label="Vị trí mong muốn"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập địa chỉ",
-            },
-          ]}
-        >
-          <Input placeholder="Vị trí mong muốn" />
-        </Form.Item>
-        <Form.Item name="support" label="Kiểu đăng ký">
-          <Radio.Group onChange={onChange} defaultValue={value}>
-            <Radio value={1}>Nhà trường hỗ trợ</Radio>
-            <Radio value={0}>Tự tìm nới thực tập</Radio>
-          </Radio.Group>
-        </Form.Item>
-        {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
-        <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
-            Đăng ký
-          </Button>
-        </Form.Item>
-      </Form>
+            {check ? (
+              <>
+                <Form.Item
+                  name="user_code"
+                  label="Mã sinh viên"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập mã sinh viên",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Mã sinh viên" />
+                </Form.Item>
+
+                <Form.Item
+                  name="name"
+                  label="Họ và Tên"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập tên",
+                      whitespace: true,
+                    },
+                  ]}
+                >
+                  <Input placeholder="Họ và tên" />
+                </Form.Item>
+                <Form.Item
+                  name="phone"
+                  label="Số điện thoại"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập số điện thoại",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Số điện thoại" />
+                </Form.Item>
+
+                <Form.Item
+                  name="address"
+                  label="Địa chỉ"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập địa chỉ",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Địa chỉ" />
+                </Form.Item>
+                <Form.Item
+                  name="majors"
+                  label="Ngành học"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn ngành học",
+                    },
+                  ]}
+                >
+                  <Select
+                    style={{
+                      width: "50%",
+                      marginLeft: "20px",
+                    }}
+                    placeholder="Chọn ngành học"
+                  >
+                    {listSpecialization.map((item, index) => (
+                      <Option value={item.name} key={index}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+
+                <Form.Item
+                  name="dream"
+                  label="Vị trí mong muốn"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập địa chỉ",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Vị trí mong muốn" />
+                </Form.Item>
+                {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
+                <Form.Item {...tailFormItemLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Đăng ký
+                  </Button>
+                </Form.Item>
+              </>
+            ) : (
+              <p>Thời gian đăng ký đã hết</p>
+            )}
+          </Form>
+        </>
+      )}
     </>
   );
 };

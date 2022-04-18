@@ -40,7 +40,7 @@ const studentSlice = createSlice({
     });
     builder.addCase(insertStudent.fulfilled, (state, action) => {
       state.loading = false;
-      state.listStudent += action.payload;
+      state.listStudent = action.payload;
     });
     builder.addCase(insertStudent.pending, (state, action) => {
       state.loading = true;

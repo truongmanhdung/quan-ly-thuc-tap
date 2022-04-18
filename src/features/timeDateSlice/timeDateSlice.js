@@ -38,6 +38,7 @@ const userSlice = createSlice({
 
     builder.addCase(getListTime.fulfilled, (state, action) => {
       state.formTime.times = action.payload;
+      state.loading = false
     });
     builder.addCase(upTimeDate.pending, (state, action) => {
       state.loading = true
@@ -48,6 +49,10 @@ const userSlice = createSlice({
     });
     builder.addCase(getTimeForm.fulfilled, (state, action) => {
       state.formTime.time = action.payload;
+      state.loading = false
+    });
+    builder.addCase(getTimeForm.pending, (state, action) => {
+      state.loading = true
     });
   },
 });
