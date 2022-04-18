@@ -10,6 +10,7 @@ import CountDownCustorm from "../../components/CountDownCustorm";
 import Proactive from "./Proactive";
 import Support from "./Support";
 import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
+import { optionsMajors } from "../../ultis/selectOption";
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -48,7 +49,6 @@ const SupportStudent = () => {
   const [spin, setSpin] = useState(false);
   const { time, loading } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
-  const { listSpecialization } = useSelector((state) => state.specialization);
   const { student } = useSelector((state) => state.cumpus);
   const { infoUser } = useSelector((state) => state.auth);
 
@@ -121,7 +121,6 @@ const SupportStudent = () => {
       const data = {
         ...values,
         support: value,
-        typeNumber: 2,
         email: infoUser?.student?.email,
         typeNumber: time.typeNumber,
         ///dispatch Redux
@@ -252,9 +251,9 @@ const SupportStudent = () => {
                     }}
                     placeholder="Chọn ngành học"
                   >
-                    {listSpecialization.map((item, index) => (
-                      <Option value={item.name} key={index}>
-                        {item.name}
+                    {optionsMajors.map((item, index) => (
+                      <Option value={item.value} key={index}>
+                        {item.title}
                       </Option>
                     ))}
                   </Select>
