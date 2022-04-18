@@ -153,8 +153,7 @@ const SupportStudent = () => {
   }, [value, dispatch, infoUser]);
 
   const check =
-    time.endTime > new Date().getTime() &&
-    (student.statusCheck === 10 || student.statusCheck === 1);
+    time.endTime > new Date().getTime()
   const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
   return (
     <>

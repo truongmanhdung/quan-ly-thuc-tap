@@ -22,7 +22,7 @@ const Formtimepicker = (props) => {
 
   useEffect(() => {
     dispatch(getListTime());
-  }, []);
+  }, [dispatch]);
 
   const onSaveTime = () => {
     const startTime = date[0]._d.getTime();
