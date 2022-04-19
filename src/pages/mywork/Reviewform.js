@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import StudentAPI from '../../API/StudentAPI';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
 import { Select, Input, Table, Button, message, Row, Col, Tag } from 'antd';
@@ -10,7 +9,6 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent
 } from '../../features/reviewerStudent/reviewerSlice';
-import { Link, useNavigate } from 'react-router-dom';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 import { statusConfigForm } from '../../ultis/constConfig';
@@ -21,6 +19,7 @@ const Reviewform = () => {
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const [status, setStatus] = useState({});
+  const [type, setType] = useState(false)
   const {
     listStudentAssReviewer: { total, list },
     loading,
@@ -30,8 +29,7 @@ const Reviewform = () => {
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.cumpus,
-    reviewer: infoUser.manager.email,
+    campus_id: infoUser.manager.campus_id,
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
@@ -40,7 +38,7 @@ const Reviewform = () => {
       ...filter,
     };
     dispatch(listStudentForm(data));
-  }, [page]);
+  }, [page,infoUser]);
 
   const columns = [
     {

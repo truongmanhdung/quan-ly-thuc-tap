@@ -63,7 +63,11 @@ const UpFile = () => {
   };
 
   const submitSave = () => {
-    dispatch(insertStudent(dataNew)).then((res) => notifications(res.payload));
+    dispatch(insertStudent(dataNew)).then((res) => {
+      notifications(res.payload)
+      setDataNew([]);
+      setNameFile();
+    });
   };
   const notifications = (payload) => {
     if (loading === false && payload !== undefined) {
@@ -83,13 +87,23 @@ const UpFile = () => {
           {" "}
           <UploadOutlined className="icon" /> Tải file excel
         </div>{" "}
-        {nameFile && dataNew.length > 0 && <span className="span-upload-name">{nameFile}</span>}
+        {nameFile && dataNew.length > 0 && (
+          <span className="span-upload-name">{nameFile}</span>
+        )}
       </label>
       <input type="file" onChange={(e) => importData(e)} id="up-file" />
       {data && dataNew.length > 0 && (
         <div className="button">
-          <Button style={{marginRight: 10}} onClick={() => submitSave()} type="primary">Lưu</Button>
-          <Button onClick={() => submitCole()} type="danger">Huỷ</Button>
+          <Button
+            style={{ marginRight: 10 }}
+            onClick={() => submitSave()}
+            type="primary"
+          >
+            Lưu
+          </Button>
+          <Button onClick={() => submitCole()} type="danger">
+            Huỷ
+          </Button>
         </div>
       )}
     </div>

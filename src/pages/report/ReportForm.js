@@ -64,13 +64,10 @@ const ReportForm = () => {
   const datePicker = (date, dateString) => {
     setStartDate(date._d);
   };
-
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
      `;
-
-    console.log("file: ", files);
     var reader = new FileReader(); //this for convert to Base64
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
@@ -87,7 +84,6 @@ const ReportForm = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, report: a.url };
-          console.log(newData);
           ReportFormAPI.uploadReport(newData)
             .then((res) => {
               message.success(res.data.message);
@@ -98,7 +94,6 @@ const ReportForm = () => {
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
-                console.log("error: ", err.response.data);
               } else {
                 message.error(`${dataErr.message}`);
               }
@@ -115,7 +110,6 @@ const ReportForm = () => {
 
   const normFile = (e) => {
     const valueFile = e.file.originFileObj.type;
-    console.log(valueFile);
     const isFile = valueFile;
 
     if (
@@ -130,9 +124,9 @@ const ReportForm = () => {
     }
   };
   useEffect(() => {
-    dispatch(getTimeForm(4));
+    dispatch(getTimeForm(3));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
+  }, [infoUser]);
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -153,9 +147,8 @@ const ReportForm = () => {
     setSpin(false);
   };
 
-  const check = time.endTime > new Date().getTime() && infoUser?.student?.CV;
+  const check = time.endTime > new Date().getTime() && student?.CV;
   const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
-  console.log(isCheck);
   return (
     <>
       {spin ? <Spin /> : null}

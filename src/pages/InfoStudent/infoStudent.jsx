@@ -3,7 +3,6 @@ import { Row, Col, Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import TextArea from "antd/lib/input/TextArea";
 import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
-import StudentAPI from "../../API/StudentAPI";
 const columns = [
   {
     title: "Doanh nghiệp",
@@ -54,7 +53,7 @@ function InfoStudent(props) {
   const { infoUser } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getStudentId(infoUser.student.mssv));
-  }, []);
+  }, [infoUser]);
   const isRegister = student?.support;
 
   return (

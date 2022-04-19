@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import {
   updateReviewerListStudent,
-  updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -35,7 +34,7 @@ const Status = () => {
   const [filter, setFiler] = useState({});
   useEffect(() => {
     dispatch(getStudent(page));
-  }, [page]);
+  }, [page, infoUser]);
   const columns = [
     {
       title: "MSSV",

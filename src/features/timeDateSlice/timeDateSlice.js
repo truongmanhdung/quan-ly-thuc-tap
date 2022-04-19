@@ -31,17 +31,28 @@ const userSlice = createSlice({
       time: {},
       times: []
     },
+    loading: false
   },
   reducers: {},
   extraReducers: (builder) => {
+
     builder.addCase(getListTime.fulfilled, (state, action) => {
       state.formTime.times = action.payload;
+      state.loading = false
     });
+    builder.addCase(upTimeDate.pending, (state, action) => {
+      state.loading = true
+    })
     builder.addCase(upTimeDate.fulfilled, (state, action) => {
+      state.loading = false
       state.formTime.time = action.payload;
     });
     builder.addCase(getTimeForm.fulfilled, (state, action) => {
       state.formTime.time = action.payload;
+      state.loading = false
+    });
+    builder.addCase(getTimeForm.pending, (state, action) => {
+      state.loading = true
     });
   },
 });
