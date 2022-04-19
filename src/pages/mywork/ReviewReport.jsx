@@ -211,7 +211,7 @@ const ReviewReport = () => {
       newObject['MSSV'] = item['mssv'];
       newObject['Họ tên'] = item['name'];
       newObject['Email'] = item['email'];
-      newObject['Số điện thoại'] = item['phone'];
+      newObject['Số điện thoại'] = item['phoneNumber'];
       newObject['Điểm thái độ'] = item['attitudePoint'];
       newObject['Điểm kết quả'] = item['resultScore'];
       newObject['Báo cáo'] = item['report'];

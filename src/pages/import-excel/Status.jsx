@@ -12,6 +12,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import UpFile from "./UpFile";
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 const { Option } = Select;
 
 const Status = () => {
@@ -31,7 +33,7 @@ const Status = () => {
   });
   const [filter, setFiler] = useState({});
   useEffect(() => {
-    dispatch(getStudent(page));
+    dispatch(getStudent());
   }, [page, infoUser]);
   const columns = [
     {
@@ -172,14 +174,13 @@ const Status = () => {
       setChooseIdStudent(selectedRows);
     },
   };
-
   const handleStandardTableChange = (key, value) => {
     const newValue =
       value.length > 0 || value > 0
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -202,12 +203,62 @@ const Status = () => {
     navigate("/review-cv");
   };
 
+  const fileType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
+
+  const exportToCSV = (list) => {
+    const newData = [];
+
+    list.filter((item) => {
+      const newObject = {};
+      newObject['MSSV'] = item['mssv'];
+      newObject['Họ tên'] = item['name'];
+      newObject['Email'] = item['email'];
+      newObject['Ngành'] = item['majors'];
+      newObject['Số điện thoại'] = item['phoneNumber'];
+      newObject['Tên công ty'] = item['nameCompany'];
+      newObject['Địa chỉ công ty'] = item['addressCompany'];
+      newObject['Mã số thuế'] = item['taxCode'];
+      newObject['Vị trí thực tập'] = item['position'];
+      newObject['Điểm thái độ'] = item['attitudePoint'];
+      newObject['Điểm kết quả'] = item['resultScore'];
+      newObject['Thời gian thực tập'] = item['internshipTime'];
+      newObject['Hình thức'] = item['support'];
+      newData.push(newObject);
+    });
+    newData.filter(item => {
+      if (item["Hình thức"] === 1) {
+        item["Hình thức"] = 1;
+        item["Hình thức"] = "Hỗ trợ";
+      } else if (item["Hình thức"] === 0) {
+        item["Hình thức"] = 0;
+        item["Hình thức"] = "Tự tìm";
+      }else{
+
+      }
+    })
+    const ws = XLSX.utils.json_to_sheet(newData);
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileExtension);
+  };
+
   return (
     <div className="status">
       <div className="flex-header">
         <h4>Sinh viên đăng ký thực tập</h4>
-        <UpFile />
+        <div style={{ display: "flex" }}>
+          <Button variant="warning" style={{ marginRight: 10, height: 36 }} onClick={(e) => exportToCSV(list)}>
+            Export
+          </Button>
+          <UpFile />
+        </div>
+
       </div>
+
+
       <div className="filter">
         <span>Ngành: </span>
 
