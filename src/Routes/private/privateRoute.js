@@ -9,7 +9,6 @@ const Privateroute = ({ children }) => {
   const [check, setCheck] = useState(true);
   const navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
-  console.log(infoUser);
   const dispatch = useDispatch();
   const checkToken = async () => {
     if (infoUser?.student) {
@@ -29,7 +28,7 @@ const Privateroute = ({ children }) => {
       StudentAPI.getAll({
         page: 1,
         limit: 20,
-        campus_id: infoUser.manager.campus_id,
+        campus_id: infoUser?.manager?.campus_id,
       })
         .then((res) => {
           if (res.message === "Request failed with status code 401") {
@@ -50,7 +49,7 @@ const Privateroute = ({ children }) => {
     checkToken();
   }, []);
 
-  return check ? children : <Navigate to="/login" />;
+  return (check && infoUser.token) ? children : <Navigate to="/login" />;
 };
 
 export default Privateroute;
