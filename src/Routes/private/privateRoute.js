@@ -33,13 +33,11 @@ const Privateroute = ({ children }) => {
         .then((res) => {
           if (res.message === "Request failed with status code 401") {
             setCheck(false);
-            navigate('login')
           }
         })
         .catch((err) => {
           if (err.message === "Request failed with status code 401") {
             setCheck(false);
-            navigate('login')
           }
         });
       // console.log(data.status);
