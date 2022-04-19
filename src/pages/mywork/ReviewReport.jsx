@@ -210,13 +210,13 @@ const ReviewReport = () => {
 
     list.filter((item) => {
       const newObject = {};
-    newObject['MSSV'] = item['mssv'];
-      newObject['Họ tên'] = item['name'];
-      newObject['Email'] = item['email'];
-      newObject['Số điện thoại'] = item['phoneNumber'];
-      newObject['Điểm thái độ'] = item['attitudePoint'];
-      newObject['Điểm kết quả'] = item['resultScore'];
-      newObject['Báo cáo'] = item['report'];
+      newObject["MSSV"] = item["mssv"];
+      newObject["Họ tên"] = item["name"];
+      newObject["Email"] = item["email"];
+      newObject["Số điện thoại"] = item["phoneNumber"];
+      newObject["Điểm thái độ"] = item["attitudePoint"];
+      newObject["Điểm kết quả"] = item["resultScore"];
+      newObject["Báo cáo"] = item["report"];
       newData.push(newObject);
     });
 
@@ -312,21 +312,19 @@ const ReviewReport = () => {
           >
             <div className="search">
               <span style={{ width: "40%" }}>Ngành: </span>
-              {type && (
-                <Select
-                  style={{ width: "100%" }}
-                  onChange={(val) => handleStandardTableChange("majors", val)}
-                  placeholder="Lọc theo ngành"
-                >
-                  {filterBranch.map((item, index) => (
-                    <>
-                      <Option value={item.value} key={index}>
-                        {item.title}
-                      </Option>
-                    </>
-                  ))}
-                </Select>
-              )}
+              <Select
+                style={{ width: "100%" }}
+                onChange={(val) => handleStandardTableChange("majors", val)}
+                placeholder="Lọc theo ngành"
+              >
+                {filterBranch.map((item, index) => (
+                  <>
+                    <Option value={item.value} key={index}>
+                      {item.title}
+                    </Option>
+                  </>
+                ))}
+              </Select>
             </div>
           </Col>
           <br />
