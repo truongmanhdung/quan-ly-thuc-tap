@@ -44,33 +44,51 @@ const Formtimepicker = (props) => {
   };
   return (
     <div>
-      <h3>Đặt thời gian cho các form nhập của sinh viên</h3>
+    <h3>Đặt thời gian cho các form nhập của sinh viên</h3>
       <Spin spinning={loading}>
-        <Row>
-          <Col span={12}>
-            <Radio.Group onChange={onChange} value={value}>
-              {times?.length > 0 &&
-                times.map((item) => (
-                  <Radio value={item.typeNumber} key={item._id}>
-                    {item.typeName}
-                  </Radio>
-                ))}
-            </Radio.Group>
-          </Col>
-          <Col span={8}>
-            <RangePicker
-              onChange={onSetDatePicker}
-              renderExtraFooter={() => "extra footer"}
-              showTime
-            />
-          </Col>
-          <Col style={{ marginLeft: 10 }} span={3}>
-            <Button onClick={onSaveTime} type="primary">
-              Đặt thời gian
-            </Button>
-          </Col>
-        </Row>
-      </Spin>
+      <Row>
+        <Col xs={24} sm={16} md={16} lg={16} xl={12}>
+          <Radio.Group onChange={onChange} value={value}>
+            {times?.length > 0 && times.map((item) => (
+              <Radio value={item.typeNumber} key={item._id}>{item.typeName}</Radio>
+            ))}
+            
+          </Radio.Group>
+        </Col>
+        <Col xs={24} sm={8} md={8} lg={8} xl={12}>
+        <RangePicker
+            onChange={onSetDatePicker}
+            renderExtraFooter={() => "extra footer"}
+            showTime
+            style={{marginTop:10}}
+          />
+          <Button style={{marginTop:10}} onClick={onSaveTime} type="primary">
+            Đặt thời gian
+          </Button>
+        </Col>
+      </Row>
+      <h3>Chọn thời gian hoạt động của form</h3>
+      <Row>
+        <Col xs={24} sm={16} md={16} lg={16} xl={12}>
+          <Radio.Group onChange={onChange} value={value}>
+            {times?.length > 0 && times.map((item) => (
+              <Radio value={item.typeNumber} key={item._id}>{item.typeName}</Radio>
+            ))}
+            
+          </Radio.Group>
+        </Col>
+        <Col xs={24} sm={8} md={8} lg={8} xl={12}>
+        <RangePicker
+            onChange={onSetDatePicker}
+            renderExtraFooter={() => "extra footer"}
+            showTime
+            style={{marginTop:10}}
+          />
+          <Button style={{marginTop:10}} onClick={onSaveTime} type="primary">
+            Đặt thời gian
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 };

@@ -29,14 +29,16 @@ function LayoutWebsite() {
   return (
     <div>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider collapsible collapsed={state} onCollapse={() => onCollapse()}>
+        {
+          window.innerWidth >1024 ?
+          <Sider collapsible collapsed={state} className="layout-sider" onCollapse={() => onCollapse()}>
           <div className="logo-school">
             <div className="logo">
               <img
                 style={
                   state
-                    ? { width: "40%", height: "40%" }
-                    : { width: "80%", height: "80%" }
+                    ? { width: "35%", height: "35%" , marginTop:"40px" }
+                    : { width: "100%", height: "100%" }
                 }
                 src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png"
                 alt=""
@@ -53,10 +55,6 @@ function LayoutWebsite() {
                 >
                   <NavLink to="status">Danh sách đăng ký</NavLink>
                 </Menu.Item>
-                {/* <Menu.Item key="5" icon={<TeamOutlined className="icon-link" />}>
-                  <NavLink to="employee-manager">Nhân viên</NavLink>
-                </Menu.Item> */}
-
                 <SubMenu
                   key="sub1"
                   icon={<UnorderedListOutlined />}
@@ -102,14 +100,13 @@ function LayoutWebsite() {
             )}
           </Menu>
         </Sider>
+        :""
+        }
+       
         <Layout className="site-layout">
           <GlobalHeader onCollapse={onCollapse} state={state} />
-          <Content style={{ margin: "15px 15px", background: "white" }}>
-            {/* <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb> */}
-            <div style={{ padding: 24, minHeight: 360 }}>
+          <Content style={{ margin: "10px 10px", background: "white" }}>
+            <div style={{ padding: 15, minHeight: 360 }}>
               <Outlet />
             </div>
           </Content>
