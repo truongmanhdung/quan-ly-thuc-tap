@@ -7,7 +7,8 @@ export const loginGoogle = createAsyncThunk(
   async (dataForm) => {
     const { data } = await AuthApi.login(dataForm)
     if (data?.accessToken) {
-      setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
+      localStorage.setItem("token", data?.accessToken);
+      // setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
     }
     return data;
   }
@@ -16,7 +17,7 @@ export const loginGoogle = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   const { data } = await AuthApi.logout();
   if(data){
-    removeCookie(STORAGEKEY.ACCESS_TOKEN)
+    localStorage.removeItem('token')
   }
   return data;
 });

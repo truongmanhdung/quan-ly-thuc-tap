@@ -24,24 +24,28 @@ const Login = () => {
       cumpusId: cumpus,
     };
     dispatch(loginGoogle(dataForm))
-      .then((res) => res  && redirect(res))
-      .catch((err) => err && message.error("Đăng nhập thất bại") );
+      .then((res) => res && redirect(res))
+      .catch((err) => err && message.error("Đăng nhập thất bại"));
   };
   const redirect = ({ payload: { isAdmin } }) => {
-    message.success('Đăng nhập thành công')
-    return isAdmin ? navigate('/status') : navigate('/info-student')
-  }
+    message.success("Đăng nhập thành công");
+    return isAdmin ? navigate("/status") : navigate("/info-student");
+  };
   const handleChange = (value) => {
     setCumpus(value);
   };
 
   useEffect(() => {
     dispatch(getListCumpus());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className={styles.login_wrapper}>
-      <img alt="diep" className={styles.logo} src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png" />
+      <img
+        alt="diep"
+        className={styles.logo}
+        src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png"
+      />
 
       <div>
         <Select

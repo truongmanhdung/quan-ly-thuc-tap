@@ -9,7 +9,10 @@ import {
 
 const Formtimepicker = (props) => {
   const { RangePicker } = DatePicker;
-  const { formTime: {times}, loading } = useSelector((state) => state.time);
+  const {
+    formTime: { times },
+    loading,
+  } = useSelector((state) => state.time);
   const [value, setValue] = useState(0);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();
@@ -33,38 +36,40 @@ const Formtimepicker = (props) => {
       endTime: endTime,
     };
     try {
-    dispatch(upTimeDate(timeObject));
-      message.success("Thành công")
+      dispatch(upTimeDate(timeObject));
+      message.success("Thành công");
     } catch (error) {
-      message.error("Thất bại")
+      message.error("Thất bại");
     }
   };
   return (
     <div>
-      <h3>Chọn thời gian hoạt động của form</h3>
-      <Spin spinning={loading}  >
-      <Row>
-        <Col span={8}>
-          <Radio.Group onChange={onChange} value={value}>
-            {times?.length > 0 && times.map((item) => (
-              <Radio value={item.typeNumber} key={item._id}>{item.typeName}</Radio>
-            ))}
-            
-          </Radio.Group>
-        </Col>
-        <Col span={8}>
-          <RangePicker
-            onChange={onSetDatePicker}
-            renderExtraFooter={() => "extra footer"}
-            showTime
-          />
-        </Col>
-        <Col span={8}>
-          <Button onClick={onSaveTime} type="primary">
-            Đặt thời gian
-          </Button>
-        </Col>
-      </Row>
+      <h3>Đặt thời gian cho các form nhập của sinh viên</h3>
+      <Spin spinning={loading}>
+        <Row>
+          <Col span={12}>
+            <Radio.Group onChange={onChange} value={value}>
+              {times?.length > 0 &&
+                times.map((item) => (
+                  <Radio value={item.typeNumber} key={item._id}>
+                    {item.typeName}
+                  </Radio>
+                ))}
+            </Radio.Group>
+          </Col>
+          <Col span={8}>
+            <RangePicker
+              onChange={onSetDatePicker}
+              renderExtraFooter={() => "extra footer"}
+              showTime
+            />
+          </Col>
+          <Col style={{ marginLeft: 10 }} span={3}>
+            <Button onClick={onSaveTime} type="primary">
+              Đặt thời gian
+            </Button>
+          </Col>
+        </Row>
       </Spin>
     </div>
   );
