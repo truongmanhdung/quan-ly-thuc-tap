@@ -61,3 +61,12 @@ table tbody td {
     padding: 1rem 0.5rem;
     border: 1px solid #eeeeee;
 }
+@media (max-width:538px) {
+    .header{
+        display: block;
+        
+    }
+    .button{
+        margin-top: 10px;
+    }
+}

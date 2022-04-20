@@ -93,7 +93,7 @@ const UpFile = () => {
       </label>
       <input type="file" onChange={(e) => importData(e)} id="up-file" />
       {data && dataNew.length > 0 && (
-        <div>
+        <div className="button">
           <Button
             style={{ marginRight: 10 }}
             onClick={() => submitSave()}

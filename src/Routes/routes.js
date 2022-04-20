@@ -28,66 +28,108 @@ const Router = () => {
           </Privateroute>
         }
       >
-        <Route path="/support-student" element={<SupportStudent />} />
+        <Route
+          path="/support-student"
+          element={
+            <Privateroute>
+              <SupportStudent />
+            </Privateroute>
+          }
+        />
 
-        <Route path="info-student" element={<InfoStudent />} />
-        <Route path="report-form" element={<ReportForm />} />
-        <Route path="report" element={<Formrp />} />
+        <Route
+          path="info-student"
+          element={
+            <Privateroute>
+              <InfoStudent />
+            </Privateroute>
+          }
+        />
+        <Route
+          path="report-form"
+          element={
+            <Privateroute>
+              <ReportForm />
+            </Privateroute>
+          }
+        />
+        <Route
+          path="report"
+          element={
+            <Privateroute>
+              <Formrp />
+            </Privateroute>
+          }
+        />
 
         <Route
           path="/employee-manager"
           element={
-            <Privateadmin>
-              <EmployeeManager />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <EmployeeManager />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route
           path="status"
           element={
-            <Privateadmin>
-              <Status />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <Status />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route
           path="form-register"
           element={
-            <Privateadmin>
-              <Formtimepicker />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <Formtimepicker />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route
           path="review-cv"
           element={
-            <Privateadmin>
-              <ReviewCV />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <ReviewCV />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route
           path="review-form"
           element={
-            <Privateadmin>
-              <Reviewform />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <Reviewform />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route
           path="review-report"
           element={
-            <Privateadmin>
-              <ReviewReport />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <ReviewReport />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route
           path="up-file"
           element={
-            <Privateadmin>
-              <UpFile />
-            </Privateadmin>
+            <Privateroute>
+              <Privateadmin>
+                <UpFile />
+              </Privateadmin>
+            </Privateroute>
           }
         />
         <Route path="/404" element={<Notfound />} />
