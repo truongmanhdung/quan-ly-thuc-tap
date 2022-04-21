@@ -25,6 +25,7 @@ const ReviewCV = () => {
   } = useSelector((state) => state.reviewer);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
+  const [listEmailStudent, setListEmailStudent] = useState([]);
   const [status, setStatus] = useState({});
   const [page, setPage] = useState({
     page: 1,
@@ -131,6 +132,7 @@ const ReviewCV = () => {
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setListIdStudent(selectedRowKeys);
+      setListEmailStudent(selectedRows);
       setChooseIdStudent(selectedRows);
     },
   };
@@ -185,6 +187,7 @@ const ReviewCV = () => {
   const selectStatus = (value) => {
     setStatus({
       listIdStudent: listIdStudent,
+      listEmailStudent: listEmailStudent,
       email: infoUser?.manager?.email,
       status: value,
     });
