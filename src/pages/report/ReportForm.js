@@ -8,6 +8,7 @@ import {
   Space,
   DatePicker,
   Upload,
+  InputNumber,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -136,7 +137,7 @@ const ReportForm = () => {
         ...values,
         internShipTime: startDate,
         mssv: mssv,
-        typeNumber: 2,
+        typeNumber: time.typeNumber,
         email: email,
       };
       await guardarArchivo(file, newData);
@@ -202,7 +203,14 @@ const ReportForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Nhập điểm thái độ thực tập" />
+              <InputNumber
+                style={{
+                  width: "50%",
+                }}
+                min={0}
+                max={10}
+                placeholder="Nhập điểm thái độ thực tập"
+              />
             </Form.Item>
 
             <Form.Item
@@ -215,7 +223,9 @@ const ReportForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Nhập điểm kết quả thực tập" />
+              <InputNumber style={{
+                  width: "50%",
+                }} min={0} max={10} placeholder="Nhập điểm kết quả thực tập" />
             </Form.Item>
             <Form.Item
               name="upload"

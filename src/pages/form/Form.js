@@ -119,7 +119,8 @@ const Formrp = () => {
     if (
       isFile === "image/jpeg" ||
       isFile === "image/jpg" ||
-      isFile === "image/png"
+      isFile === "image/png" ||
+      isFile === "application/pdf"
     ) {
       setFile(e.file.originFileObj);
     } else {
@@ -135,7 +136,7 @@ const Formrp = () => {
         ...values,
         mssv: mssv,
         email: email,
-        typeNumber: 2,
+        typeNumber: time.typeNumber,
         internshipTime: startDate,
       };
       await guardarArchivo(file, newData);
@@ -184,6 +185,7 @@ const Formrp = () => {
               rules={[
                 {
                   required: true,
+                  pattern: new RegExp("^[0-9]+$"),
                   message: "Vui lòng nhập mã số thuế của doanh nghiệp",
                 },
               ]}
@@ -205,7 +207,7 @@ const Formrp = () => {
             </Form.Item>
             <Form.Item
               name="upload"
-              label="Upload image"
+              label="Upload image or PDF"
               valuePropName="fileList"
               getValueFromEvent={normFile}
             >
