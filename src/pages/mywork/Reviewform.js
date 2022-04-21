@@ -71,7 +71,7 @@ const Reviewform = () => {
     },
     {
       title: "Mã số thuế",
-      dataIndex: "postCode",
+      dataIndex: "taxCode",
       width: 100,
     },
     {

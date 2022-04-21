@@ -397,6 +397,7 @@ const ReviewReport = () => {
               >
                 Tìm kiếm
               </Button>
+              {console.log(chooseIdStudent)}
               {chooseIdStudent.length > 0 && (
                 <div className="comfirm">
                   <span style={{ width: "40%" }}>Lựa chọn </span>
