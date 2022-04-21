@@ -28,6 +28,7 @@ const ReviewReport = () => {
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [status, setStatus] = useState({});
   const [listIdStudent, setListIdStudent] = useState([]);
+  const [listEmailStudent, setListEmailStudent] = useState([]);
   const [type, setType] = useState(false);
   const [page, setPage] = useState({
     page: 1,
@@ -170,6 +171,7 @@ const ReviewReport = () => {
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setListIdStudent(selectedRowKeys);
+      setListEmailStudent(selectedRows);
       setChooseIdStudent(selectedRows);
     },
   };
@@ -228,6 +230,7 @@ const ReviewReport = () => {
   };
 
   const actionOnchange = (value) => {
+    console.log(value);
     switch (value) {
       case "assgin":
         try {
@@ -246,6 +249,10 @@ const ReviewReport = () => {
         break;
       case "edit":
         setType(true);
+        setStatus({
+          listIdStudent: listIdStudent,
+          email: infoUser?.manager?.email,
+        });
         break;
 
       default:
@@ -261,6 +268,7 @@ const ReviewReport = () => {
       if (id.length === chooseIdStudent.length) {
         setStatus({
           listIdStudent: listIdStudent,
+          listEmailStudent: listEmailStudent,
           email: infoUser?.manager?.email,
           status: value,
         });
@@ -397,7 +405,6 @@ const ReviewReport = () => {
               >
                 Tìm kiếm
               </Button>
-              {console.log(chooseIdStudent)}
               {chooseIdStudent.length > 0 && (
                 <div className="comfirm">
                   <span style={{ width: "40%" }}>Lựa chọn </span>
@@ -414,7 +421,8 @@ const ReviewReport = () => {
                       Cập nhật trạng thái
                     </Option>
                   </Select>
-
+                  {console.log("Object: ", Object.keys(status).length )}
+                  {console.log("status: ", status )}
                   {Object.keys(status).length >= 1 && (
                     <Select
                       className="upload-status"
