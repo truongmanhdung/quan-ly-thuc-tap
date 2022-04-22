@@ -65,12 +65,27 @@ const ReviewReport = () => {
     {
       title: "Điện thoại",
       dataIndex: "phoneNumber",
+      width: 100,
+    },
+    {
+      title: "Chuyên ngành",
+      dataIndex: "majors",
+      width: 100,
+    },
+    {
+      title: "Tên công ty",
+      dataIndex: "nameCompany",
+      width: 160,
+    },
+    {
+      title: "Thời gian bắt đầu",
+      dataIndex: "internshipTime",
       width: 160,
     },
     {
       title: "Điểm thái độ",
       dataIndex: "attitudePoint",
-      width: 180,
+      width: 100,
     },
     {
       title: "Điểm kết quả",
@@ -96,6 +111,7 @@ const ReviewReport = () => {
     {
       title: "Trạng thái",
       dataIndex: "statusCheck",
+      width: 100,
       render: (status) => {
         if (status === 0) {
           return (
