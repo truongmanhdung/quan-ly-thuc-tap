@@ -120,7 +120,7 @@ const Reviewform = () => {
         } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Nhận CV
+              Chờ nộp biên bản
             </span>
           );
         } else if (status === 3) {
