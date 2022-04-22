@@ -71,6 +71,11 @@ const ReviewCV = () => {
       width: 100,
     },
     {
+      title: 'Số lần hỗ trợ',
+      dataIndex: 'numberOfTime',
+      width: 100,
+    },
+    {
       title: 'Phân loại',
       dataIndex: 'support',
       width: 90,
