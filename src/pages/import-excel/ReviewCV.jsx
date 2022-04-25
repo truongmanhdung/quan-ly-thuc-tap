@@ -12,6 +12,8 @@ import {
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 import { statusConfigCV } from '../../ultis/constConfig';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 const { Column, ColumnGroup } = Table;
 
 const { Option } = Select;
@@ -23,6 +25,7 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
+  console.log(list)
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
@@ -209,6 +212,46 @@ const ReviewCV = () => {
 
   };
 
+  const fileType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
+
+  const exportToCSV = (list) => {
+    const newData = [];
+
+    list.filter((item) => {
+      const newObject = {};
+      newObject['MSSV'] = item['mssv'];
+      newObject['Họ tên'] = item['name'];
+      newObject['Email'] = item['email'];
+      newObject['Ngành'] = item['majors'];
+      newObject['Số điện thoại'] = item['phoneNumber'];
+      newObject['Số lần hỗ trợ'] = item['numberOfTime'];
+      newObject['CV'] = item['CV'];
+      newObject['Trạng thái'] = item['statusCheck'];
+      newData.push(newObject);
+    });
+    newData.filter(item => {
+      if (item["Trạng thái"] === 0) {
+        item["Trạng thái"] = 0;
+        item["Trạng thái"] = "Chờ kiểm tra";
+      } else if (item["Trạng thái"] === 1) {
+        item["Trạng thái"] = 1;
+        item["Trạng thái"] = "Sửa lại CV";
+      } else if (item["Trạng thái"] === 2) {
+        item["Trạng thái"] = 2;
+        item["Trạng thái"] = "Đã nhận CV";
+      }
+       else {
+
+      }
+    })
+    const ws = XLSX.utils.json_to_sheet(newData);
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileExtension);
+  };
 
   return (
     <div className="status">
@@ -216,7 +259,12 @@ const ReviewCV = () => {
         window.innerWidth < 1023 ?
           <h4 style={{ fontSize: "1rem" }}>Review CV</h4>
           :
-          <h4>Review CV</h4>
+          <>
+            <h4>Review CV</h4>
+            <Button variant="warning" style={{ marginRight: 10, height: 36 }} onClick={(e) => exportToCSV(list)}>
+              Export
+            </Button>
+          </>
 
       }
 
