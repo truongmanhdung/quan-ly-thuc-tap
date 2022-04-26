@@ -34,6 +34,7 @@ const StudentAPI = {
     return axiosClient.patch(url, data);
   },
   listStudentAssReviewer(data) {
+    console.log(data);
     const url = `/review?${stringify(data)}`;
     return axiosClient.get(url);
   },

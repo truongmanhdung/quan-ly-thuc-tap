@@ -9,7 +9,7 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatuss } from "../../ultis/selectOption";
+import { filterBranch, filterStatusForm, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
 const { Column, ColumnGroup } = Table;
@@ -186,7 +186,7 @@ const Reviewform = () => {
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0
+      value.length > 0 || value > 0 && value !== ''
         ? {
             ...filter,
             [key]: value,
@@ -199,7 +199,7 @@ const Reviewform = () => {
       ...page,
       ...filter,
     };
-    dispatch(getStudent(data));
+    dispatch(listStudentForm(data));
   };
   const actionOnchange = (value) => {
     switch (value) {
@@ -257,9 +257,9 @@ const Reviewform = () => {
   return (
     <div className="status">
       {window.innerWidth < 1023 ? (
-        <h4 style={{ fontSize: "1rem" }}>Review biên bản</h4>
+        <h4 style={{ fontSize: "1rem" }}>Review biểu mẫu</h4>
       ) : (
-        <h4>Review biên bản</h4>
+        <h4>Review biểu mẫu</h4>
       )}
       <div className="filter" style={{ marginTop: "20px" }}>
         <Row>
@@ -308,8 +308,8 @@ const Reviewform = () => {
                 }
                 placeholder="Lọc theo trạng thái"
               >
-                {filterStatuss.map((item, index) => (
-                  <Option value={index} key={index}>
+                {filterStatusForm.map((item, index) => (
+                  <Option value={item.id} key={index}>
                     {item.title}
                   </Option>
                 ))}
@@ -330,9 +330,9 @@ const Reviewform = () => {
               <span style={{ width: "40%" }}>Tìm Kiếm: </span>
               <Input
                 style={{ width: "100%" }}
-                placeholder="Tìm kiếm theo tên"
+                placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
-                  handleStandardTableChange("name", val.target.value)
+                  handleStandardTableChange("mssv", val.target.value)
                 }
               />
             </div>
