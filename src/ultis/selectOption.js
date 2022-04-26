@@ -32,21 +32,109 @@ export const filterBranch = [
     value: "QHCC",
   },
 ];
+
+export const filterStatusCV = [
+  {
+    title: "Tất cả",
+    id: 11,
+  },
+  {
+    title: "Đã nộp CV",
+    id: 0,
+  },
+  {
+    title: "Sửa lại CV",
+    id: 1,
+  },
+];
+
+export const filterStatusForm = [
+  {
+    title: "Tất cả",
+    id: 11,
+  },
+  {
+    title: "Đã nộp biểu mẫu",
+    id: 4,
+  },
+  {
+    title: "Sửa lại biểu mẫu",
+    id: 5,
+  },
+];
+
+export const filterStatusReport = [
+  {
+    title: "Tất cả",
+    id: 11,
+  },
+  {
+    title: "Đang thực tập",
+    id: 6,
+  },
+  {
+    title: "Đã nộp báo cáo",
+    id: 7,
+  },
+  {
+    title: "Sửa lại báo cáo",
+    id: 8,
+  },
+  {
+    title: "Hoàn thành",
+    id: 9,
+  },
+];
+
 export const filterStatuss = [
   {
     title: "Tất cả",
-  },
-  {
-    title: "Đã tạch",
-  },
-  {
-    title: "Sửa lại",
-  },
-  {
-    title: "Đã kiểm tra",
+    id: 11,
   },
   {
     title: "Chờ kiểm tra",
+    id: 0,
+  },
+  {
+    title: "Chưa đăng ký",
+    id: 10,
+  },
+  {
+    title: "Sửa lại CV",
+    id: 1,
+  },
+  {
+    id: 2,
+    title: "Nhận CV",
+  },
+  {
+    id: 4,
+    title: "Đã nộp biên bản",
+  },
+
+  {
+    id: 5,
+    title: "Sửa biên bản",
+  },
+  {
+    id: 6,
+    title: "Đang thực tập",
+  },
+  {
+    id: 7,
+    title: "Đã nộp báo cáo",
+  },
+  {
+    id: 8,
+    title: "Sửa báo cáo",
+  },
+  {
+    id: 9,
+    title: "Hoàn thành",
+  },
+  {
+    id: 3,
+    title: "Đã trượt",
   },
 ];
 export const status = [

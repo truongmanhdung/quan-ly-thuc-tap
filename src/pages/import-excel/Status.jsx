@@ -125,13 +125,13 @@ const Status = () => {
         } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Đã nộp biên bản <br />
+              Đã nộp biểu mẫu <br />
             </span>
           );
         } else if (status === 5) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Sửa biên bản <br />
+              Sửa biểu mẫu<br />
             </span>
           );
         } else if (status === 6) {
@@ -177,7 +177,7 @@ const Status = () => {
   };
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0
+      value.length > 0 || value < 11 && value !== ''
         ? {
           ...filter,
           [key]: value,
@@ -310,7 +310,7 @@ const Status = () => {
                 placeholder="Lọc theo trạng thái"
               >
                 {filterStatuss.map((item, index) => (
-                  <Option value={index} key={index}>
+                  <Option value={item.id} key={index}>
                     {item.title}
                   </Option>
                 ))}
@@ -328,9 +328,9 @@ const Status = () => {
               </span>
               <Input
                 style={{ width: "100%" }}
-                placeholder="Tìm kiếm theo tên"
+                placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
-                  handleStandardTableChange("name", val.target.value)
+                  handleStandardTableChange("mssv", val.target.value)
                 }
               />
             </div>

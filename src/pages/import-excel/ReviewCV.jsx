@@ -9,7 +9,7 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent,
 } from '../../features/reviewerStudent/reviewerSlice';
-import { filterBranch, filterStatuss } from '../../ultis/selectOption';
+import { filterBranch, filterStatusCV, filterStatuss } from '../../ultis/selectOption';
 import { omit } from 'lodash';
 import { statusConfigCV } from '../../ultis/constConfig';
 import * as FileSaver from 'file-saver';
@@ -25,7 +25,6 @@ const ReviewCV = () => {
     listStudentAssReviewer: { total, list },
     loading,
   } = useSelector((state) => state.reviewer);
-  console.log(list)
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
@@ -147,7 +146,7 @@ const ReviewCV = () => {
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0
+      value.length > 0 || value < 11 && value !== ''
         ? {
           ...filter,
           [key]: value,
@@ -160,7 +159,7 @@ const ReviewCV = () => {
       ...page,
       ...filter,
     };
-    dispatch(getStudent(data));
+    dispatch(getListStudentAssReviewer(data));
   };
 
   const actionOnchange = (value) => {
@@ -303,8 +302,8 @@ const ReviewCV = () => {
                 onChange={(val) => handleStandardTableChange("statusCheck", val)}
                 placeholder="Lọc theo trạng thái"
               >
-                {filterStatuss.map((item, index) => (
-                  <Option value={index} key={index}>
+                {filterStatusCV.map((item, index) => (
+                  <Option value={item.id} key={index}>
                     {item.title}
                   </Option>
                 ))}
@@ -322,9 +321,9 @@ const ReviewCV = () => {
               </span>
               <Input
                 style={{ width: "100%" }}
-                placeholder="Tìm kiếm theo tên"
+                placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
-                  handleStandardTableChange("name", val.target.value)
+                  handleStandardTableChange("mssv", val.target.value)
                 }
               />
             </div>

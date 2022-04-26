@@ -8,7 +8,7 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatuss } from "../../ultis/selectOption";
+import { filterBranch, filterStatusReport, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
@@ -203,7 +203,7 @@ const ReviewReport = () => {
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0
+      value.length > 0 || value > 0 && value !== ''
         ? {
             ...filter,
             [key]: value,
@@ -216,7 +216,7 @@ const ReviewReport = () => {
       ...page,
       ...filter,
     };
-    dispatch(getStudent(data));
+    dispatch(listStudentReport(data));
   };
 
   const fileType =
@@ -371,8 +371,8 @@ const ReviewReport = () => {
                 }
                 placeholder="Lọc theo trạng thái"
               >
-                {filterStatuss.map((item, index) => (
-                  <Option value={index} key={index}>
+                {filterStatusReport.map((item, index) => (
+                  <Option value={item.id} key={index}>
                     {item.title}
                   </Option>
                 ))}
@@ -393,9 +393,9 @@ const ReviewReport = () => {
               <span style={{ width: "40%" }}>Tìm Kiếm: </span>
               <Input
                 style={{ width: "100%" }}
-                placeholder="Tìm kiếm theo tên"
+                placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
-                  handleStandardTableChange("name", val.target.value)
+                  handleStandardTableChange("mssv", val.target.value)
                 }
               />
             </div>
