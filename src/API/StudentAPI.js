@@ -3,7 +3,7 @@ import { stringify } from "qs";
 const StudentAPI = {
   getAll(page) {
     const url = `/student?${stringify(page)}`;
-    return axiosClient.get(url);
+    return axiosClient.get(url).then((res) => res).catch(err => err);
   },
   get(id) {
     const url = `/student/${id}`;
@@ -34,6 +34,7 @@ const StudentAPI = {
     return axiosClient.patch(url, data);
   },
   listStudentAssReviewer(data) {
+    console.log(data);
     const url = `/review?${stringify(data)}`;
     return axiosClient.get(url);
   },
