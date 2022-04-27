@@ -46,5 +46,9 @@ const StudentAPI = {
     const url = `/reivewreport?${stringify(data)}`;
     return axiosClient.get(url);
   },
+  getSmesterSchool(){
+    const url = '/smester';
+    return axiosClient.get(url)
+  }
 };
 export default StudentAPI;

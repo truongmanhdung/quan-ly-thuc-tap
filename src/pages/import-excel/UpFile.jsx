@@ -6,7 +6,7 @@ import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
-const UpFile = () => {
+const UpFile = ({id_smester}) => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
@@ -43,7 +43,6 @@ const UpFile = () => {
         });
         rows.push(rowData);
       });
-      console.log(rows);
       let datas = [];
       rows
         .filter((item, index) => index !== 0)
@@ -59,10 +58,12 @@ const UpFile = () => {
               newObject["email"] = item["Email"];
               newObject["supplement"] = item["bổ sung"];
               newObject["campus_id"] = manager.campus_id;
+              newObject["smester_id"] = id_smester
             }
             Object.keys(newObject).length > 0 && datas.push(newObject);
           }
         });
+        console.log(datas);
       setDataNew(datas);
       setData(fileData);
     };
