@@ -9,7 +9,7 @@ const Support = ({ normFile }) => {
     <>
       <Form.Item
         name="upload"
-        label="Upload file PDF"
+        label="Upload CV (PDF)"
         valuePropName="fileList"
         getValueFromEvent={getFile}
       >

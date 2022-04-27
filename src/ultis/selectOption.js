@@ -146,3 +146,46 @@ export const optionsMajors = [
     value: "UDPM(Java)",
   },
 ];
+
+export const optionStatus = [
+  {
+    title: "Chờ kiểm tra",
+    value: 0,
+  },
+  {
+    title: "Sửa lại CV",
+    value: 1,
+  },
+  {
+    title: "Nhận CV",
+    value: 2,
+  },
+  {
+    title: "Trươt",
+    value: 3,
+  },
+  {
+    title: "Đã nộp biên bản",
+    value: 4,
+  },
+  {
+    title: "Sửa biên bản",
+    value: 5,
+  },
+  {
+    title: "Đang thực tập",
+    value: 6,
+  },
+  {
+    title: "Đã nộp báo cáo",
+    value: 7,
+  },
+  {
+    title: "Sửa báo cáo",
+    value: 8,
+  },
+  {
+    title: "Hoàn thành",
+    value: 9,
+  },
+];

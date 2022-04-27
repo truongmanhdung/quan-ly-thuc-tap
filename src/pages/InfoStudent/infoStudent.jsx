@@ -3,6 +3,7 @@ import { Row, Col, Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import TextArea from "antd/lib/input/TextArea";
 import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
+import { optionStatus } from "../../ultis/selectOption";
 const columns = [
   {
     title: "Doanh nghiệp",
@@ -55,6 +56,7 @@ function InfoStudent(props) {
     dispatch(getStudentId(infoUser.student.mssv));
   }, [infoUser]);
   const isRegister = student?.support;
+  const statusForm = infoUser?.student?.statusCheck;
 
   return (
     <div>
@@ -75,6 +77,14 @@ function InfoStudent(props) {
                 : "" || isRegister === 1
                 ? "Nhận hỗ trợ từ nhà trường"
                 : ""}
+            </p>
+            <p>
+              Trạng thái SV :{" "}
+              {optionStatus.map((index) => {
+                if (index.value === statusForm) {
+                  return index.title
+                }
+              })}{" "}
             </p>
           </div>
         </Col>

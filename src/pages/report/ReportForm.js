@@ -223,13 +223,18 @@ const ReportForm = () => {
                 },
               ]}
             >
-              <InputNumber style={{
+              <InputNumber
+                style={{
                   width: "50%",
-                }} min={0} max={10} placeholder="Nhập điểm kết quả thực tập" />
+                }}
+                min={0}
+                max={10}
+                placeholder="Nhập điểm kết quả thực tập"
+              />
             </Form.Item>
             <Form.Item
               name="upload"
-              label="Upload Docx hoặc PDF"
+              label="Upload báo cáo (Docx hoặc PDF)"
               valuePropName="fileList"
               getValueFromEvent={normFile}
             >

@@ -132,7 +132,7 @@ const SupportStudent = () => {
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
         form.resetFields();
-        setSpin(false);
+        dispatch(getStudentId(infoUser.student.mssv));
       } else {
         await guardarArchivo(file, data);
       }
@@ -264,7 +264,7 @@ const SupportStudent = () => {
 
                 <Form.Item
                   name="dream"
-                  label="Vị trí mong muốn"
+                  label="Vị trí thực tập"
                   rules={[
                     {
                       required: true,

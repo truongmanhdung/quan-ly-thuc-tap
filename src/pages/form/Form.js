@@ -145,9 +145,10 @@ const Formrp = () => {
       message.error(dataErr.message);
     }
   };
-  const check = time.endTime > new Date().getTime() && student?.CV !== null;
+  const check = time.endTime > new Date().getTime() && student?.CV;
   const isCheck =
     (student && student.statusCheck === 2) || student.statusCheck === 5;
+  const nameCompany = student.nameCompany;
 
   return (
     <>
@@ -167,19 +168,21 @@ const Formrp = () => {
             }}
             scrollToFirstError
           >
-            <Form.Item
-              name="nameCompany"
-              label="Tên doanh nghiệp"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập tên doanh nghiệp",
-                },
-              ]}
-            >
-              <Input placeholder="Tên doanh nghiệp" />
-            </Form.Item>
-            <Form.Item
+            {nameCompany ? null : (
+              <Form.Item
+                name="nameCompany"
+                label="Tên doanh nghiệp"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập tên doanh nghiệp",
+                  },
+                ]}
+              >
+                <Input placeholder="Tên doanh nghiệp" />
+              </Form.Item>
+            )}
+            {/* <Form.Item
               name="taxCode"
               label="Mã số thuế"
               rules={[
@@ -191,7 +194,7 @@ const Formrp = () => {
               ]}
             >
               <Input placeholder="Nhập mã số thuế doanh nghiệp" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item
               name="internshipTime"
@@ -207,7 +210,7 @@ const Formrp = () => {
             </Form.Item>
             <Form.Item
               name="upload"
-              label="Upload image or PDF"
+              label="Upload biên bản (Image or PDF)"
               valuePropName="fileList"
               getValueFromEvent={normFile}
             >
