@@ -6,7 +6,7 @@ import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
-const UpFile = ({id_smester}) => {
+const UpFile = ({ smester_id }) => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
@@ -32,7 +32,7 @@ const UpFile = ({id_smester}) => {
       const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
       let headers = fileData[0];
       fileData.splice(0, 1);
-      if(headers.length === 0){
+      if (headers.length === 0) {
         headers = fileData[0];
       }
       const rows = [];
@@ -58,12 +58,11 @@ const UpFile = ({id_smester}) => {
               newObject["email"] = item["Email"];
               newObject["supplement"] = item["bổ sung"];
               newObject["campus_id"] = manager.campus_id;
-              newObject["smester_id"] = id_smester
+              newObject["smester_id"] = smester_id;
             }
             Object.keys(newObject).length > 0 && datas.push(newObject);
           }
         });
-        console.log(datas);
       setDataNew(datas);
       setData(fileData);
     };
@@ -71,8 +70,9 @@ const UpFile = ({id_smester}) => {
   };
 
   const submitSave = () => {
-    dispatch(insertStudent(dataNew)).then((res) => {
-      notifications(res.payload)
+    const dataUpload = { data: dataNew, smester_id };
+    dispatch(insertStudent(dataUpload)).then((res) => {
+      notifications(res.payload);
       setDataNew([]);
       setNameFile();
     });

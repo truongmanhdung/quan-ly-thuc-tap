@@ -272,7 +272,7 @@ const Status = () => {
                   Export
                 </Button>
                 <UpFile
-                id_smester={filter.id_smester}
+                smester_id={filter.smester_id}
                 />
               </div>
             </>
