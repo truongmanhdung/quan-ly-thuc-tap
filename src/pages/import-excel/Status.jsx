@@ -3,7 +3,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import "../../common/styles/status.css";
 import { Select, Input, Table, Button, Row, Col } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { getStudent } from "../../features/StudentSlice/StudentSlice";
+import { getSmester, getStudent } from "../../features/StudentSlice/StudentSlice";
 import {
   updateReviewerListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
@@ -24,6 +24,7 @@ const Status = () => {
   const {
     listStudent: { list, total },
     loading,
+    listSmester
   } = useSelector((state) => state.students);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
@@ -32,9 +33,16 @@ const Status = () => {
     limit: 20,
     campus_id: infoUser.manager.campus_id,
   });
-  const [filter, setFiler] = useState({});
+
+  const [filter, setFiler] = useState({
+    smester_id: '6268c1e72bfe652b8d17eb22'
+  });
   useEffect(() => {
-    dispatch(getStudent());
+    dispatch(getStudent({
+      ...page,
+      ...filter
+    }));
+    dispatch(getSmester())
   }, [page, infoUser]);
   const columns = [
     {
@@ -125,13 +133,13 @@ const Status = () => {
         } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Đã nộp biên bản <br />
+              Đã nộp biểu mẫu <br />
             </span>
           );
         } else if (status === 5) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Sửa biên bản <br />
+              Sửa biểu mẫu<br />
             </span>
           );
         } else if (status === 6) {
@@ -168,7 +176,6 @@ const Status = () => {
       },
     },
   ];
-
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setListIdStudent(selectedRowKeys);
@@ -177,7 +184,7 @@ const Status = () => {
   };
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0
+      value.length > 0 || value < 11 && value !== ''
         ? {
           ...filter,
           [key]: value,
@@ -264,7 +271,9 @@ const Status = () => {
                 <Button variant="warning" style={{ marginRight: 10, height: 36 }} onClick={(e) => exportToCSV(list)}>
                   Export
                 </Button>
-                <UpFile />
+                <UpFile
+                smester_id={filter.smester_id}
+                />
               </div>
             </>
         }
@@ -276,7 +285,7 @@ const Status = () => {
         }
         <br />
         <Row>
-          <Col xs={24} sm={4} md={12} lg={8} xl={8} style={{ padding: "0 10px" }}>
+          <Col span={6}  style={{ padding: "0 10px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span style={{ width: "40%" }}>Ngành: </span>
               <Select
@@ -296,7 +305,7 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col xs={24} sm={4} md={12} lg={8} xl={8} style={{ padding: "0 10px" }}>
+          <Col  span={6}  style={{ padding: "0 10px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span
                 style={{ width: "40%" }}
@@ -310,7 +319,7 @@ const Status = () => {
                 placeholder="Lọc theo trạng thái"
               >
                 {filterStatuss.map((item, index) => (
-                  <Option value={index} key={index}>
+                  <Option value={item.id} key={index}>
                     {item.title}
                   </Option>
                 ))}
@@ -319,7 +328,31 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col xs={24} sm={4} md={12} lg={8} xl={8} style={{ padding: "0 10px" }}>
+          <Col  span={6}  style={{ padding: "0 10px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span
+                style={{ width: "40%" }}
+              >
+               Kỳ
+              </span>
+              <Select
+                className="filter-status"
+                style={{ width: "100%" }}
+                onChange={(val) => handleStandardTableChange("smester_id", val)}
+                placeholder="Lọc theo trạng thái"
+                defaultValue={filter.smester_id}
+              >
+                {listSmester.map((item, index) => (
+                  <Option value={item._id} key={index}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          </Col>
+          <br />
+          <br />
+          <Col span={6}  style={{ padding: "0 10px" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span
                 style={{ width: "40%" }}
@@ -328,9 +361,9 @@ const Status = () => {
               </span>
               <Input
                 style={{ width: "100%" }}
-                placeholder="Tìm kiếm theo tên"
+                placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
-                  handleStandardTableChange("name", val.target.value)
+                  handleStandardTableChange("mssv", val.target.value)
                 }
               />
             </div>

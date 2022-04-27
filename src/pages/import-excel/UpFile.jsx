@@ -6,7 +6,7 @@ import "../../common/styles/upfile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
-const UpFile = () => {
+const UpFile = ({ smester_id }) => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
@@ -20,15 +20,21 @@ const UpFile = () => {
     const file = e.target.files[0];
     setNameFile(file.name);
     const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
     reader.onload = (event) => {
       const bstr = event.target.result;
-      const wordBook = XLSX.read(bstr, { type: "binary" });
-      const wordSheetName = wordBook.SheetNames[0];
-      const wordSheet = wordBook.Sheets[wordSheetName];
-      const fileData = XLSX.utils.sheet_to_json(wordSheet, { header: 1 });
+      const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      console.log(rABS, wb);
+      /* Convert array of arrays */
+      const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      let headers = fileData[0];
       fileData.splice(0, 1);
-      const headers = fileData[0];
-
+      if (headers.length === 0) {
+        headers = fileData[0];
+      }
       const rows = [];
       fileData.forEach((item) => {
         let rowData = {};
@@ -52,6 +58,7 @@ const UpFile = () => {
               newObject["email"] = item["Email"];
               newObject["supplement"] = item["bổ sung"];
               newObject["campus_id"] = manager.campus_id;
+              newObject["smester_id"] = smester_id;
             }
             Object.keys(newObject).length > 0 && datas.push(newObject);
           }
@@ -63,8 +70,9 @@ const UpFile = () => {
   };
 
   const submitSave = () => {
-    dispatch(insertStudent(dataNew)).then((res) => {
-      notifications(res.payload)
+    const dataUpload = { data: dataNew, smester_id };
+    dispatch(insertStudent(dataUpload)).then((res) => {
+      notifications(res.payload);
       setDataNew([]);
       setNameFile();
     });

@@ -34,6 +34,7 @@ const StudentAPI = {
     return axiosClient.patch(url, data);
   },
   listStudentAssReviewer(data) {
+    console.log(data);
     const url = `/review?${stringify(data)}`;
     return axiosClient.get(url);
   },
@@ -45,5 +46,9 @@ const StudentAPI = {
     const url = `/reivewreport?${stringify(data)}`;
     return axiosClient.get(url);
   },
+  getSmesterSchool(){
+    const url = '/smester';
+    return axiosClient.get(url)
+  }
 };
 export default StudentAPI;
