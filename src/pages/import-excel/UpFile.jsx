@@ -20,15 +20,21 @@ const UpFile = () => {
     const file = e.target.files[0];
     setNameFile(file.name);
     const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
     reader.onload = (event) => {
       const bstr = event.target.result;
-      const wordBook = XLSX.read(bstr, { type: "binary" });
-      const wordSheetName = wordBook.SheetNames[0];
-      const wordSheet = wordBook.Sheets[wordSheetName];
-      const fileData = XLSX.utils.sheet_to_json(wordSheet, { header: 1 });
+      const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      console.log(rABS, wb);
+      /* Convert array of arrays */
+      const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+      let headers = fileData[0];
       fileData.splice(0, 1);
-      const headers = fileData[0];
-
+      if(headers.length === 0){
+        headers = fileData[0];
+      }
       const rows = [];
       fileData.forEach((item) => {
         let rowData = {};
@@ -37,6 +43,7 @@ const UpFile = () => {
         });
         rows.push(rowData);
       });
+      console.log(rows);
       let datas = [];
       rows
         .filter((item, index) => index !== 0)
