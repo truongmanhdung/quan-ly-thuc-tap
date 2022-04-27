@@ -57,7 +57,7 @@ function InfoStudent(props) {
   }, [infoUser]);
   const isRegister = student?.support;
   const statusForm = infoUser?.student?.statusCheck;
-
+  console.log(student, infoUser);
   return (
     <div>
       <Row>
