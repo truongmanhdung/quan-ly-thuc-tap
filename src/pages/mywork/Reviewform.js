@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import { EyeOutlined } from "@ant-design/icons";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, message, Row, Col, Tag } from "antd";
+import { Select, Input, Table, Button, message, Row, Col, } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import {
   listStudentForm,
   updateReviewerListStudent,
@@ -12,6 +11,7 @@ import {
 import { filterBranch, filterStatusForm, filterStatuss } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
+import TextArea from "antd/lib/input/TextArea";
 const { Column, ColumnGroup } = Table;
 const { Option } = Select;
 
@@ -19,7 +19,9 @@ const Reviewform = () => {
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const [status, setStatus] = useState({});
-  const [type, setType] = useState(false);
+  const [note, setNote] = useState();
+  const typePingTimeoutRef = useRef(null)
+  const [textNote,setTextNote] = useState('')
   const {
     listStudentAssReviewer: { total, list },
     loading,
@@ -94,6 +96,11 @@ const Reviewform = () => {
       dataIndex: "reviewer",
       render: (val) => val && val.slice(0, -11),
       width: 200,
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "note",
+      width:200
     },
     {
       title: "Ngày bắt đầu",
@@ -188,9 +195,9 @@ const Reviewform = () => {
     const newValue =
       value.length > 0 || value > 0 && value !== ''
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -229,6 +236,7 @@ const Reviewform = () => {
     }
   };
   const selectStatus = (value) => {
+    setNote(value)
     if (value === 1) {
       let id = [];
       chooseIdStudent
@@ -248,12 +256,22 @@ const Reviewform = () => {
       });
     }
   };
-
   const comfirm = () => {
-    dispatch(updateStatusListStudent(status));
+    dispatch(updateStatusListStudent({
+      ...status,
+      textNote
+    }));
     setChooseIdStudent([]);
   };
-
+  
+  const handleNote =({target: {value}}) => {
+    if (typePingTimeoutRef.current) {
+      clearTimeout(typePingTimeoutRef.current)
+    }
+    typePingTimeoutRef.current = setTimeout(()=>{
+      setTextNote(value)
+    }, 300)
+  }
   return (
     <div className="status">
       {window.innerWidth < 1023 ? (
@@ -393,7 +411,16 @@ const Reviewform = () => {
                       ))}
                     </Select>
                   )}
-
+                  {
+                    note === 1 || note === 5 ? (
+                      <TextArea
+                      // value={value}
+                      onChange={handleNote}
+                      placeholder="Ghi chú..."
+                      autoSize={{ minRows: 3, maxRows: 5 }}
+                    />
+                    ): null
+                  }
                   {Object.keys(status).length > 0 && (
                     <Button onClick={() => comfirm()}>Xác nhận</Button>
                   )}

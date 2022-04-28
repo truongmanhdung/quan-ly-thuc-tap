@@ -15,7 +15,6 @@ const Privateroute = ({ children }) => {
       StudentAPI.get(infoUser?.student?.mssv)
         .then((res) => {
           if (res.data) {
-            console.log("sadsadsa", res);
             setCheck(true);
           }
         })
@@ -40,7 +39,6 @@ const Privateroute = ({ children }) => {
             setCheck(false);
           }
         });
-      // console.log(data.status);
     }
   };
   useEffect(() => {

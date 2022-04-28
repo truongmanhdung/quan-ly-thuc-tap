@@ -27,7 +27,6 @@ const UpFile = ({ smester_id }) => {
       /* Get first worksheet */
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
-      console.log(rABS, wb);
       /* Convert array of arrays */
       const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
       let headers = fileData[0];
