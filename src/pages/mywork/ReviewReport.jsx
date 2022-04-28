@@ -305,6 +305,7 @@ const ReviewReport = () => {
     } else {
       setStatus({
         listIdStudent: listIdStudent,
+        listEmailStudent: listEmailStudent,
         email: infoUser?.manager?.email,
         status: value,
       });
@@ -475,7 +476,7 @@ const ReviewReport = () => {
                     </Select>
                   )}
                    {
-                    note === 3 || note === 5 || note === 8? (
+                    note === 3 || note === 5 || note === 8 ? (
                       <TextArea
                       // value={value}
                       onChange={handleNote}

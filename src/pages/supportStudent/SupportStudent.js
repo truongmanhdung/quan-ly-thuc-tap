@@ -173,16 +173,15 @@ const SupportStudent = () => {
             }}
             scrollToFirstError
           >
-            <Form.Item name="support" label="Kiểu đăng ký">
-              <Radio.Group onChange={onChange} defaultValue={value}>
-                <Radio value={1}>Nhà trường hỗ trợ</Radio>
-                <Radio value={0}>Tự tìm nới thực tập</Radio>
-              </Radio.Group>
-            </Form.Item>
-
             {check ? (
               isCheck ? (
                 <>
+                  <Form.Item name="support" label="Kiểu đăng ký">
+                    <Radio.Group onChange={onChange} defaultValue={value}>
+                      <Radio value={1}>Nhà trường hỗ trợ</Radio>
+                      <Radio value={0}>Tự tìm nới thực tập</Radio>
+                    </Radio.Group>
+                  </Form.Item>
                   <Form.Item
                     name="user_code"
                     label="Mã sinh viên"
