@@ -10,6 +10,7 @@ import {
   Upload,
   InputNumber,
 } from "antd";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
@@ -54,7 +55,7 @@ const ReportForm = () => {
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [file, setFile] = useState();
-  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [form] = Form.useForm();
   const { infoUser } = useSelector((state) => state.auth);
   const { student } = useSelector((state) => state.cumpus);
@@ -63,7 +64,7 @@ const ReportForm = () => {
   const lForm = infoUser.student.form;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
-    setStartDate(date._d);
+    setEndDate(date._d);
   };
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -135,7 +136,8 @@ const ReportForm = () => {
     try {
       const newData = {
         ...values,
-        internShipTime: startDate,
+        EndInternShipTime: endDate,
+        nameCompany: student.nameCompany,
         mssv: mssv,
         typeNumber: time.typeNumber,
         email: email,
@@ -148,8 +150,10 @@ const ReportForm = () => {
     setSpin(false);
   };
 
-  const check = time.endTime > new Date().getTime() && student?.CV;
+  const check = time.endTime > new Date().getTime();
   const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
+  const dateFormat = "YYYY-MM-DD";
+  console.log(student.internshipTime);
   return (
     <>
       {spin ? <Spin /> : null}
@@ -168,28 +172,35 @@ const ReportForm = () => {
             }}
             scrollToFirstError
           >
-            <Form.Item
-              name="nameCompany"
-              label="Tên doanh nghiệp"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập tên doanh nghiệp",
-                },
-              ]}
-            >
-              <Input placeholder="Tên doanh nghiệp" />
+            <Form.Item name="nameCompany" label="Tên doanh nghiệp">
+              <Input
+                defaultValue={student.nameCompany}
+                disabled
+                placeholder="Tên doanh nghiệp"
+              />
             </Form.Item>
 
             <Form.Item
-              name="internshipTime"
-              label="Thời gian thực tập"
+              label="Thời gian bắt đầu thực tập"
+              // rules={[{}]}
+            >
+              <Space direction="vertical">
+                <DatePicker
+                  defaultValue={moment(student.internshipTime, dateFormat)}
+                  disabled
+                  placeholder="Bắt đầu thực tập"
+                />
+              </Space>
+            </Form.Item>
+            <Form.Item
+              name="EndInternshipTime"
+              label="Thời gian kết thúc thực tập"
               // rules={[{}]}
             >
               <Space direction="vertical">
                 <DatePicker
                   onChange={datePicker}
-                  placeholder="Bắt đầu thực tập"
+                  placeholder="Kết thúc thực tập"
                 />
               </Space>
             </Form.Item>
@@ -223,13 +234,18 @@ const ReportForm = () => {
                 },
               ]}
             >
-              <InputNumber style={{
+              <InputNumber
+                style={{
                   width: "50%",
-                }} min={0} max={10} placeholder="Nhập điểm kết quả thực tập" />
+                }}
+                min={0}
+                max={10}
+                placeholder="Nhập điểm kết quả thực tập"
+              />
             </Form.Item>
             <Form.Item
               name="upload"
-              label="Upload Docx hoặc PDF"
+              label="Upload báo cáo (Docx hoặc PDF)"
               valuePropName="fileList"
               getValueFromEvent={normFile}
             >
@@ -246,7 +262,7 @@ const ReportForm = () => {
                   margin: "0 5px 0",
                 }}
                 type="link"
-                href={lForm}
+                onClick={() => window.open(lForm)}
               >
                 Xem biểu mẫu
               </Button>
