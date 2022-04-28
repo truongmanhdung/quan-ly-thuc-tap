@@ -277,6 +277,10 @@ export const optionStatus = [
     value: 9,
   },
   {
+    title: "Chờ nộp CV",
+    value: 10,
+  },
+  {
     title: "Sửa biên bản",
     value: 52,
   },

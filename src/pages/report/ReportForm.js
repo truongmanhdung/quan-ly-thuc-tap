@@ -90,6 +90,7 @@ const ReportForm = () => {
             .then((res) => {
               message.success(res.data.message);
               form.resetFields();
+              setFile("");
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
@@ -128,7 +129,7 @@ const ReportForm = () => {
   useEffect(() => {
     dispatch(getTimeForm(3));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [infoUser]);
+  }, [file]);
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -156,7 +157,11 @@ const ReportForm = () => {
     student.statusCheck === 8 ||
     student.status === 52;
   const dateFormat = "YYYY-MM-DD";
-  console.log(student.internshipTime);
+  function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current < moment(student.internshipTime);
+  }
+  console.log(moment(student.internshipTime).endOf("day"));
   return (
     <>
       {spin ? <Spin /> : null}
@@ -202,6 +207,7 @@ const ReportForm = () => {
             >
               <Space direction="vertical">
                 <DatePicker
+                  disabledDate={disabledDate}
                   onChange={datePicker}
                   placeholder="Kết thúc thực tập"
                 />
