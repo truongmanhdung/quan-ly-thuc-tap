@@ -88,6 +88,7 @@ const Formrp = () => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
+          console.log("data_url: ", newData);
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
               message.success(res.data.message);
@@ -139,16 +140,18 @@ const Formrp = () => {
         typeNumber: time.typeNumber,
         internshipTime: startDate,
       };
+      console.log("newData: ", newData);
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
       message.error(dataErr.message);
     }
   };
-  const check = time.endTime > new Date().getTime() && student?.CV;
+  const check = time.endTime > new Date().getTime();
   const isCheck =
     (student && student.statusCheck === 2) || student.statusCheck === 5;
-  const nameCompany = student.nameCompany;
+  const nameCompany = student.nameCompany && student.support === 0;
+  console.log(nameCompany);
 
   return (
     <>
