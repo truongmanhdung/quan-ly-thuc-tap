@@ -417,7 +417,7 @@ const Reviewform = () => {
                       ))}
                     </Select>
                   )}
-                  {note === 12 || note === 52 ? (
+                  {note === 1 || note === 5 ? (
                     <TextArea
                       // value={value}
                       onChange={handleNote}

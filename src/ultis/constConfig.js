@@ -14,11 +14,11 @@ export const statusConfigCV = [
 export const statusConfigForm = [
   {
     title: "Hoàn CV",
-    value: 12,
+    value: 1,
   },
   {
     title: "Sửa biên bản",
-    value: 52,
+    value: 5,
   },
   {
     title: "Đã nhận biên bản",
