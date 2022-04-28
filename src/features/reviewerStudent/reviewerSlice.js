@@ -66,14 +66,10 @@ const reviewerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateStatusListStudent.fulfilled, (state, action) => {
-      console.log("actiob dsdadsadsa", action.payload.status);
       const dataArr = [];
-      console.log(action.payload.listStudentChangeStatus);
-
       state.listStudentAssReviewer.list.forEach((data) => {
         action.payload.listStudentChangeStatus.forEach((item) => {
           if (data.mssv !== item.mssv) {
-            console.log(data.mssv);
             dataArr.push(data);
           }
         });

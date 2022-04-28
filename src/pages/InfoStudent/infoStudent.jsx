@@ -91,7 +91,7 @@ function InfoStudent(props) {
           <TextArea
             disabled={true}
             rows={10}
-            value="Sửa lại lỗi CV, Vui lòng thêm 1-2 dự án mình đã làm"
+            value={student.note}
             className="text-dark"
           ></TextArea>
         </Col>

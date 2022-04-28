@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import "../../common/styles/status.css";
 import { Select, Input, Table, Button, message, Row, Col, Tag } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import {
   listStudentReport,
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatusReport, filterStatuss } from "../../ultis/selectOption";
+import { filterBranch, filterStatusReport } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { statusConfigReport } from "../../ultis/constConfig";
 import { EyeOutlined } from "@ant-design/icons";
-const { Column, ColumnGroup } = Table;
+import TextArea from "antd/lib/input/TextArea";
+const { Column } = Table;
 
 const { Option } = Select;
 
@@ -29,7 +29,10 @@ const ReviewReport = () => {
   const [status, setStatus] = useState({});
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
-  const [type, setType] = useState(false);
+  const [type,setType] = useState(false)
+  const [note, setNote] = useState();
+  const typePingTimeoutRef = useRef(null)
+  const [textNote,setTextNote] = useState('')
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -107,7 +110,11 @@ const ReviewReport = () => {
           ""
         ),
     },
-
+    {
+      title: "Ghi chú",
+      dataIndex: "note",
+      width: 200,
+    },
     {
       title: "Trạng thái",
       dataIndex: "statusCheck",
@@ -246,7 +253,7 @@ const ReviewReport = () => {
   };
 
   const actionOnchange = (value) => {
-    console.log(value);
+
     switch (value) {
       case "assgin":
         try {
@@ -276,6 +283,7 @@ const ReviewReport = () => {
     }
   };
   const selectStatus = (value) => {
+    setNote(value)
     let id = [];
     if (value !== 5) {
       chooseIdStudent
@@ -305,14 +313,24 @@ const ReviewReport = () => {
 
   const comfirm = () => {
     try {
-      dispatch(updateStatusListStudent(status));
+      dispatch(updateStatusListStudent({
+        ...status,
+        textNote
+      }));
       setChooseIdStudent([]);
       message.success("Thành công");
     } catch (error) {
       message.error("Thất bại");
     }
   };
-
+  const handleNote =({target: {value}}) => {
+    if (typePingTimeoutRef.current) {
+      clearTimeout(typePingTimeoutRef.current)
+    }
+    typePingTimeoutRef.current = setTimeout(()=>{
+      setTextNote(value)
+    }, 300)
+  }
   return (
     <div className="status">
       {window.innerWidth < 1023 ? (
@@ -403,11 +421,11 @@ const ReviewReport = () => {
           <br />
           <br />
           <Col
-            xs={24}
+            xs={20}
             sm={4}
             md={24}
             lg={24}
-            xl={8}
+            xl={80}
             style={{ padding: "0 10px" }}
           >
             <div>
@@ -437,8 +455,7 @@ const ReviewReport = () => {
                       Cập nhật trạng thái
                     </Option>
                   </Select>
-                  {console.log("Object: ", Object.keys(status).length )}
-                  {console.log("status: ", status )}
+              
                   {Object.keys(status).length >= 1 && (
                     <Select
                       className="upload-status"
@@ -457,7 +474,17 @@ const ReviewReport = () => {
                       ))}
                     </Select>
                   )}
-
+                   {
+                    note === 3 || note === 5 || note === 8? (
+                      <TextArea
+                      // value={value}
+                      onChange={handleNote}
+                      placeholder="Ghi chú..."
+                      autoSize={{ minRows: 3, maxRows: 5 }}
+                    />
+                    ): null
+                  }
+                
                   {Object.keys(status).length > 0 && (
                     <Button onClick={() => comfirm()}>Xác nhận</Button>
                   )}

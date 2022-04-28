@@ -2,7 +2,6 @@ import { notification } from 'antd';
 import React, { memo } from 'react';
 
 const Notification = ({type, message}) => {
-    console.log(type);
     const noti = (type)=>{
          return  notification[type]({
             message: message,
