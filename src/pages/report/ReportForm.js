@@ -151,7 +151,10 @@ const ReportForm = () => {
   };
 
   const check = time.endTime > new Date().getTime();
-  const isCheck = student.statusCheck === 6 || student.statusCheck === 8;
+  const isCheck =
+    student.statusCheck === 6 ||
+    student.statusCheck === 8 ||
+    student.status === 52;
   const dateFormat = "YYYY-MM-DD";
   console.log(student.internshipTime);
   return (
