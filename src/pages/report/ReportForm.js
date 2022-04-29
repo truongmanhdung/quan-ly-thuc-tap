@@ -164,119 +164,120 @@ const ReportForm = () => {
   console.log(moment(student.internshipTime).endOf("day"));
   return (
     <>
-      {spin ? <Spin /> : null}
       {check && <CountDownCustorm time={time} />}
       {check ? (
         isCheck ? (
-          <Form
-            {...formItemLayout}
-            form={form}
-            className={styles.form}
-            name="register"
-            onFinish={onFinish}
-            initialValues={{
-              residence: ["zhejiang", "hangzhou", "xihu"],
-              prefix: "86",
-            }}
-            scrollToFirstError
-          >
-            <Form.Item name="nameCompany" label="Tên doanh nghiệp">
-              <Input
-                defaultValue={student.nameCompany}
-                disabled
-                placeholder="Tên doanh nghiệp"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Thời gian bắt đầu thực tập"
-              // rules={[{}]}
+          <Spin spinning={spin}>
+            <Form
+              {...formItemLayout}
+              form={form}
+              className={styles.form}
+              name="register"
+              onFinish={onFinish}
+              initialValues={{
+                residence: ["zhejiang", "hangzhou", "xihu"],
+                prefix: "86",
+              }}
+              scrollToFirstError
             >
-              <Space direction="vertical">
-                <DatePicker
-                  defaultValue={moment(student.internshipTime, dateFormat)}
+              <Form.Item name="nameCompany" label="Tên doanh nghiệp">
+                <Input
+                  defaultValue={student.nameCompany}
                   disabled
-                  placeholder="Bắt đầu thực tập"
+                  placeholder="Tên doanh nghiệp"
                 />
-              </Space>
-            </Form.Item>
-            <Form.Item
-              name="EndInternshipTime"
-              label="Thời gian kết thúc thực tập"
-              // rules={[{}]}
-            >
-              <Space direction="vertical">
-                <DatePicker
-                  disabledDate={disabledDate}
-                  onChange={datePicker}
-                  placeholder="Kết thúc thực tập"
-                />
-              </Space>
-            </Form.Item>
-            <Form.Item
-              name="attitudePoint"
-              label="Điểm thái độ"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập điểm thái độ",
-                },
-              ]}
-            >
-              <InputNumber
-                style={{
-                  width: "50%",
-                }}
-                min={0}
-                max={10}
-                placeholder="Nhập điểm thái độ thực tập"
-              />
-            </Form.Item>
+              </Form.Item>
 
-            <Form.Item
-              name="resultScore"
-              label="Điểm kết quả"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập điểm kết quả thực tập",
-                },
-              ]}
-            >
-              <InputNumber
-                style={{
-                  width: "50%",
-                }}
-                min={0}
-                max={10}
-                placeholder="Nhập điểm kết quả thực tập"
-              />
-            </Form.Item>
-            <Form.Item
-              name="upload"
-              label="Upload báo cáo (Docx hoặc PDF)"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-            >
-              <Upload name="logo" action="/upload.do" listType="picture">
-                <Button icon={<UploadOutlined />}>Click to upload</Button>
-              </Upload>
-            </Form.Item>
-            <Form.Item {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-              <Button
-                style={{
-                  margin: "0 5px 0",
-                }}
-                type="link"
-                onClick={() => window.open(lForm)}
+              <Form.Item
+                label="Thời gian bắt đầu thực tập"
+                // rules={[{}]}
               >
-                Xem biểu mẫu
-              </Button>
-            </Form.Item>
-          </Form>
+                <Space direction="vertical">
+                  <DatePicker
+                    defaultValue={moment(student.internshipTime, dateFormat)}
+                    disabled
+                    placeholder="Bắt đầu thực tập"
+                  />
+                </Space>
+              </Form.Item>
+              <Form.Item
+                name="EndInternshipTime"
+                label="Thời gian kết thúc thực tập"
+                // rules={[{}]}
+              >
+                <Space direction="vertical">
+                  <DatePicker
+                    disabledDate={disabledDate}
+                    onChange={datePicker}
+                    placeholder="Kết thúc thực tập"
+                  />
+                </Space>
+              </Form.Item>
+              <Form.Item
+                name="attitudePoint"
+                label="Điểm thái độ"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập điểm thái độ",
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{
+                    width: "50%",
+                  }}
+                  min={0}
+                  max={10}
+                  placeholder="Nhập điểm thái độ thực tập"
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="resultScore"
+                label="Điểm kết quả"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng nhập điểm kết quả thực tập",
+                  },
+                ]}
+              >
+                <InputNumber
+                  style={{
+                    width: "50%",
+                  }}
+                  min={0}
+                  max={10}
+                  placeholder="Nhập điểm kết quả thực tập"
+                />
+              </Form.Item>
+              <Form.Item
+                name="upload"
+                label="Upload báo cáo (Docx hoặc PDF)"
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
+              >
+                <Upload name="logo" action="/upload.do" listType="picture">
+                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                </Upload>
+              </Form.Item>
+              <Form.Item {...tailFormItemLayout}>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+                <Button
+                  style={{
+                    margin: "0 5px 0",
+                  }}
+                  type="link"
+                  onClick={() => window.open(lForm)}
+                >
+                  Xem biểu mẫu
+                </Button>
+              </Form.Item>
+            </Form>
+          </Spin>
         ) : (
           "Bạn đã nộp báo cáo thành công"
         )
