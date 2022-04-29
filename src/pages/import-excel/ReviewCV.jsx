@@ -384,11 +384,12 @@ const ReviewCV = () => {
                       // value={value}
                       onChange={handleNote}
                       placeholder="Ghi chú..."
+                      style={{marginRight: 10}}
                       autoSize={{ minRows: 3, maxRows: 5 }}
                     />
                   )}
                   {Object.keys(status).length > 0 && (
-                    <Button onClick={() => comfirm()}>Xác nhận</Button>
+                    <Button style={{marginRight: 10}} onClick={() => comfirm()}>Xác nhận</Button>
                   )}
                 </div>
               )}
