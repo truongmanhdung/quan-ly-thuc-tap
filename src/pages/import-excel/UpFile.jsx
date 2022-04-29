@@ -64,6 +64,7 @@ const UpFile = ({ smester_id }) => {
         });
       setDataNew(datas);
       setData(fileData);
+      refInput.current.value = ''
     };
     reader.readAsBinaryString(file);
   };
