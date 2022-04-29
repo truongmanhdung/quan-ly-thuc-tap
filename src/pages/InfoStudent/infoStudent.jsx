@@ -56,7 +56,7 @@ function InfoStudent(props) {
     dispatch(getStudentId(infoUser.student.mssv));
   }, [infoUser]);
   const isRegister = student?.support;
-  const statusForm = infoUser?.student?.statusCheck;
+  const statusForm = student?.statusCheck;
   console.log(student, infoUser);
   return (
     <div>

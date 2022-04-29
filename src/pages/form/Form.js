@@ -66,7 +66,7 @@ const Formrp = () => {
   useEffect(() => {
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [infoUser]);
+  }, [file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
@@ -92,6 +92,7 @@ const Formrp = () => {
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
               message.success(res.data.message);
+              setFile("");
               form.resetFields();
             })
             .catch(async (err) => {

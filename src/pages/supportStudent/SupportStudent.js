@@ -75,6 +75,7 @@ const SupportStudent = () => {
           RegisterInternAPI.upload(newData)
             .then((res) => {
               message.success(res.data.message);
+              setValue([]);
               form.resetFields();
               setSpin(false);
             })
@@ -112,22 +113,26 @@ const SupportStudent = () => {
   const onFinish = async (values) => {
     setSpin(true);
     try {
-      const useCode = values.user_code;
-      const studentMssv = infoUser?.student?.mssv;
-      const compare = useCode.toLowerCase() === studentMssv.toLowerCase();
-      if (!compare) {
-        message.error("Vui lòng nhập đúng mã sinh viên của bạn");
-      }
+      // const useCode = values.user_code;
+      // const studentMssv = infoUser?.student?.mssv;
+      // const compare = useCode.toLowerCase() === studentMssv.toLowerCase();
+      // if (!compare) {
+      //   message.error("Vui lòng nhập đúng mã sinh viên của bạn");
+      // }
 
       const supportForm = values.support === 0 ? 0 : 1;
 
       const data = {
         ...values,
         support: value,
+        majors: student?.majors,
+        name: student?.name,
+        user_code: infoUser?.student?.mssv,
         email: infoUser?.student?.email,
         typeNumber: supportForm,
         ///dispatch Redux
       };
+      console.log("data: ", data);
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
@@ -183,30 +188,38 @@ const SupportStudent = () => {
                     </Radio.Group>
                   </Form.Item>
                   <Form.Item
-                    name="user_code"
+                    // name="user_code"
                     label="Mã sinh viên"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng nhập mã sinh viên",
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Vui lòng nhập mã sinh viên",
+                    //   },
+                    // ]}
                   >
-                    <Input placeholder="Mã sinh viên" />
+                    <Input
+                      defaultValue={student.mssv.toUpperCase()}
+                      disabled
+                      placeholder="Mã sinh viên"
+                    />
                   </Form.Item>
 
                   <Form.Item
-                    name="name"
+                    // name="name"
                     label="Họ và Tên"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng nhập tên",
-                        whitespace: true,
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Vui lòng nhập tên",
+                    //     whitespace: true,
+                    //   },
+                    // ]}
                   >
-                    <Input placeholder="Họ và tên" />
+                    <Input
+                      defaultValue={student.name}
+                      disabled
+                      placeholder="Họ và tên"
+                    />
                   </Form.Item>
                   <Form.Item
                     name="phone"
@@ -234,21 +247,14 @@ const SupportStudent = () => {
                   >
                     <Input placeholder="Địa chỉ" />
                   </Form.Item>
-                  <Form.Item
-                    name="majors"
-                    label="Ngành học"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng chọn ngành học",
-                      },
-                    ]}
-                  >
+                  <Form.Item label="Ngành học">
                     <Select
                       style={{
                         width: "50%",
                         marginLeft: "20px",
                       }}
+                      defaultValue={student.majors}
+                      disabled
                       placeholder="Chọn ngành học"
                     >
                       {optionsMajors.map((item, index) => (
