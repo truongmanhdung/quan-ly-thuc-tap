@@ -305,7 +305,7 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "40%" }}>Ngành: </span>
+              <span style={{ width: "30%" }}>Ngành : </span>
               <Select
                 style={{ width: "100%" }}
                 onChange={(val) => handleStandardTableChange("majors", val)}
@@ -331,7 +331,7 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "40%" }}>Trạng thái:</span>
+              <span style={{ width: "45%" }}>Trạng thái :</span>
               <Select
                 className="filter-status"
                 style={{ width: "100%" }}
@@ -350,7 +350,7 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={5} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: "flex",
@@ -358,7 +358,7 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "40%" }}>Kỳ</span>
+              <span style={{ width: "45%" }}>Học Kỳ : </span>
               <Select
                 className="filter-status"
                 style={{ width: "100%" }}
@@ -376,7 +376,7 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={7} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: "flex",
