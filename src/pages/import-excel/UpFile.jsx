@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import * as XLSX from "xlsx";
-import { Table, notification, message, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import "../../common/styles/upfile.css";
+import { Button, message } from "antd";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import "../../common/styles/upfile.css";
+import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 const UpFile = ({ smester_id }) => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
@@ -85,7 +85,10 @@ const UpFile = ({ smester_id }) => {
   const submitCole = () => {
     setDataNew([]);
     setNameFile();
+    refInput.current.value = ''
   };
+
+  const refInput = useRef();
 
   return (
     <div className="header">
@@ -98,7 +101,12 @@ const UpFile = ({ smester_id }) => {
           <span className="span-upload-name">{nameFile}</span>
         )}
       </label>
-      <input type="file" onChange={(e) => importData(e)} id="up-file" />
+      <input
+        type="file"
+        ref={refInput}
+        onChange={(e) => importData(e)}
+        id="up-file"
+      />
       {data && dataNew.length > 0 && (
         <div className="button">
           <Button
