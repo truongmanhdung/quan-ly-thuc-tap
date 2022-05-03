@@ -159,7 +159,7 @@ const ReportForm = () => {
   const dateFormat = "YYYY-MM-DD";
   function disabledDate(current) {
     // Can not select days before today and today
-    return current && current < moment(student.internshipTime);
+    return current && current < moment(student.internshipTime).add(1, "days");
   }
   console.log(moment(student.internshipTime).endOf("day"));
   return (

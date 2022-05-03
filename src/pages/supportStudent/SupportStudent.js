@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
-import Countdown from "react-countdown";
 import styles from "./SupportStudent.module.css";
 import CountDownCustorm from "../../components/CountDownCustorm";
 import Proactive from "./Proactive";
@@ -47,7 +46,7 @@ const SupportStudent = () => {
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
-  const { time, loading } = useSelector((state) => state.time.formTime);
+  const { time } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
   const { student } = useSelector((state) => state.cumpus);
   const { infoUser } = useSelector((state) => state.auth);
@@ -112,14 +111,8 @@ const SupportStudent = () => {
 
   const onFinish = async (values) => {
     setSpin(true);
-    try {
-      // const useCode = values.user_code;
-      // const studentMssv = infoUser?.student?.mssv;
-      // const compare = useCode.toLowerCase() === studentMssv.toLowerCase();
-      // if (!compare) {
-      //   message.error("Vui lòng nhập đúng mã sinh viên của bạn");
-      // }
 
+    try {
       const supportForm = values.support === 0 ? 0 : 1;
 
       const data = {
@@ -132,7 +125,6 @@ const SupportStudent = () => {
         typeNumber: supportForm,
         ///dispatch Redux
       };
-      console.log("data: ", data);
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
@@ -150,7 +142,6 @@ const SupportStudent = () => {
   const onChange = (e) => {
     setValue(e.target.value);
   };
-
   useEffect(() => {
     dispatch(getListSpecialization());
     dispatch(getTimeForm(value));
@@ -159,6 +150,7 @@ const SupportStudent = () => {
 
   const check = time.endTime > new Date().getTime();
   const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
+  const isSupport = student.support;
   return (
     <>
       {check && <CountDownCustorm time={time} />}
@@ -272,7 +264,7 @@ const SupportStudent = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Vị trí mong muốn" />
+                  <Input placeholder="VD: Web Back-end, Dựng phim, Thiết kế nội thất" />
                 </Form.Item>
                 {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
                 <Form.Item {...tailFormItemLayout}>
