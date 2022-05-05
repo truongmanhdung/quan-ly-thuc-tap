@@ -150,7 +150,6 @@ const SupportStudent = () => {
 
   const check = time.endTime > new Date().getTime();
   const isCheck = student.statusCheck === 10 || student.statusCheck === 1;
-  const isSupport = student.support;
   return (
     <>
       {check && <CountDownCustorm time={time} />}

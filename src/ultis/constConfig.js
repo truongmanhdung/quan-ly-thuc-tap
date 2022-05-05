@@ -13,10 +13,6 @@ export const statusConfigCV = [
 ];
 export const statusConfigForm = [
   {
-    title: "Hoàn CV",
-    value: 1,
-  },
-  {
     title: "Sửa biên bản",
     value: 5,
   },
@@ -27,7 +23,7 @@ export const statusConfigForm = [
 ];
 export const statusConfigReport = [
   {
-    title: "Hoàn biên bản",
+    title: "Sửa biên bản",
     value: 5,
   },
   {
