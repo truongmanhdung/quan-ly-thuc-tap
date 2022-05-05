@@ -136,13 +136,13 @@ const Status = () => {
         } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Đã nộp biểu mẫu <br />
+              Đã nộp biên bản <br />
             </span>
           );
         } else if (status === 5) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Sửa biểu mẫu
+              Sửa biên bản
               <br />
             </span>
           );

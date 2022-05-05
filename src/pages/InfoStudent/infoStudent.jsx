@@ -73,7 +73,7 @@ function InfoStudent(props) {
             <p>
               Lựa chọn :{" "}
               {isRegister === 0
-                ? "Tự tìm nới thực tập"
+                ? "Tự tìm nơi thực tập"
                 : "" || isRegister === 1
                 ? "Nhận hỗ trợ từ nhà trường"
                 : ""}
