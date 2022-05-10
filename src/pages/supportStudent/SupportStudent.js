@@ -1,16 +1,40 @@
-import { Form, Input, Select, Button, message, Spin, Radio } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {
+    Form,
+    Input,
+    Select,
+    Button,
+    message,
+    Spin,
+    Radio
+} from "antd";
+import React, {
+    useEffect,
+    useState
+} from "react";
+import {
+    useDispatch,
+    useSelector
+} from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
-import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
-import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import {
+    getListSpecialization
+} from "../../features/specializationSlice/specializationSlice";
+import {
+    getTimeForm
+} from "../../features/timeDateSlice/timeDateSlice";
 import styles from "./SupportStudent.module.css";
 import CountDownCustorm from "../../components/CountDownCustorm";
 import Proactive from "./Proactive";
 import Support from "./Support";
-import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
-import { optionsMajors } from "../../ultis/selectOption";
-const { Option } = Select;
+import {
+    getStudentId
+} from "../../features/cumpusSlice/cumpusSlice";
+import {
+    optionsMajors
+} from "../../ultis/selectOption";
+const {
+    Option
+} = Select;
 const formItemLayout = {
     labelCol: {
         xs: {
@@ -46,10 +70,16 @@ const SupportStudent = () => {
     const [file, setFile] = useState();
     const [value, setValue] = useState(1);
     const [spin, setSpin] = useState(false);
-    const { time } = useSelector((state) => state.time.formTime);
+    const {
+        time
+    } = useSelector((state) => state.time.formTime);
     const [form] = Form.useForm();
-    const { student } = useSelector((state) => state.cumpus);
-    const { infoUser } = useSelector((state) => state.auth);
+    const {
+        student
+    } = useSelector((state) => state.cumpus);
+    const {
+        infoUser
+    } = useSelector((state) => state.auth);
 
     function guardarArchivo(files, data) {
         const file = files; //the file
@@ -60,17 +90,27 @@ const SupportStudent = () => {
             //.. once finished..
             var rawLog = reader.result.split(",")[1]; //extract only thee file data part
             var dataSend = {
-                dataReq: { data: rawLog, name: file.name, type: file.type },
+                dataReq: {
+                    data: rawLog,
+                    name: file.name,
+                    type: file.type
+                },
                 fname: "uploadFilesToGoogleDrive",
             }; //preapre info to send to API
             fetch(
                     `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
     `, //your AppsScript URL
-                    { method: "POST", body: JSON.stringify(dataSend) }
+                    {
+                        method: "POST",
+                        body: JSON.stringify(dataSend)
+                    }
                 ) //send to Api
                 .then((res) => res.json())
                 .then((a) => {
-                    const newData = {...data, CV: a.url };
+                    const newData = {
+                        ...data,
+                        CV: a.url
+                    };
                     RegisterInternAPI.upload(newData)
                         .then((res) => {
                             message.success(res.data.message);
@@ -153,13 +193,23 @@ const SupportStudent = () => {
     return ( <
         >
         {
-            check && < CountDownCustorm time = { time }
+            check && < CountDownCustorm time = {
+                time
+            }
             />} <
-            Form {...formItemLayout }
-            form = { form }
-            className = { styles.form }
+            Form {
+                ...formItemLayout
+            }
+            form = {
+                form
+            }
+            className = {
+                styles.form
+            }
             name = "register"
-            onFinish = { onFinish }
+            onFinish = {
+                onFinish
+            }
             initialValues = {
                 {
                     residence: ["zhejiang", "hangzhou", "xihu"],
@@ -171,16 +221,26 @@ const SupportStudent = () => {
                     isCheck ? ( <
                         >
                         <
-                        Spin spinning = { spin } >
+                        Spin spinning = {
+                            spin
+                        } >
                         <
                         Form.Item name = "support"
                         label = "Kiểu đăng ký" >
                         <
-                        Radio.Group onChange = { onChange }
-                        defaultValue = { value } >
+                        Radio.Group onChange = {
+                            onChange
+                        }
+                        defaultValue = {
+                            value
+                        } >
                         <
-                        Radio value = { 1 } > Nhà trường hỗ trợ < /Radio> <
-                        Radio value = { 0 } > Tự tìm nơi thực tập < /Radio> < /
+                        Radio value = {
+                            1
+                        } > Nhà trường hỗ trợ < /Radio> <
+                        Radio value = {
+                            0
+                        } > Tự tìm nơi thực tập < /Radio> < /
                         Radio.Group > <
                         /Form.Item> <
                         Form.Item
@@ -194,7 +254,9 @@ const SupportStudent = () => {
                         // ]}
                         >
                         <
-                        Input defaultValue = { student.mssv.toUpperCase() }
+                        Input defaultValue = {
+                            student.mssv.toUpperCase()
+                        }
                         disabled placeholder = "Mã sinh viên" /
                         >
                         <
@@ -213,7 +275,9 @@ const SupportStudent = () => {
                         // ]}
                         >
                         <
-                        Input defaultValue = { student.name }
+                        Input defaultValue = {
+                            student.name
+                        }
                         disabled placeholder = "Họ và tên" /
                         >
                         <
@@ -253,11 +317,19 @@ const SupportStudent = () => {
                                 marginLeft: "20px",
                             }
                         }
-                        defaultValue = { student.majors }
+                        defaultValue = {
+                            student.majors
+                        }
                         disabled placeholder = "Chọn ngành học" > {
                             optionsMajors.map((item, index) => ( <
-                                Option value = { item.value }
-                                key = { index } > { item.title } <
+                                Option value = {
+                                    item.value
+                                }
+                                key = {
+                                    index
+                                } > {
+                                    item.title
+                                } <
                                 /Option>
                             ))
                         } <
@@ -276,18 +348,19 @@ const SupportStudent = () => {
                         <
                         Input placeholder = "VD: Web Back-end, Dựng phim, Thiết kế nội thất" / >
                         <
-                        /Form.Item> { value === 1 ? < Support normFile = { normFile } /
-                        >: < Proactive / >
+                        /Form.Item> {value === 1 ? < Support normFile={normFile} / >
+                        : < Proactive / >
                     } <
-                    Form.Item {...tailFormItemLayout } >
+                    Form.Item {
+                        ...tailFormItemLayout
+                    } >
                     <
                     Button type = "primary"
                     htmlType = "submit" >
                     Đăng ký <
                     /Button> < /
                     Form.Item > <
-                    /Spin> < /
-                    >
+                    /Spin> < / >
                 ) : (
                     "Đăng ký thông tin thành công"
                 )
@@ -295,8 +368,7 @@ const SupportStudent = () => {
                 p > Thời gian đăng ký đã hết < /p>
             )
         } <
-        /Form> < /
-        >
+        /Form> < / >
     );
 };
 
