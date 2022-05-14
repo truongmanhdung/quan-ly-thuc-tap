@@ -46,6 +46,7 @@ const Status = () => {
       })
     );
     dispatch(getSmester());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const columns = [
     {
@@ -237,8 +238,9 @@ const Status = () => {
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Thời gian thực tập"] = item["internshipTime"];
       newObject["Hình thức"] = item["support"];
-      newData.push(newObject);
+      return  newData.push(newObject);
     });
+    // eslint-disable-next-line array-callback-return
     newData.filter((item) => {
       if (item["Hình thức"] === 1) {
         item["Hình thức"] = 1;
@@ -493,8 +495,8 @@ const Status = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support == 1 && "Hỗ trợ"}
-                  {record.support == 0 && "Tự tìm"}
+                  {record.support === 1 && "Hỗ trợ"}
+                  {record.support === 0 && "Tự tìm"}
                   {record.support !== 1 && record.support !== 0 && ""}
                 </p>
                 <br />

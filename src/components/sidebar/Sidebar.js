@@ -25,6 +25,7 @@ const Sidebar = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div>
           <img
+            alt=""
             className={styles.logo}
             src="https://career.fpt.edu.vn/Content/images/logo_unit/Poly.png"
           />

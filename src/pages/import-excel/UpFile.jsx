@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "../../common/styles/upfile.css";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
-const UpFile = ({ smester_id }) => {
+const UpFile = ({ smester_id, name }) => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
@@ -43,25 +43,27 @@ const UpFile = ({ smester_id }) => {
         rows.push(rowData);
       });
       let datas = [];
-      rows
-        .filter((item, index) => index !== 0)
-        .map((item) => {
-          const newObject = {};
-          if (manager) {
-            if (item["MSSV"] !== undefined) {
-              newObject["mssv"] = item["MSSV"];
-              newObject["name"] = item["Họ tên"];
-              newObject["course"] = item["Khóa nhập học"];
-              newObject["status"] = item["Trạng thái FA21"];
-              newObject["majors"] = item["Ngành FA21"];
-              newObject["email"] = item["Email"];
-              newObject["supplement"] = item["bổ sung"];
-              newObject["campus_id"] = manager.campus_id;
-              newObject["smester_id"] = smester_id;
-            }
-            Object.keys(newObject).length > 0 && datas.push(newObject);
-          }
-        });
+      console.log(rows);
+      // rows
+      //   .filter((item, index) => index !== 0)
+      //   // eslint-disable-next-line array-callback-return
+      //   .map((item) => {
+      //     const newObject = {};
+      //     if (manager) {
+      //       if (item["MSSV"] !== undefined) {
+      //         newObject["mssv"] = item["MSSV"];
+      //         newObject["name"] = item["Họ tên"];
+      //         newObject["course"] = item["Khóa nhập học"];
+      //         newObject["status"] = item["Trạng thái FA21"];
+      //         newObject["majors"] = item["Ngành FA21"];
+      //         newObject["email"] = item["Email"];
+      //         newObject["supplement"] = item["bổ sung"];
+      //         newObject["campus_id"] = manager.campus_id;
+      //         newObject["smester_id"] = smester_id;
+      //       }
+      //       Object.keys(newObject).length > 0 && datas.push(newObject);
+      //     }
+      //   });
       setDataNew(datas);
       setData(fileData);
       refInput.current.value = ''

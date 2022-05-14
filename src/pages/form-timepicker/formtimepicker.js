@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { Button, Col, DatePicker, message, Radio, Row, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,7 +6,7 @@ import {
   upTimeDate,
 } from "../../features/timeDateSlice/timeDateSlice";
 
-const Formtimepicker = (props) => {
+const Formtimepicker = () => {
   const { RangePicker } = DatePicker;
   const {
     formTime: { times },

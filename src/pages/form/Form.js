@@ -66,6 +66,7 @@ const Formrp = () => {
   useEffect(() => {
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -152,7 +153,6 @@ const Formrp = () => {
   const isCheck =
     (student && student.statusCheck === 2) || student.statusCheck === 5;
   const nameCompany = student.nameCompany && student.support === 0;
-  console.log(nameCompany);
 
   return (
     <>

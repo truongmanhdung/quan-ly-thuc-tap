@@ -11,12 +11,11 @@ import {
 import {
   filterBranch,
   filterStatusForm,
-  filterStatuss,
 } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
 import TextArea from "antd/lib/input/TextArea";
-const { Column, ColumnGroup } = Table;
+const { Column} = Table;
 const { Option } = Select;
 
 const Reviewform = () => {
@@ -45,6 +44,7 @@ const Reviewform = () => {
       ...filter,
     };
     dispatch(listStudentForm(data));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
   const columns = [
@@ -497,8 +497,8 @@ const Reviewform = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support == 1 && "Hỗ trợ"}
-                  {record.support == 0 && "Tự tìm"}
+                  {record.support === 1 && "Hỗ trợ"}
+                  {record.support === 0 && "Tự tìm"}
                   {record.support !== 1 && record.support !== 0 && ""}
                 </p>
                 <br />

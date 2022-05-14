@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import  { shape } from "prop-types";
 import Countdown from "react-countdown";
 
 function CountDownCustorm(props) {
@@ -20,6 +20,8 @@ function CountDownCustorm(props) {
   );
 }
 
-CountDownCustorm.propTypes = {};
+CountDownCustorm.propTypes = {
+  props: shape()
+};
 
 export default CountDownCustorm;

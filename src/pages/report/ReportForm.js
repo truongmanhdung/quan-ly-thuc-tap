@@ -130,6 +130,7 @@ const ReportForm = () => {
   useEffect(() => {
     dispatch(getTimeForm(3));
     dispatch(getStudentId(infoUser.student.mssv));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   const onFinish = async (values) => {
