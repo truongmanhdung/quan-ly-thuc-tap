@@ -16,6 +16,7 @@ import Formrp from "../pages/form/Form";
 import Reviewform from "../pages/mywork/Reviewform";
 import Formtimepicker from "../pages/form-timepicker/formtimepicker";
 import ReviewReport from "../pages/mywork/ReviewReport";
+import ListOfBusiness from "../pages/business/ListOfBusiness";
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -83,7 +84,7 @@ const Router = () => {
             </Privateroute>
           }
         />
-           {/* <Route
+        {/* <Route
           path="company"
           element={
             <Privateroute>
@@ -139,6 +140,16 @@ const Router = () => {
             <Privateroute>
               <Privateadmin>
                 <UpFile />
+              </Privateadmin>
+            </Privateroute>
+          }
+        />
+        <Route
+          path="company"
+          element={
+            <Privateroute>
+              <Privateadmin>
+                <ListOfBusiness />
               </Privateadmin>
             </Privateroute>
           }
