@@ -56,6 +56,13 @@ const reviewerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateReviewerListStudent.fulfilled, (state, action) => {
+      const {email, listIdStudent} = action.payload;
+      listIdStudent.forEach((id) => {
+        const student = state.listStudentAssReviewer.list.find((item) => item._id === id);
+        if(student){
+          student.reviewer = email
+        }
+      })
       state.loading = false;
     });
     builder.addCase(updateReviewerListStudent.rejected, (state, action) => {

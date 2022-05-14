@@ -16,7 +16,7 @@ import Formrp from "../pages/form/Form";
 import Reviewform from "../pages/mywork/Reviewform";
 import Formtimepicker from "../pages/form-timepicker/formtimepicker";
 import ReviewReport from "../pages/mywork/ReviewReport";
-import Company from "../pages/company/company";
+// import Company from "../pages/company/company";
 const Router = () => {
   return (
     <Routes>
@@ -83,7 +83,7 @@ const Router = () => {
             </Privateroute>
           }
         />
-           <Route
+           {/* <Route
           path="company"
           element={
             <Privateroute>
@@ -92,7 +92,7 @@ const Router = () => {
               </Privateadmin>
             </Privateroute>
           }
-        />
+        /> */}
         <Route
           path="form-register"
           element={
