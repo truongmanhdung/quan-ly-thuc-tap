@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { EyeOutlined } from '@ant-design/icons';
 import '../../common/styles/status.css';
-import { Select, Input, Table, Button, message, Row, Col, Tag } from 'antd';
+import { Select, Input, Table, Button, message, Row, Col} from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   getListStudentAssReviewer,
@@ -14,7 +14,7 @@ import { omit } from 'lodash';
 import { statusConfigCV } from '../../ultis/constConfig';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 
 const { Option } = Select;
 
@@ -42,6 +42,7 @@ const ReviewCV = () => {
     };
     setChooseIdStudent([]);
     dispatch(getListStudentAssReviewer(data));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
   const columns = [
@@ -238,7 +239,7 @@ const ReviewCV = () => {
   const exportToCSV = (list) => {
     const newData = [];
 
-    list.filter((item) => {
+    list.filter(item => {
       const newObject = {};
       newObject['MSSV'] = item['mssv'];
       newObject['Họ tên'] = item['name'];
@@ -248,8 +249,9 @@ const ReviewCV = () => {
       newObject['Số lần hỗ trợ'] = item['numberOfTime'];
       newObject['CV'] = item['CV'];
       newObject['Trạng thái'] = item['statusCheck'];
-      newData.push(newObject);
+    return  newData.push(newObject);
     });
+    // eslint-disable-next-line array-callback-return
     newData.filter((item) => {
       if (item['Trạng thái'] === 0) {
         item['Trạng thái'] = 0;
@@ -459,8 +461,8 @@ const ReviewCV = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support == 1 && 'Hỗ trợ'}
-                  {record.support == 0 && 'Tự tìm'}
+                  {record.support === 1 && 'Hỗ trợ'}
+                  {record.support === 0 && 'Tự tìm'}
                   {record.support !== 1 && record.support !== 0 && ''}
                 </p>
                 <br />

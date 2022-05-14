@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthApi from '../../API/Auth'
-import { removeCookie, setCookie, STORAGEKEY } from "../../ultis/storage";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",

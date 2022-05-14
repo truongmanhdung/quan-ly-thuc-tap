@@ -1,10 +1,9 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Divider, Table, Radio, Select } from 'antd'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import {  Select } from 'antd'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStudent } from '../../features/todoSlide/studentModel';
 import { filterBranch, filterStatus, status } from '../../ultis/selectOption';
-import constConfig from '../../ultis/constConfig';
 import StandardTable from '../../components/StandardTable';
 const { Option } = Select;
 
@@ -17,6 +16,7 @@ export default function Status() {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchStudent())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     const columns = [
         {
@@ -77,7 +77,8 @@ export default function Status() {
             title: 'Trạng thái',
             dataIndex: 'status',
             width: 150,
-            render: val => status.map((item, index) => {
+            // eslint-disable-next-line array-callback-return
+            render: val => status.map((item) => {
                 if (val === item.value) {
                     return <span className={item.className} style={item.style}>{item.title}</span>
                 }
@@ -87,6 +88,7 @@ export default function Status() {
             title: 'Trạng thái',
             dataIndex: 'status',
             width: 150,
+            // eslint-disable-next-line array-callback-return
             render: val => status.map((item, index) => {
                 if (val === item.value) {
                     return <span className={item.className} style={item.style}>{item.title}</span>
@@ -95,15 +97,10 @@ export default function Status() {
         }
     ];
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const filterMajors = useCallback((key, value) => {
         const newValue = { ...type, [key]: value }
         setType(newValue)
-        const range = JSON.stringify([0, constConfig.PAGE_SIZE - 1])
-        //callAction
-        // dispatch({
-        //     type: 'dsd',
-        //     payload:{range, filter: JSON.stringify(newValue)}
-        // })
     })
     const renderForm = () => (
         <>

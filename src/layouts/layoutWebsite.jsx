@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Layout, Menu } from "antd";
 import {
   ProfileOutlined,
   UserOutlined,
-  UploadOutlined,
   FolderViewOutlined,
   UnorderedListOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { NavLink, Outlet } from "react-router-dom";
 import GlobalHeader from "../components/GlobalHeader.js";
@@ -13,9 +13,6 @@ import { Content } from "antd/lib/layout/layout";
 import { useSelector } from "react-redux";
 import "./layout.css";
 import SubMenu from "antd/lib/menu/SubMenu";
-import { getCookie, STORAGEKEY } from "../ultis/storage.js";
-import { setAuthHeader } from "../API/Link.js";
-
 const { Sider } = Layout;
 function LayoutWebsite() {
   const [state, setState] = useState(false);
@@ -54,6 +51,14 @@ function LayoutWebsite() {
                   icon={<ProfileOutlined className="icon-link" />}
                 >
                   <NavLink to="status">Danh sách đăng ký</NavLink>
+                </Menu.Item>
+                <Menu.Item
+                  key="111"
+                  icon={<BankOutlined />}
+                >
+                  <NavLink to="company"
+                
+                  >Danh sách Công Ty</NavLink>
                 </Menu.Item>
                 <SubMenu
                   key="sub1"

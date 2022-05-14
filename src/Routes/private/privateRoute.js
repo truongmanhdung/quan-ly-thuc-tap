@@ -1,15 +1,12 @@
+import { any } from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import StudentAPI from "../../API/StudentAPI";
-import { logout } from "../../features/authSlice/authSlice";
 
 const Privateroute = ({ children }) => {
-  const token = localStorage.getItem("token");
   const [check, setCheck] = useState(true);
-  const navigate = useNavigate();
   const { infoUser } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const checkToken = async () => {
     if (infoUser?.student) {
       StudentAPI.get(infoUser?.student?.mssv)
@@ -43,9 +40,13 @@ const Privateroute = ({ children }) => {
   };
   useEffect(() => {
     checkToken();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (check && infoUser.token) ? children : <Navigate to="/login" />;
 };
 
+Privateroute.propTypes = {
+  children: any
+}
 export default Privateroute;

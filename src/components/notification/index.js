@@ -1,4 +1,6 @@
 import { notification } from 'antd';
+import { any, string } from 'prop-types';
+// eslint-disable-next-line no-unused-vars
 import React, { memo } from 'react';
 
 const Notification = ({type, message}) => {
@@ -17,5 +19,9 @@ const Notification = ({type, message}) => {
     }
     return (noti(type))
     
+}
+Notification.propTypes = {
+    type: any,
+    message: string
 }
 export default memo(Notification);
