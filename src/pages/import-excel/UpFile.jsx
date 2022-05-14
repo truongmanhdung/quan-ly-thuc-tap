@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import * as XLSX from "xlsx";
-import { Table, notification, message, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import "../../common/styles/upfile.css";
+import { Button, message } from "antd";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import { useNavigate } from "react-router-dom";
-const UpFile = ({ smester_id }) => {
+import * as XLSX from "xlsx";
+import "../../common/styles/upfile.css";
+import { insertStudent } from "../../features/StudentSlice/StudentSlice";
+const UpFile = ({ smester_id, name }) => {
   const [data, setData] = useState();
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
@@ -43,27 +43,30 @@ const UpFile = ({ smester_id }) => {
         rows.push(rowData);
       });
       let datas = [];
-      rows
-        .filter((item, index) => index !== 0)
-        .map((item) => {
-          const newObject = {};
-          if (manager) {
-            if (item["MSSV"] !== undefined) {
-              newObject["mssv"] = item["MSSV"];
-              newObject["name"] = item["Họ tên"];
-              newObject["course"] = item["Khóa nhập học"];
-              newObject["status"] = item["Trạng thái FA21"];
-              newObject["majors"] = item["Ngành FA21"];
-              newObject["email"] = item["Email"];
-              newObject["supplement"] = item["bổ sung"];
-              newObject["campus_id"] = manager.campus_id;
-              newObject["smester_id"] = smester_id;
-            }
-            Object.keys(newObject).length > 0 && datas.push(newObject);
-          }
-        });
+      console.log(rows);
+      // rows
+      //   .filter((item, index) => index !== 0)
+      //   // eslint-disable-next-line array-callback-return
+      //   .map((item) => {
+      //     const newObject = {};
+      //     if (manager) {
+      //       if (item["MSSV"] !== undefined) {
+      //         newObject["mssv"] = item["MSSV"];
+      //         newObject["name"] = item["Họ tên"];
+      //         newObject["course"] = item["Khóa nhập học"];
+      //         newObject["status"] = item["Trạng thái FA21"];
+      //         newObject["majors"] = item["Ngành FA21"];
+      //         newObject["email"] = item["Email"];
+      //         newObject["supplement"] = item["bổ sung"];
+      //         newObject["campus_id"] = manager.campus_id;
+      //         newObject["smester_id"] = smester_id;
+      //       }
+      //       Object.keys(newObject).length > 0 && datas.push(newObject);
+      //     }
+      //   });
       setDataNew(datas);
       setData(fileData);
+      refInput.current.value = ''
     };
     reader.readAsBinaryString(file);
   };
@@ -85,7 +88,10 @@ const UpFile = ({ smester_id }) => {
   const submitCole = () => {
     setDataNew([]);
     setNameFile();
+    refInput.current.value = ''
   };
+
+  const refInput = useRef();
 
   return (
     <div className="header">
@@ -98,7 +104,12 @@ const UpFile = ({ smester_id }) => {
           <span className="span-upload-name">{nameFile}</span>
         )}
       </label>
-      <input type="file" onChange={(e) => importData(e)} id="up-file" />
+      <input
+        type="file"
+        ref={refInput}
+        onChange={(e) => importData(e)}
+        id="up-file"
+      />
       {data && dataNew.length > 0 && (
         <div className="button">
           <Button

@@ -66,7 +66,8 @@ const Formrp = () => {
   useEffect(() => {
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
-  }, [infoUser]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
@@ -92,6 +93,7 @@ const Formrp = () => {
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
               message.success(res.data.message);
+              setFile("");
               form.resetFields();
             })
             .catch(async (err) => {
@@ -151,41 +153,40 @@ const Formrp = () => {
   const isCheck =
     (student && student.statusCheck === 2) || student.statusCheck === 5;
   const nameCompany = student.nameCompany && student.support === 0;
-  console.log(nameCompany);
 
   return (
     <>
-      {spin ? <Spin /> : null}
       {check && <CountDownCustorm time={time} />}
       {check ? (
         isCheck ? (
-          <Form
-            {...formItemLayout}
-            form={form}
-            className={styles.form}
-            name="register"
-            onFinish={onFinish}
-            initialValues={{
-              residence: ["zhejiang", "hangzhou", "xihu"],
-              prefix: "86",
-            }}
-            scrollToFirstError
-          >
-            {nameCompany ? null : (
-              <Form.Item
-                name="nameCompany"
-                label="Tên doanh nghiệp"
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng nhập tên doanh nghiệp",
-                  },
-                ]}
-              >
-                <Input placeholder="Tên doanh nghiệp" />
-              </Form.Item>
-            )}
-            {/* <Form.Item
+          <Spin spinning={spin}>
+            <Form
+              {...formItemLayout}
+              form={form}
+              className={styles.form}
+              name="register"
+              onFinish={onFinish}
+              initialValues={{
+                residence: ["zhejiang", "hangzhou", "xihu"],
+                prefix: "86",
+              }}
+              scrollToFirstError
+            >
+              {nameCompany ? null : (
+                <Form.Item
+                  name="nameCompany"
+                  label="Tên doanh nghiệp"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập tên doanh nghiệp",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Tên doanh nghiệp" />
+                </Form.Item>
+              )}
+              {/* <Form.Item
               name="taxCode"
               label="Mã số thuế"
               rules={[
@@ -199,34 +200,35 @@ const Formrp = () => {
               <Input placeholder="Nhập mã số thuế doanh nghiệp" />
             </Form.Item> */}
 
-            <Form.Item
-              name="internshipTime"
-              label="Thời gian bắt đầu thực tập"
-              // rules={[{}]}
-            >
-              <Space direction="vertical">
-                <DatePicker
-                  onChange={datePicker}
-                  placeholder="Bắt đầu thực tập"
-                />
-              </Space>
-            </Form.Item>
-            <Form.Item
-              name="upload"
-              label="Upload biên bản (Image or PDF)"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-            >
-              <Upload name="logo" action="/upload.do" listType="picture">
-                <Button icon={<UploadOutlined />}>Click to upload</Button>
-              </Upload>
-            </Form.Item>
-            <Form.Item {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
+              <Form.Item
+                name="internshipTime"
+                label="Thời gian bắt đầu thực tập"
+                // rules={[{}]}
+              >
+                <Space direction="vertical">
+                  <DatePicker
+                    onChange={datePicker}
+                    placeholder="Bắt đầu thực tập"
+                  />
+                </Space>
+              </Form.Item>
+              <Form.Item
+                name="upload"
+                label="Upload biên bản (Image or PDF)"
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
+              >
+                <Upload name="logo" action="/upload.do" listType="picture">
+                  <Button icon={<UploadOutlined />}>Click to upload</Button>
+                </Upload>
+              </Form.Item>
+              <Form.Item {...tailFormItemLayout}>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </Spin>
         ) : (
           "Bạn đã nộp biên bản thành công"
         )

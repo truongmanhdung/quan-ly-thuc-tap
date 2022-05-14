@@ -54,10 +54,10 @@ function InfoStudent(props) {
   const { infoUser } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getStudentId(infoUser.student.mssv));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infoUser]);
   const isRegister = student?.support;
-  const statusForm = infoUser?.student?.statusCheck;
-  console.log(student, infoUser);
+  const statusForm = student?.statusCheck;
   return (
     <div>
       <Row>
@@ -73,14 +73,17 @@ function InfoStudent(props) {
             <p>
               Lựa chọn :{" "}
               {isRegister === 0
-                ? "Tự tìm nới thực tập"
+                ? "Tự tìm nơi thực tập"
                 : "" || isRegister === 1
                 ? "Nhận hỗ trợ từ nhà trường"
                 : ""}
             </p>
+            
             <p>
+              
               Trạng thái SV :{" "}
-              {optionStatus.map((index) => {
+            {/* eslint-disable-next-line array-callback-return */}
+              {optionStatus.map(index => {
                 if (index.value === statusForm) {
                   return index.title
                 }

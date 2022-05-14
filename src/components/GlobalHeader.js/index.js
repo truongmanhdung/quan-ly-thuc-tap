@@ -1,7 +1,6 @@
-import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
-import { Button, Row, Col } from 'antd';
+import {  Row, Col } from 'antd';
 import { Header } from 'antd/lib/layout/layout';
-import React, { useState } from 'react';
+import React from 'react';
 import Rightcontent from './RightContent';
 import './index.css'
 const GlobalHeader = () => {

@@ -1,7 +1,7 @@
 export const filterBranch = [
   {
     title: "Tất cả",
-    value: 0,
+    value: 11,
   },
   {
     title: "Quản trị doanh nghiệp",
@@ -275,5 +275,13 @@ export const optionStatus = [
   {
     title: "Hoàn thành",
     value: 9,
+  },
+  {
+    title: "Chờ nộp CV",
+    value: 10,
+  },
+  {
+    title: "Sửa biên bản",
+    value: 52,
   },
 ];

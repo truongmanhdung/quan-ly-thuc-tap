@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { EyeOutlined } from "@ant-design/icons";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, message, Row, Col, } from "antd";
+import { Select, Input, Table, Button, message, Row, Col } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   listStudentForm,
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatusForm, filterStatuss } from "../../ultis/selectOption";
+import {
+  filterBranch,
+  filterStatusForm,
+} from "../../ultis/selectOption";
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
 import TextArea from "antd/lib/input/TextArea";
-const { Column, ColumnGroup } = Table;
+const { Column} = Table;
 const { Option } = Select;
 
 const Reviewform = () => {
@@ -20,8 +23,8 @@ const Reviewform = () => {
   const { infoUser } = useSelector((state) => state.auth);
   const [status, setStatus] = useState({});
   const [note, setNote] = useState();
-  const typePingTimeoutRef = useRef(null)
-  const [textNote,setTextNote] = useState('')
+  const typePingTimeoutRef = useRef(null);
+  const [textNote, setTextNote] = useState("");
   const {
     listStudentAssReviewer: { total, list },
     loading,
@@ -41,6 +44,7 @@ const Reviewform = () => {
       ...filter,
     };
     dispatch(listStudentForm(data));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
   const columns = [
@@ -77,7 +81,7 @@ const Reviewform = () => {
       width: 100,
     },
     {
-      title: "Biểu mẫu",
+      title: "Biên bản",
       dataIndex: "form",
       width: 100,
       render: (val) =>
@@ -100,7 +104,7 @@ const Reviewform = () => {
     {
       title: "Ghi chú",
       dataIndex: "note",
-      width:200
+      width: 200,
     },
     {
       title: "Ngày bắt đầu",
@@ -193,11 +197,11 @@ const Reviewform = () => {
 
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0 && value !== ''
+      value.length > 0 || (value > 0 && value !== "")
         ? {
-          ...filter,
-          [key]: value,
-        }
+            ...filter,
+            [key]: value,
+          }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -236,7 +240,7 @@ const Reviewform = () => {
     }
   };
   const selectStatus = (value) => {
-    setNote(value)
+    setNote(value);
     if (value === 1) {
       let id = [];
       chooseIdStudent
@@ -257,27 +261,29 @@ const Reviewform = () => {
     }
   };
   const comfirm = () => {
-    dispatch(updateStatusListStudent({
-      ...status,
-      textNote
-    }));
+    dispatch(
+      updateStatusListStudent({
+        ...status,
+        textNote,
+      })
+    );
     setChooseIdStudent([]);
   };
-  
-  const handleNote =({target: {value}}) => {
+
+  const handleNote = ({ target: { value } }) => {
     if (typePingTimeoutRef.current) {
-      clearTimeout(typePingTimeoutRef.current)
+      clearTimeout(typePingTimeoutRef.current);
     }
-    typePingTimeoutRef.current = setTimeout(()=>{
-      setTextNote(value)
-    }, 300)
-  }
+    typePingTimeoutRef.current = setTimeout(() => {
+      setTextNote(value);
+    }, 300);
+  };
   return (
     <div className="status">
       {window.innerWidth < 1023 ? (
-        <h4 style={{ fontSize: "1rem" }}>Review biểu mẫu</h4>
+        <h4 style={{ fontSize: "1rem" }}>Review báo cáo</h4>
       ) : (
-        <h4>Review biểu mẫu</h4>
+        <h4>Review báo cáo</h4>
       )}
       <div className="filter" style={{ marginTop: "20px" }}>
         <Row>
@@ -411,16 +417,14 @@ const Reviewform = () => {
                       ))}
                     </Select>
                   )}
-                  {
-                    note === 1 || note === 5 ? (
-                      <TextArea
+                  {note === 1 || note === 5 ? (
+                    <TextArea
                       // value={value}
                       onChange={handleNote}
                       placeholder="Ghi chú..."
                       autoSize={{ minRows: 3, maxRows: 5 }}
                     />
-                    ): null
-                  }
+                  ) : null}
                   {Object.keys(status).length > 0 && (
                     <Button onClick={() => comfirm()}>Xác nhận</Button>
                   )}
@@ -493,8 +497,8 @@ const Reviewform = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support == 1 && "Hỗ trợ"}
-                  {record.support == 0 && "Tự tìm"}
+                  {record.support === 1 && "Hỗ trợ"}
+                  {record.support === 0 && "Tự tìm"}
                   {record.support !== 1 && record.support !== 0 && ""}
                 </p>
                 <br />

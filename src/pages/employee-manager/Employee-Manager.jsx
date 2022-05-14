@@ -4,13 +4,14 @@ import { Option } from 'antd/lib/mentions';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchManager } from '../../features/managerSlice/managerSlice';
 import { getListCumpus } from '../../features/cumpusSlice/cumpusSlice';
-function EmployeeManager(props) {
+function EmployeeManager() {
   const dispatch = useDispatch()
   const {listManager} = useSelector(state => state.manager)
   const {listCumpus} = useSelector(state => state.cumpus)
   useEffect(() => {
     dispatch(fetchManager())
     dispatch(getListCumpus())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const rowSelection = {
@@ -55,7 +56,6 @@ function EmployeeManager(props) {
       title: 'Trạng thái',
       dataIndex: 'status',
       render: (status) => {
-        function ji() {
           if (status === 0) {
             return <span className='status-suscess' style={{ color: 'green' }}>Đang đi làm <br /></span>
           } else if (status === 1) {
@@ -63,8 +63,6 @@ function EmployeeManager(props) {
           } else if (status === 2) {
             return <span className='status-check' style={{ color: 'rgb(255, 106, 0)' }}>Có việc bận <br/><button>Sửa</button></span>
           } 
-        }
-       
       }
      
     }

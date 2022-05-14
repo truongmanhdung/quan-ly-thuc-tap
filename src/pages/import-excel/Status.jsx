@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from "react";
 import { EyeOutlined } from "@ant-design/icons";
+import { Button, Col, Input, Row, Select, Table } from "antd";
+import Column from "antd/lib/table/Column";
+import * as FileSaver from "file-saver";
+import { omit } from "lodash";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, Row, Col, Modal } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
 import {
   getSmester,
   getStudent,
 } from "../../features/StudentSlice/StudentSlice";
-import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
-import { Link, useNavigate } from "react-router-dom";
-
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
-import { omit } from "lodash";
 import UpFile from "./UpFile";
-import * as FileSaver from "file-saver";
-import * as XLSX from "xlsx";
-import Column from "antd/lib/table/Column";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
 const { Option } = Select;
 
@@ -68,6 +67,7 @@ const Status = () => {
       })
     );
     dispatch(getSmester());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const columns = [
     {
@@ -165,13 +165,13 @@ const Status = () => {
         } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Đã nộp biểu mẫu <br />
+              Đã nộp biên bản <br />
             </span>
           );
         } else if (status === 5) {
           return (
             <span className="status-fail" style={{ color: "red" }}>
-              Sửa biểu mẫu
+              Sửa biên bản
               <br />
             </span>
           );
@@ -266,8 +266,9 @@ const Status = () => {
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Thời gian thực tập"] = item["internshipTime"];
       newObject["Hình thức"] = item["support"];
-      newData.push(newObject);
+      return  newData.push(newObject);
     });
+    // eslint-disable-next-line array-callback-return
     newData.filter((item) => {
       if (item["Hình thức"] === 1) {
         item["Hình thức"] = 1;
@@ -334,7 +335,7 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "40%" }}>Ngành: </span>
+              <span style={{ width: "30%" }}>Ngành : </span>
               <Select
                 style={{ width: "100%" }}
                 onChange={(val) => handleStandardTableChange("majors", val)}
@@ -360,7 +361,7 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "45%" }}>Trạng thái:</span>
+              <span style={{ width: "45%" }}>Trạng thái :</span>
               <Select
                 className="filter-status"
                 style={{ width: "100%" }}
@@ -379,7 +380,7 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={5} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: "flex",
@@ -387,7 +388,7 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "10%" }}>Kỳ:</span>
+              <span style={{ width: "45%" }}>Học Kỳ : </span>
               <Select
                 className="filter-status"
                 style={{ width: "100%" }}
@@ -405,7 +406,7 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={7} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: "flex",
@@ -413,12 +414,12 @@ const Status = () => {
                 justifyContent: "space-between",
               }}
             >
-              <span style={{ width: "43%" }}>Tìm Kiếm: </span>
+              <span style={{ width: "40%" }}>Tìm Kiếm: </span>
               <Input
                 style={{ width: "100%" }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
-                  handleStandardTableChange("mssv", val.target.value)
+                  handleStandardTableChange("mssv", val.target.value.trim())
                 }
               />
             </div>
@@ -522,8 +523,8 @@ const Status = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support == 1 && "Hỗ trợ"}
-                  {record.support == 0 && "Tự tìm"}
+                  {record.support === 1 && "Hỗ trợ"}
+                  {record.support === 0 && "Tự tìm"}
                   {record.support !== 1 && record.support !== 0 && ""}
                 </p>
                 <br />

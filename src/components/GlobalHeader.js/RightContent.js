@@ -1,10 +1,8 @@
 import {
     LogoutOutlined, SettingOutlined, MenuOutlined, ProfileOutlined,
     UserOutlined,
-    UploadOutlined,
     FolderViewOutlined,
     UnorderedListOutlined,
-    MoreOutlined
 } from '@ant-design/icons';
 import { Menu, Dropdown, Button, Avatar, Drawer } from 'antd';
 

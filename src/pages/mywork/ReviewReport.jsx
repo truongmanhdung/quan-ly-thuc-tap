@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect,  useRef } from "react";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, message, Row, Col, Tag } from "antd";
+import { Select, Input, Table, Button, message, Row, Col} from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   listStudentReport,
@@ -29,7 +29,6 @@ const ReviewReport = () => {
   const [status, setStatus] = useState({});
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
-  const [type,setType] = useState(false)
   const [note, setNote] = useState();
   const typePingTimeoutRef = useRef(null)
   const [textNote,setTextNote] = useState('')
@@ -45,6 +44,7 @@ const ReviewReport = () => {
       ...filter,
     };
     dispatch(listStudentReport(data));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
   const columns = [
@@ -198,19 +198,9 @@ const ReviewReport = () => {
       setChooseIdStudent(selectedRows);
     },
   };
-  const chooseStudent = useCallback(() => {
-    dispatch(
-      updateReviewerListStudent({
-        listIdStudent: listIdStudent,
-        email: infoUser?.manager?.email,
-      })
-    );
-    alert("Thêm thành công ");
-  }, [listIdStudent]);
-
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || value > 0 && value !== ''
+      (value.length > 0 || value > 0) && value !== ''
         ? {
             ...filter,
             [key]: value,
@@ -242,7 +232,7 @@ const ReviewReport = () => {
       newObject["Điểm thái độ"] = item["attitudePoint"];
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Báo cáo"] = item["report"];
-      newData.push(newObject);
+     return newData.push(newObject);
     });
 
     const ws = XLSX.utils.json_to_sheet(newData);
@@ -271,7 +261,6 @@ const ReviewReport = () => {
 
         break;
       case "edit":
-        setType(true);
         setStatus({
           listIdStudent: listIdStudent,
           email: infoUser?.manager?.email,
@@ -296,15 +285,14 @@ const ReviewReport = () => {
           email: infoUser?.manager?.email,
           status: value,
         });
-        setType(false);
       } else {
         message.error("Chưa nộp báo cáo");
         setChooseIdStudent([]);
-        setType(false);
       }
     } else {
       setStatus({
         listIdStudent: listIdStudent,
+        listEmailStudent: listEmailStudent,
         email: infoUser?.manager?.email,
         status: value,
       });
@@ -475,7 +463,7 @@ const ReviewReport = () => {
                     </Select>
                   )}
                    {
-                    note === 3 || note === 5 || note === 8? (
+                    note === 3 || note === 5 || note === 8 ? (
                       <TextArea
                       // value={value}
                       onChange={handleNote}
@@ -557,8 +545,8 @@ const ReviewReport = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support == 1 && "Hỗ trợ"}
-                  {record.support == 0 && "Tự tìm"}
+                  {record.support === 1 && "Hỗ trợ"}
+                  {record.support === 0 && "Tự tìm"}
                   {record.support !== 1 && record.support !== 0 && ""}
                 </p>
                 <br />
