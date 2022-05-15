@@ -77,8 +77,14 @@ const ReviewReport = () => {
     },
     {
       title: "Tên công ty",
-      dataIndex: "nameCompany",
       width: 160,
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business.name
+        }else{
+          return record.nameCompany
+        }
+      }
     },
     {
       title: "Thời gian bắt đầu",
