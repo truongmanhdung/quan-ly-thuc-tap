@@ -77,7 +77,8 @@ const Status = () => {
       fixed: "left",
       render: (val, key) => {
         return (
-          <p style={{ margin: 0 }} onClick={() => onShowDetail(val, key)}>
+          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
+            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
             {val}
           </p>
         );
