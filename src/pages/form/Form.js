@@ -9,11 +9,12 @@ import {
   Space,
   DatePicker,
 } from "antd";
+import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
-import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 
 import styles from "./Form.module.css";
@@ -48,21 +49,22 @@ const tailFormItemLayout = {
     },
   },
 };
-const Formrp = () => {
+const Formrp = ({
+  infoUser,
+  studentById
+}) => {
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [startDate, setStartDate] = useState();
   const [file, setFile] = useState();
   const [form] = Form.useForm();
-  const { infoUser } = useSelector((state) => state.auth);
-  const { student } = useSelector((state) => state.cumpus);
-  const mssv = infoUser.student.mssv;
+  
+  const mssv = infoUser.student?.mssv;
   const email = infoUser?.student?.email;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
     setStartDate(date._d);
   };
-
   useEffect(() => {
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
@@ -151,8 +153,8 @@ const Formrp = () => {
   };
   const check = time.endTime > new Date().getTime();
   const isCheck =
-    (student && student.statusCheck === 2) || student.statusCheck === 5;
-  const nameCompany = student.nameCompany && student.support === 0;
+    (studentById && studentById.statusCheck === 2) || studentById.statusCheck === 5;
+  const nameCompany =  studentById.support === 0 ?  studentById.nameCompany : studentById.business
 
   return (
     <>
@@ -238,5 +240,15 @@ const Formrp = () => {
     </>
   );
 };
+Formrp.propTypes={
+  infoUser: object,
+  studentById: object
+}
 
-export default Formrp;
+export default connect(({
+  auth: {infoUser},
+  students: {studentById}
+}) => ({
+  infoUser,
+  studentById
+}))(Formrp) ;

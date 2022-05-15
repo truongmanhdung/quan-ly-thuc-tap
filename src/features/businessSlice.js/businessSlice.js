@@ -7,23 +7,36 @@ export const insertBusiness = createAsyncThunk(
     return data;
   }
 );
-
+export const getBusiness = createAsyncThunk(
+  "business/getBusiness",
+  async (action) => {
+    const {data} = await BusinessAPI.get(action)
+    return data
+  }
+)
 const businessSlice = createSlice({
   name: "business",
   initialState: {
-    listBusiness: [],
+    business: {},
     loading: false,
     error: "",
   },
-  reducers: {
-    addStudent(state, action) {
-      state.listStudent.push(action.payload);
-    },
-  },
   extraReducers: (builder) => {
+    builder.addCase(getBusiness.fulfilled, (state, action) => {
+      state.loading = false;
+      state.business = action.payload;
+    });
+    builder.addCase(getBusiness.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(getBusiness.rejected, (state, action) => {
+      state.error = "Thất bại";
+    });
+
+
     builder.addCase(insertBusiness.fulfilled, (state, action) => {
       state.loading = false;
-      state.listStudent = action.payload;
+      state.business = action.payload;
     });
     builder.addCase(insertBusiness.pending, (state, action) => {
       state.loading = true;

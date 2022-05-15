@@ -1,189 +1,194 @@
-import { EyeOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row, Select, Table } from "antd";
-import Column from "antd/lib/table/Column";
-import * as FileSaver from "file-saver";
-import { omit } from "lodash";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
-import "../../common/styles/status.css";
-import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
-import {
-  getSmester,
-  getStudent,
-} from "../../features/StudentSlice/StudentSlice";
-import { filterBranch, filterStatuss } from "../../ultis/selectOption";
-import UpFile from "./UpFile";
-
+import { Col, Row, Select, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { getSmester } from '../../features/StudentSlice/StudentSlice';
+import UpFile from '../../components/ExcelDocument/UpFile';
+import { getBusiness } from '../../features/businessSlice.js/businessSlice';
+import { bool, object } from 'prop-types';
+import { array } from 'prop-types';
 const { Option } = Select;
-
-const ListOfBusiness = () => {
+const { Column } = Table;
+const ListOfBusiness = ({ infoUser, business, listSmester, loading }) => {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
-  const { infoUser } = useSelector((state) => state.auth);
-  const {
-    listStudent: { list, total },
-    loading,
-    listSmester,
-  } = useSelector((state) => state.students);
-  const [chooseIdStudent, setChooseIdStudent] = useState([]);
-  const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-  });
-
-  const [filter, setFiler] = useState({
-    smester_id: "6268c1e72bfe652b8d17eb22",
+    smester_id: '6268c1e72bfe652b8d17eb22',
   });
   useEffect(() => {
-    dispatch(
-      getStudent({
-        ...page,
-        ...filter,
-      })
-    );
+    dispatch(getBusiness(page));
     dispatch(getSmester());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const columns = [
     {
-      title: "Tên doanh nghiệp",
-      dataIndex: "name",
-      width: 100,
-      fixed: "left",
+      title: 'Tên doanh nghiệp',
+      dataIndex: 'name',
     },
     {
-      title: "Vị trí thực tập",
-      dataIndex: "internshipPosition",
-      width: 50,
-      fixed: "left",
+      title: 'Vị trí thực tập',
+      dataIndex: 'internshipPosition',
     },
     {
-      title: "Số lượng",
-      dataIndex: "amount",
-      width: 20,
+      title: 'Số lượng',
+      dataIndex: 'amount',
     },
-   
+
     {
-      title: "Địa chỉ thực tập",
-      dataIndex: "address",
-      width: 100,
+      title: 'Địa chỉ thực tập',
+      dataIndex: 'address',
     },
+    {
+      title: 'Ngành',
+      dataIndex: 'majors'
+    }
   ];
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setListIdStudent(selectedRowKeys);
-      setChooseIdStudent(selectedRows);
-    },
-  };
-  const handleStandardTableChange = (key, value) => {
-    const newValue =
-      value.length > 0 || (value < 11 && value !== "")
-        ? {
-            ...filter,
-            [key]: value,
-          }
-        : omit(filter, [key]);
-    setFiler(newValue);
-  };
-  const handleSearch = () => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(getStudent(data));
-  };
 
-  const comfirm = () => {
-    dispatch(
-      updateReviewerListStudent({
-        listIdStudent: listIdStudent,
-        email: infoUser?.manager?.email,
-      })
-    );
-    alert("Thêm thành công ");
-    navigate("/review-cv");
-  };
-
-  const fileType =
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  const fileExtension = ".xlsx";
-
-  const exportToCSV = (list) => {
-    const newData = [];
-
-    list.filter((item) => {
-      const newObject = {};
-      newObject["Tên doanh nghiệp"] = item["mssv"];
-      newObject["Vị trí thực tập"] = item["internshipPosition"];
-      newObject["Số lượng"] = item["amount"];
-      newObject["Địa chỉ doanh nghiệp"] = item["address"];
-      return  newData.push(newObject);
-    });
-    // eslint-disable-next-line array-callback-return
-    newData.filter((item) => {
-      if (item["Hình thức"] === 1) {
-        item["Hình thức"] = 1;
-        item["Hình thức"] = "Hỗ trợ";
-      } else if (item["Hình thức"] === 0) {
-        item["Hình thức"] = 0;
-        item["Hình thức"] = "Tự tìm";
-      } else {
-      }
-    });
-    const ws = XLSX.utils.json_to_sheet(newData);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileExtension);
-  };
-
+  // const handleStandardTableChange = (key, value) => {
+  //   const newValue =
+  //     value.length > 0 || (value < 11 && value !== '')
+  //       ? {
+  //           ...filter,
+  //           [key]: value,
+  //         }
+  //       : omit(filter, [key]);
+  //   setFiler(newValue);
+  // };
   return (
     <div className="status">
-      <div className="flex-header">
+      <Row>
         {window.innerWidth < 739 ? (
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
             }}
           >
-            <h4 style={{ fontSize: ".9rem" }}>Doanh nghiệp đăng ký</h4>
-            <Button
-              variant="warning"
-              style={{ marginRight: 10, height: 36 }}
-              onClick={(e) => exportToCSV(list)}
-            >
-              Export
-            </Button>
+            <h4 style={{ fontSize: '.9rem' }}>Doanh nghiệp đăng ký</h4>
           </div>
         ) : (
           <>
-            <h4>Doanh nghiệp đăng ký</h4>
-            <div style={{ display: "flex" }}>
-              <Button
-                variant="warning"
-                style={{ marginRight: 10, height: 36 }}
-                onClick={(e) => exportToCSV(list)}
-              >
-                Export
-              </Button>
-              <UpFile smester_id={filter.smester_id} />
-            </div>
+            <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+              <h4>Doanh nghiệp đăng ký</h4>
+            </Col>
+            <Col xs={20} sm={16} md={12} lg={8} xl={4}>
+              {' '}
+            </Col>
+            <Col xs={2} sm={4} md={6} lg={8} xl={10}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto auto' }}>
+                <div>
+                  <Select
+                    className="filter-status"
+                    onChange={(val) =>
+                      setPage({
+                        ...page,
+                        smester_id: val,
+                      })
+                    }
+                    defaultValue={page.smester_id}
+                  >
+                    {listSmester.map((item, index) => (
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+                <div
+                  style={{
+                    marginLeft: '20px',
+                  }}
+                >
+                  <UpFile keys="business" smester_id={page.smester_id} />
+                </div>
+              </div>
+            </Col>
           </>
         )}
-      </div>
-      <div className="filter" style={{ marginTop: "20px" }}>
-        {window.innerWidth < 739 && <UpFile style={{ fontSize: ".9rem" }} />}
+      </Row>
+      <div className="filter" style={{ marginTop: '20px' }}>
+        {window.innerWidth < 739 && <UpFile style={{ fontSize: '.9rem' }} />}
         <br />
       </div>
+      {window.innerWidth > 1024 ? (
+        <Table
+          pagination={{
+            pageSize: page.limit,
+            total: business.total,
+            onChange: (pages, pageSize) => {
+              setPage({
+                ...page,
+                page: pages,
+                limit: pageSize,
+              });
+            },
+          }}
+          rowKey="_id"
+          loading={loading}
+          columns={columns}
+          dataSource={business.list}
+        />
+      ) : (
+        <Table
+          pagination={{
+            pageSize: page.limit,
+            total: business.total,
+            onChange: (pages, pageSize) => {
+              setPage({
+                ...page,
+                page: pages,
+                limit: pageSize,
+              });
+            },
+          }}
+          rowKey="_id"
+          loading={loading}
+          dataSource={business.list}
+          expandable={{
+            expandedRowRender: (record) => (
+              <div style={{ marginTop: '10px' }}>
+                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
+                  ''
+                ) : (
+                  <>
+                    <p className="list-detail">Email: {record.email}</p>
+                    <br />
+                  </>
+                )}
+                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
+                <br />
+                <p className="list-detail">Ngành: {record.majors}</p>
+                <br />
+              </div>
+            ),
+          }}
+        >
+          <Column title="Mssv" dataIndex="mssv" key="_id" />
+          <Column title="Họ và Tên" dataIndex="name" key="_id" />
+          {window.innerWidth > 739 && window.innerWidth < 1023 && (
+            <Column title="Email" dataIndex="email" key="_id" />
+          )}
+        </Table>
+      )}
     </div>
   );
 };
 
-export default ListOfBusiness;
+ListOfBusiness.propTypes = {
+  infoUser: object,
+  business: object,
+  listSmester: array,
+  loading: bool,
+};
+
+export default connect(
+  ({ auth: { infoUser }, business: { business, loading }, students: { listSmester } }) => ({
+    infoUser,
+    business,
+    listSmester,
+    loading,
+  }),
+)(ListOfBusiness);

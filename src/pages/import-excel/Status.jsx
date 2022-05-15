@@ -1,20 +1,17 @@
-import { EyeOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row, Select, Table } from "antd";
-import Column from "antd/lib/table/Column";
-import * as FileSaver from "file-saver";
-import { omit } from "lodash";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
-import "../../common/styles/status.css";
-import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
-import {
-  getSmester,
-  getStudent,
-} from "../../features/StudentSlice/StudentSlice";
-import { filterBranch, filterStatuss } from "../../ultis/selectOption";
-import UpFile from "./UpFile";
+import { EyeOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Select, Table } from 'antd';
+import Column from 'antd/lib/table/Column';
+import * as FileSaver from 'file-saver';
+import { omit } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
+import '../../common/styles/status.css';
+import { updateReviewerListStudent } from '../../features/reviewerStudent/reviewerSlice';
+import { getSmester, getStudent } from '../../features/StudentSlice/StudentSlice';
+import { filterBranch, filterStatuss } from '../../ultis/selectOption';
+import UpFile from '../../components/ExcelDocument/UpFile';
 
 const { Option } = Select;
 
@@ -36,144 +33,140 @@ const Status = () => {
   });
 
   const [filter, setFiler] = useState({
-    smester_id: "6268c1e72bfe652b8d17eb22",
+    smester_id: '6268c1e72bfe652b8d17eb22',
   });
   useEffect(() => {
     dispatch(
       getStudent({
         ...page,
         ...filter,
-      })
+      }),
     );
     dispatch(getSmester());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const columns = [
     {
-      title: "MSSV",
-      dataIndex: "mssv",
+      title: 'MSSV',
+      dataIndex: 'mssv',
       width: 100,
-      fixed: "left",
+      fixed: 'left',
     },
     {
-      title: "Họ và Tên",
-      dataIndex: "name",
+      title: 'Họ và Tên',
+      dataIndex: 'name',
       width: 150,
-      fixed: "left",
+      fixed: 'left',
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: 'Email',
+      dataIndex: 'email',
       width: 200,
     },
     {
-      title: "Điện thoại",
-      dataIndex: "phoneNumber",
+      title: 'Điện thoại',
+      dataIndex: 'phoneNumber',
       width: 160,
     },
     {
-      title: "Ngành",
-      dataIndex: "majors",
+      title: 'Ngành',
+      dataIndex: 'majors',
       width: 100,
     },
     {
-      title: "Phân loại",
-      dataIndex: "support",
+      title: 'Phân loại',
+      dataIndex: 'support',
       width: 90,
       render: (val) => {
         if (val === 1) {
-          return "Hỗ trợ";
+          return 'Hỗ trợ';
         } else if (val === 0) {
-          return "Tự tìm";
+          return 'Tự tìm';
         } else {
-          return "";
+          return '';
         }
       },
     },
     {
-      title: "CV",
-      dataIndex: "CV",
+      title: 'CV',
+      dataIndex: 'CV',
       width: 50,
       render: (val) =>
-        val ? (
-          <EyeOutlined className="icon-cv" onClick={() => window.open(val)} />
-        ) : (
-          ""
-        ),
+        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
     },
     {
-      title: "Người review",
-      dataIndex: "reviewer",
+      title: 'Người review',
+      dataIndex: 'reviewer',
       width: 230,
     },
     {
-      title: "Trạng thái",
-      dataIndex: "statusCheck",
+      title: 'Trạng thái',
+      dataIndex: 'statusCheck',
       render: (status) => {
         if (status === 0) {
           return (
-            <span className="status-fail" style={{ color: "orange" }}>
+            <span className="status-fail" style={{ color: 'orange' }}>
               Chờ kiểm tra
             </span>
           );
         } else if (status === 1) {
           return (
-            <span className="status-up" style={{ color: "grey" }}>
+            <span className="status-up" style={{ color: 'grey' }}>
               Sửa lại CV
             </span>
           );
         } else if (status === 2) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Nhận CV
             </span>
           );
         } else if (status === 3) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Trượt
             </span>
           );
         } else if (status === 4) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Đã nộp biên bản <br />
             </span>
           );
         } else if (status === 5) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Sửa biên bản
               <br />
             </span>
           );
         } else if (status === 6) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Đang thực tập <br />
             </span>
           );
         } else if (status === 7) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Đã nộp báo cáo <br />
             </span>
           );
         } else if (status === 8) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Sửa báo cáo <br />
             </span>
           );
         } else if (status === 9) {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Hoàn thành <br />
             </span>
           );
         } else {
           return (
-            <span className="status-fail" style={{ color: "red" }}>
+            <span className="status-fail" style={{ color: 'red' }}>
               Chưa đăng ký
             </span>
           );
@@ -189,7 +182,7 @@ const Status = () => {
   };
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || (value < 11 && value !== "")
+      value.length > 0 || (value < 11 && value !== '')
         ? {
             ...filter,
             [key]: value,
@@ -210,50 +203,50 @@ const Status = () => {
       updateReviewerListStudent({
         listIdStudent: listIdStudent,
         email: infoUser?.manager?.email,
-      })
+      }),
     );
-    alert("Thêm thành công ");
-    navigate("/review-cv");
+    alert('Thêm thành công ');
+    navigate('/review-cv');
   };
 
   const fileType =
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  const fileExtension = ".xlsx";
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
 
   const exportToCSV = (list) => {
     const newData = [];
 
     list.filter((item) => {
       const newObject = {};
-      newObject["MSSV"] = item["mssv"];
-      newObject["Họ tên"] = item["name"];
-      newObject["Email"] = item["email"];
-      newObject["Ngành"] = item["majors"];
-      newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Tên công ty"] = item["nameCompany"];
-      newObject["Địa chỉ công ty"] = item["addressCompany"];
-      newObject["Mã số thuế"] = item["taxCode"];
-      newObject["Vị trí thực tập"] = item["position"];
-      newObject["Điểm thái độ"] = item["attitudePoint"];
-      newObject["Điểm kết quả"] = item["resultScore"];
-      newObject["Thời gian thực tập"] = item["internshipTime"];
-      newObject["Hình thức"] = item["support"];
-      return  newData.push(newObject);
+      newObject['MSSV'] = item['mssv'];
+      newObject['Họ tên'] = item['name'];
+      newObject['Email'] = item['email'];
+      newObject['Ngành'] = item['majors'];
+      newObject['Số điện thoại'] = item['phoneNumber'];
+      newObject['Tên công ty'] = item['nameCompany'];
+      newObject['Địa chỉ công ty'] = item['addressCompany'];
+      newObject['Mã số thuế'] = item['taxCode'];
+      newObject['Vị trí thực tập'] = item['position'];
+      newObject['Điểm thái độ'] = item['attitudePoint'];
+      newObject['Điểm kết quả'] = item['resultScore'];
+      newObject['Thời gian thực tập'] = item['internshipTime'];
+      newObject['Hình thức'] = item['support'];
+      return newData.push(newObject);
     });
     // eslint-disable-next-line array-callback-return
     newData.filter((item) => {
-      if (item["Hình thức"] === 1) {
-        item["Hình thức"] = 1;
-        item["Hình thức"] = "Hỗ trợ";
-      } else if (item["Hình thức"] === 0) {
-        item["Hình thức"] = 0;
-        item["Hình thức"] = "Tự tìm";
+      if (item['Hình thức'] === 1) {
+        item['Hình thức'] = 1;
+        item['Hình thức'] = 'Hỗ trợ';
+      } else if (item['Hình thức'] === 0) {
+        item['Hình thức'] = 0;
+        item['Hình thức'] = 'Tự tìm';
       } else {
       }
     });
     const ws = XLSX.utils.json_to_sheet(newData);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
@@ -264,13 +257,13 @@ const Status = () => {
         {window.innerWidth < 739 ? (
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%',
+              alignItems: 'center',
             }}
           >
-            <h4 style={{ fontSize: ".9rem" }}>Sinh viên đăng ký thực tập</h4>
+            <h4 style={{ fontSize: '.9rem' }}>Sinh viên đăng ký thực tập</h4>
             <Button
               variant="warning"
               style={{ marginRight: 10, height: 36 }}
@@ -282,7 +275,7 @@ const Status = () => {
         ) : (
           <>
             <h4>Sinh viên đăng ký thực tập</h4>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: 'flex' }}>
               <Button
                 variant="warning"
                 style={{ marginRight: 10, height: 36 }}
@@ -290,27 +283,27 @@ const Status = () => {
               >
                 Export
               </Button>
-              <UpFile smester_id={filter.smester_id} />
+              <UpFile keys='status' smester_id={filter.smester_id} />
             </div>
           </>
         )}
       </div>
-      <div className="filter" style={{ marginTop: "20px" }}>
-        {window.innerWidth < 739 && <UpFile style={{ fontSize: ".9rem" }} />}
+      <div className="filter" style={{ marginTop: '20px' }}>
+        {window.innerWidth < 739 && <UpFile style={{ fontSize: '.9rem' }} />}
         <br />
         <Row>
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={6} style={{ padding: '0 10px' }}>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <span style={{ width: "30%" }}>Ngành : </span>
+              <span style={{ width: '30%' }}>Ngành : </span>
               <Select
-                style={{ width: "100%" }}
-                onChange={(val) => handleStandardTableChange("majors", val)}
+                style={{ width: '100%' }}
+                onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
                 {filterBranch.map((item, index) => (
@@ -325,21 +318,19 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={6} style={{ padding: '0 10px' }}>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <span style={{ width: "45%" }}>Trạng thái :</span>
+              <span style={{ width: '45%' }}>Trạng thái :</span>
               <Select
                 className="filter-status"
-                style={{ width: "100%" }}
-                onChange={(val) =>
-                  handleStandardTableChange("statusCheck", val)
-                }
+                style={{ width: '100%' }}
+                onChange={(val) => handleStandardTableChange('statusCheck', val)}
                 placeholder="Lọc theo trạng thái"
               >
                 {filterStatuss.map((item, index) => (
@@ -352,19 +343,19 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={5} style={{ padding: "0 10px" }}>
+          <Col span={5} style={{ padding: '0 10px' }}>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <span style={{ width: "45%" }}>Học Kỳ : </span>
+              <span style={{ width: '45%' }}>Học Kỳ : </span>
               <Select
                 className="filter-status"
-                style={{ width: "100%" }}
-                onChange={(val) => handleStandardTableChange("smester_id", val)}
+                style={{ width: '100%' }}
+                onChange={(val) => handleStandardTableChange('smester_id', val)}
                 placeholder="Lọc theo trạng thái"
                 defaultValue={filter.smester_id}
               >
@@ -378,39 +369,30 @@ const Status = () => {
           </Col>
           <br />
           <br />
-          <Col span={7} style={{ padding: "0 10px" }}>
+          <Col span={7} style={{ padding: '0 10px' }}>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <span style={{ width: "40%" }}>Tìm Kiếm: </span>
+              <span style={{ width: '40%' }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
-                onChange={(val) =>
-                  handleStandardTableChange("mssv", val.target.value.trim())
-                }
+                onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
               />
             </div>
           </Col>
           <br />
           <br />
-          <Col
-            xs={24}
-            sm={4}
-            md={24}
-            lg={24}
-            xl={4}
-            style={{ padding: "0 10px" }}
-          >
+          <Col xs={24} sm={4} md={24} lg={24} xl={4} style={{ padding: '0 10px' }}>
             <Button
               style={{
-                marginTop: "10px",
-                color: "#fff",
-                background: "#ee4d2d",
+                marginTop: '10px',
+                color: '#fff',
+                background: '#ee4d2d',
               }}
               onClick={handleSearch}
             >
@@ -420,9 +402,9 @@ const Status = () => {
             {chooseIdStudent.length > 0 && (
               <Button
                 style={{
-                  marginTop: "10px",
-                  color: "#fff",
-                  background: "#ee4d2d",
+                  marginTop: '10px',
+                  color: '#fff',
+                  background: '#ee4d2d',
                 }}
                 onClick={() => comfirm()}
               >
@@ -436,7 +418,7 @@ const Status = () => {
       {window.innerWidth > 1024 ? (
         <Table
           rowSelection={{
-            type: "checkbox",
+            type: 'checkbox',
             ...rowSelection,
           }}
           pagination={{
@@ -455,12 +437,12 @@ const Status = () => {
           loading={loading}
           columns={columns}
           dataSource={list}
-          scroll={{ x: "calc(700px + 50%)" }}
+          scroll={{ x: 'calc(700px + 50%)' }}
         />
       ) : (
         <Table
           rowSelection={{
-            type: "checkbox",
+            type: 'checkbox',
             ...rowSelection,
           }}
           pagination={{
@@ -480,9 +462,9 @@ const Status = () => {
           dataSource={list}
           expandable={{
             expandedRowRender: (record) => (
-              <div style={{ marginTop: "10px" }}>
+              <div style={{ marginTop: '10px' }}>
                 {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ""
+                  ''
                 ) : (
                   <>
                     <p className="list-detail">Email: {record.email}</p>
@@ -495,20 +477,20 @@ const Status = () => {
                 <br />
                 <p className="list-detail">
                   Phân loại:
-                  {record.support === 1 && "Hỗ trợ"}
-                  {record.support === 0 && "Tự tìm"}
-                  {record.support !== 1 && record.support !== 0 && ""}
+                  {record.support === 1 && 'Hỗ trợ'}
+                  {record.support === 0 && 'Tự tìm'}
+                  {record.support !== 1 && record.support !== 0 && ''}
                 </p>
                 <br />
                 <p className="list-detail">
-                  CV:{" "}
+                  CV:{' '}
                   {record.CV ? (
                     <EyeOutlined
-                      style={{ fontSize: ".9rem" }}
+                      style={{ fontSize: '.9rem' }}
                       onClick={() => window.open(record.CV)}
                     />
                   ) : (
-                    ""
+                    ''
                   )}
                 </p>
                 <br />
@@ -530,67 +512,67 @@ const Status = () => {
             render={(status) => {
               if (status === 0) {
                 return (
-                  <span className="status-fail" style={{ color: "orange" }}>
+                  <span className="status-fail" style={{ color: 'orange' }}>
                     Chờ kiểm tra
                   </span>
                 );
               } else if (status === 1) {
                 return (
-                  <span className="status-up" style={{ color: "grey" }}>
+                  <span className="status-up" style={{ color: 'grey' }}>
                     Sửa lại CV
                   </span>
                 );
               } else if (status === 2) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Nhận CV
                   </span>
                 );
               } else if (status === 3) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Trượt
                   </span>
                 );
               } else if (status === 4) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Đã nộp biên bản <br />
                   </span>
                 );
               } else if (status === 5) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Sửa biên bản <br />
                   </span>
                 );
               } else if (status === 6) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Đang thực tập <br />
                   </span>
                 );
               } else if (status === 7) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Đã nộp báo cáo <br />
                   </span>
                 );
               } else if (status === 8) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Sửa báo cáo <br />
                   </span>
                 );
               } else if (status === 9) {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Hoàn thành <br />
                   </span>
                 );
               } else {
                 return (
-                  <span className="status-fail" style={{ color: "red" }}>
+                  <span className="status-fail" style={{ color: 'red' }}>
                     Chưa đăng ký
                   </span>
                 );

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { EyeOutlined } from "@ant-design/icons";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, message, Row, Col } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import { Select, Input, Table, Button, message, Row, Col, } from "antd";
+import { useDispatch, connect } from "react-redux";
 import {
   listStudentForm,
   updateReviewerListStudent,
@@ -15,20 +15,19 @@ import {
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
 import TextArea from "antd/lib/input/TextArea";
-const { Column} = Table;
+import { bool, object } from "prop-types";
+const { Column } = Table;
 const { Option } = Select;
-
-const Reviewform = () => {
+const Reviewform = ({
+  infoUser,
+  listStudentAssReviewer: { total, list },
+  loading,
+}) => {
   const dispatch = useDispatch();
-  const { infoUser } = useSelector((state) => state.auth);
   const [status, setStatus] = useState({});
   const [note, setNote] = useState();
   const typePingTimeoutRef = useRef(null);
   const [textNote, setTextNote] = useState("");
-  const {
-    listStudentAssReviewer: { total, list },
-    loading,
-  } = useSelector((state) => state.reviewer);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
@@ -44,7 +43,7 @@ const Reviewform = () => {
       ...filter,
     };
     dispatch(listStudentForm(data));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
   const columns = [
@@ -72,8 +71,14 @@ const Reviewform = () => {
     },
     {
       title: "Tên công ty",
-      dataIndex: "nameCompany",
       width: 180,
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business.name
+        } else {
+          return record.nameCompany
+        }
+      }
     },
     {
       title: "Mã số thuế",
@@ -199,9 +204,9 @@ const Reviewform = () => {
     const newValue =
       value.length > 0 || (value > 0 && value !== "")
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -605,4 +610,20 @@ const Reviewform = () => {
   );
 };
 
-export default Reviewform;
+Reviewform.propTypes = {
+  infoUser: object,
+  loading: bool,
+  listStudentAssReviewer: object,
+}
+
+export default connect(({
+  auth: { infoUser },
+  reviewer: {
+    listStudentAssReviewer,
+    loading
+  }
+}) => ({
+  listStudentAssReviewer,
+  infoUser,
+  loading
+}))(Reviewform);
