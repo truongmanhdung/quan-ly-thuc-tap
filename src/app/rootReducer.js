@@ -7,6 +7,7 @@ import specializationSlice from "../features/specializationSlice/specializationS
 import managerSlice from "../features/managerSlice/managerSlice";
 import reviewerSlice from "../features/reviewerStudent/reviewerSlice";
 import timeDateSlice from "../features/timeDateSlice/timeDateSlice";
+import businessSlice from "../features/businessSlice.js/businessSlice";
 const rootReducer = combineReducers(
     {
     students:studentSlice,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers(
     specialization:specializationSlice,
     manager: managerSlice,
     reviewer:reviewerSlice,
-    time: timeDateSlice
+    time: timeDateSlice,
+    business: businessSlice
 });
 export default rootReducer;

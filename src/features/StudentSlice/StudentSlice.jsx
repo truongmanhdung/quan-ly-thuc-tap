@@ -12,12 +12,22 @@ export const getSmester = createAsyncThunk('student/getSmester', async (action) 
   const { data } = await StudentAPI.getSmesterSchool(action);
   return data;
 });
+
+
+export const getStudentId = createAsyncThunk(
+  "student/getById",
+   async (id) => {
+  const { data } = await StudentAPI.get(id);
+  return data;
+});
+
 const studentSlice = createSlice({
   name: 'student',
   initialState: {
     listStudent: {},
     loading: false,
     listSmester: [],
+    studentById:{},
     error: '',
   },
   reducers: {
@@ -58,6 +68,19 @@ const studentSlice = createSlice({
       state.loading = false;
       state.error = 'Thất bại';
     });
+    //studentByID
+
+    builder.addCase(getStudentId.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getStudentId.fulfilled, (state, action) => {
+      state.loading = false;
+      state.studentById = action.payload;
+    });
+    builder.addCase(getStudentId.rejected, (state) => {
+      state.messages = "Get student fail";
+    });
+
   },
 });
 export const { uploadStudent } = studentSlice.actions;
