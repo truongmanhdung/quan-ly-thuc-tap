@@ -2,7 +2,7 @@ import { Col, DatePicker, Form, Input, Row, Button } from "antd";
 import React from "react";
 const { RangePicker } = DatePicker;
 
-const FSemester = ({ onFinish, dataEdit, editStatusButton, text, forms }) => {
+const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
   const onFinishForm = (values) => {
     if (text.toLowerCase() === "sửa kỳ") {
       onFinish({ ...values, status: 1 });
@@ -27,19 +27,6 @@ const FSemester = ({ onFinish, dataEdit, editStatusButton, text, forms }) => {
             xl={8}
             style={{ padding: "0 10px" }}
           >
-            <Form.Item
-              name="id"
-              label="Tên kỳ"
-              style={{ display: "none" }}
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập tên kỳ học!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
             <Form.Item
               name="name"
               label="Tên kỳ"

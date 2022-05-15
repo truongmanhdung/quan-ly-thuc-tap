@@ -1,40 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Col, Table } from 'antd';
-import { connect, useDispatch,  } from 'react-redux';
-import TextArea from 'antd/lib/input/TextArea';
-import { optionStatus } from '../../ultis/selectOption';
-import { getStudentId } from '../../features/StudentSlice/StudentSlice';
-import { bool, object } from 'prop-types';
-import { getBusiness } from '../../features/businessSlice.js/businessSlice';
+import React, { useEffect, useState } from "react";
+import { Row, Col, Table } from "antd";
+import { connect, useDispatch } from "react-redux";
+import TextArea from "antd/lib/input/TextArea";
+import { optionStatus } from "../../ultis/selectOption";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
+import { bool, object } from "prop-types";
+import { getBusiness } from "../../features/businessSlice.js/businessSlice";
 const columns = [
   {
-    title: 'Doanh nghiệp',
-    dataIndex: 'name',
+    title: "Doanh nghiệp",
+    dataIndex: "name",
   },
   {
-    title: 'Vị trí',
-    dataIndex: 'internshipPosition',
+    title: "Vị trí",
+    dataIndex: "internshipPosition",
   },
   {
-    title: 'Số lượng',
-    dataIndex: 'amount',
+    title: "Số lượng",
+    dataIndex: "amount",
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
+    title: "Address",
+    dataIndex: "address",
   },
   {
     title: "Ngành",
-    dataIndex: 'majors'
-  }
+    dataIndex: "majors",
+  },
 ];
-function InfoStudent({ studentById, infoUser, business: { list, total }, loading }) {
+function InfoStudent({
+  studentById,
+  infoUser,
+  business: { list, total },
+  loading,
+}) {
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
     campus_id: infoUser.student.campus_id,
-    smester_id: '6268c1e72bfe652b8d17eb22',
-    majors: infoUser.student.majors
+    smester_id: "6268c1e72bfe652b8d17eb22",
+    majors: infoUser.student.majors,
   });
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,21 +62,28 @@ function InfoStudent({ studentById, infoUser, business: { list, total }, loading
             <p>Khóa học : {studentById.course}</p>
             <p>Email : {studentById.email}</p>
             <p>
-              Lựa chọn :{' '}
+              Lựa chọn :{" "}
               {isRegister === 0
-                ? 'Tự tìm nơi thực tập'
-                : '' || isRegister === 1
-                ? 'Nhận hỗ trợ từ nhà trường'
-                : ''}
+                ? "Tự tìm nơi thực tập"
+                : "" || isRegister === 1
+                ? "Nhận hỗ trợ từ nhà trường"
+                : ""}
             </p>
-            <p> Công ty đã chọn: {studentById.support === 1 ? studentById.business.name : studentById.nameCompany} </p>
             <p>
-              Trạng thái SV : {/* eslint-disable-next-line array-callback-return */}
+              {" "}
+              Công ty đã chọn:{" "}
+              {studentById.support === 1
+                ? studentById.business.name
+                : studentById.nameCompany}{" "}
+            </p>
+            <p>
+              Trạng thái SV :{" "}
+              {/* eslint-disable-next-line array-callback-return */}
               {optionStatus.map((index) => {
                 if (index.value === statusForm) {
                   return index.title;
                 }
-              })}{' '}
+              })}{" "}
             </p>
           </div>
         </Col>
@@ -79,23 +91,23 @@ function InfoStudent({ studentById, infoUser, business: { list, total }, loading
           <h4>Chọn công ty</h4>
           <div>
             <Table
-            loading={loading}
-             rowKey="_id"
-             columns={columns} 
-             dataSource={list}
-             pagination={{
-              pageSize: page.limit,
-              total: total,
-              onChange: (pages, pageSize) => {
-                setPage({
-                  ...page,
-                  page: pages,
-                  limit: pageSize,
-                  campus_id: infoUser.student.cumpus,
-                });
-              },
-            }}
-             />
+              loading={loading}
+              rowKey="_id"
+              columns={columns}
+              dataSource={list}
+              pagination={{
+                pageSize: page.limit,
+                total: total,
+                onChange: (pages, pageSize) => {
+                  setPage({
+                    ...page,
+                    page: pages,
+                    limit: pageSize,
+                    campus_id: infoUser.student.cumpus,
+                  });
+                },
+              }}
+            />
           </div>
         </Col>
       </Row>
@@ -117,14 +129,18 @@ InfoStudent.propTypes = {
   studentById: object,
   infoUser: object,
   business: object,
-  loading: bool
+  loading: bool,
 };
 
 export default connect(
-  ({ students: { studentById }, auth: { infoUser }, business: { business, loading } }) => ({
+  ({
+    students: { studentById },
+    auth: { infoUser },
+    business: { business, loading },
+  }) => ({
     studentById,
     infoUser,
     business,
-    loading
-  }),
+    loading,
+  })
 )(InfoStudent);

@@ -10,6 +10,7 @@ const FormSemester = () => {
   const dispatch = useDispatch();
   const [hideForm, setHideForm] = useState(false);
   const [hideButton, setHideButton] = useState(false);
+  const [idSemester, setIdSemester] = useState("");
   const [text, setText] = useState("Thêm kỳ");
   const [dataEdit, setDataEdit] = useState({});
   const [form] = Form.useForm();
@@ -28,7 +29,7 @@ const FormSemester = () => {
 
   const onFinish = async (values) => {
     const data = {
-      id: values.id,
+      id: values.id ? values.id : idSemester,
       name: values.name,
       start_time: values.time[0]._d,
       end_time: values.time[1]._d,
@@ -55,6 +56,7 @@ const FormSemester = () => {
   // sửa kỳ
   const getDataEdit = (value) => {
     setHideForm(true);
+    setIdSemester(value.id);
     form.setFieldsValue({
       id: value.id,
       name: value.name,
