@@ -1,20 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import SpecializationApi from '../../API/Specialization'
+import SpecializationApi from "../../API/Specialization";
 
 export const getListSpecialization = createAsyncThunk(
   "specialization/getListSpecialization",
-   async () => {
-  const { data } = await SpecializationApi.getList();
-  return data.listSpecialization;
-});
+  async () => {
+    const { data } = await SpecializationApi.getList();
+    return data.listSpecialization;
+  }
+);
 
 const specializationSlice = createSlice({
   name: "specialization",
   initialState: {
-    listSpecialization:[],
-    loading:false,
+    listSpecialization: [],
+    loading: false,
   },
-  
+
   extraReducers: (builder) => {
     builder.addCase(getListSpecialization.pending, (state) => {
       state.loading = true;
