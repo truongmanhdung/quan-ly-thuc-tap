@@ -40,6 +40,8 @@ const FormSemester = () => {
         if (res) {
           message.success("Sửa kỳ học thành công");
         }
+        setHideButton(false);
+        setHideForm(false);
       } else {
         const res = await SemestersAPI.insertSemester(data);
         if (res) {
@@ -74,6 +76,7 @@ const FormSemester = () => {
 
   // Bật tắt button tạo kỳ
   const isHideForm = () => {
+    setText("Thêm kỳ");
     form.resetFields();
     setHideForm(!hideForm);
     setDataEdit();
