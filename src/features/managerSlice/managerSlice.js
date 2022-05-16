@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import managerApi from "../../API/managerApi";
 export const fetchManager = createAsyncThunk(
   "manager/fetchManager",
-  async (page) => {
+  async () => {
     const { data } = await managerApi.getAll();
 
     return data.managers;

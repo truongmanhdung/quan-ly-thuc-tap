@@ -9,6 +9,10 @@ const StudentAPI = {
     const url = `/student/${id}`;
     return axiosClient.get(url);
   },
+  getStudentById(id) {
+    const url = `/student/manager/${id}`;
+    return axiosClient.get(url);
+  },
   getMajors(majors) {
     const url = `/students/${majors}`;
     return axiosClient.get(url);

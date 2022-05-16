@@ -12,12 +12,18 @@ import { updateReviewerListStudent } from '../../features/reviewerStudent/review
 import { getSmester, getStudent } from '../../features/StudentSlice/StudentSlice';
 import { filterBranch, filterStatuss } from '../../ultis/selectOption';
 import UpFile from '../../components/ExcelDocument/UpFile';
-
+import StudentDetail from "../../components/studentDetail/StudentDetail";
 const { Option } = Select;
 
 const Status = () => {
+  const [studentdetail, setStudentDetail] = useState('');
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const onShowModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   const { infoUser } = useSelector((state) => state.auth);
   const {
     listStudent: { list, total },
@@ -35,6 +41,12 @@ const Status = () => {
   const [filter, setFiler] = useState({
     smester_id: '6268c1e72bfe652b8d17eb22',
   });
+
+  const onShowDetail = (mssv, key) => {
+    onShowModal()
+    setStudentDetail(key._id)
+  };
+
   useEffect(() => {
     dispatch(
       getStudent({
@@ -50,7 +62,15 @@ const Status = () => {
       title: 'MSSV',
       dataIndex: 'mssv',
       width: 100,
-      fixed: 'left',
+      fixed: "left",
+      render: (val, key) => {
+        return (
+          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
+            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: 'Họ và Tên',
@@ -580,6 +600,9 @@ const Status = () => {
             }}
           />
         </Table>
+      )}
+      {isModalVisible && (
+        <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
       )}
     </div>
   );

@@ -15,6 +15,7 @@ import { statusConfigReport } from "../../ultis/constConfig";
 import { EyeOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import { timestamps } from "../../ultis/timestamps";
+import StudentDetail from "../../components/studentDetail/StudentDetail";
 const { Column } = Table; 
 
 const { Option } = Select;
@@ -38,6 +39,11 @@ const ReviewReport = () => {
     limit: 20,
     campus_id: infoUser.manager.campus_id,
   });
+  const [studentdetail, setStudentDetail] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const onShowModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
   const [filter, setFiler] = useState({});
   useEffect(() => {
     const data = {
@@ -47,13 +53,24 @@ const ReviewReport = () => {
     dispatch(listStudentReport(data));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
-
+  const onShowDetail = (mssv, key) => {
+    onShowModal()
+    setStudentDetail(key._id)
+  };
   const columns = [
     {
       title: "MSSV",
       dataIndex: "mssv",
       width: 100,
       fixed: "left",
+      render: (val, key) => {
+        return (
+          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
+            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: "Họ và Tên",
@@ -672,6 +689,9 @@ const ReviewReport = () => {
             }}
           />
         </Table>
+      )}
+       {isModalVisible && (
+        <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
       )}
     </div>
   );

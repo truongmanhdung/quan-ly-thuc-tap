@@ -1,0 +1,22 @@
+.text-one-row{
+    display: block;
+    display: -webkit-box;
+    max-width: 60%;
+    height: 20px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detal-form-status{
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.ant-modal-footer{
+    display: none;
+}
