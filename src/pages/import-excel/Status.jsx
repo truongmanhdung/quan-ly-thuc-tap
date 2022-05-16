@@ -16,6 +16,7 @@ import {
 import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
+import SemestersAPI from "../../API/SemestersAPI";
 const { Option } = Select;
 
 const Status = () => {
@@ -32,11 +33,10 @@ const Status = () => {
     listStudent: { list, total },
     loading,
     listSmester,
-    defaultSmester
   } = useSelector((state) => state.students);
-  console.log();
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
+  const [defaultSmester, setDefaultSmester] = useState({});
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -50,22 +50,23 @@ const Status = () => {
   };
 
   useEffect(() => {
-    dispatch(
-      getStudent({
-        ...page,
-        ...filter,
-      })
-    );
+    SemestersAPI.getDefaultSemester().then((data) => {
+      if (data) {
+        setDefaultSmester(data.data);
+        dispatch(
+          getStudent({
+            ...page,
+            ...filter,
+            smester_id: data.data._id,
+          })
+        );
+      }
+    });
+    
     dispatch(getSmester());
-    if(defaultSmester._id){
-      setFiler({
-        ...filter,
-        smester_id: defaultSmester._id,
-      })
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
-  
+
   const columns = [
     {
       title: "MSSV",
@@ -290,7 +291,7 @@ const Status = () => {
     FileSaver.saveAs(data, fileExtension);
   };
 
-   return (
+  return (
     <div className="status">
       <div className="flex-header">
         {window.innerWidth < 739 ? (
@@ -398,6 +399,7 @@ const Status = () => {
                 style={{ width: "100%" }}
                 onChange={(val) => handleStandardTableChange("smester_id", val)}
                 defaultValue={defaultSmester._id}
+                placeholder={defaultSmester.name}
               >
                 {listSmester.map((item, index) => (
                   <Option value={item._id} key={index}>

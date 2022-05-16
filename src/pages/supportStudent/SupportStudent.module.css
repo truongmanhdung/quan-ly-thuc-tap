@@ -3,3 +3,9 @@
     width: 50%;
     margin-left: 20px;
 }
+
+.text_form_label{
+    margin-left: 20px;
+    margin-bottom: 0;
+    font-weight: '400';
+}

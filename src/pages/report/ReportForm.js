@@ -52,11 +52,7 @@ const tailFormItemLayout = {
   },
 };
 
-const ReportForm = ({
-  infoUser,
-  studentById
-}) => {
-
+const ReportForm = ({ infoUser, studentById }) => {
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [file, setFile] = useState();
@@ -124,7 +120,7 @@ const ReportForm = ({
     if (
       isFile === "application/pdf" ||
       isFile ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       setFile(e.file.originFileObj);
     } else {
@@ -142,7 +138,7 @@ const ReportForm = ({
         typeNumber: time.typeNumber,
         email: studentById.mssv,
         attitudePoint: values.attitudePoint,
-        resultScore: values.resultScore
+        resultScore: values.resultScore,
       };
       console.log(newData);
       await guardarArchivo(file, newData);
@@ -161,15 +157,17 @@ const ReportForm = ({
   const dateFormat = "YYYY-MM-DD";
   function disabledDate(current) {
     // Can not select days before today and today
-    return current && current < moment(studentById.internshipTime).add(1, "day");
+    return (
+      current && current < moment(studentById.internshipTime).add(1, "day")
+    );
   }
 
   return (
     <>
-      {check && <CountDownCustorm time={time} />}
       {check ? (
         isCheck ? (
           <>
+            {check && <CountDownCustorm time={time} />}
             <Spin spinning={spin}>
               <Form
                 {...formItemLayout}
@@ -183,24 +181,30 @@ const ReportForm = ({
                 }}
                 scrollToFirstError
               >
-                <Form.Item
-                  name="nameCompany"
-                  label="Tên doanh nghiệp"
-                  initialValue={infoUser.student.support === 1 ? studentById.business.name : infoUser.student.nameCompany}
-                >
-                  <Input
-                    disabled
-                    placeholder="Tên doanh nghiệp"
-                  />
+                <Form.Item label="Họ và Tên">
+                  <p className={styles.text_form_label}>{studentById.name}</p>
+                </Form.Item>
+                <Form.Item label="Mã sinh viên">
+                  <p className={styles.text_form_label}>{studentById.mssv.toUpperCase()}</p>
+                </Form.Item>
+                <Form.Item name="nameCompany" label="Tên doanh nghiệp">
+                  <p className={styles.text_form_label}>
+                    {infoUser.student.support === 1
+                      ? studentById.business.name.toUpperCase()
+                      : infoUser.student.nameCompany.toUpperCase()}
+                  </p>
                 </Form.Item>
 
                 <Form.Item
                   label="Thời gian bắt đầu thực tập"
-                // rules={[{}]}
+                  // rules={[{}]}
                 >
                   <Space direction="vertical">
                     <DatePicker
-                      defaultValue={moment(studentById.internshipTime, dateFormat)}
+                      defaultValue={moment(
+                        studentById.internshipTime,
+                        dateFormat
+                      )}
                       disabled
                       placeholder="Bắt đầu thực tập"
                     />
@@ -209,7 +213,7 @@ const ReportForm = ({
                 <Form.Item
                   name="EndInternshipTime"
                   label="Thời gian kết thúc thực tập"
-                // rules={[{}]}
+                  // rules={[{}]}
                 >
                   <Space direction="vertical">
                     <DatePicker
@@ -286,7 +290,7 @@ const ReportForm = ({
             </Spin>
           </>
         ) : (
-          "Bạn đã nộp báo cáo thành công"
+         (!studentById.form) ? 'Bạn phải nộp biểu mẫu trước' : "Bạn đã nộp báo cáo thành công"
         )
       ) : (
         <p>Chưa đến thời gian nộp báo cáo</p>
@@ -297,13 +301,10 @@ const ReportForm = ({
 
 ReportForm.propTypes = {
   infoUser: object,
-  studentById: object
-}
+  studentById: object,
+};
 
-export default connect(({
-  auth: { infoUser },
-  students: { studentById }
-}) => ({
+export default connect(({ auth: { infoUser }, students: { studentById } }) => ({
   infoUser,
-  studentById
+  studentById,
 }))(ReportForm);

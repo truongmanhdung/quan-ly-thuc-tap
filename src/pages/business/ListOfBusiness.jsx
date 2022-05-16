@@ -1,49 +1,56 @@
-import { Col, Row, Select, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { getSmester } from '../../features/StudentSlice/StudentSlice';
-import UpFile from '../../components/ExcelDocument/UpFile';
-import { getBusiness } from '../../features/businessSlice.js/businessSlice';
-import { bool, object } from 'prop-types';
-import { array } from 'prop-types';
+import { Col, Row, Select, Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { getSmester } from "../../features/StudentSlice/StudentSlice";
+import UpFile from "../../components/ExcelDocument/UpFile";
+import { getBusiness } from "../../features/businessSlice.js/businessSlice";
+import { bool, object } from "prop-types";
+import { array } from "prop-types";
+import SemestersAPI from "../../API/SemestersAPI";
 const { Option } = Select;
 const { Column } = Table;
-const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
+const ListOfBusiness = ({ infoUser, listSmester }) => {
   const dispatch = useDispatch();
+  const [defaultSmester, setDefaultSmester] = useState({});
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSmester._id,
   });
   useEffect(() => {
-    dispatch(getBusiness({...page}));
+    SemestersAPI.getDefaultSemester().then((data) => {
+      if (data) {
+        setDefaultSmester(data.data);
+        dispatch(getBusiness({ ...page, smester_id: data.data._id }));
+      }
+    });
+
     dispatch(getSmester());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser, defaultSmester._id]);
-  const {listBusiness, loading} = useSelector(state => state.business)
+  const { listBusiness, loading } = useSelector((state) => state.business);
   const columns = [
     {
-      title: 'Tên doanh nghiệp',
-      dataIndex: 'name',
+      title: "Tên doanh nghiệp",
+      dataIndex: "name",
     },
     {
-      title: 'Vị trí thực tập',
-      dataIndex: 'internshipPosition',
+      title: "Vị trí thực tập",
+      dataIndex: "internshipPosition",
     },
     {
-      title: 'Số lượng',
-      dataIndex: 'amount',
+      title: "Số lượng",
+      dataIndex: "amount",
     },
 
     {
-      title: 'Địa chỉ thực tập',
-      dataIndex: 'address',
+      title: "Địa chỉ thực tập",
+      dataIndex: "address",
     },
     {
-      title: 'Ngành',
-      dataIndex: 'majors'
-    }
+      title: "Ngành",
+      dataIndex: "majors",
+    },
   ];
 
   // const handleStandardTableChange = (key, value) => {
@@ -62,13 +69,13 @@ const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
         {window.innerWidth < 739 ? (
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
             }}
           >
-            <h4 style={{ fontSize: '.9rem' }}>Doanh nghiệp đăng ký</h4>
+            <h4 style={{ fontSize: ".9rem" }}>Doanh nghiệp đăng ký</h4>
           </div>
         ) : (
           <>
@@ -76,14 +83,16 @@ const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
               <h4>Doanh nghiệp đăng ký</h4>
             </Col>
             <Col xs={20} sm={16} md={12} lg={8} xl={4}>
-              {' '}
+              {" "}
             </Col>
             <Col xs={2} sm={4} md={6} lg={8} xl={10}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto auto' }}>
+              <div
+                style={{ display: "grid", gridTemplateColumns: "auto auto" }}
+              >
                 <div>
                   <Select
                     className="filter-status"
-                    placeholder="Chọn kỳ học"
+                    placeholder={defaultSmester.name}
                     onChange={(val) =>
                       setPage({
                         ...page,
@@ -101,7 +110,7 @@ const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
                 </div>
                 <div
                   style={{
-                    marginLeft: '20px',
+                    marginLeft: "20px",
                   }}
                 >
                   <UpFile keys="business" smester_id={page?.smester_id} />
@@ -111,8 +120,8 @@ const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
           </>
         )}
       </Row>
-      <div className="filter" style={{ marginTop: '20px' }}>
-        {window.innerWidth < 739 && <UpFile style={{ fontSize: '.9rem' }} />}
+      <div className="filter" style={{ marginTop: "20px" }}>
+        {window.innerWidth < 739 && <UpFile style={{ fontSize: ".9rem" }} />}
         <br />
       </div>
       {window.innerWidth > 1024 ? (
@@ -151,9 +160,9 @@ const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
           dataSource={listBusiness.list}
           expandable={{
             expandedRowRender: (record) => (
-              <div style={{ marginTop: '10px' }}>
+              <div style={{ marginTop: "10px" }}>
                 {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ''
+                  ""
                 ) : (
                   <>
                     <p className="list-detail">Email: {record.email}</p>
@@ -189,6 +198,6 @@ export default connect(
   ({ auth: { infoUser }, students: { listSmester, defaultSmester } }) => ({
     infoUser,
     listSmester,
-    defaultSmester
-  }),
+    defaultSmester,
+  })
 )(ListOfBusiness);
