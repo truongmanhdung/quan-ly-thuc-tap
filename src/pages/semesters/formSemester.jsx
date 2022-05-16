@@ -1,8 +1,11 @@
 import { Col, DatePicker, Form, Input, Row, Button } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getSemesters } from "../../features/semesters/semestersSlice";
+import moment from "moment";
 const { RangePicker } = DatePicker;
-
 const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
+  const dispatch = useDispatch();
   const onFinishForm = (values) => {
     if (text.toLowerCase() === "sửa kỳ") {
       onFinish({ ...values, status: 1 });
@@ -11,10 +14,17 @@ const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
     }
   };
 
+  const { listSemesters } = useSelector((state) => state.semester);
+  console.log(listSemesters);
+
+  useEffect(() => {
+    dispatch(getSemesters());
+  }, [dispatch]);
+
   const sethButton = (values) => {
     editStatusButton(values);
   };
-
+  console.log(forms);
   return (
     <>
       <Form form={forms} onFinish={onFinishForm}>
@@ -51,7 +61,17 @@ const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
                 },
               ]}
             >
-              <RangePicker />
+              <RangePicker
+                  disabledDate={(current) => {
+                    return (
+                      current &&
+                      new Date(current).getTime() <
+                        new Date(
+                          listSemesters[listSemesters.length - 1]?.end_time
+                        ).getTime()
+                    );
+                  }}
+                />
             </Form.Item>
           </Col>
           <Col>
