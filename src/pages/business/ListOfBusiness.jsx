@@ -1,6 +1,6 @@
 import { Col, Row, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { getSmester } from '../../features/StudentSlice/StudentSlice';
 import UpFile from '../../components/ExcelDocument/UpFile';
 import { getBusiness } from '../../features/businessSlice.js/businessSlice';
@@ -8,7 +8,7 @@ import { bool, object } from 'prop-types';
 import { array } from 'prop-types';
 const { Option } = Select;
 const { Column } = Table;
-const ListOfBusiness = ({ infoUser, listBusiness, listSmester, loading }) => {
+const ListOfBusiness = ({ infoUser,listSmester }) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState({
     page: 1,
@@ -21,6 +21,7 @@ const ListOfBusiness = ({ infoUser, listBusiness, listSmester, loading }) => {
     dispatch(getSmester());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
+  const {listBusiness, loading} = useSelector(state => state.business)
   const columns = [
     {
       title: 'Tên doanh nghiệp',
@@ -179,16 +180,13 @@ const ListOfBusiness = ({ infoUser, listBusiness, listSmester, loading }) => {
 
 ListOfBusiness.propTypes = {
   infoUser: object,
-  listBusiness: object,
   listSmester: array,
   loading: bool,
 };
 
 export default connect(
-  ({ auth: { infoUser }, business, students: { listSmester } }) => ({
+  ({ auth: { infoUser }, students: { listSmester } }) => ({
     infoUser,
-    listBusiness: business.listBusiness,
     listSmester,
-    loading: business.loading,
   }),
 )(ListOfBusiness);
