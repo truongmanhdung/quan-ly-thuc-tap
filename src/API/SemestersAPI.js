@@ -5,6 +5,11 @@ const SemestersAPI = {
     return axiosClient.get(url);
   },
 
+  getDefaultSemester(){
+    const url = `/smester/default`;
+    return axiosClient.get(url);
+  },
+
   insertSemester(data) {
     const url = `/add-mester`;
     return axiosClient.post(url, data);

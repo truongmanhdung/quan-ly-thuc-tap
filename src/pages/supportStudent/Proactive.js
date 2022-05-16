@@ -3,6 +3,20 @@ import { Form, Input } from "antd";
 const Proactive = () => {
   return (
     <>
+      <Form.Item label="Họ và Tên">
+        <p
+          className={{ marginLeft: "20px", marginBottom: 0, fontWeight: "400" }}
+        >
+          {/* {studentById.name} */}
+        </p>
+      </Form.Item>
+      <Form.Item label="Mã sinh viên">
+        <p
+          className={{ marginLeft: "20px", marginBottom: 0, fontWeight: "400" }}
+        >
+          {/* {studentById.mssv} */}
+        </p>
+      </Form.Item>
       <Form.Item
         name="unit"
         label="Đơn vị thực tập"

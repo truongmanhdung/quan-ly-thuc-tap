@@ -1,15 +1,16 @@
-import { Form, Input, Select, Button, message, Spin, Radio } from "antd";
+import { Button, Form, Input, message, Radio, Select, Spin } from "antd";
+import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
+import BusinessAPI from "../../API/Business";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
-import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
-import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
-import styles from "./SupportStudent.module.css";
 import CountDownCustorm from "../../components/CountDownCustorm";
+import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import Proactive from "./Proactive";
 import Support from "./Support";
-import { getStudentId } from "../../features/StudentSlice/StudentSlice";
-import { object } from "prop-types";
+import styles from "./SupportStudent.module.css";
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -41,23 +42,29 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = ({
-  studentById,
-  infoUser,
-  listBusiness: { list }
-}) => {
+const SupportStudent = ({ studentById, infoUser }) => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
   const { time } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
+  const [listBusiness, setListBusiness] = useState([]);
+
+  const getDefaultSmester = async () => {
+    const { data: data1 } = await BusinessAPI.get({
+      campus_id: infoUser.student.campus_id,
+      majors: infoUser.student.majors,
+      smester_id: infoUser.student.smester_id._id,
+    });
+    setListBusiness(data1.list);
+  };
   useEffect(() => {
     dispatch(getListSpecialization());
     dispatch(getTimeForm(value));
     dispatch(getStudentId(infoUser.student.mssv));
+    getDefaultSmester();
   }, [value, dispatch, infoUser]);
-
 
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -150,10 +157,10 @@ const SupportStudent = ({
   };
 
   const check = time.endTime > new Date().getTime();
-  const isCheck = studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+  const isCheck =
+    studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
   return (
     <>
-      {check && <CountDownCustorm time={time} />}
       <Form
         {...formItemLayout}
         form={form}
@@ -169,6 +176,7 @@ const SupportStudent = ({
         {check ? (
           isCheck ? (
             <>
+              {check && <CountDownCustorm time={time} />}
               <Spin spinning={spin}>
                 <Form.Item name="support" label="Kiểu đăng ký">
                   <Radio.Group onChange={onChange} defaultValue={value}>
@@ -180,29 +188,15 @@ const SupportStudent = ({
                   // name="user_code"
                   label="Mã sinh viên"
                 >
-                  <Input
-                    defaultValue={studentById.mssv.toUpperCase()}
-                    disabled
-                    placeholder="Mã sinh viên"
-                  />
+                  <p className={styles.text_form_label}>
+                    {studentById.mssv.toUpperCase()}
+                  </p>
                 </Form.Item>
 
                 <Form.Item
-                  // name="name"
                   label="Họ và Tên"
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "Vui lòng nhập tên",
-                //     whitespace: true,
-                //   },
-                // ]}
                 >
-                  <Input
-                    defaultValue={studentById.name}
-                    disabled
-                    placeholder="Họ và tên"
-                  />
+                  <p className={styles.text_form_label}>{studentById.name}</p>
                 </Form.Item>
                 <Form.Item
                   name="phone"
@@ -230,36 +224,43 @@ const SupportStudent = ({
                 >
                   <Input placeholder="Địa chỉ" />
                 </Form.Item>
+
                 <Form.Item
-                  name='majors'
+                  name="majors"
                   label="Ngành học"
                   initialValue={studentById.majors}
                 >
-                  <Input disabled  />
+                  <p className={styles.text_form_label}>
+                    {studentById.majors ? studentById.majors : "Chưa có"}
+                  </p>
                 </Form.Item>
-               {
-                 value === 1 && 
-                 <Form.Item
-               
-                 name="business"
-                 label="Đơn vị thực tập" rules={[{ required: true }]}>
-                 <Select
-                    style={{
-                     width: "50%",
-                     marginLeft: "20px",
-                   }}
-                   placeholder="Chọn doanh nghiệp"
-                   onChange={val => form.setFieldsValue(val)}
-                 >
-                   {
-                     list.map(item => (
-                       <Option value={item._id}>{item.name}</Option>
-                     ))
-                   }
-
-                 </Select>
-               </Form.Item>
-               }
+                {value === 1 && (
+                  <Form.Item
+                    name="business"
+                    label="Đơn vị thực tập"
+                    rules={[{ required: true }]}
+                  >
+                    <Select
+                      style={{
+                        width: "50%",
+                        marginLeft: "20px",
+                      }}
+                      placeholder="Chọn doanh nghiệp"
+                      onChange={(val) => form.setFieldsValue(val)}
+                    >
+                      {listBusiness.length > 0 &&
+                        listBusiness.map((item) => (
+                          <Option key={item._id} value={item._id}>
+                            {item.name +
+                              "-" +
+                              item.internshipPosition +
+                              "-" +
+                              item.majors}
+                          </Option>
+                        ))}
+                    </Select>
+                  </Form.Item>
+                )}
                 <Form.Item
                   name="dream"
                   label="Vị trí thực tập"
@@ -293,14 +294,9 @@ const SupportStudent = ({
 SupportStudent.propTypes = {
   studentById: object,
   infoUser: object,
-  business: object
-}
-export default connect(({
-  auth: { infoUser },
-  students: { studentById },
-  business: { listBusiness }
-}) => ({
+  business: object,
+};
+export default connect(({ auth: { infoUser }, students: { studentById } }) => ({
   studentById,
   infoUser,
-  listBusiness
-}))(SupportStudent) 
+}))(SupportStudent);

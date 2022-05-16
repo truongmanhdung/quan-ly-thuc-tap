@@ -28,8 +28,7 @@ const studentSlice = createSlice({
     loading: false,
     listSmester: [],
     studentById:{},
-    error: '',
-    defaultSmester: {}
+    error: ''
   },
   reducers: {
     addStudent(state, action) {
@@ -64,16 +63,6 @@ const studentSlice = createSlice({
     builder.addCase(getSmester.fulfilled, (state, action) => {
       state.loading = false;
       state.listSmester = action.payload;
-      // eslint-disable-next-line array-callback-return
-      action.payload.forEach((item) => {
-        const startTime = new Date(item.start_time).getTime();
-        const endTime = new Date(item.end_time).getTime();
-        const dateNow = new Date().getTime()
-        if(startTime <= dateNow && dateNow <= endTime){
-          return state.defaultSmester = item
-        }
-      })
-      
     });
     builder.addCase(getSmester.rejected, (state, action) => {
       state.loading = false;

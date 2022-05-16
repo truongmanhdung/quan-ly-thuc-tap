@@ -49,16 +49,13 @@ const tailFormItemLayout = {
     },
   },
 };
-const Formrp = ({
-  infoUser,
-  studentById
-}) => {
+const Formrp = ({ infoUser, studentById }) => {
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [startDate, setStartDate] = useState();
   const [file, setFile] = useState();
   const [form] = Form.useForm();
-  
+
   const mssv = infoUser.student?.mssv;
   const email = infoUser?.student?.email;
   const dispatch = useDispatch();
@@ -68,7 +65,7 @@ const Formrp = ({
   useEffect(() => {
     dispatch(getTimeForm(2));
     dispatch(getStudentId(infoUser.student.mssv));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -153,42 +150,46 @@ const Formrp = ({
   };
   const check = time.endTime > new Date().getTime();
   const isCheck =
-    (studentById && studentById.statusCheck === 2) || studentById.statusCheck === 5;
-  const nameCompany =  studentById.support === 0 ?  studentById.nameCompany : studentById.business
+    (studentById && studentById.statusCheck === 2) ||
+    studentById.statusCheck === 5;
+  const nameCompany =
+    studentById.support === 0 ? studentById.nameCompany : studentById.business;
 
   return (
     <>
-      {check && <CountDownCustorm time={time} />}
       {check ? (
         isCheck ? (
-          <Spin spinning={spin}>
-            <Form
-              {...formItemLayout}
-              form={form}
-              className={styles.form}
-              name="register"
-              onFinish={onFinish}
-              initialValues={{
-                residence: ["zhejiang", "hangzhou", "xihu"],
-                prefix: "86",
-              }}
-              scrollToFirstError
-            >
-              {nameCompany ? null : (
-                <Form.Item
-                  name="nameCompany"
-                  label="Tên doanh nghiệp"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng nhập tên doanh nghiệp",
-                    },
-                  ]}
-                >
-                  <Input placeholder="Tên doanh nghiệp" />
-                </Form.Item>
-              )}
-              {/* <Form.Item
+          <>
+            {" "}
+            {check && <CountDownCustorm time={time} />}
+            <Spin spinning={spin}>
+              <Form
+                {...formItemLayout}
+                form={form}
+                className={styles.form}
+                name="register"
+                onFinish={onFinish}
+                initialValues={{
+                  residence: ["zhejiang", "hangzhou", "xihu"],
+                  prefix: "86",
+                }}
+                scrollToFirstError
+              >
+                {nameCompany ? null : (
+                  <Form.Item
+                    name="nameCompany"
+                    label="Tên doanh nghiệp"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Vui lòng nhập tên doanh nghiệp",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Tên doanh nghiệp" />
+                  </Form.Item>
+                )}
+                {/* <Form.Item
               name="taxCode"
               label="Mã số thuế"
               rules={[
@@ -202,37 +203,50 @@ const Formrp = ({
               <Input placeholder="Nhập mã số thuế doanh nghiệp" />
             </Form.Item> */}
 
-              <Form.Item
-                name="internshipTime"
-                label="Thời gian bắt đầu thực tập"
-                // rules={[{}]}
-              >
-                <Space direction="vertical">
-                  <DatePicker
-                    onChange={datePicker}
-                    placeholder="Bắt đầu thực tập"
-                  />
-                </Space>
-              </Form.Item>
-              <Form.Item
-                name="upload"
-                label="Upload biên bản (Image or PDF)"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
-              >
-                <Upload name="logo" action="/upload.do" listType="picture">
-                  <Button icon={<UploadOutlined />}>Click to upload</Button>
-                </Upload>
-              </Form.Item>
-              <Form.Item {...tailFormItemLayout}>
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
-          </Spin>
+                <Form.Item
+                  // name="user_code"
+                  label="Mã sinh viên"
+                >
+                  <p className={styles.text_form_label}>
+                    {studentById.mssv.toUpperCase()}
+                  </p>
+                </Form.Item>
+
+                <Form.Item label="Họ và Tên">
+                  <p className={styles.text_form_label}>{studentById.name}</p>
+                </Form.Item>
+                <Form.Item
+                  name="internshipTime"
+                  label="Thời gian bắt đầu thực tập"
+                  // rules={[{}]}
+                >
+                  <Space direction="vertical">
+                    <DatePicker
+                      onChange={datePicker}
+                      placeholder="Bắt đầu thực tập"
+                    />
+                  </Space>
+                </Form.Item>
+                <Form.Item
+                  name="upload"
+                  label="Upload biên bản (Image or PDF)"
+                  valuePropName="fileList"
+                  getValueFromEvent={normFile}
+                >
+                  <Upload name="logo" action="/upload.do" listType="picture">
+                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  </Upload>
+                </Form.Item>
+                <Form.Item {...tailFormItemLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Spin>
+          </>
         ) : (
-          "Bạn đã nộp biên bản thành công"
+          (!studentById.form) ? 'Bạn phải đăng ký form trước trước' : "Bạn đã nộp biểu mẫu thành công"
         )
       ) : (
         <p>Bạn phải nộp cv rồi mới đến biên bản</p>
@@ -240,15 +254,12 @@ const Formrp = ({
     </>
   );
 };
-Formrp.propTypes={
+Formrp.propTypes = {
   infoUser: object,
-  studentById: object
-}
+  studentById: object,
+};
 
-export default connect(({
-  auth: {infoUser},
-  students: {studentById}
-}) => ({
+export default connect(({ auth: { infoUser }, students: { studentById } }) => ({
   infoUser,
-  studentById
-}))(Formrp) ;
+  studentById,
+}))(Formrp);

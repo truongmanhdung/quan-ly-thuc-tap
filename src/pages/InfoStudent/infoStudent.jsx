@@ -6,13 +6,14 @@ import { optionStatus } from "../../ultis/selectOption";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { bool, object } from "prop-types";
 import { getBusiness } from "../../features/businessSlice.js/businessSlice";
+import SemestersAPI from "../../API/SemestersAPI";
 const columns = [
   {
-    title: "Doanh nghiệp",
+    title: "Tên doanh nghiệp",
     dataIndex: "name",
   },
   {
-    title: "Vị trí",
+    title: "Vị trí TT",
     dataIndex: "internshipPosition",
   },
   {
@@ -38,13 +39,19 @@ function InfoStudent({
     page: 1,
     limit: 5,
     campus_id: infoUser.student.campus_id,
-    smester_id: "6268c1e72bfe652b8d17eb22",
+    smester_id: "",
     majors: infoUser.student.majors,
   });
   const dispatch = useDispatch();
+  const getDefaultSmester = async () => {
+      const {data} = await SemestersAPI.getDefaultSemester();
+      if(data){
+        dispatch(getStudentId(infoUser.student.mssv));
+        dispatch(getBusiness({...page, smester_id: data._id}));
+      }
+  }
   useEffect(() => {
-    dispatch(getStudentId(infoUser.student.mssv));
-    dispatch(getBusiness(page));
+    getDefaultSmester()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const isRegister = studentById?.support;
@@ -52,7 +59,7 @@ function InfoStudent({
   return (
     <div>
       <Row>
-        <Col span={10} className=" border-end p-2">
+        <Col span={12} className=" border-end p-3">
           <div>
             <h4>Thông tin đăng ký</h4>
           </div>
@@ -87,7 +94,7 @@ function InfoStudent({
             </p>
           </div>
         </Col>
-        <Col span={10} className="ms-5 p-2">
+        <Col span={12} className="p-3">
           <h4>Chọn công ty</h4>
           <div>
             <Table
