@@ -81,7 +81,7 @@ const ReviewReport = () => {
       width: 160,
       render: (val, record) => {
         if (record.support === 1) {
-          return record.business.name;
+          return record.business?.name;
         } else {
           return record.nameCompany;
         }
@@ -246,7 +246,7 @@ const ReviewReport = () => {
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
       newObject["Ngày kết thúc"] = item["endInternShipTime"];
-      newObject["Trạng thái"] = itemStatus==1?'Chờ kiểm tra':itemStatus==2?' Nhận CV':itemStatus==3?' Trượt':itemStatus==4?' Đã nộp biên bản':itemStatus==5?'Sửa biên bản':itemStatus==6?'Đang thực tập ':itemStatus==7?' Đã nộp báo cáo ':itemStatus==8?' Sửa báo cáo':itemStatus==9?'Hoàn thành':'Chưa đăng ký';
+      newObject["Trạng thái"] = itemStatus===1?'Chờ kiểm tra':itemStatus===2?' Nhận CV':itemStatus===3?' Trượt':itemStatus===4?' Đã nộp biên bản':itemStatus===5?'Sửa biên bản':itemStatus===6?'Đang thực tập ':itemStatus===7?' Đã nộp báo cáo ':itemStatus===8?' Sửa báo cáo':itemStatus===9?'Hoàn thành':'Chưa đăng ký';
       newObject["Báo cáo"] = item["report"];
       return newData.push(newObject);
     });

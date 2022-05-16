@@ -31,7 +31,7 @@ const columns = [
 function InfoStudent({
   studentById,
   infoUser,
-  business: { list, total },
+  listBusiness: { list, total },
   loading,
 }) {
   const [page, setPage] = useState({
@@ -128,7 +128,7 @@ function InfoStudent({
 InfoStudent.propTypes = {
   studentById: object,
   infoUser: object,
-  business: object,
+  listBusiness: object,
   loading: bool,
 };
 
@@ -136,11 +136,11 @@ export default connect(
   ({
     students: { studentById },
     auth: { infoUser },
-    business: { business, loading },
+    business: { listBusiness, loading },
   }) => ({
     studentById,
     infoUser,
-    business,
+    listBusiness,
     loading,
   })
 )(InfoStudent);
