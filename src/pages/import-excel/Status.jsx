@@ -16,7 +16,7 @@ import StudentDetail from "../../components/studentDetail/StudentDetail";
 const { Option } = Select;
 
 const Status = () => {
-  const [studentdetail, setStudentDetail] = useState({});
+  const [studentdetail, setStudentDetail] = useState('');
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -24,13 +24,6 @@ const Status = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const handleOk = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
   const { infoUser } = useSelector((state) => state.auth);
   const {
     listStudent: { list, total },

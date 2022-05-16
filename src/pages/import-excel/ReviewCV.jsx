@@ -14,12 +14,14 @@ import { omit } from 'lodash';
 import { statusConfigCV } from '../../ultis/constConfig';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import StudentDetail from '../../components/studentDetail/StudentDetail';
 const { Column } = Table;
 
 const { Option } = Select;
 
 const ReviewCV = () => {
   const dispatch = useDispatch();
+  const [studentdetail, setStudentDetail] = useState('');
   const { infoUser } = useSelector((state) => state.auth);
   const {
     listStudentAssReviewer: { total, list },
@@ -29,6 +31,10 @@ const ReviewCV = () => {
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
   const [status, setStatus] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const onShowModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -45,12 +51,25 @@ const ReviewCV = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
+  const onShowDetail = (mssv, key) => {
+    onShowModal()
+    setStudentDetail(key._id)
+  };
+
   const columns = [
     {
       title: 'MSSV',
       dataIndex: 'mssv',
       width: 100,
       fixed: 'left',
+      render: (val, key) => {
+        return (
+          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
+            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: 'Họ và Tên',
@@ -564,6 +583,10 @@ const ReviewCV = () => {
             }}
           />
         </Table>
+      )}
+
+      {isModalVisible && (
+        <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
       )}
     </div>
   );

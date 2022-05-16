@@ -1,13 +1,18 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Button, Col, message, Modal, Row, Select } from "antd";
+import { Button, Col, Input, message, Modal, Row, Select } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import StudentAPI from "../../API/StudentAPI";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
-import { filterStatuss } from "../../ultis/selectOption";
+import {
+  statusConfigCV,
+  statusConfigForm,
+  statusConfigReport,
+} from "../../ultis/constConfig";
 import "./studentDetail.css";
-
+const optionCheck = [1, 5, 8, 3];
 const { Option } = Select;
+const { TextArea } = Input;
 const StudentDetail = (props) => {
   const { onShowModal, studentId } = props;
   const [isShowSelectStatus, setIsShowSelectStatus] = useState(false);
@@ -17,12 +22,17 @@ const StudentDetail = (props) => {
   const [statusUpdate, setStatusUpdate] = useState(0);
   const { infoUser } = useSelector((state) => state.auth);
   const { listManager } = useSelector((state) => state.manager);
-
+  const [isShowNote, setIsShowNote] = useState(false);
+  const [note, setNote] = useState("");
+  const [isSetNote, setIsSetNote] = useState(false);
+  const [noteDetail, setNoteDetail] = useState("");
+  const [listOption, setListOption] = useState([]);
   const dispatch = useDispatch();
 
   const getDataStudent = useCallback(async () => {
     const { data } = await StudentAPI.getStudentById(studentId);
     setStudentdetail(data);
+    setNoteDetail(data.note);
   }, [studentId]);
 
   useEffect(() => {
@@ -101,12 +111,27 @@ const StudentDetail = (props) => {
     }
   };
 
-  const onSelectStatus = (value) => {
-    if (value !== +studentdetail.statusCheck) {
+  const handelChangeText = (e) => {
+    if (e.target.value !== "") {
+      setNote(e.target.value);
       setSubmitStatus(true);
-      setStatusUpdate(value);
     } else {
       setSubmitStatus(false);
+    }
+  };
+
+  const onSelectStatus = (value) => {
+    if (value !== +studentdetail.statusCheck) {
+      if (optionCheck.includes(value)) {
+        setIsShowNote(true);
+        setStatusUpdate(value);
+      } else {
+        setSubmitStatus(true);
+        setStatusUpdate(value);
+      }
+    } else {
+      setSubmitStatus(false);
+      setIsShowNote(false);
     }
   };
   const onSetStatus = () => {
@@ -129,26 +154,75 @@ const StudentDetail = (props) => {
     }
   };
 
+  const onChangeTextArea = (e) => {
+    if (e.target.value !== "") {
+      setIsSetNote(true);
+      setNoteDetail(e.target.value);
+    }
+  };
+
   const onUpdateStatus = async () => {
     if (window.confirm("Bạn có chắc chắn muốn đổi trạng thái không?")) {
       const { data } = await StudentAPI.updateStatusSudent({
         listIdStudent: [studentId],
-        listEmailStudent: [studentdetail.email],
+        listEmailStudent: [{ email: studentdetail.email }],
         email: infoUser?.manager?.email,
         status: statusUpdate,
+        textNote: note,
       });
-      if(data.listStudentChangeStatus.length > 0){
-        getDataStudent()
-        setStatusUpdate(false)
-        setSubmitStatus(false)
-        setIsShowSelectStatus(false)
+      if (data.listStudentChangeStatus.length > 0) {
+        getDataStudent();
+        setStatusUpdate(false);
+        setSubmitStatus(false);
+        setIsShowSelectStatus(false);
+        setIsShowNote(false);
         message.success("Thành công");
       }
       // console.log(data);
     }
   };
 
-  
+  const onUpdateNote = async () => {
+    const { data } = await StudentAPI.updateStatusSudent({
+      listIdStudent: [studentId],
+      listEmailStudent: [{ email: studentdetail.email }],
+      email: infoUser?.manager?.email,
+      status: studentdetail.statusCheck,
+      textNote: noteDetail,
+    });
+    if (data.listStudentChangeStatus.length > 0) {
+      setIsSetNote(false);
+      getDataStudent();
+      message.success("Cập nhật ghi chú thành công");
+    }
+  };
+
+  useEffect(() => {
+    if (
+      studentdetail.CV &&
+      !studentdetail.form &&
+      !studentdetail.report &&
+      studentdetail.statusCheck !== 3
+    ) {
+      setListOption(statusConfigCV);
+    } else if (
+      studentdetail.CV &&
+      studentdetail.form &&
+      !studentdetail.report &&
+      studentdetail.statusCheck !== 3
+    ) {
+      setListOption(statusConfigForm);
+    } else if (studentdetail.CV && studentdetail.form && studentdetail.report) {
+      setListOption(statusConfigReport);
+    } else {
+      setListOption(statusConfigCV);
+    }
+  }, [
+    studentdetail.CV,
+    studentdetail.form,
+    studentdetail.report,
+    studentdetail.statusCheck,
+  ]);
 
   return (
     <Modal
@@ -157,9 +231,9 @@ const StudentDetail = (props) => {
       onCancel={onShowModal}
       visible={true}
     >
+      <h4>Thông tin sinh viên</h4>  
       <Row>
-        <Col span={16} className="border-right">
-          <h4>Thông tin sinh viên</h4>
+        <Col span={16} className="border-right" style={{ paddingRight: 20 }}>
           <Row className="d-flex align-items-center">
             <Col span={12} className="d-flex">
               <h6>Họ tên: </h6>
@@ -258,12 +332,31 @@ const StudentDetail = (props) => {
                 <span className="ms-2">Chưa nộp</span>
               )}
             </Col>
+            <Col style={{ marginTop: 40 }} span={24}>
+              <h6>Ghi chú cho sinh viên</h6>
+            </Col>
+            <Col span={24}>
+              <TextArea
+                value={noteDetail}
+                showCount
+                maxLength={100}
+                style={{ height: 80, marginBottom: 10 }}
+                onChange={onChangeTextArea}
+              />
+              {isSetNote && (
+                <Button type="primary" onClick={onUpdateNote}>
+                  Cập nhật ghi chú
+                </Button>
+              )}
+            </Col>
           </Row>
         </Col>
         <Col span={8}>
-          <h4>Trạng thái</h4>
           <div className="detal-form-status">
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div
+              className="d-flex justify-content-between align-items-center mb-3"
+              style={{ flexWrap: "wrap" }}
+            >
               <h6 className="mb-0 me-2">Trạng thái: </h6>
               {isShowSelectStatus ? (
                 <Select
@@ -271,22 +364,30 @@ const StudentDetail = (props) => {
                   defaultValue="Trạng thái"
                   style={{ width: "50%" }}
                 >
-                  {filterStatuss.map((item, index) => (
-                    <Option value={item.id} key={index}>
-                      {item.title}
-                    </Option>
-                  ))}
+                  {listOption.length > 0 &&
+                    listOption.map((item, index) => (
+                      <Option value={item.value} key={index}>
+                        {item.title}
+                      </Option>
+                    ))}
                 </Select>
               ) : (
                 renderStatus(studentdetail.statusCheck)
               )}
 
+              {isShowNote && (
+                <Input
+                  style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+                  onChange={handelChangeText}
+                  placeholder="Nhập text note"
+                />
+              )}
               {submitStatus ? (
                 <Button type="primary" onClick={onUpdateStatus}>
                   Thực hiện
                 </Button>
               ) : (
-                <EditOutlined onClick={onSetStatus} />
+                !isShowNote && <EditOutlined onClick={onSetStatus} />
               )}
             </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
