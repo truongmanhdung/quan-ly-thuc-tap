@@ -74,7 +74,7 @@ const Reviewform = ({
       width: 180,
       render: (val, record) => {
         if (record.support === 1) {
-          return record.business.name
+          return record.business?.name
         } else {
           return record.nameCompany
         }
