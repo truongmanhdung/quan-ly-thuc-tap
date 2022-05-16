@@ -94,7 +94,7 @@ const Reviewform = ({
       render: (val, record) => {
         if (record.support === 1) {
           return record.business?.name
-        } else {  
+        } else {
           return record.nameCompany
         }
       }

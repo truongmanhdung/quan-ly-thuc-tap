@@ -17,14 +17,14 @@ export const getBusiness = createAsyncThunk(
 const businessSlice = createSlice({
   name: "business",
   initialState: {
-    business: {},
+    listBusiness: {},
     loading: false,
     error: "",
   },
   extraReducers: (builder) => {
     builder.addCase(getBusiness.fulfilled, (state, action) => {
       state.loading = false;
-      state.business = action.payload;
+      state.listBusiness = action.payload;
     });
     builder.addCase(getBusiness.pending, (state, action) => {
       state.loading = true;
@@ -36,7 +36,7 @@ const businessSlice = createSlice({
 
     builder.addCase(insertBusiness.fulfilled, (state, action) => {
       state.loading = false;
-      state.business = action.payload;
+      state.listBusiness = action.payload;
     });
     builder.addCase(insertBusiness.pending, (state, action) => {
       state.loading = true;
