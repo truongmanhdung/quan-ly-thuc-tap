@@ -8,7 +8,7 @@ import { bool, object } from 'prop-types';
 import { array } from 'prop-types';
 const { Option } = Select;
 const { Column } = Table;
-const ListOfBusiness = ({ infoUser, business, listSmester, loading }) => {
+const ListOfBusiness = ({ infoUser, listBusiness, listSmester, loading }) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState({
     page: 1,
@@ -117,7 +117,7 @@ const ListOfBusiness = ({ infoUser, business, listSmester, loading }) => {
         <Table
           pagination={{
             pageSize: page.limit,
-            total: business.total,
+            total: listBusiness.total,
             onChange: (pages, pageSize) => {
               setPage({
                 ...page,
@@ -129,13 +129,13 @@ const ListOfBusiness = ({ infoUser, business, listSmester, loading }) => {
           rowKey="_id"
           loading={loading}
           columns={columns}
-          dataSource={business.list}
+          dataSource={listBusiness.list}
         />
       ) : (
         <Table
           pagination={{
             pageSize: page.limit,
-            total: business.total,
+            total: listBusiness.total,
             onChange: (pages, pageSize) => {
               setPage({
                 ...page,
@@ -146,7 +146,7 @@ const ListOfBusiness = ({ infoUser, business, listSmester, loading }) => {
           }}
           rowKey="_id"
           loading={loading}
-          dataSource={business.list}
+          dataSource={listBusiness.list}
           expandable={{
             expandedRowRender: (record) => (
               <div style={{ marginTop: '10px' }}>
@@ -179,15 +179,15 @@ const ListOfBusiness = ({ infoUser, business, listSmester, loading }) => {
 
 ListOfBusiness.propTypes = {
   infoUser: object,
-  business: object,
+  listBusiness: object,
   listSmester: array,
   loading: bool,
 };
 
 export default connect(
-  ({ auth: { infoUser }, business: { business, loading }, students: { listSmester } }) => ({
+  ({ auth: { infoUser }, business: { listBusiness, loading }, students: { listSmester } }) => ({
     infoUser,
-    business,
+    listBusiness,
     listSmester,
     loading,
   }),

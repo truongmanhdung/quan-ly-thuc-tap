@@ -44,7 +44,7 @@ const tailFormItemLayout = {
 const SupportStudent = ({
   studentById,
   infoUser,
-  business: { list }
+  listBusiness: { list }
 }) => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
@@ -298,9 +298,9 @@ SupportStudent.propTypes = {
 export default connect(({
   auth: { infoUser },
   students: { studentById },
-  business: { business }
+  business: { listBusiness }
 }) => ({
   studentById,
   infoUser,
-  business
+  listBusiness
 }))(SupportStudent) 
