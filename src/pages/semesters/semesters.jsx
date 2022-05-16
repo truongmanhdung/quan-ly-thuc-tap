@@ -52,7 +52,6 @@ const FormSemester = () => {
       const dataErr = error.response.data.message;
       message.error(dataErr);
     }
-    setHideForm(false);
   };
 
   // sửa kỳ
