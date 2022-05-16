@@ -7,17 +7,16 @@ import specializationSlice from "../features/specializationSlice/specializationS
 import managerSlice from "../features/managerSlice/managerSlice";
 import reviewerSlice from "../features/reviewerStudent/reviewerSlice";
 import timeDateSlice from "../features/timeDateSlice/timeDateSlice";
-import businessSlice from "../features/businessSlice.js/businessSlice";
-const rootReducer = combineReducers(
-    {
-    students:studentSlice,
-    users:userSlice,
-    auth: authSlice,
-    cumpus:cumpusSlice,
-    specialization:specializationSlice,
-    manager: managerSlice,
-    reviewer:reviewerSlice,
-    time: timeDateSlice,
-    business: businessSlice
+import semestersSlice from "../features/semesters/semestersSlice";
+const rootReducer = combineReducers({
+  students: studentSlice,
+  users: userSlice,
+  auth: authSlice,
+  cumpus: cumpusSlice,
+  specialization: specializationSlice,
+  manager: managerSlice,
+  reviewer: reviewerSlice,
+  time: timeDateSlice,
+  semester: semestersSlice,
 });
 export default rootReducer;
