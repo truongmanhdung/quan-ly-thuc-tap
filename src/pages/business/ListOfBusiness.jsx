@@ -185,10 +185,10 @@ ListOfBusiness.propTypes = {
 };
 
 export default connect(
-  ({ auth: { infoUser }, business: { listBusiness, loading }, students: { listSmester } }) => ({
+  ({ auth: { infoUser }, business, students: { listSmester } }) => ({
     infoUser,
-    listBusiness,
+    listBusiness: business.listBusiness,
     listSmester,
-    loading,
+    loading: business.loading,
   }),
 )(ListOfBusiness);
