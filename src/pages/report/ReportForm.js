@@ -11,11 +11,12 @@ import {
   InputNumber,
 } from "antd";
 import moment from "moment";
+import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
-import { getStudentId } from "../../features/cumpusSlice/cumpusSlice";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 
 import styles from "./ReportForm.module.css";
@@ -51,17 +52,22 @@ const tailFormItemLayout = {
   },
 };
 
-const ReportForm = () => {
+const ReportForm = ({
+  infoUser,
+  studentById
+}) => {
+
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [file, setFile] = useState();
   const [endDate, setEndDate] = useState();
   const [form] = Form.useForm();
-  const { infoUser } = useSelector((state) => state.auth);
-  const { student } = useSelector((state) => state.cumpus);
-  const mssv = infoUser.student.mssv;
-  const email = infoUser.student.email;
-  const lForm = infoUser.student.form;
+  useEffect(() => {
+    dispatch(getTimeForm(3));
+    dispatch(getStudentId(infoUser.student.mssv));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
+  const lForm = studentById.form;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
     setEndDate(date._d);
@@ -111,7 +117,6 @@ const ReportForm = () => {
         }); // Or Error in console
     };
   }
-
   const normFile = (e) => {
     const valueFile = e.file.originFileObj.type;
     const isFile = valueFile;
@@ -119,7 +124,7 @@ const ReportForm = () => {
     if (
       isFile === "application/pdf" ||
       isFile ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       setFile(e.file.originFileObj);
     } else {
@@ -127,23 +132,19 @@ const ReportForm = () => {
       message.error("Vui lòng nhập file đúng định dạng PDF hoặc .docx");
     }
   };
-  useEffect(() => {
-    dispatch(getTimeForm(3));
-    dispatch(getStudentId(infoUser.student.mssv));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file]);
 
   const onFinish = async (values) => {
     setSpin(true);
     try {
       const newData = {
-        ...values,
         EndInternShipTime: endDate,
-        nameCompany: student.nameCompany,
-        mssv: mssv,
+        mssv: studentById.mssv,
         typeNumber: time.typeNumber,
-        email: email,
+        email: studentById.mssv,
+        attitudePoint: values.attitudePoint,
+        resultScore: values.resultScore
       };
+      console.log(newData);
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
@@ -154,16 +155,15 @@ const ReportForm = () => {
 
   const check = time.endTime > new Date().getTime();
   const isCheck =
-    student.statusCheck === 6 ||
-    student.statusCheck === 8 ||
-    student.status === 52;
+    studentById.statusCheck === 6 ||
+    studentById.statusCheck === 8 ||
+    studentById.status === 52;
   const dateFormat = "YYYY-MM-DD";
   function disabledDate(current) {
     // Can not select days before today and today
-    return current && current < moment(student.internshipTime).add(1, "day");
+    return current && current < moment(studentById.internshipTime).add(1, "day");
   }
-  console.log(moment(student.internshipTime).endOf("day"));
-  console.log(spin);
+
   return (
     <>
       {check && <CountDownCustorm time={time} />}
@@ -183,9 +183,12 @@ const ReportForm = () => {
                 }}
                 scrollToFirstError
               >
-                <Form.Item name="nameCompany" label="Tên doanh nghiệp">
+                <Form.Item
+                  name="nameCompany"
+                  label="Tên doanh nghiệp"
+                  initialValue={infoUser.student.support === 1 ? studentById.business.name : infoUser.student.nameCompany}
+                >
                   <Input
-                    defaultValue={student.nameCompany}
                     disabled
                     placeholder="Tên doanh nghiệp"
                   />
@@ -193,11 +196,11 @@ const ReportForm = () => {
 
                 <Form.Item
                   label="Thời gian bắt đầu thực tập"
-                  // rules={[{}]}
+                // rules={[{}]}
                 >
                   <Space direction="vertical">
                     <DatePicker
-                      defaultValue={moment(student.internshipTime, dateFormat)}
+                      defaultValue={moment(studentById.internshipTime, dateFormat)}
                       disabled
                       placeholder="Bắt đầu thực tập"
                     />
@@ -206,7 +209,7 @@ const ReportForm = () => {
                 <Form.Item
                   name="EndInternshipTime"
                   label="Thời gian kết thúc thực tập"
-                  // rules={[{}]}
+                // rules={[{}]}
                 >
                   <Space direction="vertical">
                     <DatePicker
@@ -292,4 +295,15 @@ const ReportForm = () => {
   );
 };
 
-export default ReportForm;
+ReportForm.propTypes = {
+  infoUser: object,
+  studentById: object
+}
+
+export default connect(({
+  auth: { infoUser },
+  students: { studentById }
+}) => ({
+  infoUser,
+  studentById
+}))(ReportForm);

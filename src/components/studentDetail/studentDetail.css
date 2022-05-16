@@ -16,3 +16,7 @@
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 15px;
 }
+
+.ant-modal-footer{
+    display: none;
+}

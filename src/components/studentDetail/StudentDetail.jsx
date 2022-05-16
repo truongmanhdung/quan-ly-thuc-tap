@@ -1,28 +1,34 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Col, message, Modal, Row, Select } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Col, message, Modal, Row, Select } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import StudentAPI from "../../API/StudentAPI";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
-import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
+import { filterStatuss } from "../../ultis/selectOption";
 import "./studentDetail.css";
 
 const { Option } = Select;
 const StudentDetail = (props) => {
-  const { onShowModal, studentdetail } = props;
+  const { onShowModal, studentId } = props;
   const [isShowSelectStatus, setIsShowSelectStatus] = useState(false);
-  const [isEditReviewer, setIsEditReviewer] = useState(false)
-  console.log(studentdetail);
-  const {listManager} = useSelector((state) => state.manager);
+  const [isEditReviewer, setIsEditReviewer] = useState(false);
+  const [studentdetail, setStudentdetail] = useState({});
+  const [submitStatus, setSubmitStatus] = useState(false);
+  const [statusUpdate, setStatusUpdate] = useState(0);
+  const { infoUser } = useSelector((state) => state.auth);
+  const { listManager } = useSelector((state) => state.manager);
+
   const dispatch = useDispatch();
 
-  const getDataStudent = async() => {
-    
-  }
-  useEffect(() => {
-    dispatch(fetchManager())
-  }, [])
+  const getDataStudent = useCallback(async () => {
+    const { data } = await StudentAPI.getStudentById(studentId);
+    setStudentdetail(data);
+  }, [studentId]);
 
-  
+  useEffect(() => {
+    dispatch(fetchManager());
+    getDataStudent();
+  }, [dispatch, getDataStudent, studentId]);
 
   const renderStatus = (status) => {
     if (status === 0) {
@@ -95,24 +101,54 @@ const StudentDetail = (props) => {
     }
   };
 
+  const onSelectStatus = (value) => {
+    if (value !== +studentdetail.statusCheck) {
+      setSubmitStatus(true);
+      setStatusUpdate(value);
+    } else {
+      setSubmitStatus(false);
+    }
+  };
   const onSetStatus = () => {
     setIsShowSelectStatus(!isShowSelectStatus);
   };
 
   const onShowEditReviewer = () => {
-    setIsEditReviewer(!isEditReviewer)
-  }
+    setIsEditReviewer(!isEditReviewer);
+  };
 
-  const onSetReviewer = (value) => {
-    dispatch(
-      updateReviewerListStudent({
-        listIdStudent: [studentdetail._id],
-        email: value
-      }),
-    );
-    setIsEditReviewer(false)
-    message.success('Thành công');
-  }
+  const onSetReviewer = async (value) => {
+    const { data } = await StudentAPI.updateReviewerSudent({
+      listIdStudent: [studentdetail._id],
+      email: value,
+    });
+    if (data) {
+      getDataStudent();
+      setIsEditReviewer(false);
+      message.success("Thành công");
+    }
+  };
+
+  const onUpdateStatus = async () => {
+    if (window.confirm("Bạn có chắc chắn muốn đổi trạng thái không?")) {
+      const { data } = await StudentAPI.updateStatusSudent({
+        listIdStudent: [studentId],
+        listEmailStudent: [studentdetail.email],
+        email: infoUser?.manager?.email,
+        status: statusUpdate,
+      });
+      if(data.listStudentChangeStatus.length > 0){
+        getDataStudent()
+        setStatusUpdate(false)
+        setSubmitStatus(false)
+        setIsShowSelectStatus(false)
+        message.success("Thành công");
+      }
+      // console.log(data);
+    }
+  };
+
+  
 
   return (
     <Modal
@@ -183,6 +219,7 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>CV: </h6>
               {studentdetail.CV ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   className="ms-2 text-one-row"
                   onClick={() => window.open(studentdetail.CV)}
@@ -196,6 +233,7 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Biên bản: </h6>
               {studentdetail.form ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   className="ms-2 text-one-row"
                   onClick={() => window.open(studentdetail.form)}
@@ -209,6 +247,7 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Báo cáo: </h6>
               {studentdetail.report ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   className="ms-2 text-one-row"
                   onClick={() => window.open(studentdetail.report)}
@@ -227,30 +266,48 @@ const StudentDetail = (props) => {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h6 className="mb-0 me-2">Trạng thái: </h6>
               {isShowSelectStatus ? (
-                <Select defaultValue="Chọn người review" style={{ width: "50%" }}>
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="disabled" disabled>
-                    Disabled
-                  </Option>
-                  <Option value="Yiminghe">yiminghe</Option>
+                <Select
+                  onChange={onSelectStatus}
+                  defaultValue="Trạng thái"
+                  style={{ width: "50%" }}
+                >
+                  {filterStatuss.map((item, index) => (
+                    <Option value={item.id} key={index}>
+                      {item.title}
+                    </Option>
+                  ))}
                 </Select>
               ) : (
                 renderStatus(studentdetail.statusCheck)
               )}
 
-              <EditOutlined onClick={onSetStatus} />
+              {submitStatus ? (
+                <Button type="primary" onClick={onUpdateStatus}>
+                  Thực hiện
+                </Button>
+              ) : (
+                <EditOutlined onClick={onSetStatus} />
+              )}
             </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h6 className="mb-0 me-2">Người review: </h6>
               {isEditReviewer ? (
-                <Select onChange={onSetReviewer} defaultValue="Chọn người review" style={{ width: "50%" }}>
-                  {listManager.length > 0 && listManager.map((item) => (
-                    <Option key={item._id} value={item.email}>{item.name} - {item.email}</Option>
-                  ))}
+                <Select
+                  onChange={onSetReviewer}
+                  defaultValue="Chọn người review"
+                  style={{ width: "50%" }}
+                >
+                  {listManager.length > 0 &&
+                    listManager.map((item) => (
+                      <Option key={item._id} value={item.email}>
+                        {item.name} - {item.email}
+                      </Option>
+                    ))}
                 </Select>
-              ) : (
+              ) : studentdetail.reviewer ? (
                 studentdetail.reviewer
+              ) : (
+                "Chưa có"
               )}
 
               <EditOutlined onClick={onShowEditReviewer} />

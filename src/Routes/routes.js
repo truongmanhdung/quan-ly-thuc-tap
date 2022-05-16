@@ -6,7 +6,7 @@ import SupportStudent from "../pages/supportStudent/SupportStudent";
 import Privateroute from "./private/privateRoute";
 import Status from "../pages/import-excel/Status";
 import ReviewCV from "../pages/import-excel/ReviewCV";
-import UpFile from "../pages/import-excel/UpFile";
+import UpFile from "../components/ExcelDocument/UpFile";
 import EmployeeManager from "../pages/employee-manager/Employee-Manager";
 import InfoStudent from "../pages/InfoStudent/infoStudent";
 import Privateadmin from "./private/privateAdmin";
@@ -16,6 +16,7 @@ import Formrp from "../pages/form/Form";
 import Reviewform from "../pages/mywork/Reviewform";
 import Formtimepicker from "../pages/form-timepicker/formtimepicker";
 import ReviewReport from "../pages/mywork/ReviewReport";
+import ListOfBusiness from "../pages/business/ListOfBusiness";
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -37,7 +38,6 @@ const Router = () => {
             </Privateroute>
           }
         />
-
         <Route
           path="info-student"
           element={
@@ -83,7 +83,7 @@ const Router = () => {
             </Privateroute>
           }
         />
-           {/* <Route
+        {/* <Route
           path="company"
           element={
             <Privateroute>
@@ -139,6 +139,16 @@ const Router = () => {
             <Privateroute>
               <Privateadmin>
                 <UpFile />
+              </Privateadmin>
+            </Privateroute>
+          }
+        />
+        <Route
+          path="company"
+          element={
+            <Privateroute>
+              <Privateadmin>
+                <ListOfBusiness />
               </Privateadmin>
             </Privateroute>
           }
