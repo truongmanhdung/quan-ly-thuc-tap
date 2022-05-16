@@ -215,7 +215,7 @@ const StudentDetail = (props) => {
     } else if (studentdetail.CV && studentdetail.form && studentdetail.report) {
       setListOption(statusConfigReport);
     } else {
-      setListOption(statusConfigCV);
+      setListOption([]);
     }
   }, [
     studentdetail.CV,
@@ -231,7 +231,7 @@ const StudentDetail = (props) => {
       onCancel={onShowModal}
       visible={true}
     >
-      <h4>Thông tin sinh viên</h4>  
+      <h4>Thông tin sinh viên</h4>
       <Row>
         <Col span={16} className="border-right" style={{ paddingRight: 20 }}>
           <Row className="d-flex align-items-center">
@@ -382,13 +382,14 @@ const StudentDetail = (props) => {
                   placeholder="Nhập text note"
                 />
               )}
-              {submitStatus ? (
-                <Button type="primary" onClick={onUpdateStatus}>
-                  Thực hiện
-                </Button>
-              ) : (
-                !isShowNote && <EditOutlined onClick={onSetStatus} />
-              )}
+              {listOption.length > 0 ?
+                (submitStatus ? (
+                  <Button type="primary" onClick={onUpdateStatus}>
+                    Thực hiện
+                  </Button>
+                ) : (
+                  !isShowNote && <EditOutlined onClick={onSetStatus} />
+                )): <span></span>}
             </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h6 className="mb-0 me-2">Người review: </h6>
@@ -411,7 +412,7 @@ const StudentDetail = (props) => {
                 "Chưa có"
               )}
 
-              <EditOutlined onClick={onShowEditReviewer} />
+              {listOption.length > 0 ? <EditOutlined onClick={onShowEditReviewer} /> : <span></span>}
             </div>
           </div>
         </Col>

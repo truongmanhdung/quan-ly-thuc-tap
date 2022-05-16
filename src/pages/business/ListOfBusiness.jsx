@@ -8,19 +8,19 @@ import { bool, object } from 'prop-types';
 import { array } from 'prop-types';
 const { Option } = Select;
 const { Column } = Table;
-const ListOfBusiness = ({ infoUser,listSmester }) => {
+const ListOfBusiness = ({ infoUser,listSmester, defaultSmester }) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: '6268c1e72bfe652b8d17eb22',
+    smester_id: defaultSmester._id,
   });
   useEffect(() => {
-    dispatch(getBusiness(page));
+    dispatch(getBusiness({...page}));
     dispatch(getSmester());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page, infoUser, defaultSmester._id]);
   const {listBusiness, loading} = useSelector(state => state.business)
   const columns = [
     {
@@ -83,13 +83,14 @@ const ListOfBusiness = ({ infoUser,listSmester }) => {
                 <div>
                   <Select
                     className="filter-status"
+                    placeholder="Chọn kỳ học"
                     onChange={(val) =>
                       setPage({
                         ...page,
                         smester_id: val,
                       })
                     }
-                    defaultValue={page.smester_id}
+                    defaultValue={defaultSmester._id}
                   >
                     {listSmester.map((item, index) => (
                       <Option value={item._id} key={index}>
@@ -103,7 +104,7 @@ const ListOfBusiness = ({ infoUser,listSmester }) => {
                     marginLeft: '20px',
                   }}
                 >
-                  <UpFile keys="business" smester_id={page.smester_id} />
+                  <UpFile keys="business" smester_id={page?.smester_id} />
                 </div>
               </div>
             </Col>
@@ -185,8 +186,9 @@ ListOfBusiness.propTypes = {
 };
 
 export default connect(
-  ({ auth: { infoUser }, students: { listSmester } }) => ({
+  ({ auth: { infoUser }, students: { listSmester, defaultSmester } }) => ({
     infoUser,
     listSmester,
+    defaultSmester
   }),
 )(ListOfBusiness);
