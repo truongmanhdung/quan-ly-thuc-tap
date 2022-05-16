@@ -28,7 +28,11 @@ const columns = [
     dataIndex: 'majors'
   }
 ];
-function InfoStudent({ studentById, infoUser, business: { list, total }, loading }) {
+function InfoStudent({ 
+  studentById, 
+  infoUser, 
+  listBusiness: { list, total }, 
+  loading }) {
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
@@ -116,15 +120,15 @@ function InfoStudent({ studentById, infoUser, business: { list, total }, loading
 InfoStudent.propTypes = {
   studentById: object,
   infoUser: object,
-  business: object,
+  listBusiness: object,
   loading: bool
 };
 
 export default connect(
-  ({ students: { studentById }, auth: { infoUser }, business: { business, loading } }) => ({
+  ({ students: { studentById }, auth: { infoUser }, business: { listBusiness, loading } }) => ({
     studentById,
     infoUser,
-    business,
+    listBusiness,
     loading
   }),
 )(InfoStudent);
