@@ -1,6 +1,6 @@
-import React, { useState, useEffect,  useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, message, Row, Col} from "antd";
+import { Select, Input, Table, Button, message, Row, Col } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   listStudentReport,
@@ -14,7 +14,8 @@ import * as XLSX from "xlsx";
 import { statusConfigReport } from "../../ultis/constConfig";
 import { EyeOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
-const { Column } = Table;
+import { timestamps } from "../../ultis/timestamps";
+const { Column } = Table; 
 
 const { Option } = Select;
 
@@ -30,8 +31,8 @@ const ReviewReport = () => {
   const [listIdStudent, setListIdStudent] = useState([]);
   const [listEmailStudent, setListEmailStudent] = useState([]);
   const [note, setNote] = useState();
-  const typePingTimeoutRef = useRef(null)
-  const [textNote,setTextNote] = useState('')
+  const typePingTimeoutRef = useRef(null);
+  const [textNote, setTextNote] = useState("");
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -44,7 +45,7 @@ const ReviewReport = () => {
       ...filter,
     };
     dispatch(listStudentReport(data));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
   const columns = [
@@ -80,15 +81,20 @@ const ReviewReport = () => {
       width: 160,
       render: (val, record) => {
         if (record.support === 1) {
-          return record.business.name
-        }else{
-          return record.nameCompany
+          return record.business.name;
+        } else {
+          return record.nameCompany;
         }
-      }
+      },
     },
     {
       title: "Thời gian bắt đầu",
       dataIndex: "internshipTime",
+      width: 160,
+    },
+    {
+      title: "Thời gian kết thúc",
+      dataIndex: "endInternShipTime",
       width: 160,
     },
     {
@@ -206,7 +212,7 @@ const ReviewReport = () => {
   };
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      (value.length > 0 || value > 0) && value !== ''
+      (value.length > 0 || value > 0) && value !== ""
         ? {
             ...filter,
             [key]: value,
@@ -228,17 +234,21 @@ const ReviewReport = () => {
 
   const exportToCSV = (list) => {
     const newData = [];
-
     list.filter((item) => {
+      let itemStatus = item["statusCheck"];
       const newObject = {};
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
       newObject["Số điện thoại"] = item["phoneNumber"];
+      newObject["Công ty"] = item["business"].name
       newObject["Điểm thái độ"] = item["attitudePoint"];
       newObject["Điểm kết quả"] = item["resultScore"];
+      newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
+      newObject["Ngày kết thúc"] = item["endInternShipTime"];
+      newObject["Trạng thái"] = itemStatus==1?'Chờ kiểm tra':itemStatus==2?' Nhận CV':itemStatus==3?' Trượt':itemStatus==4?' Đã nộp biên bản':itemStatus==5?'Sửa biên bản':itemStatus==6?'Đang thực tập ':itemStatus==7?' Đã nộp báo cáo ':itemStatus==8?' Sửa báo cáo':itemStatus==9?'Hoàn thành':'Chưa đăng ký';
       newObject["Báo cáo"] = item["report"];
-     return newData.push(newObject);
+      return newData.push(newObject);
     });
 
     const ws = XLSX.utils.json_to_sheet(newData);
@@ -249,7 +259,6 @@ const ReviewReport = () => {
   };
 
   const actionOnchange = (value) => {
-
     switch (value) {
       case "assgin":
         try {
@@ -278,7 +287,7 @@ const ReviewReport = () => {
     }
   };
   const selectStatus = (value) => {
-    setNote(value)
+    setNote(value);
     let id = [];
     if (value !== 5) {
       chooseIdStudent
@@ -307,24 +316,27 @@ const ReviewReport = () => {
 
   const comfirm = () => {
     try {
-      dispatch(updateStatusListStudent({
-        ...status,
-        textNote
-      }));
+      dispatch(
+        updateStatusListStudent({
+          ...status,
+          textNote,
+        })
+      );
       setChooseIdStudent([]);
       message.success("Thành công");
     } catch (error) {
       message.error("Thất bại");
     }
   };
-  const handleNote =({target: {value}}) => {
+  const handleNote = ({ target: { value } }) => {
     if (typePingTimeoutRef.current) {
-      clearTimeout(typePingTimeoutRef.current)
+      clearTimeout(typePingTimeoutRef.current);
     }
-    typePingTimeoutRef.current = setTimeout(()=>{
-      setTextNote(value)
-    }, 300)
-  }
+    typePingTimeoutRef.current = setTimeout(() => {
+      setTextNote(value);
+    }, 300);
+  };
+  console.log(list);
   return (
     <div className="status">
       {window.innerWidth < 1023 ? (
@@ -449,7 +461,7 @@ const ReviewReport = () => {
                       Cập nhật trạng thái
                     </Option>
                   </Select>
-              
+
                   {Object.keys(status).length >= 1 && (
                     <Select
                       className="upload-status"
@@ -468,17 +480,15 @@ const ReviewReport = () => {
                       ))}
                     </Select>
                   )}
-                   {
-                    note === 3 || note === 5 || note === 8 ? (
-                      <TextArea
+                  {note === 3 || note === 5 || note === 8 ? (
+                    <TextArea
                       // value={value}
                       onChange={handleNote}
                       placeholder="Ghi chú..."
                       autoSize={{ minRows: 3, maxRows: 5 }}
                     />
-                    ): null
-                  }
-                
+                  ) : null}
+
                   {Object.keys(status).length > 0 && (
                     <Button onClick={() => comfirm()}>Xác nhận</Button>
                   )}
@@ -510,7 +520,15 @@ const ReviewReport = () => {
           rowKey="_id"
           loading={loading}
           columns={columns}
-          dataSource={list}
+          dataSource={list.map(({internshipTime,endInternShipTime,...list})=>{
+            return {
+              internshipTime:
+              timestamps(internshipTime),
+              endInternShipTime:
+              timestamps(endInternShipTime),
+              ...list
+            }
+          })}
           scroll={{ x: "calc(700px + 50%)" }}
         />
       ) : (

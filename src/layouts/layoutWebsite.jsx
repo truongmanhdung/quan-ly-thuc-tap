@@ -6,6 +6,7 @@ import {
   FolderViewOutlined,
   UnorderedListOutlined,
   BankOutlined,
+  CalendarOutlined,
 } from "@ant-design/icons";
 import { NavLink, Outlet } from "react-router-dom";
 import GlobalHeader from "../components/GlobalHeader.js";
@@ -75,7 +76,12 @@ function LayoutWebsite() {
                     <NavLink to="review-report">Báo cáo</NavLink>
                   </Menu.Item>
                 </SubMenu>
-
+                <Menu.Item
+                  key="12"
+                  icon={<CalendarOutlined className="icon-link" />}
+                >
+                  <NavLink to="semesters">Tạo kỳ học</NavLink>
+                </Menu.Item>
                 <Menu.Item
                   key="11"
                   icon={<FolderViewOutlined className="icon-link" />}
