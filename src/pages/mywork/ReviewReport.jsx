@@ -81,7 +81,7 @@ const ReviewReport = () => {
       width: 160,
       render: (val, record) => {
         if (record.support === 1) {
-          return record.business.name;
+          return record.business?.name;
         } else {
           return record.nameCompany;
         }
