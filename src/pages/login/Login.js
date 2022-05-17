@@ -6,7 +6,7 @@ import { loginGoogle } from "../../features/authSlice/authSlice";
 import { Select, Empty, message } from "antd";
 import { useNavigate } from "react-router";
 import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
-
+import SemestersAPI from "../../API/SemestersAPI";
 const { Option } = Select;
 
 const Login = () => {
@@ -19,13 +19,16 @@ const Login = () => {
   };
 
   const handleLogin = (googleData) => {
-    const dataForm = {
-      token: googleData.tokenId,
-      cumpusId: cumpus,
-    };
-    dispatch(loginGoogle(dataForm))
-      .then((res) => res && redirect(res))
-      .catch((err) => err && message.error("Đăng nhập thất bại"));
+    SemestersAPI.getDefaultSemester().then((data) => {
+      const dataForm = {
+        token: googleData.tokenId,
+        cumpusId: cumpus,
+        smester_id: data.data._id,
+      };
+      dispatch(loginGoogle(dataForm))
+        .then((res) => res && redirect(res))
+        .catch((err) => err && message.error("Đăng nhập thất bại"));
+    });
   };
   const redirect = ({ payload: { isAdmin } }) => {
     message.success("Đăng nhập thành công");
