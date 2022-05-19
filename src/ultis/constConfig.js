@@ -23,10 +23,10 @@ export const statusConfigForm = [
   },
 ];
 export const statusConfigReport = [
-  {
-    title: "Sửa biên bản",
-    value: 5,
-  },
+  // {
+  //   title: "Sửa biên bản",
+  //   value: 5,
+  // },
   {
     title: "Sửa báo cáo",
     value: 8,

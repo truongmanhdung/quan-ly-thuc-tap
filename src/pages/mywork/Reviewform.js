@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { EyeOutlined } from "@ant-design/icons";
 import "../../common/styles/status.css";
-import { Select, Input, Table, Button, message, Row, Col, } from "antd";
+import { Select, Input, Table, Button, message, Row, Col } from "antd";
 import { useDispatch, connect } from "react-redux";
 import {
   listStudentForm,
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import {
-  filterBranch,
-  filterStatusForm,
-} from "../../ultis/selectOption";
+import { filterBranch, filterStatusForm } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
 import TextArea from "antd/lib/input/TextArea";
@@ -37,7 +34,7 @@ const Reviewform = ({
     limit: 20,
     campus_id: infoUser.manager.campus_id,
   });
-  const [studentdetail, setStudentDetail] = useState('');
+  const [studentdetail, setStudentDetail] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const onShowModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -53,8 +50,8 @@ const Reviewform = ({
   }, [page, infoUser]);
 
   const onShowDetail = (mssv, key) => {
-    onShowModal()
-    setStudentDetail(key._id)
+    onShowModal();
+    setStudentDetail(key._id);
   };
 
   const columns = [
@@ -65,8 +62,14 @@ const Reviewform = ({
       fixed: "left",
       render: (val, key) => {
         return (
-          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
-            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
+          <p
+            style={{ margin: 0, cursor: "pointer" }}
+            onClick={() => onShowDetail(val, key)}
+          >
+            <EyeOutlined
+              className="icon-cv"
+              style={{ marginRight: "5px", color: "blue" }}
+            />
             {val}
           </p>
         );
@@ -93,11 +96,11 @@ const Reviewform = ({
       width: 180,
       render: (val, record) => {
         if (record.support === 1) {
-          return record.business?.name
+          return record.business?.name;
         } else {
-          return record.nameCompany
+          return record.nameCompany;
         }
-      }
+      },
     },
     {
       title: "Mã số thuế",
@@ -223,9 +226,9 @@ const Reviewform = ({
     const newValue =
       value.length > 0 || (value > 0 && value !== "")
         ? {
-          ...filter,
-          [key]: value,
-        }
+            ...filter,
+            [key]: value,
+          }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -375,7 +378,7 @@ const Reviewform = ({
             style={{ padding: "0 10px" }}
           >
             <div className="search">
-              <span style={{ width: "40%" }}>Tìm Kiếm: </span>
+              <span style={{ width: "40%" }}>Tìm Kiếm1: </span>
               <Input
                 style={{ width: "100%" }}
                 placeholder="Tìm kiếm theo mã sinh viên"
@@ -625,7 +628,7 @@ const Reviewform = ({
           />
         </Table>
       )}
-       {isModalVisible && (
+      {isModalVisible && (
         <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
       )}
     </div>
@@ -636,16 +639,12 @@ Reviewform.propTypes = {
   infoUser: object,
   loading: bool,
   listStudentAssReviewer: object,
-}
+};
 
-export default connect(({
-  auth: { infoUser },
-  reviewer: {
+export default connect(
+  ({ auth: { infoUser }, reviewer: { listStudentAssReviewer, loading } }) => ({
     listStudentAssReviewer,
-    loading
-  }
-}) => ({
-  listStudentAssReviewer,
-  infoUser,
-  loading
-}))(Reviewform);
+    infoUser,
+    loading,
+  })
+)(Reviewform);

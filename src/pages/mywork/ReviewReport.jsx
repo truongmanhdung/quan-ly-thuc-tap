@@ -16,7 +16,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import { timestamps } from "../../ultis/timestamps";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
-const { Column } = Table; 
+const { Column } = Table;
 
 const { Option } = Select;
 
@@ -39,7 +39,7 @@ const ReviewReport = () => {
     limit: 20,
     campus_id: infoUser.manager.campus_id,
   });
-  const [studentdetail, setStudentDetail] = useState('');
+  const [studentdetail, setStudentDetail] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const onShowModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -54,8 +54,8 @@ const ReviewReport = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const onShowDetail = (mssv, key) => {
-    onShowModal()
-    setStudentDetail(key._id)
+    onShowModal();
+    setStudentDetail(key._id);
   };
   const columns = [
     {
@@ -65,8 +65,14 @@ const ReviewReport = () => {
       fixed: "left",
       render: (val, key) => {
         return (
-          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
-            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
+          <p
+            style={{ margin: 0, cursor: "pointer" }}
+            onClick={() => onShowDetail(val, key)}
+          >
+            <EyeOutlined
+              className="icon-cv"
+              style={{ marginRight: "5px", color: "blue" }}
+            />
             {val}
           </p>
         );
@@ -258,12 +264,31 @@ const ReviewReport = () => {
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
       newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Công ty"] = item["business"].name
+      newObject["Công ty"] = item["business"].name;
       newObject["Điểm thái độ"] = item["attitudePoint"];
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
       newObject["Ngày kết thúc"] = item["endInternShipTime"];
-      newObject["Trạng thái"] = itemStatus===1?'Chờ kiểm tra':itemStatus===2?' Nhận CV':itemStatus===3?' Trượt':itemStatus===4?' Đã nộp biên bản':itemStatus===5?'Sửa biên bản':itemStatus===6?'Đang thực tập ':itemStatus===7?' Đã nộp báo cáo ':itemStatus===8?' Sửa báo cáo':itemStatus===9?'Hoàn thành':'Chưa đăng ký';
+      newObject["Trạng thái"] =
+        itemStatus === 1
+          ? "Chờ kiểm tra"
+          : itemStatus === 2
+          ? " Nhận CV"
+          : itemStatus === 3
+          ? " Trượt"
+          : itemStatus === 4
+          ? " Đã nộp biên bản"
+          : itemStatus === 5
+          ? "Sửa biên bản"
+          : itemStatus === 6
+          ? "Đang thực tập "
+          : itemStatus === 7
+          ? " Đã nộp báo cáo "
+          : itemStatus === 8
+          ? " Sửa báo cáo"
+          : itemStatus === 9
+          ? "Hoàn thành"
+          : "Chưa đăng ký";
       newObject["Báo cáo"] = item["report"];
       return newData.push(newObject);
     });
@@ -357,7 +382,7 @@ const ReviewReport = () => {
   return (
     <div className="status">
       {window.innerWidth < 1023 ? (
-        <h4 style={{ fontSize: "1rem" }}>Review báo cáo</h4>
+        <h4 style={{ fontSize: "1rem" }}>Review báo cáo 1</h4>
       ) : (
         <h4>Review báo cáo</h4>
       )}
@@ -537,15 +562,15 @@ const ReviewReport = () => {
           rowKey="_id"
           loading={loading}
           columns={columns}
-          dataSource={list.map(({internshipTime,endInternShipTime,...list})=>{
-            return {
-              internshipTime:
-              timestamps(internshipTime),
-              endInternShipTime:
-              timestamps(endInternShipTime),
-              ...list
+          dataSource={list.map(
+            ({ internshipTime, endInternShipTime, ...list }) => {
+              return {
+                internshipTime: timestamps(internshipTime),
+                endInternShipTime: timestamps(endInternShipTime),
+                ...list,
+              };
             }
-          })}
+          )}
           scroll={{ x: "calc(700px + 50%)" }}
         />
       ) : (
@@ -690,7 +715,7 @@ const ReviewReport = () => {
           />
         </Table>
       )}
-       {isModalVisible && (
+      {isModalVisible && (
         <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
       )}
     </div>
