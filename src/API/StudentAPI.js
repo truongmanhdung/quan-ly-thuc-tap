@@ -3,7 +3,10 @@ import { stringify } from "qs";
 const StudentAPI = {
   getAll(page) {
     const url = `/student?${stringify(page)}`;
-    return axiosClient.get(url).then((res) => res).catch(err => err);
+    return axiosClient
+      .get(url)
+      .then((res) => res)
+      .catch((err) => err);
   },
   get(id) {
     const url = `/student/${id}`;
@@ -49,9 +52,9 @@ const StudentAPI = {
     const url = `/reivewreport?${stringify(data)}`;
     return axiosClient.get(url);
   },
-  getSmesterSchool(){
-    const url = '/smester';
-    return axiosClient.get(url)
-  }
+  getSmesterSchool() {
+    const url = "/smester";
+    return axiosClient.get(url);
+  },
 };
 export default StudentAPI;

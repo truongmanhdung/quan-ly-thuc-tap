@@ -1,7 +1,6 @@
 import { UploadOutlined } from "@ant-design/icons";
 import {
   Form,
-  Input,
   Button,
   message,
   Spin,
@@ -63,7 +62,7 @@ const ReportForm = ({ infoUser, studentById }) => {
     dispatch(getStudentId(infoUser.student.mssv));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
-  const lForm = studentById.form;
+  const lForm = studentById.CV;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
     setEndDate(date._d);
@@ -136,7 +135,8 @@ const ReportForm = ({ infoUser, studentById }) => {
         EndInternShipTime: endDate,
         mssv: studentById.mssv,
         typeNumber: time.typeNumber,
-        email: studentById.mssv,
+        email: studentById.email,
+        business: studentById.business,
         attitudePoint: values.attitudePoint,
         resultScore: values.resultScore,
       };
@@ -161,6 +161,8 @@ const ReportForm = ({ infoUser, studentById }) => {
       current && current < moment(studentById.internshipTime).add(1, "day")
     );
   }
+  console.log("studentById:", studentById);
+  console.log("infoUser:", infoUser);
 
   return (
     <>
@@ -185,13 +187,15 @@ const ReportForm = ({ infoUser, studentById }) => {
                   <p className={styles.text_form_label}>{studentById.name}</p>
                 </Form.Item>
                 <Form.Item label="Mã sinh viên">
-                  <p className={styles.text_form_label}>{studentById.mssv.toUpperCase()}</p>
+                  <p className={styles.text_form_label}>
+                    {studentById.mssv.toUpperCase()}
+                  </p>
                 </Form.Item>
                 <Form.Item name="nameCompany" label="Tên doanh nghiệp">
                   <p className={styles.text_form_label}>
                     {infoUser.student.support === 1
-                      ? studentById.business.name.toUpperCase()
-                      : infoUser.student.nameCompany.toUpperCase()}
+                      ? studentById?.business?.name?.toUpperCase()
+                      : infoUser?.student?.nameCompany?.toUpperCase()}
                   </p>
                 </Form.Item>
 
@@ -283,14 +287,16 @@ const ReportForm = ({ infoUser, studentById }) => {
                     type="link"
                     onClick={() => window.open(lForm)}
                   >
-                    Xem biểu mẫu
+                    Xem CV
                   </Button>
                 </Form.Item>
               </Form>
             </Spin>
           </>
+        ) : !studentById.form ? (
+          "Bạn phải nộp biểu mẫu trước"
         ) : (
-         (!studentById.form) ? 'Bạn phải nộp biểu mẫu trước' : "Bạn đã nộp báo cáo thành công"
+          "Bạn đã nộp báo cáo thành công"
         )
       ) : (
         <p>Chưa đến thời gian nộp báo cáo</p>

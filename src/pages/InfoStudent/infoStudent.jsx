@@ -44,14 +44,14 @@ function InfoStudent({
   });
   const dispatch = useDispatch();
   const getDefaultSmester = async () => {
-      const {data} = await SemestersAPI.getDefaultSemester();
-      if(data){
-        dispatch(getStudentId(infoUser.student.mssv));
-        dispatch(getBusiness({...page, smester_id: data._id}));
-      }
-  }
+    const { data } = await SemestersAPI.getDefaultSemester();
+    if (data) {
+      dispatch(getStudentId(infoUser.student.mssv));
+      dispatch(getBusiness({ ...page, smester_id: data._id }));
+    }
+  };
   useEffect(() => {
-    getDefaultSmester()
+    getDefaultSmester();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const isRegister = studentById?.support;
@@ -80,8 +80,8 @@ function InfoStudent({
               {" "}
               Công ty đã chọn:{" "}
               {studentById.support === 1
-                ? studentById.business.name
-                : studentById.nameCompany}{" "}
+                ? studentById?.business?.name
+                : studentById?.nameCompany}{" "}
             </p>
             <p>
               Trạng thái SV :{" "}
