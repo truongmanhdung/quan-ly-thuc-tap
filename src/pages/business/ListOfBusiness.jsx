@@ -1,33 +1,25 @@
 import { Col, Row, Select, Table } from "antd";
+import { array, bool, object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { getSmester } from "../../features/StudentSlice/StudentSlice";
 import UpFile from "../../components/ExcelDocument/UpFile";
-import { getBusiness } from "../../features/businessSlice.js/businessSlice";
-import { bool, object } from "prop-types";
-import { array } from "prop-types";
-import SemestersAPI from "../../API/SemestersAPI";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { getSmester } from "../../features/StudentSlice/StudentSlice";
 const { Option } = Select;
 const { Column } = Table;
-const ListOfBusiness = ({ infoUser, listSmester }) => {
+const ListOfBusiness = ({ infoUser, listSemesters, defaultSemester }) => {
   const dispatch = useDispatch();
-  const [defaultSmester, setDefaultSmester] = useState({});
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
+    smester_id: defaultSemester._id
   });
   useEffect(() => {
-    SemestersAPI.getDefaultSemester().then((data) => {
-      if (data) {
-        setDefaultSmester(data.data);
-        dispatch(getBusiness({ ...page, smester_id: data.data._id }));
-      }
-    });
-
     dispatch(getSmester());
+    dispatch(getBusiness(page))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser, defaultSmester._id]);
+  }, [page, infoUser]);
   const { listBusiness, loading } = useSelector((state) => state.business);
   const columns = [
     {
@@ -92,16 +84,16 @@ const ListOfBusiness = ({ infoUser, listSmester }) => {
                 <div>
                   <Select
                     className="filter-status"
-                    placeholder={defaultSmester.name}
+                    placeholder={defaultSemester.name}
                     onChange={(val) =>
                       setPage({
                         ...page,
                         smester_id: val,
                       })
                     }
-                    defaultValue={defaultSmester._id}
+                    defaultValue={defaultSemester._id}
                   >
-                    {listSmester.map((item, index) => (
+                    {listSemesters.map((item, index) => (
                       <Option value={item._id} key={index}>
                         {item.name}
                       </Option>
@@ -195,9 +187,9 @@ ListOfBusiness.propTypes = {
 };
 
 export default connect(
-  ({ auth: { infoUser }, students: { listSmester, defaultSmester } }) => ({
+  ({ auth: { infoUser }, semester }) => ({
     infoUser,
-    listSmester,
-    defaultSmester,
+    listSemesters: semester.listSemesters,
+    defaultSemester: semester.defaultSemester,
   })
 )(ListOfBusiness);

@@ -77,7 +77,7 @@ function LayoutWebsite() {
                   </Menu.Item>
                 </SubMenu>
                 <Menu.Item
-                  key="12"
+                  key="125"
                   icon={<CalendarOutlined className="icon-link" />}
                 >
                   <NavLink to="semesters">Tạo kỳ học</NavLink>

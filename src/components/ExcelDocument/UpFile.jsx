@@ -3,9 +3,12 @@ import { Button, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
-import { insertBusiness } from '../../features/businessSlice.js/businessSlice';
+import { insertBusiness } from '../../features/businessSlice/businessSlice';
 import { insertStudent } from '../../features/StudentSlice/StudentSlice';
 const UpFile = ({ smester_id, name, keys }) => {
+  console.log('====================================');
+  console.log("dsdasdsdasass", smester_id);
+  console.log('====================================');
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
   const dispatch = useDispatch();

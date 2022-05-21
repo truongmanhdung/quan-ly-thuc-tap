@@ -3,28 +3,26 @@ import { Button, Col, Input, Row, Select, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
 import { omit } from "lodash";
+import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "../../common/styles/status.css";
-import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
-import {
-  getSmester,
-  getStudent,
-} from "../../features/StudentSlice/StudentSlice";
-import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
-import SemestersAPI from "../../API/SemestersAPI";
-import { object } from "prop-types";
+import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
+import { getSemesters } from "../../features/semesters/semestersSlice";
+import { getStudent } from "../../features/StudentSlice/StudentSlice";
+import { filterBranch, filterStatuss } from "../../ultis/selectOption";
 const { Option } = Select;
 
 const Status = ({
-  listStudent: {list, total},
+  listStudent: { list, total },
   infoUser,
   loading,
-  listSmester
+  listSemesters,
+  defaultSemester,
 }) => {
   const [studentdetail, setStudentDetail] = useState("");
   const dispatch = useDispatch();
@@ -36,11 +34,11 @@ const Status = ({
 
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
-  const [defaultSmester, setDefaultSmester] = useState({});
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
+    smester_id: defaultSemester?._id,
   });
 
   const [filter, setFiler] = useState();
@@ -50,20 +48,13 @@ const Status = ({
   };
 
   useEffect(() => {
-    SemestersAPI.getDefaultSemester().then((data) => {
-      if (data) {
-        setDefaultSmester(data.data);
-        dispatch(
-          getStudent({
-            ...page,
-            ...filter,
-            smester_id: data.data._id,
-          })
-        );
-      }
-    });
-    
-    dispatch(getSmester());
+    dispatch(
+      getStudent({
+        ...page,
+        ...filter,
+      })
+    );
+    dispatch(getSemesters());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
 
@@ -304,6 +295,30 @@ const Status = ({
             }}
           >
             <h4 style={{ fontSize: ".9rem" }}>Sinh viên đăng ký thực tập</h4>
+            <Col span={5} style={{ padding: "0 10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span style={{ width: "45%" }}>Học Kỳ : </span>
+                <Select
+                  className="filter-status"
+                  style={{ width: "100%" }}
+                  onChange={(val) => setPage({ ...page, smester_id: val })}
+                  defaultValue={defaultSemester?._id}
+                  placeholder={defaultSemester?.name}
+                >
+                  {listSemesters?.map((item, index) => (
+                    <Option value={item._id} key={index}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+            </Col>
             <Button
               variant="warning"
               style={{ marginRight: 10, height: 36 }}
@@ -315,6 +330,30 @@ const Status = ({
         ) : (
           <>
             <h4>Sinh viên đăng ký thực tập</h4>
+            <Col span={5} style={{ padding: "0 10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span style={{ width: "45%" }}>Học Kỳ : </span>
+                <Select
+                  className="filter-status"
+                  style={{ width: "100%" }}
+                  onChange={(val) => setPage({ ...page, smester_id: val })}
+                  defaultValue={defaultSemester?._id}
+                  placeholder={defaultSemester?.name}
+                >
+                  {listSemesters?.map((item, index) => (
+                    <Option value={item._id} key={index}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+            </Col>
             <div style={{ display: "flex" }}>
               <Button
                 variant="warning"
@@ -323,13 +362,15 @@ const Status = ({
               >
                 Export
               </Button>
-              <UpFile keys="status" smester_id={filter?.smester_id} />
+              <UpFile keys="status" smester_id={page?.smester_id} />
             </div>
           </>
         )}
       </div>
       <div className="filter" style={{ marginTop: "20px" }}>
-        {window.innerWidth < 739 && <UpFile style={{ fontSize: ".9rem" }} />}
+        {window.innerWidth < 739 && (
+          <UpFile smester_id={page?.smester_id} style={{ fontSize: ".9rem" }} />
+        )}
         <br />
         <Row>
           <Col span={6} style={{ padding: "0 10px" }}>
@@ -385,30 +426,7 @@ const Status = ({
           </Col>
           <br />
           <br />
-          <Col span={5} style={{ padding: "0 10px" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span style={{ width: "45%" }}>Học Kỳ : </span>
-              <Select
-                className="filter-status"
-                style={{ width: "100%" }}
-                onChange={(val) => handleStandardTableChange("smester_id", val)}
-                defaultValue={defaultSmester._id}
-                placeholder={defaultSmester.name}
-              >
-                {listSmester.map((item, index) => (
-                  <Option value={item._id} key={index}>
-                    {item.name}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-          </Col>
+
           <br />
           <br />
           <Col span={7} style={{ padding: "0 10px" }}>
@@ -441,7 +459,6 @@ const Status = ({
           >
             <Button
               style={{
-                marginTop: "10px",
                 color: "#fff",
                 background: "#ee4d2d",
               }}
@@ -639,16 +656,15 @@ const Status = ({
   );
 };
 
-Status.propTypes ={
+Status.propTypes = {
   listStudent: object,
-  infoUser:object
-}
+  infoUser: object,
+};
 
-export default connect(({
-  students, auth
-}) => ({
+export default connect(({ students, auth, semester }) => ({
   listStudent: students.listStudent,
   infoUser: auth.infoUser,
-  listSmester: students.listSmester,
-  loading: students.loading
+  listSemesters: semester.listSemesters,
+  defaultSemester: semester.defaultSemester,
+  loading: students.loading,
 }))(Status);

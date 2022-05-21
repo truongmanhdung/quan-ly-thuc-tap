@@ -15,8 +15,6 @@ const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
   };
 
   const { listSemesters } = useSelector((state) => state.semester);
-  console.log(listSemesters);
-
   useEffect(() => {
     dispatch(getSemesters());
   }, [dispatch]);
@@ -61,7 +59,10 @@ const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
                 },
               ]}
             >
-              <RangePicker
+              {text.toLowerCase() === "sửa kỳ" ? (
+                <RangePicker />
+              ) : (
+                <RangePicker
                   disabledDate={(current) => {
                     return (
                       current &&
@@ -72,6 +73,7 @@ const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
                     );
                   }}
                 />
+              )}
             </Form.Item>
           </Col>
           <Col>

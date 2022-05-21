@@ -20,6 +20,7 @@ const semesterSlice = createSlice({
   name: "semesters",
   initialState: {
     listSemesters: [],
+    defaultSemester: {},
     loading: false,
   },
 
@@ -29,7 +30,8 @@ const semesterSlice = createSlice({
     });
     builder.addCase(getSemesters.fulfilled, (state, action) => {
       state.loading = false;
-      state.listSemesters = action.payload;
+      state.defaultSemester = action.payload.defaultSemester;
+      state.listSemesters = action.payload.listSemesters;
     });
     builder.addCase(getSemesters.rejected, (state) => {
       state.messages = "Get Semesters fail!";
