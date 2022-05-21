@@ -1,15 +1,18 @@
-import { Button, Form, Input, message, Radio, Spin } from "antd";
+import { Button, Form, Input, message, Radio, Select, Spin } from "antd";
 import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import Proactive from "./Proactive";
 import Support from "./Support";
 import styles from "./SupportStudent.module.css";
+
+const { Option } = Select;
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -40,7 +43,7 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = ({ studentById, infoUser }) => {
+const SupportStudent = ({ studentById, infoUser, listBusiness }) => {
   const dispatch = useDispatch();
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
@@ -49,19 +52,16 @@ const SupportStudent = ({ studentById, infoUser }) => {
   const [form] = Form.useForm();
   // const [listBusiness, setListBusiness] = useState([]);
 
-  const getDefaultSmester = async () => {
-    // const { data: data1 } = await BusinessAPI.get({
-    //   campus_id: infoUser.student.campus_id,
-    //   majors: infoUser.student.majors,
-    //   smester_id: infoUser.student.smester_id._id,
-    // });
-    // setListBusiness(data1.list);
-  };
   useEffect(() => {
     dispatch(getListSpecialization());
     dispatch(getTimeForm(value));
     dispatch(getStudentId(infoUser.student.mssv));
-    getDefaultSmester();
+    dispatch(
+      getBusiness({
+        campus_id: infoUser.student.campus_id,
+        smester_id: infoUser.student.smester_id,
+      })
+    );
   }, [value, dispatch, infoUser]);
 
   function guardarArchivo(files, data) {
@@ -136,7 +136,6 @@ const SupportStudent = ({ studentById, infoUser }) => {
         typeNumber: supportForm,
         ///dispatch Redux
       };
-      console.log("data: ", data);
       if (value === 0) {
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
@@ -158,7 +157,6 @@ const SupportStudent = ({ studentById, infoUser }) => {
   const check = time.endTime > new Date().getTime();
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
-  console.log("studentById?.statusCheck: ", studentById?.statusCheck);
   return (
     <>
       <Spin spinning={spin}>
@@ -240,7 +238,7 @@ const SupportStudent = ({ studentById, infoUser }) => {
                       {studentById.majors ? studentById.majors : "Chưa có"}
                     </p>
                   </Form.Item>
-                  {/* {value === 1 && (
+                  {value === 1 && (
                     <Form.Item
                       name="business"
                       label="Đơn vị thực tập"
@@ -252,10 +250,9 @@ const SupportStudent = ({ studentById, infoUser }) => {
                           marginLeft: "20px",
                         }}
                         placeholder="Chọn doanh nghiệp"
-                        onChange={(val) => form.setFieldsValue(val)}
                       >
-                        {listBusiness.length > 0 &&
-                          listBusiness.map((item) => (
+                        {listBusiness.list.length > 0 &&
+                          listBusiness.list.map((item) => (
                             <Option key={item._id} value={item._id}>
                               {item.name +
                                 "-" +
@@ -266,7 +263,7 @@ const SupportStudent = ({ studentById, infoUser }) => {
                           ))}
                       </Select>
                     </Form.Item>
-                  )} */}
+                  )}
                   <Form.Item
                     name="dream"
                     label="Vị trí thực tập"
@@ -309,7 +306,14 @@ SupportStudent.propTypes = {
   infoUser: object,
   business: object,
 };
-export default connect(({ auth: { infoUser }, students: { studentById } }) => ({
-  studentById,
-  infoUser,
-}))(SupportStudent);
+export default connect(
+  ({
+    auth: { infoUser },
+    students: { studentById },
+    business: { listBusiness },
+  }) => ({
+    studentById,
+    infoUser,
+    listBusiness,
+  })
+)(SupportStudent);

@@ -36,6 +36,10 @@ const StudentAPI = {
     const url = `/student`;
     return axiosClient.patch(url, data);
   },
+  updateBusinessStudent(data) {
+    const url = `/student/business`;
+    return axiosClient.patch(url, data);
+  },
   updateStatusSudent(data) {
     const url = `/student/status`;
     return axiosClient.patch(url, data);

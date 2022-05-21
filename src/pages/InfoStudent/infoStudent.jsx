@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Row, Col, Table } from "antd";
-import { connect, useDispatch } from "react-redux";
+import { Col, Row, Table } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { optionStatus } from "../../ultis/selectOption";
-import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { bool, object } from "prop-types";
-import { getBusiness } from "../../features/businessSlice.js/businessSlice";
-import SemestersAPI from "../../API/SemestersAPI";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
+import { optionStatus } from "../../ultis/selectOption";
 const columns = [
   {
     title: "Tên doanh nghiệp",
@@ -39,19 +38,13 @@ function InfoStudent({
     page: 1,
     limit: 5,
     campus_id: infoUser.student.campus_id,
-    smester_id: "",
+    smester_id: infoUser.student.smester_id,
     majors: infoUser.student.majors,
   });
   const dispatch = useDispatch();
-  const getDefaultSmester = async () => {
-    const { data } = await SemestersAPI.getDefaultSemester();
-    if (data) {
-      dispatch(getStudentId(infoUser.student.mssv));
-      dispatch(getBusiness({ ...page, smester_id: data._id }));
-    }
-  };
   useEffect(() => {
-    getDefaultSmester();
+    dispatch(getStudentId(infoUser.student.mssv));
+    dispatch(getBusiness(page));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const isRegister = studentById?.support;

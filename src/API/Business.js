@@ -8,6 +8,6 @@ const BusinessAPI = {
   get(range){
     const url = `/business?${stringify(range)}`
     return axiosClient.get(url)
-  }
+  },
 };
 export default BusinessAPI;
