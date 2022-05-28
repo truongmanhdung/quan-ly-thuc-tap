@@ -12,7 +12,6 @@ const Formtimepicker = () => {
     formTime: { times },
     loading,
   } = useSelector((state) => state.time);
-  console.log(times)
   const [value, setValue] = useState(0);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();

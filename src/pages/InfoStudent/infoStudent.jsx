@@ -43,10 +43,8 @@ function InfoStudent({
     majors: infoUser.student.majors,
   });
   const [dateNow] = useState(Date.now());
-  console.log(dateNow);
   const [value] = useState(4);
   const { time } = useSelector((state) => state.time.formTime);
-  console.log(time);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getTimeForm(value));
