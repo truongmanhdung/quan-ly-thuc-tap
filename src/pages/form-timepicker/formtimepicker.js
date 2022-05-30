@@ -43,10 +43,10 @@ const Formtimepicker = () => {
   };
   return (
     <div>
-    <h3>Đặt thời gian cho các form nhập của sinh viên</h3>
+    <h3 style={{marginBottom:50}}>Đặt thời gian cho các form nhập của sinh viên</h3>
       <Spin spinning={loading}/>
-      <Row>
-        <Col xs={24} sm={16} md={16} lg={16} xl={12}>
+      <Row gutter={[16, 20]}>
+        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
           <Radio.Group onChange={onChange} value={value}>
             {times?.length > 0 && times.map((item) => (
               <Radio value={item.typeNumber} key={item._id}>{item.typeName}</Radio>
@@ -54,7 +54,7 @@ const Formtimepicker = () => {
             
           </Radio.Group>
         </Col>
-        <Col xs={24} sm={8} md={8} lg={8} xl={12}>
+        <Col xs={24} sm={24} md={24} lg={24} xl={24}>
         <RangePicker
             onChange={onSetDatePicker}
             renderExtraFooter={() => "extra footer"}

@@ -2,9 +2,10 @@ import { Col, Row, Table } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { bool, object } from "prop-types";
 import React, { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { optionStatus } from "../../ultis/selectOption";
 const columns = [
   {
@@ -41,8 +42,12 @@ function InfoStudent({
     smester_id: infoUser.student.smester_id,
     majors: infoUser.student.majors,
   });
+  const [dateNow] = useState(Date.now());
+  const [value] = useState(4);
+  const { time } = useSelector((state) => state.time.formTime);
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getTimeForm(value));
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(getBusiness(page));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,26 +94,30 @@ function InfoStudent({
         </Col>
         <Col span={12} className="p-3">
           <h4>Chọn công ty</h4>
-          <div>
-            <Table
-              loading={loading}
-              rowKey="_id"
-              columns={columns}
-              dataSource={list}
-              pagination={{
-                pageSize: page.limit,
-                total: total,
-                onChange: (pages, pageSize) => {
-                  setPage({
-                    ...page,
-                    page: pages,
-                    limit: pageSize,
-                    campus_id: infoUser.student.cumpus,
-                  });
-                },
-              }}
-            />
-          </div>
+          {time?.startTime <= dateNow && dateNow <= time.endTime ? (
+            <div>
+              <Table
+                loading={loading}
+                rowKey="_id"
+                columns={columns}
+                dataSource={list}
+                pagination={{
+                  pageSize: page.limit,
+                  total: total,
+                  onChange: (pages, pageSize) => {
+                    setPage({
+                      ...page,
+                      page: pages,
+                      limit: pageSize,
+                      campus_id: infoUser.student.cumpus,
+                    });
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            <span>Chưa có thông tin công ty thực tập.</span>
+          )}
         </Col>
       </Row>
       <Row>
