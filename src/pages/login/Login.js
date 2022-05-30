@@ -68,15 +68,14 @@ const Login = () => {
         </Select>
       </div>
       <div className={styles.button_login}>
-        {cumpus !== "" && (
           <GoogleLogin
+            disabled={cumpus === "" ? true : false}
             className={styles.button_login}
             clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
             buttonText="Login With Google"
             onSuccess={handleLogin}
             onFailure={handleFailure}
           />
-        )}
       </div>
     </div>
   );
