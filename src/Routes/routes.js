@@ -18,6 +18,7 @@ import Formtimepicker from "../pages/form-timepicker/formtimepicker";
 import ReviewReport from "../pages/mywork/ReviewReport";
 import ListOfBusiness from "../pages/business/ListOfBusiness";
 import FormSemester from "../pages/semesters/semesters";
+import Major from "../pages/major/major";
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -60,6 +61,14 @@ const Router = () => {
           element={
             <Privateroute>
               <FormSemester />
+            </Privateroute>
+          }
+        />
+        <Route
+          path="major"
+          element={
+            <Privateroute>
+              <Major />
             </Privateroute>
           }
         />
