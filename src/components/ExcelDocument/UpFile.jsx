@@ -6,9 +6,6 @@ import * as XLSX from 'xlsx';
 import { insertBusiness } from '../../features/businessSlice/businessSlice';
 import { insertStudent } from '../../features/StudentSlice/StudentSlice';
 const UpFile = ({ smester_id, name, keys }) => {
-  console.log('====================================');
-  console.log("dsdasdsdasass", smester_id);
-  console.log('====================================');
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
   const dispatch = useDispatch();

@@ -1,10 +1,9 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Button, Col, Input, message, Modal, Row, Select } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import StudentAPI from "../../API/StudentAPI";
-import {getBusiness} from '../../features/businessSlice/businessSlice'
-import { fetchManager } from "../../features/managerSlice/managerSlice";
+
 import {
   statusConfigCV,
   statusConfigForm,
@@ -15,17 +14,19 @@ const optionCheck = [1, 5, 8, 3];
 const { Option } = Select;
 const { TextArea } = Input;
 const StudentDetail = (props) => {
-  const { onShowModal, studentId } = props;
+  const { 
+    onShowModal, 
+    studentId, 
+    closeModal, 
+    listManager,
+    listBusiness,
+    infoUser
+  } = props;
   const [isShowSelectStatus, setIsShowSelectStatus] = useState(false);
   const [isEditReviewer, setIsEditReviewer] = useState(false);
   const [isEditBusiness, setIsEditBusiness] = useState(false)
-  const [studentdetail, setStudentdetail] = useState({});
   const [submitStatus, setSubmitStatus] = useState(false);
   const [statusUpdate, setStatusUpdate] = useState(0);
-  const { infoUser } = useSelector((state) => state.auth);
-  const { listManager } = useSelector((state) => state.manager);
-  const { listBusiness } = useSelector((state) => state.business);
-  console.log("business", listBusiness);
   const [isShowNote, setIsShowNote] = useState(false);
   const [note, setNote] = useState("");
   const [isSetNote, setIsSetNote] = useState(false);
@@ -34,19 +35,10 @@ const StudentDetail = (props) => {
   const dispatch = useDispatch();
 
   const getDataStudent = useCallback(async () => {
-    const { data } = await StudentAPI.getStudentById(studentId);
-    setStudentdetail(data);
-    if(data){
-      dispatch(getBusiness({
-        campus_id: data.campus_id._id,
-        smester_id: data.smester_id._id,
-      }));
-    }
-    setNoteDetail(data.note);
-  }, [dispatch, studentId]);
+    setNoteDetail(studentId.note);
+  }, [studentId]);
 
   useEffect(() => {
-    dispatch(fetchManager());
     getDataStudent();
 
   }, [dispatch, getDataStudent, studentId]);
@@ -132,7 +124,7 @@ const StudentDetail = (props) => {
   };
 
   const onSelectStatus = (value) => {
-    if (value !== +studentdetail.statusCheck) {
+    if (value !== +studentId.statusCheck) {
       if (optionCheck.includes(value)) {
         setIsShowNote(true);
         setStatusUpdate(value);
@@ -160,7 +152,7 @@ const StudentDetail = (props) => {
 
   const onSetReviewer = async (value) => {
     const { data } = await StudentAPI.updateReviewerSudent({
-      listIdStudent: [studentdetail._id],
+      listIdStudent: [studentId._id],
       email: value,
     });
     if (data) {
@@ -181,7 +173,7 @@ const StudentDetail = (props) => {
     if (window.confirm("Bạn có chắc chắn muốn đổi trạng thái không?")) {
       const { data } = await StudentAPI.updateStatusSudent({
         listIdStudent: [studentId],
-        listEmailStudent: [{ email: studentdetail.email }],
+        listEmailStudent: [{ email: studentId.email }],
         email: infoUser?.manager?.email,
         status: statusUpdate,
         textNote: note,
@@ -194,16 +186,15 @@ const StudentDetail = (props) => {
         setIsShowNote(false);
         message.success("Thành công");
       }
-      // console.log(data);
     }
   };
 
   const onUpdateNote = async () => {
     const { data } = await StudentAPI.updateStatusSudent({
       listIdStudent: [studentId],
-      listEmailStudent: [{ email: studentdetail.email }],
+      listEmailStudent: [{ email: studentId.email }],
       email: infoUser?.manager?.email,
-      status: studentdetail.statusCheck,
+      status: studentId.statusCheck,
       textNote: noteDetail,
     });
     if (data.listStudentChangeStatus.length > 0) {
@@ -216,7 +207,7 @@ const StudentDetail = (props) => {
 
   const onSelectBusiness = async (value) => {
     const { data } = await StudentAPI.updateBusinessStudent({
-      listIdStudent: [studentdetail._id],
+      listIdStudent: [studentId._id],
       business: value,
     });
     if (data) {
@@ -228,37 +219,37 @@ const StudentDetail = (props) => {
 
   useEffect(() => {
     if (
-      studentdetail.CV &&
-      !studentdetail.form &&
-      !studentdetail.report &&
-      studentdetail.statusCheck !== 3
+      studentId.CV &&
+      !studentId.form &&
+      !studentId.report &&
+      studentId.statusCheck !== 3
     ) {
       setListOption(statusConfigCV);
     } else if (
-      studentdetail.CV &&
-      studentdetail.form &&
-      !studentdetail.report &&
-      studentdetail.statusCheck !== 3
+      studentId.CV &&
+      studentId.form &&
+      !studentId.report &&
+      studentId.statusCheck !== 3
     ) {
       setListOption(statusConfigForm);
-    } else if (studentdetail.CV && studentdetail.form && studentdetail.report) {
+    } else if (studentId.CV && studentId.form && studentId.report) {
       setListOption(statusConfigReport);
     } else {
       setListOption([]);
     }
   }, [
-    studentdetail.CV,
-    studentdetail.form,
-    studentdetail.report,
-    studentdetail.statusCheck,
+    studentId.CV,
+    studentId.form,
+    studentId.report,
+    studentId.statusCheck,
   ]);
 
   return (
     <Modal
       width="90%"
       title="Chi tiết sinh viên"
-      onCancel={onShowModal}
-      visible={true}
+      onCancel={closeModal}
+      visible={onShowModal}
     >
       <h4>Thông tin sinh viên</h4>
       <Row>
@@ -267,21 +258,21 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Họ tên: </h6>
               <span className="ms-2">
-                {studentdetail.name ? studentdetail.name : "Không có"}
+                {studentId.name ? studentId.name : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Tên công ty: </h6>
-              {studentdetail.support === 1 ? (
+              {studentId.support === 1 ? (
                 <span className="ms-2">
-                  {studentdetail.business?.name
-                    ? studentdetail.business?.name
+                  {studentId.business?.name
+                    ? studentId.business?.name
                     : "Không có"}
                 </span>
               ) : (
                 <span className="ms-2">
-                  {studentdetail.nameCompany
-                    ? studentdetail.nameCompany
+                  {studentId.nameCompany
+                    ? studentId.nameCompany
                     : "Không có"}
                 </span>
               )}
@@ -289,21 +280,21 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Mã sinh viên: </h6>
               <span className="ms-2">
-                {studentdetail.mssv ? studentdetail.mssv : "Không có"}
+                {studentId.mssv ? studentId.mssv : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Địa chỉ công ty: </h6>
-              {studentdetail.support === 1 ? (
+              {studentId.support === 1 ? (
                 <span className="ms-2">
-                  {studentdetail.business?.address
-                    ? studentdetail.business?.address
+                  {studentId.business?.address
+                    ? studentId.business?.address
                     : "Không có"}
                 </span>
               ) : (
                 <span className="ms-2">
-                  {studentdetail.addressCompany
-                    ? studentdetail.addressCompany
+                  {studentId.addressCompany
+                    ? studentId.addressCompany
                     : "Không có"}
                 </span>
               )}
@@ -311,108 +302,108 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Email: </h6>
               <span className="ms-2">
-                {studentdetail.email ? studentdetail.email : "Không có"}
+                {studentId.email ? studentId.email : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Mã số thuế: </h6>
-              {studentdetail.support === 1 ? (
+              {studentId.support === 1 ? (
                 <span className="ms-2">
-                  {studentdetail.business?.taxCode
-                    ? studentdetail.business?.taxCode
+                  {studentId.business?.taxCode
+                    ? studentId.business?.taxCode
                     : "Không có"}
                 </span>
               ) : (
                 <span className="ms-2">
-                  {studentdetail.taxCode ? studentdetail.taxCode : "Không có"}
+                  {studentId.taxCode ? studentId.taxCode : "Không có"}
                 </span>
               )}
             </Col>
             <Col span={12} className="d-flex">
               <h6>Chuyên ngành: </h6>
               <span className="ms-2">
-                {studentdetail.majors ? studentdetail.majors : "Không có"}
+                {studentId.majors ? studentId.majors : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Vị trí thực tập: </h6>
-              {studentdetail.support === 1 ? (
+              {studentId.support === 1 ? (
                 <span className="ms-2">
-                  {studentdetail.business?.internshipPosition
-                    ? studentdetail.business?.internshipPosition
+                  {studentId.business?.internshipPosition
+                    ? studentId.business?.internshipPosition
                     : "Không có"}
                 </span>
               ) : (
                 <span className="ms-2">
-                  {studentdetail.position ? studentdetail.position : "Không có"}
+                  {studentId.position ? studentId.position : "Không có"}
                 </span>
               )}
             </Col>
             <Col span={12} className="d-flex">
               <h6>Khoá học: </h6>
               <span className="ms-2">
-                {studentdetail.course ? studentdetail.course : "Không có"}
+                {studentId.course ? studentId.course : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>SĐT công ty: </h6>
               <span className="ms-2">
-                {studentdetail.phoneNumberCompany
-                  ? studentdetail.phoneNumberCompany
+                {studentId.phoneNumberCompany
+                  ? studentId.phoneNumberCompany
                   : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Kỳ thực tập: </h6>
               <span className="ms-2">
-                {studentdetail?.smester_id?.name
-                  ? studentdetail.smester_id?.name
+                {studentId?.smester_id?.name
+                  ? studentId.smester_id?.name
                   : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Email người xác nhận: </h6>
               <span className="ms-2">
-                {studentdetail.emailEnterprise
-                  ? studentdetail.emailEnterprise
+                {studentId.emailEnterprise
+                  ? studentId.emailEnterprise
                   : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Số điện thoại: </h6>
               <span className="ms-2">
-                {studentdetail?.phoneNumber
-                  ? studentdetail?.phoneNumber
+                {studentId?.phoneNumber
+                  ? studentId?.phoneNumber
                   : "không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Ngày bắt đầu thực tập: </h6>
               <span className="ms-2">
-                {studentdetail.internshipTime
-                  ? studentdetail.internshipTime
+                {studentId.internshipTime
+                  ? studentId.internshipTime
                   : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Địa chỉ: </h6>
               <span className="ms-2">
-                {studentdetail?.address ? studentdetail?.address : "không có"}
+                {studentId?.address ? studentId?.address : "không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Ngày kết thúc thực tập: </h6>
               <span className="ms-2">
-                {studentdetail.endInternShipTime
-                  ? studentdetail.endInternShipTime
+                {studentId.endInternShipTime
+                  ? studentId.endInternShipTime
                   : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>Phân loại: </h6>
-              {studentdetail.support ? (
+              {studentId.support ? (
                 <span className="ms-2">
-                  {studentdetail.support === 1
+                  {studentId.support === 1
                     ? "Nhờ nhà trường hỗ trợ"
                     : "Tự tìm"}
                 </span>
@@ -423,33 +414,33 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Điểm thái độ: </h6>
               <span className="ms-2">
-                {studentdetail.attitudePoint
-                  ? studentdetail.attitudePoint
+                {studentId.attitudePoint
+                  ? studentId.attitudePoint
                   : "Không có"}
               </span>
             </Col>
 
             <Col span={12} className="d-flex">
               <h6 className="me-2">Trạng thái: </h6>
-              {renderStatus(studentdetail.statusCheck)}
+              {renderStatus(studentId.statusCheck)}
             </Col>
             <Col span={12} className="d-flex">
               <h6>Điểm kết thúc: </h6>
               <span className="ms-2">
-                {studentdetail.resultScore
-                  ? studentdetail.resultScore
+                {studentId.resultScore
+                  ? studentId.resultScore
                   : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
               <h6>CV: </h6>
-              {studentdetail.CV ? (
+              {studentId.CV ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   className="ms-2 text-one-row"
-                  onClick={() => window.open(studentdetail.CV)}
+                  onClick={() => window.open(studentId.CV)}
                 >
-                  {studentdetail.CV}
+                  {studentId.CV}
                 </a>
               ) : (
                 <span className="ms-2">Chưa nộp</span>
@@ -457,13 +448,13 @@ const StudentDetail = (props) => {
             </Col>
             <Col span={12} className="d-flex">
               <h6>Biên bản: </h6>
-              {studentdetail.form ? (
+              {studentId.form ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   className="ms-2 text-one-row"
-                  onClick={() => window.open(studentdetail.form)}
+                  onClick={() => window.open(studentId.form)}
                 >
-                  {studentdetail.form}
+                  {studentId.form}
                 </a>
               ) : (
                 <span className="ms-2">Chưa nộp</span>
@@ -471,13 +462,13 @@ const StudentDetail = (props) => {
             </Col>
             <Col span={12} className="d-flex">
               <h6>Báo cáo: </h6>
-              {studentdetail.report ? (
+              {studentId.report ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
                 <a
                   className="ms-2 text-one-row"
-                  onClick={() => window.open(studentdetail.report)}
+                  onClick={() => window.open(studentId.report)}
                 >
-                  {studentdetail.report}
+                  {studentId.report}
                 </a>
               ) : (
                 <span className="ms-2">Chưa nộp</span>
@@ -494,6 +485,7 @@ const StudentDetail = (props) => {
                 maxLength={100}
                 style={{ height: 80, marginBottom: 10 }}
                 onChange={onChangeTextArea}
+                
               />
               {isSetNote && (
                 <Button type="primary" onClick={onUpdateNote}>
@@ -524,7 +516,7 @@ const StudentDetail = (props) => {
                     ))}
                 </Select>
               ) : (
-                renderStatus(studentdetail.statusCheck)
+                renderStatus(studentId.statusCheck)
               )}
 
               {isShowNote && (
@@ -561,8 +553,8 @@ const StudentDetail = (props) => {
                       </Option>
                     ))}
                 </Select>
-              ) : studentdetail.reviewer ? (
-                studentdetail.reviewer
+              ) : studentId.reviewer ? (
+                studentId.reviewer
               ) : (
                 "Chưa có"
               )}
@@ -575,12 +567,12 @@ const StudentDetail = (props) => {
             </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h6 className="mb-0 me-2 text-header-abc">Công ty: </h6>
-              {isEditBusiness && studentdetail.support === 1  ? (
+              {isEditBusiness && studentId.support === 1  ? (
                 <Select
                   onChange={onSelectBusiness}
                   // defaultValue="Chọn công ty"
                   style={{ width: "60%" }}
-                  defaultValue={studentdetail.business?._id}
+                  defaultValue={studentId.business?._id}
                 >
                   {listBusiness.list.length > 0 &&
                     listBusiness.list.map((item) => (
@@ -591,23 +583,23 @@ const StudentDetail = (props) => {
                 </Select>
               ) : (
                 <span>
-                  {studentdetail.support === 1 ? (
+                  {studentId.support === 1 ? (
                     <span className="ms-2">
-                      {studentdetail.business?.name
-                        ? studentdetail.business?.name
+                      {studentId.business?.name
+                        ? studentId.business?.name
                         : "Không có"}
                     </span>
                   ) : (
                     <span className="ms-2">
-                      {studentdetail.nameCompany
-                        ? studentdetail.nameCompany
+                      {studentId.nameCompany
+                        ? studentId.nameCompany
                         : "Không có"}
                     </span>
                   )}
                 </span>
               )}
 
-              {listBusiness.list.length > 0 && studentdetail.support === 1  ? (
+              {listBusiness.list.length > 0 && studentId.support === 1  ? (
                 <EditOutlined onClick={onShowEditBusiness} />
               ) : (
                 <span></span>

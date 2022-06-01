@@ -11,6 +11,7 @@ import * as XLSX from "xlsx";
 import "../../common/styles/status.css";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
 import { getSemesters } from "../../features/semesters/semestersSlice";
 import { getStudent } from "../../features/StudentSlice/StudentSlice";
@@ -23,15 +24,13 @@ const Status = ({
   loading,
   listSemesters,
   defaultSemester,
+  listManager,
+listBusiness
 }) => {
   const [studentdetail, setStudentDetail] = useState("");
+  const [modal, setModal] = useState(false)
   const dispatch = useDispatch();
   let navigate = useNavigate();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const onShowModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
@@ -43,8 +42,12 @@ const Status = ({
 
   const [filter, setFiler] = useState();
   const onShowDetail = (mssv, key) => {
-    onShowModal();
-    setStudentDetail(key._id);
+    setStudentDetail(key);
+    setModal(true)
+    dispatch(getBusiness({
+      campus_id: key.campus_id._id,
+      smester_id: key.smester_id._id,
+    }));
   };
 
   useEffect(() => {
@@ -52,6 +55,7 @@ const Status = ({
       getStudent({
         ...page,
         ...filter,
+        onShowDetail
       })
     );
     dispatch(getSemesters());
@@ -64,20 +68,6 @@ const Status = ({
       dataIndex: "mssv",
       width: 100,
       fixed: "left",
-      render: (val, key) => {
-        return (
-          <p
-            style={{ margin: 0, cursor: "pointer" }}
-            onClick={() => onShowDetail(val, key)}
-          >
-            <EyeOutlined
-              className="icon-cv"
-              style={{ marginRight: "5px", color: "blue" }}
-            />
-            {val}
-          </p>
-        );
-      },
     },
     {
       title: "Họ và Tên",
@@ -649,9 +639,14 @@ const Status = ({
           />
         </Table>
       )}
-      {isModalVisible && (
-        <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
-      )}
+        <StudentDetail
+        infoUser={infoUser} 
+        studentId={studentdetail} 
+        onShowModal={modal} 
+        closeModal={()=> setModal(false) }
+        listBusiness={listBusiness}
+        listManager={listManager}
+         />
     </div>
   );
 };
@@ -659,12 +654,17 @@ const Status = ({
 Status.propTypes = {
   listStudent: object,
   infoUser: object,
+  listManager: object,
+  listBusiness: object
 };
 
-export default connect(({ students, auth, semester }) => ({
+export default connect(({ students, auth, semester, manager, business }) => ({
   listStudent: students.listStudent,
   infoUser: auth.infoUser,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,
   loading: students.loading,
+  listManager: manager.listManager,
+  listBusiness: business.listBusiness
+
 }))(Status);
