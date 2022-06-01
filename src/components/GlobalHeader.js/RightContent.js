@@ -65,7 +65,7 @@ const Rightcontent = () => {
                 }} >
                     <Dropdown overlay={menu} placement="bottomLeft" arrow>
                         <span>
-                            <Avatar size={44} src={infoUser.picture} />  <span>{infoUser.name}</span>
+                            <Avatar size={35} src={infoUser.picture} />  <span>{infoUser.name}</span>
                         </span>
                     </Dropdown>
                 </div>
@@ -77,7 +77,7 @@ const Rightcontent = () => {
                     <Drawer width={250} placement="right" onClose={onCloseMenuMobile} visible={visible} >
 
                         <div className='info-user'>
-                            <Avatar size={44} src={infoUser.picture} />  <span>{infoUser.name}</span>
+                            <Avatar size={35} src={infoUser.picture} />  <span>{infoUser.name}</span>
                         </div>
 
                         <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">

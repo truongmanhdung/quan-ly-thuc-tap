@@ -255,6 +255,7 @@ const StudentDetail = (props) => {
 
   return (
     <Modal
+      className="showModal"
       width="90%"
       title="Chi tiết sinh viên"
       onCancel={onShowModal}

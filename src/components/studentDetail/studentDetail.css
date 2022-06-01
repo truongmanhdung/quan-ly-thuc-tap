@@ -24,3 +24,17 @@
 .text-header-abc{
     width: 120px;
 }
+@media only screen and (min-width:46.25em) {
+    .detal-form-status{
+        display: flex;
+        flex-wrap: wrap-reverse;
+        position: relative;
+        top: 100px;
+    }
+    .showModal{
+        width:50%
+    }
+    .text-header-abc{
+        display: none;
+    }
+}
