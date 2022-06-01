@@ -88,6 +88,12 @@ function LayoutWebsite() {
                 >
                   <NavLink to="form-register">Thời gian đăng ký</NavLink>
                 </Menu.Item>
+                <Menu.Item
+                  key="12"
+                  icon={<ProfileOutlined className="icon-link" />}
+                >
+                  <NavLink to="major">Danh sách ngành học</NavLink>
+                </Menu.Item>
               </>
             ) : (
               <>
