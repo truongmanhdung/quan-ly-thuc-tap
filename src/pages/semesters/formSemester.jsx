@@ -22,7 +22,6 @@ const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
   const sethButton = (values) => {
     editStatusButton(values);
   };
-  console.log(forms);
   return (
     <>
       <Form form={forms} onFinish={onFinishForm}>
