@@ -22,6 +22,9 @@ const StudentDetail = (props) => {
     listBusiness,
     infoUser
   } = props;
+  console.log('====================================');
+  console.log(studentId);
+  console.log('====================================');
   const [isShowSelectStatus, setIsShowSelectStatus] = useState(false);
   const [isEditReviewer, setIsEditReviewer] = useState(false);
   const [isEditBusiness, setIsEditBusiness] = useState(false)
@@ -323,7 +326,7 @@ const StudentDetail = (props) => {
             <Col span={12} className="d-flex">
               <h6>Chuyên ngành: </h6>
               <span className="ms-2">
-                {studentId.majors ? studentId.majors : "Không có"}
+                {studentId.majors ? studentId.majors.name : "Không có"}
               </span>
             </Col>
             <Col span={12} className="d-flex">
@@ -509,7 +512,7 @@ const StudentDetail = (props) => {
                   defaultValue="Trạng thái"
                   style={{ width: "50%" }}
                 >
-                  {listOption.length > 0 &&
+                  {listOption && listOption.length > 0 &&
                     listOption.map((item, index) => (
                       <Option value={item.value} key={index}>
                         {item.title}
@@ -527,7 +530,7 @@ const StudentDetail = (props) => {
                   placeholder="Nhập text note"
                 />
               )}
-              {listOption.length > 0 ? (
+              {listOption && listOption.length > 0 ? (
                 submitStatus ? (
                   <Button type="primary" onClick={onUpdateStatus}>
                     Thực hiện
@@ -560,7 +563,7 @@ const StudentDetail = (props) => {
                 "Chưa có"
               )}
 
-              {listOption.length > 0 ? (
+              {listOption && listOption.length > 0 ? (
                 <EditOutlined onClick={onShowEditReviewer} />
               ) : (
                 <span></span>
@@ -575,7 +578,7 @@ const StudentDetail = (props) => {
                   style={{ width: "60%" }}
                   defaultValue={studentId.business?._id}
                 >
-                  {listBusiness.list.length > 0 &&
+                  {listBusiness && listBusiness.list && listBusiness.list.length > 0 &&
                     listBusiness.list.map((item) => (
                       <Option key={item._id} value={item._id}>
                         {item.name} - {item.internshipPosition} - {item.majors}
@@ -600,7 +603,7 @@ const StudentDetail = (props) => {
                 </span>
               )}
 
-              {listBusiness.list.length > 0 && studentId.support === 1  ? (
+              {listBusiness && listBusiness.list && listBusiness.list.length > 0 && studentId.support === 1  ? (
                 <EditOutlined onClick={onShowEditBusiness} />
               ) : (
                 <span></span>
