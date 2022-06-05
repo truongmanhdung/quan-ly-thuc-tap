@@ -18,7 +18,7 @@ const majorAPI = {
     },
     update(id, data) {
         const url = `/major/${id}`;
-        return axiosClient.put(url, data);
+        return axiosClient.patch(url, data);
     },
 
 };
