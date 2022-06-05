@@ -22,9 +22,6 @@ const StudentDetail = (props) => {
     listBusiness,
     infoUser
   } = props;
-  console.log('====================================');
-  console.log(studentId);
-  console.log('====================================');
   const [isShowSelectStatus, setIsShowSelectStatus] = useState(false);
   const [isEditReviewer, setIsEditReviewer] = useState(false);
   const [isEditBusiness, setIsEditBusiness] = useState(false)
