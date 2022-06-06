@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 import { insertBusiness } from '../../features/businessSlice/businessSlice';
 import { insertStudent } from '../../features/StudentSlice/StudentSlice';
-const UpFile = ({ smester_id, name, keys }) => {
+const UpFile = ({ smester_id, name, keys, major }) => {
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
   const dispatch = useDispatch();
@@ -14,85 +14,93 @@ const UpFile = ({ smester_id, name, keys }) => {
   } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
   const importData = (e) => {
-    const file = e.target.files[0];
-    setNameFile(file.name);
-    const reader = new FileReader();
-    const rABS = !!reader.readAsBinaryString;
-    reader.onload = (event) => {
-      const bstr = event.target.result;
-      const wb = XLSX.read(bstr, { type: rABS ? 'binary' : 'array' });
-      /* Get first worksheet */
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      /* Convert array of arrays */
-      const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      let headers = fileData[0];
-      fileData.splice(0, 1);
-      if (headers.length === 0) {
-        headers = fileData[0];
-      }
-      const rows = [];
-      fileData.forEach((item) => {
-        let rowData = {};
-        item.forEach((element, index) => {
-          rowData[headers[index]] = element;
+    if (major.length > 0) {
+      const file = e.target.files[0];
+      setNameFile(file.name);
+      const reader = new FileReader();
+      const rABS = !!reader.readAsBinaryString;
+      reader.onload = (event) => {
+        const bstr = event.target.result;
+        const wb = XLSX.read(bstr, { type: rABS ? 'binary' : 'array' });
+        /* Get first worksheet */
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        /* Convert array of arrays */
+        const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        let headers = fileData[0];
+        fileData.splice(0, 1);
+        if (headers.length === 0) {
+          headers = fileData[0];
+        }
+        const rows = [];
+        fileData.forEach((item) => {
+          let rowData = {};
+          item.forEach((element, index) => {
+            rowData[headers[index]] = element;
+          });
+          rows.push(rowData);
         });
-        rows.push(rowData);
-      });
-      let datas = [];
-      rows
-        .filter((item, index) => Object.keys(item).length > 0 && index > 0 )
-        // eslint-disable-next-line array-callback-return
-        .map((item) => {
-          const newObject = {};
-          if (manager) {
-            switch (keys) {
-              case 'status':
-                if (item['MSSV'] !== undefined) {
-                  newObject['mssv'] = item['MSSV'];
-                  newObject['name'] = item['Họ tên'];
-                  newObject['course'] = item['Khóa nhập học'];
-                  newObject['status'] = item['Trạng thái'];
-                  newObject['majors'] = item['Ngành'];
-                  newObject['email'] = item['Email'];
-                  newObject['supplement'] = item['bổ sung'];
-                  newObject['campus_id'] = manager.campus_id;
-                  newObject['smester_id'] = smester_id;
-                  return datas.push(newObject);
-                }
-                break;
-              case 'business':
-                if (item['Tên doanh nghiệp'] !== undefined) {
-                  newObject['name'] = item['Tên doanh nghiệp'];
-                  newObject['internshipPosition'] = item['Vị trí thực tập'];
-                  newObject['amount'] = item['Số lượng'];
-                  newObject['address'] = item['Địa chỉ doanh nghiệp'];
-                  newObject['majors'] = item['Ngành']
-                  newObject['campus_id'] = manager.campus_id;
-                  newObject['smester_id'] = smester_id;
-                  return datas.push(newObject);
-                }
-                break;
-              default:
-                break;
+        let datas = [];
+        rows
+          .filter((item, index) => Object.keys(item).length > 0 && index > 0 )
+          // eslint-disable-next-line array-callback-return
+          .map((item) => {
+            const newObject = {};
+            if (manager) {
+              switch (keys) {
+                case 'status':
+                  if (item['MSSV'] !== undefined) {
+                    newObject['mssv'] = item['MSSV'];
+                    newObject['name'] = item['Họ tên'];
+                    newObject['course'] = item['Khóa nhập học'];
+                    newObject['status'] = item['Trạng thái'];
+                    newObject['majors'] = major
+                    newObject['email'] = item['Email'];
+                    newObject['supplement'] = item['bổ sung'];
+                    newObject['campus_id'] = manager.campus_id;
+                    newObject['smester_id'] = smester_id;
+                    return datas.push(newObject);
+                  }
+                  break;
+                case 'business':
+                  if (item['Tên doanh nghiệp'] !== undefined) {
+                    newObject['name'] = item['Tên doanh nghiệp'];
+                    newObject['internshipPosition'] = item['Vị trí thực tập'];
+                    newObject['amount'] = item['Số lượng'];
+                    newObject['address'] = item['Địa chỉ doanh nghiệp'];
+                    newObject['majors'] = item['Ngành']
+                    newObject['campus_id'] = manager.campus_id;
+                    newObject['smester_id'] = smester_id;
+                    return datas.push(newObject);
+                  }
+                  break;
+                default:
+                  break;
+              }
             }
-          }
-        });
-      setDataNew(datas);
-      refInput.current.value = '';
-    };
+          });
+        setDataNew(datas);
+        refInput.current.value = '';
+      };
+  
+      reader.readAsBinaryString(file);
+    }else{
+      message.warning("Vui lòng chọn ngành")
+    }
 
-    reader.readAsBinaryString(file);
   };
   const submitSave = () => {
     const dataUpload = { data: dataNew, smester_id };
     switch (keys) {
       case 'status':
-        dispatch(insertStudent(dataUpload)).then((res) => {
-          notifications(res.payload);
-          setDataNew([]);
-          setNameFile();
-        });
+        if (major.length > 0) {
+          dispatch(insertStudent(dataUpload)).then((res) => {
+            notifications(res.payload);
+            setDataNew([]);
+            setNameFile();
+          });
+        }
+       
         break;
       case 'business':
         dispatch(insertBusiness(dataNew)).then((res) => {
