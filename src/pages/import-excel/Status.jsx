@@ -372,7 +372,7 @@ const Status = ({
                 justifyContent: 'space-between',
               }}
             >
-              <span style={{ width: '30%' }}>Ngành : </span>
+              <span className="select-status" style={{ width: '30%' }}>Ngành : </span>
               <Select
                 style={{ width: '100%' }}
                 onChange={(val) => handleStandardTableChange('majors', val)}
@@ -400,6 +400,7 @@ const Status = ({
             >
               <span style={{ width: '45%' }}>Trạng thái :</span>
               <Select
+              
                 className="filter-status"
                 style={{ width: '100%' }}
                 onChange={(val) => handleStandardTableChange('statusCheck', val)}
@@ -426,7 +427,7 @@ const Status = ({
                 justifyContent: 'space-between',
               }}
             >
-              <span style={{ width: '40%' }}>Tìm Kiếm: </span>
+              <span className="select-status" style={{ width: '40%' }}>Tìm Kiếm: </span>
               <Input
                 style={{ width: '100%' }}
                 placeholder="Tìm kiếm theo mã sinh viên"

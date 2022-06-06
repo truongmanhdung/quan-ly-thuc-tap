@@ -235,6 +235,8 @@ table tbody td {
         flex-wrap: wrap;
     }
     .filter{
+        display: flex;
+        gap: 10px 13px;
         margin: 0 0 0 10px
         /* display:flex; */
         /* justify-content:space-between; */
@@ -255,6 +257,9 @@ table tbody td {
     }
     .checkbox>input {
         font-size: 4rem;
+    }
+    .select-status{
+        margin: 0 10px;
     }
     
 }
