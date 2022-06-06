@@ -284,8 +284,8 @@ listBusiness
               alignItems: "center",
             }}
           >
-            <h4 style={{ fontSize: ".9rem" }}>Sinh viên đăng ký thực tập</h4>
-            <Col span={5} style={{ padding: "0 10px" }}>
+            <h4 style={{ fontSize: ".9rem", margin: "0 -15px" }}>Sinh viên đăng ký thực tập</h4>
+            <Col span={4} style={{ padding: "0 3px" }}>
               <div
                 style={{
                   display: "flex",
@@ -293,10 +293,10 @@ listBusiness
                   justifyContent: "space-between",
                 }}
               >
-                <span style={{ width: "45%" }}>Học Kỳ : </span>
+                <span style={{ width: "45%",display: "flex",flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", margin: "0 20px" }}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   defaultValue={defaultSemester?._id}
                   placeholder={defaultSemester?.name}
@@ -311,7 +311,7 @@ listBusiness
             </Col>
             <Button
               variant="warning"
-              style={{ marginRight: 10, height: 36 }}
+              style={{ marginRight: 5, height: 33 }}
               onClick={(e) => exportToCSV(list)}
             >
               Export
@@ -320,7 +320,7 @@ listBusiness
         ) : (
           <>
             <h4>Sinh viên đăng ký thực tập</h4>
-            <Col span={5} style={{ padding: "0 10px" }}>
+            <Col span={4} style={{ padding: "0 3px" }}>
               <div
                 style={{
                   display: "flex",
@@ -328,7 +328,7 @@ listBusiness
                   justifyContent: "space-between",
                 }}
               >
-                <span style={{ width: "45%" }}>Học Kỳ : </span>
+                <span style={{ width: "45%", display: "flex", flexWrap: "wrap" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
                   style={{ width: "100%" }}
@@ -344,10 +344,10 @@ listBusiness
                 </Select>
               </div>
             </Col>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex" }} className="bnt-export">
               <Button
                 variant="warning"
-                style={{ marginRight: 10, height: 36 }}
+                style={{ marginRight: 5, height: 36 }}
                 onClick={(e) => exportToCSV(list)}
               >
                 Export
@@ -363,7 +363,7 @@ listBusiness
         )}
         <br />
         <Row>
-          <Col span={6} style={{ padding: "0 10px" }}>
+          <Col span={7} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: "flex",
