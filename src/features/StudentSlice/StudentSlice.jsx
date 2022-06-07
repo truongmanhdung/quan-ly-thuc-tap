@@ -5,7 +5,8 @@ import { Button } from 'antd';
 export const getStudent = createAsyncThunk('student/getStudent', async (page) => {
   const {onShowDetail} = page
   const { data } = await StudentAPI.getAll(page);
-  return {data: data,func: onShowDetail}
+  return {data: data,
+    func: onShowDetail}
 });
 export const insertStudent = createAsyncThunk('student/insertStudent', async (action) => {
   const { data } = await StudentAPI.add(action);

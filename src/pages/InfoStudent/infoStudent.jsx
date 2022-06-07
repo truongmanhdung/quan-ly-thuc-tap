@@ -63,7 +63,7 @@ function InfoStudent({
           </div>
           <div className="border-top mt-3 pt-2">
             <p>Họ và tên : {studentById.name}</p>
-            <p>Ngành : {studentById.majors}</p>
+            <p>Ngành : {studentById.majors?.name}</p>
             <p>Khóa học : {studentById.course}</p>
             <p>Email : {studentById.email}</p>
             <p>

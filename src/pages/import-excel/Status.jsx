@@ -30,6 +30,7 @@ const Status = ({
   listBusiness,
   listMajors,
 }) => {
+
   const [studentdetail, setStudentDetail] = useState('');
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const Status = ({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSemester?._id,
+    smester_id: defaultSemester._id,
   });
   const [major, setMajor] = useState('');
   const [filter, setFiler] = useState();
@@ -94,7 +95,7 @@ const Status = ({
       title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
-      render: (val) => val.name,
+      render: val =>val.name,
     },
     {
       title: 'Phân loại',
@@ -334,8 +335,9 @@ const Status = ({
                   className="filter-status"
                   style={{ width: '100%' }}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
-                  defaultValue={defaultSemester?._id}
-                  placeholder={defaultSemester?.name}
+                  placeholder={defaultSemester.name}
+                  defaultValue={defaultSemester._id}
+
                 >
                   {listSemesters?.map((item, index) => (
                     <Option value={item._id} key={index}>
@@ -359,7 +361,7 @@ const Status = ({
                 onChange={(val) => setMajor(val)}
                 placeholder="Chọn ngành"
               >
-                {listMajors?.map((item, index) => (
+                { listMajors && listMajors?.map((item, index) => (
                   <Option value={item._id} key={index}>
                     {item.name}
                   </Option>
@@ -399,7 +401,7 @@ const Status = ({
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
-                {listMajors.map((item, index) => (
+                { listMajors && listMajors.map((item, index) => (
                   <>
                     <Option value={item._id} key={index}>
                       {item.name}
