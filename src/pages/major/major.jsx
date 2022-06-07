@@ -2,7 +2,8 @@
 import { Button, Table, message, Space, Form, } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createMajor, getListMajor, removeMajor, updateMajor } from "../../features/majorSlice/majorSlice";
+import majorAPI from "../../API/majorAPi";
+import { getListMajor,  updateMajor } from "../../features/majorSlice/majorSlice";
 import { createNarrows, getNarow } from "../../features/narrow";
 import FormMajor from "./majorForm";
 const Major = () => {
@@ -10,7 +11,6 @@ const Major = () => {
   const [hideForm, setHideForm] = useState('');
   const [change, setChange] = useState(false)
   const [text, setText] = useState("Thêm kỳ");
-  const [dataEdit, setDataEdit] = useState({});
   const [form] = Form.useForm();
   const { listMajor, loading } = useSelector((state) => state.major);
   const {listNarrow, loadings} = useSelector(state => state.narrow)
@@ -37,11 +37,11 @@ const Major = () => {
                 if (listNarrow && Array.isArray(listNarrow) ) {
                     const v = listNarrow.filter(i => i.id_majors._id === record._id)
                     return v.map(item => (<span>{item.name},</span>)  )
+                }else{
+                  return val
                 }
       }
     },
-    
-    
     {
       title: "Action",
       key: "action",
@@ -51,10 +51,6 @@ const Major = () => {
           <a style={{ color: "blue" }} onClick={() => getDataEdit(record)}>
             Sửa
           </a>
-          <a style={{ color: "blue" }} onClick={() => dispatch(removeMajor(record._id))}>
-           Xoá
-          </a>
-          
         </Space>
       ),
     },
@@ -66,23 +62,22 @@ const Major = () => {
   const onFinish = async (values) => {
     const data = {
       ...values,
-      id: values.id,
+      _id: change._id
     };
     try {
       switch (hideForm) {
         case "majors":
-          if (change) {
+          if (text.toLowerCase() === 'sửa ngành') {
             dispatch(updateMajor({
-              ...data,
-              id: change._id
+              ...data
             }))
           } else {
-            dispatch(createMajor(data))
+            majorAPI.create(data).then(res => dispatch(getListMajor()))
           }
           break;
 
         case "specializing":
-          dispatch(createNarrows(data))
+          dispatch(createNarrows(data)).then( res => dispatch(getListMajor()))
           break;
         default:
           break;
@@ -92,7 +87,6 @@ const Major = () => {
       message.error(dataErr);
     }
   };
-
   // sửa ngành
   const getDataEdit = (value) => {
     setHideForm("majors");
@@ -116,7 +110,6 @@ const Major = () => {
     form.resetFields();
     setHideForm(type);
     setText("Xác Nhận");
-    setDataEdit();
   };
 
 
@@ -147,7 +140,7 @@ const Major = () => {
           <div className="filter" style={{ marginTop: "20px" }}>
             <FormMajor
               onFinish={onFinish}
-              dataEdit={dataEdit}
+              dataEdit={change}
               editStatusButton={editStatusButton}
               text={text}
               forms={form}

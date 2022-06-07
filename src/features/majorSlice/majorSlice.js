@@ -4,22 +4,15 @@ export const getListMajor = createAsyncThunk(
   "major/getListMajor", 
   async () => {
   const { data } = await majorAPI.getList();
-  console.log(123);
   return data?.majors;
 });
 
-export const createMajor = createAsyncThunk(
-  "major/createMajor",
-  async (dataForm) => {
-    const { data } = await majorAPI.create(dataForm);
-    return data
-  }
-);
+
 
 export const updateMajor = createAsyncThunk(
   "major/updateMajor",
-  async (dataForm) => {
-    const { data } = await majorAPI.update(dataForm.id, dataForm);
+  async (z) => {
+    const { data } = await majorAPI.update(z._id, z);
     return data
   }
 );
@@ -50,20 +43,20 @@ const majorSlice = createSlice({
     });
 
     //createMajor
-    builder.addCase(createMajor.pending, (state, { payload }) => {
-      state.listMajor.push(payload.major)
-      state.message = payload.message
-      state.loading = true;
-    });
-    builder.addCase(createMajor.fulfilled, (state, action) => {
-      state.message = action.payload;
-      state.success = true;
-      state.loading = false;
-    });
-    builder.addCase(createMajor.rejected, (state) => {
-      state.loading = false;
-      state.success = false;
-    });
+    // builder.addCase(majoradd.pending, (state, { payload }) => {
+    //   state.listMajor.push(payload.major)
+    //   state.message = payload.message
+    //   state.loading = true;
+    // });
+    // builder.addCase(majoradd.fulfilled, (state, action) => {
+    //   state.message = action.payload;
+    //   state.success = true;
+    //   state.loading = false;
+    // });
+    // builder.addCase(majoradd.rejected, (state) => {
+    //   state.loading = false;
+    //   state.success = false;
+    // });
 
     //updateMajor
     builder.addCase(updateMajor.pending, (state) => {
@@ -71,7 +64,7 @@ const majorSlice = createSlice({
     });
     builder.addCase(updateMajor.fulfilled, (state, { payload }) => {
       let data = state.listMajor.filter(item => item._id !== payload.major._id)
-      state.listMajor = [payload.major, ...data,]
+      state.listMajor = [ ...data,payload.major,]
       state.message = payload.message
       state.loading = false;
     });

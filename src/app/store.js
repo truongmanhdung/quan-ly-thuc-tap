@@ -10,7 +10,20 @@ import rootReducer from "./rootReducer";
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["cumpus","specialization","students", "users"],
+  blacklist: [
+    "cumpus",
+    "specialization",
+    "students", 
+    "users", 
+    "major", 
+    "students", 
+    "narrow", 
+    "business",
+    "time",
+    "semester",
+    "reviewer",
+    "manager"
+  ],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

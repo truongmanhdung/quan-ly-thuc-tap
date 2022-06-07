@@ -6,7 +6,7 @@ export const createNarrows = createAsyncThunk(
       return data
 });
 export const getNarow = createAsyncThunk(
-  "narrows/getNarow", async (req) => {
+  "narrows/getNarow", async (req, func) => {
 const { data } = await getNarrow()
     return data
 });
