@@ -654,14 +654,16 @@ const Status = ({
           />
         </Table>
       )}
-      <StudentDetail
+
+      {modal && <StudentDetail
         infoUser={infoUser}
-        studentId={studentdetail}
+        studentId={studentdetail._id}
         onShowModal={modal}
         closeModal={() => setModal(false)}
         listBusiness={listBusiness}
         listManager={listManager}
-      />
+      />}
+      
     </div>
   );
 };

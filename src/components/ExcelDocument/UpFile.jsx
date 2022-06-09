@@ -90,7 +90,7 @@ const UpFile = ({ smester_id, name, keys, major }) => {
 
   };
   const submitSave = () => {
-    const dataUpload = { data: dataNew, smester_id };
+    const dataUpload = { data: dataNew, smester_id, majors: major };
     switch (keys) {
       case 'status':
         if (major.length > 0) {
