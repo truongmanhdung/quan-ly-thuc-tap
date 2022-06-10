@@ -9,6 +9,7 @@ import { getNarow } from '../../features/narrow';
 import { getListSpecialization } from '../../features/specializationSlice/specializationSlice';
 import { getStudentId } from '../../features/StudentSlice/StudentSlice';
 import { getTimeForm } from '../../features/timeDateSlice/timeDateSlice';
+import { getLocal } from '../../ultis/storage';
 import Proactive from './Proactive';
 import Support from './Support';
 import styles from './SupportStudent.module.css';
@@ -44,7 +45,8 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = ({ studentById, infoUser, listBusiness, narrow: { listNarrow } }) => {
+const SupportStudent = ({ studentById, listBusiness, narrow: { listNarrow } }) => {
+  const infoUser = getLocal()
   const dispatch = useDispatch();
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);

@@ -16,7 +16,7 @@ export const loginGoogle = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   const { data } = await AuthApi.logout();
   if(data){
-    localStorage.removeItem('token')
+    localStorage.removeItem('user')
   }
   return data;
 });

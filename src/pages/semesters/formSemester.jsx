@@ -2,7 +2,6 @@ import { Col, DatePicker, Form, Input, Row, Button } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSemesters } from "../../features/semesters/semestersSlice";
-import moment from "moment";
 const { RangePicker } = DatePicker;
 const FSemester = ({ onFinish, editStatusButton, text, forms }) => {
   const dispatch = useDispatch();
