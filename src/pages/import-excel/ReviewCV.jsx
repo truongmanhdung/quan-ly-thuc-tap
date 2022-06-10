@@ -15,6 +15,7 @@ import { statusConfigCV } from '../../ultis/constConfig';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import StudentDetail from '../../components/studentDetail/StudentDetail';
+import { getLocal } from '../../ultis/storage';
 const { Column } = Table;
 
 const { Option } = Select;
@@ -22,7 +23,7 @@ const { Option } = Select;
 const ReviewCV = () => {
   const dispatch = useDispatch();
   const [studentdetail, setStudentDetail] = useState('');
-  const { infoUser } = useSelector((state) => state.auth);
+  const infoUser = getLocal()
   const {
     listStudentAssReviewer: { total, list },
     loading,
@@ -49,7 +50,7 @@ const ReviewCV = () => {
     setChooseIdStudent([]);
     dispatch(getListStudentAssReviewer(data));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
 
   const onShowDetail = (mssv, key) => {
     onShowModal()

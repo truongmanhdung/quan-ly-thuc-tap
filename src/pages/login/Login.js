@@ -7,6 +7,7 @@ import { Select, Empty, message } from "antd";
 import { useNavigate } from "react-router";
 import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
 import SemestersAPI from "../../API/SemestersAPI";
+import { saveLocal } from "../../ultis/storage";
 const { Option } = Select;
 
 const Login = () => {
@@ -26,11 +27,15 @@ const Login = () => {
         smester_id: data.data._id,
       };
       dispatch(loginGoogle(dataForm))
-        .then((res) => res && redirect(res))
+        .then((res) => {
+          saveLocal(res.payload)
+         return res && redirect(res)
+        })
         .catch((err) => err && message.error("Đăng nhập thất bại"));
     });
   };
   const redirect = ({ payload: { isAdmin } }) => {
+
     message.success("Đăng nhập thành công");
     return isAdmin ? navigate("/status") : navigate("/info-student");
   };

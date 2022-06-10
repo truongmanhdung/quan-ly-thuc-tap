@@ -7,6 +7,7 @@ import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { optionStatus } from "../../ultis/selectOption";
+import { getLocal } from "../../ultis/storage";
 const columns = [
   {
     title: "Tên doanh nghiệp",
@@ -31,10 +32,10 @@ const columns = [
 ];
 function InfoStudent({
   studentById,
-  infoUser,
   listBusiness: { list, total },
   loading,
 }) {
+  const infoUser = getLocal()
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
@@ -51,7 +52,7 @@ function InfoStudent({
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(getBusiness(page));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
   const isRegister = studentById?.support;
   const statusForm = studentById?.statusCheck;
   return (
@@ -144,11 +145,9 @@ InfoStudent.propTypes = {
 export default connect(
   ({
     students: { studentById },
-    auth: { infoUser },
     business: { listBusiness, loading },
   }) => ({
     studentById,
-    infoUser,
     listBusiness,
     loading,
   })

@@ -18,11 +18,11 @@ import { updateReviewerListStudent } from '../../features/reviewerStudent/review
 import { getSemesters } from '../../features/semesters/semestersSlice';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import { filterStatuss } from '../../ultis/selectOption';
+import { getLocal } from '../../ultis/storage';
 const { Option } = Select;
 
 const Status = ({
   listStudent: { list, total },
-  infoUser,
   loading,
   listSemesters,
   defaultSemester,
@@ -30,7 +30,7 @@ const Status = ({
   listBusiness,
   listMajors,
 }) => {
-
+  const infoUser = getLocal()
   const [studentdetail, setStudentDetail] = useState('');
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
@@ -67,7 +67,7 @@ const Status = ({
     dispatch(getSemesters());
     dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
   const columns = [
     {
       title: 'MSSV',
@@ -676,9 +676,8 @@ Status.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ students, auth, semester, manager, business, major }) => ({
+export default connect(({ students,semester, manager, business, major }) => ({
   listStudent: students.listStudent,
-  infoUser: auth.infoUser,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,
   loading: students.loading,
