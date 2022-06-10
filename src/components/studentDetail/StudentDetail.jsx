@@ -461,6 +461,22 @@ const StudentDetail = (props) => {
                 <span className="ms-2">Chưa nộp</span>
               )}
             </Col>
+
+            <Col span={12} className="d-flex">
+              <h6>Sinh viên đã được hỗ trợ thực tập: </h6>
+              {studentId.support ? (
+                // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                <a
+                  className="ms-2 text-one-row"
+                  onClick={() => window.open(studentId.support)}
+                >
+                  {studentId.support}
+                </a>
+              ) : (
+                <span className="ms-2">Chưa được hỗ trợ</span>
+              )}
+            </Col>
+            
             <Col span={12} className="d-flex">
               <h6>Báo cáo: </h6>
               {studentId.report ? (
