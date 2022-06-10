@@ -13,3 +13,19 @@ export const setCookie = (key, value) => {
 export const getCookie = (key) => cookies.get(key)
 
 export const removeCookie = async (key) => await cookies.remove(key)
+
+
+
+export const saveLocal = (val) => {
+    if (typeof window === 'undefined') return false
+    return localStorage.setItem('user', JSON.stringify(val))
+}
+
+export const getLocal = () => {
+    if (typeof window === 'undefined') return false;
+    if (localStorage.getItem('user')) {
+        return JSON.parse(localStorage.getItem('user'))
+    } else {
+        return false
+    }
+}

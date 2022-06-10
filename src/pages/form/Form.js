@@ -16,6 +16,7 @@ import ReportFormAPI from "../../API/ReportFormAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import { getLocal } from "../../ultis/storage";
 
 import styles from "./Form.module.css";
 
@@ -49,7 +50,8 @@ const tailFormItemLayout = {
     },
   },
 };
-const Formrp = ({ infoUser, studentById }) => {
+const Formrp = ({  studentById }) => {
+  const infoUser = getLocal()
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [startDate, setStartDate] = useState();
@@ -259,7 +261,6 @@ Formrp.propTypes = {
   studentById: object,
 };
 
-export default connect(({ auth: { infoUser }, students: { studentById } }) => ({
-  infoUser,
+export default connect(({ students: { studentById } }) => ({
   studentById,
 }))(Formrp);
