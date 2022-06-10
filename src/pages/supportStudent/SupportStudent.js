@@ -252,7 +252,7 @@ const SupportStudent = ({ studentById, infoUser, listBusiness, narrow: { listNar
                         }}
                         placeholder="Chọn doanh nghiệp"
                       >
-                        {listBusiness.list.length > 0 &&
+                        {listBusiness.list.length >= 0 && listBusiness.list >= 20 &&
                           listBusiness.list.map((item) => (
                             <Option key={item._id} value={item._id}>
                               {item.name + '-' + item.internshipPosition + '-' + item.majors}

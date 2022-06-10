@@ -21,6 +21,7 @@ const ListOfBusiness = ({ infoUser, listSemesters, defaultSemester }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, infoUser]);
   const { listBusiness, loading } = useSelector((state) => state.business);
+  console.log("data---",listBusiness);
   const columns = [
     {
       title: "Tên doanh nghiệp",
@@ -42,6 +43,10 @@ const ListOfBusiness = ({ infoUser, listSemesters, defaultSemester }) => {
     {
       title: "Ngành",
       dataIndex: "majors",
+    },
+    {
+      title: "Chi tiết",
+      dataIndex: ""
     },
   ];
 

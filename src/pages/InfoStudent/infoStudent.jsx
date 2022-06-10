@@ -28,6 +28,10 @@ const columns = [
     title: "Ngành",
     dataIndex: "majors",
   },
+  {
+    title: "Chi tiết",
+    dataIndex: ""
+  }
 ];
 function InfoStudent({
   studentById,

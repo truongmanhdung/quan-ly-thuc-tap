@@ -4,7 +4,7 @@ const managerApi = {
         const url = `/manager`;
         return axiosClient.get(url);
     },
-  
 
+    
 };
 export default managerApi;
