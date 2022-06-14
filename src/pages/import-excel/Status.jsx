@@ -273,7 +273,10 @@ const Status = ({
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
-
+const parentMethods = {
+  major,
+  ...page
+}
   return (
     <div className="status">
       <div className="flex-header">
@@ -377,7 +380,7 @@ const Status = ({
               >
                 Export
               </Button>
-              <UpFile major={major} keys="status" smester_id={page?.smester_id} />
+              <UpFile parentMethods={parentMethods} keys="status"  />
             </div>
           </>
         )}
