@@ -28,14 +28,13 @@ const Login = () => {
       };
       dispatch(loginGoogle(dataForm))
         .then((res) => {
-          saveLocal(res.payload)
-         return res && redirect(res)
+          saveLocal(res.payload);
+          return res && redirect(res);
         })
         .catch((err) => err && message.error("Đăng nhập thất bại"));
     });
   };
   const redirect = ({ payload: { isAdmin } }) => {
-
     message.success("Đăng nhập thành công");
     return isAdmin ? navigate("/status") : navigate("/info-student");
   };
@@ -73,14 +72,14 @@ const Login = () => {
         </Select>
       </div>
       <div className={styles.button_login}>
-          <GoogleLogin
-            disabled={cumpus === "" ? true : false}
-            className={styles.button_login}
-            clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
-            buttonText="Login With Google"
-            onSuccess={handleLogin}
-            onFailure={handleFailure}
-          />
+        <GoogleLogin
+          disabled={cumpus === "" ? true : false}
+          className={styles.button_login}
+          clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
+          buttonText="Login With Google"
+          onSuccess={handleLogin}
+          onFailure={handleFailure}
+        />
       </div>
     </div>
   );
