@@ -31,6 +31,7 @@ const studentSlice = createSlice({
     listStudent: {},
     loading: false,
     listSmester: [],
+    defaultSemester:{},
     studentById:{},
     error: ''
   },
@@ -74,9 +75,10 @@ const studentSlice = createSlice({
     builder.addCase(getSmester.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(getSmester.fulfilled, (state, action) => {
+    builder.addCase(getSmester.fulfilled, (state, {payload}) => {
       state.loading = false;
-      state.listSmester = action.payload;
+      state.listSmester = payload.listSemesters;
+      state.defaultSemester = payload.defaultSemester
     });
     builder.addCase(getSmester.rejected, (state, action) => {
       state.loading = false;

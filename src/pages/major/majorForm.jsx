@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row, Button, Select } from 'antd';
+import { Col, Form, Input, Row, Button, Select} from 'antd';
 import { Option } from 'antd/lib/mentions';
 import React from 'react';
 
@@ -30,6 +30,7 @@ const FormMajor = ({
           ...values,
           id_majors: data,
         });
+        setData({})
         break;
       default:
         break;
