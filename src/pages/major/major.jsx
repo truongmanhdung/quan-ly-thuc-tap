@@ -35,7 +35,7 @@ const Major = () => {
       width: 100,
       render: (val, record) => {
                 if (listNarrow && Array.isArray(listNarrow) ) {
-                    const v = listNarrow.filter(i => i.id_majors._id === record._id)
+                    const v =  listNarrow.filter(i => i.id_majors?._id === record?._id)
                     return v.map(item => (<span>{item.name},</span>)  )
                 }else{
                   return val
@@ -77,7 +77,11 @@ const Major = () => {
           break;
 
         case "specializing":
-          dispatch(createNarrows(data)).then( res => dispatch(getListMajor()))
+          if (Object.keys(data.id_majors).length <= 0) {
+            return message.warning("Vui lòng chọn ngành")
+          }else{
+            dispatch(createNarrows(data)).then( res => dispatch(getListMajor()))
+          }
           break;
         default:
           break;
