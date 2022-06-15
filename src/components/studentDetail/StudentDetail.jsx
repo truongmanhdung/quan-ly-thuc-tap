@@ -249,17 +249,17 @@ const StudentDetail = (props) => {
       onCancel={closeModal}
       visible={onShowModal}
     >
-      <h4>Thông tin sinh viên</h4>
-      <Row>
-        <Col span={16} className="border-right" style={{ paddingRight: 20 }}>
+      <h4 className="text-center">Thông tin sinh viên</h4>
+      <Row className="col-md-16">
+        <Col span={16} className="border-right ms-4" style={{ paddingRight: 20 }}>
           <Row className="d-flex align-items-center">
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} sm={{span: 24}} md={{ span: 12 }}  className="d-flex">
               <h6>Họ tên: </h6>
               <span className="ms-2">
                 {student.name ? student.name : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Tên công ty: </h6>
               {student.support === 1 ? (
                 <span className="ms-2">
@@ -273,13 +273,13 @@ const StudentDetail = (props) => {
                 </span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Mã sinh viên: </h6>
               <span className="ms-2">
                 {student.mssv ? student.mssv : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Địa chỉ công ty: </h6>
               {student.support === 1 ? (
                 <span className="ms-2">
@@ -295,13 +295,13 @@ const StudentDetail = (props) => {
                 </span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Email: </h6>
               <span className="ms-2">
                 {student.email ? student.email : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Mã số thuế: </h6>
               {student.support === 1 ? (
                 <span className="ms-2">
@@ -315,13 +315,13 @@ const StudentDetail = (props) => {
                 </span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Chuyên ngành: </h6>
               <span className="ms-2">
                 {student.majors ? student.majors.name : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Vị trí thực tập: </h6>
               {student.support === 1 ? (
                 <span className="ms-2">
@@ -335,13 +335,13 @@ const StudentDetail = (props) => {
                 </span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Khoá học: </h6>
               <span className="ms-2">
                 {student.course ? student.course : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>SĐT công ty: </h6>
               <span className="ms-2">
                 {student.phoneNumberCompany
@@ -349,7 +349,7 @@ const StudentDetail = (props) => {
                   : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Kỳ thực tập: </h6>
               <span className="ms-2">
                 {student?.smester_id?.name
@@ -357,7 +357,7 @@ const StudentDetail = (props) => {
                   : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Email người xác nhận: </h6>
               <span className="ms-2">
                 {student.emailEnterprise
@@ -365,13 +365,13 @@ const StudentDetail = (props) => {
                   : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Số điện thoại: </h6>
               <span className="ms-2">
                 {student?.phoneNumber ? student?.phoneNumber : "không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Ngày bắt đầu thực tập: </h6>
               <span className="ms-2">
                 {student.internshipTime
@@ -379,13 +379,13 @@ const StudentDetail = (props) => {
                   : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Địa chỉ: </h6>
               <span className="ms-2">
                 {student?.address ? student?.address : "không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Ngày kết thúc thực tập: </h6>
               <span className="ms-2">
                 {student.endInternShipTime
@@ -393,7 +393,7 @@ const StudentDetail = (props) => {
                   : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Phân loại: </h6>
               {student.support ? (
                 <span className="ms-2">
@@ -403,24 +403,24 @@ const StudentDetail = (props) => {
                 <span className="ms-2">Chưa nhập form</span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Điểm thái độ: </h6>
               <span className="ms-2">
                 {student.attitudePoint ? student.attitudePoint : "Không có"}
               </span>
             </Col>
 
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6 className="me-2">Trạng thái: </h6>
               {renderStatus(student.statusCheck)}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Điểm kết thúc: </h6>
               <span className="ms-2">
                 {student.resultScore ? student.resultScore : "Không có"}
               </span>
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>CV: </h6>
               {student.CV ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -434,7 +434,7 @@ const StudentDetail = (props) => {
                 <span className="ms-2">Chưa nộp</span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Biên bản: </h6>
               {student.form ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -448,7 +448,7 @@ const StudentDetail = (props) => {
                 <span className="ms-2">Chưa nộp</span>
               )}
             </Col>
-            <Col span={12} className="d-flex">
+            <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
               <h6>Báo cáo: </h6>
               {student.report ? (
                 // eslint-disable-next-line jsx-a11y/anchor-is-valid
