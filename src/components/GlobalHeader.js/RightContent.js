@@ -65,7 +65,7 @@ const Rightcontent = () => {
                 }} >
                     <Dropdown overlay={menu} placement="bottomLeft" arrow>
                         <span>
-                            <Avatar size={35} src={infoUser.picture} />  <span>{infoUser.name}</span>
+                            <Avatar size={35} src={infoUser.picture} />  <span>{infoUser.name.length > 20 ? infoUser.name.slice(0,20) + "..." : infoUser.name }</span>
                         </span>
                     </Dropdown>
                 </div>

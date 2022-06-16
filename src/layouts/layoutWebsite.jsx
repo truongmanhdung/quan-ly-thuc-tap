@@ -51,7 +51,7 @@ function LayoutWebsite() {
                   key="4"
                   icon={<ProfileOutlined className="icon-link" />}
                 >
-                  <NavLink to="status">Danh sách đăng ký</NavLink>
+                  <NavLink to="/">Danh sách đăng ký</NavLink>
                 </Menu.Item>
                 <Menu.Item
                   key="111"
@@ -89,7 +89,7 @@ function LayoutWebsite() {
                   <NavLink to="form-register">Thời gian đăng ký</NavLink>
                 </Menu.Item>
                 <Menu.Item
-                  key="12"
+                  key="123"
                   icon={<ProfileOutlined className="icon-link" />}
                 >
                   <NavLink to="major">Danh sách ngành học</NavLink>

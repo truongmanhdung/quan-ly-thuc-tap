@@ -45,8 +45,8 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = ({ studentById, listBusiness, narrow: { listNarrow } }) => {
-  const infoUser = getLocal()
+const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNarrow } }) => {
+  const infoUser = getLocal();
   const dispatch = useDispatch();
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
@@ -63,10 +63,12 @@ const SupportStudent = ({ studentById, listBusiness, narrow: { listNarrow } }) =
       getBusiness({
         campus_id: infoUser.student.campus_id,
         smester_id: infoUser.student.smester_id,
+        majors: infoUser.student.majors,
       }),
     );
     dispatch(getNarow());
-  }, [value, dispatch, infoUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -234,7 +236,13 @@ const SupportStudent = ({ studentById, listBusiness, narrow: { listNarrow } }) =
                     label="Chuyên ngành"
                     rules={[{ required: true, message: 'Vui lòng chọn chuyên ngành' }]}
                   >
-                    <Select placeholder="Chọn chuyên ngành" style={{ width: '100%' }}>
+                    <Select
+                      placeholder="Chọn chuyên ngành"
+                      style={{
+                        width: '50%',
+                        marginLeft: '20px',
+                      }}
+                    >
                       {listNarrow
                         .filter((i) => i.id_majors._id === studentById.majors._id)
                         .map((i, k) => (
@@ -254,12 +262,11 @@ const SupportStudent = ({ studentById, listBusiness, narrow: { listNarrow } }) =
                         }}
                         placeholder="Chọn doanh nghiệp"
                       >
-                        {listBusiness.list.length >= 0 && listBusiness.list >= 20 &&
-                          listBusiness.list.map((item) => (
-                            <Option key={item._id} value={item._id}>
-                              {item.name + '-' + item.internshipPosition + '-' + item.majors}
-                            </Option>
-                          ))}
+                        {list?.map((item) => (
+                          <Option key={item._id} value={item._id}>
+                            {item.name + '-' + item.internshipPosition}
+                          </Option>
+                        ))}
                       </Select>
                     </Form.Item>
                   )}
