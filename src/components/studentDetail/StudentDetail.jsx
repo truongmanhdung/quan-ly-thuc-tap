@@ -535,8 +535,8 @@ const StudentDetail = (props) => {
                   style={{ width: "50%" }}
                 >
                   {listManager.length > 0 &&
-                    listManager.map((item) => (
-                      <Option key={item._id} value={item.email}>
+                    listManager.map((item, index) => (
+                      <Option key={index} value={item.email}>
                         {item.name} - {item.email}
                       </Option>
                     ))}
@@ -565,8 +565,8 @@ const StudentDetail = (props) => {
                   {listBusiness &&
                     listBusiness.list &&
                     listBusiness.list.length > 0 &&
-                    listBusiness.list.map((item) => (
-                      <Option key={item._id} value={item._id}>
+                    listBusiness.list.map((item, index) => (
+                      <Option key={index} value={item._id}>
                         {item.name} - {item.internshipPosition} - {item.majors}
                       </Option>
                     ))}

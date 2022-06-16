@@ -19,6 +19,7 @@ import ReviewReport from '../pages/mywork/ReviewReport';
 import ListOfBusiness from '../pages/business/ListOfBusiness';
 import FormSemester from '../pages/semesters/semesters';
 import Major from '../pages/major/major';
+import PrivateStudent from './private/privateStudent';
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -32,28 +33,30 @@ const Router = () => {
           </Privateroute>
         }
       >
+
         <Route
           path="/support-student"
           element={
-            <Privateroute>
+            <PrivateStudent>
+
               <SupportStudent />
-            </Privateroute>
+            </PrivateStudent>
           }
         />
         <Route
           path="info-student"
           element={
-            <Privateroute>
+            <PrivateStudent>
               <InfoStudent />
-            </Privateroute>
+              </PrivateStudent>
           }
         />
         <Route
           path="report-form"
           element={
-            <Privateroute>
+            <PrivateStudent>
               <ReportForm />
-            </Privateroute>
+              </PrivateStudent>
           }
         />
         <Route
@@ -64,115 +67,92 @@ const Router = () => {
             </Privateroute>
           }
         />
+          <Route
+          index
+          element={
+              <Privateadmin>
+                <Status />
+              </Privateadmin>
+          }
+        />
         <Route
           path="major"
           element={
-            <Privateroute>
+            <Privateadmin>
+
               <Major />
-            </Privateroute>
+              </Privateadmin>
+
           }
         />
         <Route
           path="report"
           element={
-            <Privateroute>
+            <PrivateStudent>
+
               <Formrp />
-            </Privateroute>
+            </PrivateStudent>
           }
         />
-
         <Route
           path="/employee-manager"
           element={
-            <Privateroute>
               <Privateadmin>
                 <EmployeeManager />
               </Privateadmin>
-            </Privateroute>
           }
         />
-        <Route
-          path="status"
-          element={
-            <Privateroute>
-              <Privateadmin>
-                <Status />
-              </Privateadmin>
-            </Privateroute>
-          }
-        />
-        {/* <Route
-          path="company"
-          element={
-            <Privateroute>
-              <Privateadmin>
-                <Company />
-              </Privateadmin>
-            </Privateroute>
-          }
-        /> */}
         <Route
           path="form-register"
           element={
-            <Privateroute>
               <Privateadmin>
                 <Formtimepicker />
               </Privateadmin>
-            </Privateroute>
           }
         />
         <Route
           path="review-cv"
           element={
-            <Privateroute>
               <Privateadmin>
                 <ReviewCV />
               </Privateadmin>
-            </Privateroute>
           }
         />
         <Route
           path="review-form"
           element={
-            <Privateroute>
               <Privateadmin>
                 <Reviewform />
               </Privateadmin>
-            </Privateroute>
           }
         />
         <Route
           path="review-report"
           element={
-            <Privateroute>
               <Privateadmin>
                 <ReviewReport />
               </Privateadmin>
-            </Privateroute>
           }
         />
         <Route
           path="up-file"
           element={
-            <Privateroute>
               <Privateadmin>
                 <UpFile />
               </Privateadmin>
-            </Privateroute>
           }
         />
         <Route
           path="company"
           element={
-            <Privateroute>
               <Privateadmin>
                 <ListOfBusiness />
               </Privateadmin>
-            </Privateroute>
           }
         />
-        <Route path="/404" element={<Notfound />} />
       </Route>
+      <Route path="/404" element={<Notfound />} />
+
     </Routes>
   );
 };

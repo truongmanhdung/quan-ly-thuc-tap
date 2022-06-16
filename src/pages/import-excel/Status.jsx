@@ -387,7 +387,7 @@ const parentMethods = {
       </div>
       <div className="filter" style={{ marginTop: '20px' }}>
         {window.innerWidth < 739 && (
-          <UpFile smester_id={page?.smester_id} style={{ fontSize: '.9rem' }} />
+          <UpFile parentMethods={parentMethods}  keys="status" style={{ fontSize: '.9rem' }} />
         )}
         <br />
         <Row>

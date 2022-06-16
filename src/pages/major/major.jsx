@@ -36,7 +36,7 @@ const Major = () => {
       render: (val, record) => {
                 if (listNarrow && Array.isArray(listNarrow) ) {
                     const v =  listNarrow.filter(i => i.id_majors?._id === record?._id)
-                    return v.map(item => (<span>{item.name},</span>)  )
+                    return v.map((item, index) => (<span key={index} >{item.name},</span>)  )
                 }else{
                   return val
                 }
