@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
 import SemestersAPI from "../../API/SemestersAPI";
 import { saveLocal } from "../../ultis/storage";
+import { getSemesters } from "../../features/semesters/semestersSlice";
 const { Option } = Select;
 
 const Login = () => {
@@ -45,6 +46,7 @@ const Login = () => {
 
   useEffect(() => {
     dispatch(getListCumpus());
+    dispatch(getSemesters());
   }, [dispatch]);
 
   return (
