@@ -56,6 +56,8 @@ const Status = ({
     );
   };
   useEffect(() => {
+    dispatch(getSemesters());
+    dispatch(getListMajor());
     dispatch(fetchManager());
     dispatch(
       getStudent({
@@ -64,8 +66,6 @@ const Status = ({
         onShowDetail,
       }),
     );
-    dispatch(getSemesters());
-    dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const columns = [
