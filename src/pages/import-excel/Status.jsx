@@ -18,11 +18,11 @@ import { updateReviewerListStudent } from '../../features/reviewerStudent/review
 import { getSemesters } from '../../features/semesters/semestersSlice';
 import { getStudent } from '../../features/StudentSlice/StudentSlice';
 import { filterStatuss } from '../../ultis/selectOption';
+import { getLocal } from '../../ultis/storage';
 const { Option } = Select;
 
 const Status = ({
   listStudent: { list, total },
-  infoUser,
   loading,
   listSemesters,
   defaultSemester,
@@ -30,6 +30,7 @@ const Status = ({
   listBusiness,
   listMajors,
 }) => {
+  const infoUser = getLocal()
   const [studentdetail, setStudentDetail] = useState('');
   const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const Status = ({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSemester?._id,
+    smester_id: defaultSemester._id,
   });
   const [major, setMajor] = useState('');
   const [filter, setFiler] = useState();
@@ -55,6 +56,8 @@ const Status = ({
     );
   };
   useEffect(() => {
+    dispatch(getSemesters());
+    dispatch(getListMajor());
     dispatch(fetchManager());
     dispatch(
       getStudent({
@@ -63,10 +66,8 @@ const Status = ({
         onShowDetail,
       }),
     );
-    dispatch(getSemesters());
-    dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
   const columns = [
     {
       title: 'MSSV',
@@ -94,7 +95,7 @@ const Status = ({
       title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
-      render: (val) => val.name,
+      render: val =>val.name,
     },
     {
       title: 'Phân loại',
@@ -272,7 +273,10 @@ const Status = ({
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
-
+const parentMethods = {
+  major,
+  ...page
+}
   return (
     <div className="status">
       <div className="flex-header">
@@ -334,8 +338,9 @@ const Status = ({
                   className="filter-status"
                   style={{ width: '100%' }}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
-                  defaultValue={defaultSemester?._id}
-                  placeholder={defaultSemester?.name}
+                  placeholder={defaultSemester.name}
+                  defaultValue={defaultSemester._id}
+
                 >
                   {listSemesters?.map((item, index) => (
                     <Option value={item._id} key={index}>
@@ -345,7 +350,29 @@ const Status = ({
                 </Select>
               </div>
             </Col>
-            <div style={{ display: "flex" }} className="bnt-export">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span style={{ width: '45%' }}>Ngành: </span>
+              <Select
+                className="filter-status"
+                style={{ width: '100%' }}
+                onChange={(val) => setMajor(val)}
+                placeholder="Chọn ngành"
+              >
+                { listMajors && listMajors?.map((item, index) => (
+                  <Option value={item._id} key={index}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+            <div style={{ display: 'flex' }} className="bnt-export" >
+
               <Button
                 variant="warning"
                 style={{ marginRight: 5, height: 36 }}
@@ -353,14 +380,14 @@ const Status = ({
               >
                 Export
               </Button>
-              <UpFile major={major} keys="status" smester_id={page?.smester_id} />
+              <UpFile parentMethods={parentMethods} keys="status"  />
             </div>
           </>
         )}
       </div>
       <div className="filter" style={{ marginTop: '20px' }}>
         {window.innerWidth < 739 && (
-          <UpFile smester_id={page?.smester_id} style={{ fontSize: '.9rem' }} />
+          <UpFile parentMethods={parentMethods}  keys="status" style={{ fontSize: '.9rem' }} />
         )}
         <br />
         <Row>
@@ -378,7 +405,7 @@ const Status = ({
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
-                {listMajors.map((item, index) => (
+                { listMajors && listMajors.map((item, index) => (
                   <>
                     <Option value={item._id} key={index}>
                       {item.name}
@@ -630,14 +657,16 @@ const Status = ({
           />
         </Table>
       )}
-      <StudentDetail
+
+      {modal && <StudentDetail
         infoUser={infoUser}
-        studentId={studentdetail}
+        studentId={studentdetail._id}
         onShowModal={modal}
         closeModal={() => setModal(false)}
         listBusiness={listBusiness}
         listManager={listManager}
-      />
+      />}
+      
     </div>
   );
 };
@@ -650,9 +679,8 @@ Status.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ students, auth, semester, manager, business, major }) => ({
+export default connect(({ students,semester, manager, business, major }) => ({
   listStudent: students.listStudent,
-  infoUser: auth.infoUser,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,
   loading: students.loading,

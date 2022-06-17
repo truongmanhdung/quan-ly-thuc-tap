@@ -7,7 +7,12 @@ import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { optionStatus } from "../../ultis/selectOption";
+import { getLocal } from "../../ultis/storage";
 const columns = [
+  {
+    title: "Mã",
+    dataIndex: "code_request"
+  },
   {
     title: "Tên doanh nghiệp",
     dataIndex: "name",
@@ -25,16 +30,21 @@ const columns = [
     dataIndex: "address",
   },
   {
-    title: "Ngành",
-    dataIndex: "majors",
+    title: "Yêu cầu",
+    dataIndex: "request"
   },
+  {
+    title: "Chi tiết",
+    dataIndex: "description"
+  },
+
 ];
 function InfoStudent({
   studentById,
-  infoUser,
   listBusiness: { list, total },
   loading,
 }) {
+  const infoUser = getLocal()
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
@@ -51,19 +61,19 @@ function InfoStudent({
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(getBusiness(page));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
   const isRegister = studentById?.support;
   const statusForm = studentById?.statusCheck;
   return (
     <div>
       <Row>
-        <Col span={12} className=" border-end p-3">
+        <Col span={8} className=" border-end p-3">
           <div>
             <h4>Thông tin đăng ký</h4>
           </div>
           <div className="border-top mt-3 pt-2">
             <p>Họ và tên : {studentById.name}</p>
-            <p>Ngành : {studentById.majors}</p>
+            <p>Ngành : {studentById.majors?.name}</p>
             <p>Khóa học : {studentById.course}</p>
             <p>Email : {studentById.email}</p>
             <p>
@@ -92,8 +102,8 @@ function InfoStudent({
             </p>
           </div>
         </Col>
-        <Col span={12} className="p-3">
-          <h4>Chọn công ty</h4>
+        <Col span={16} className="p-3">
+          <h4>Thông tin tuyển dụng</h4>
           {time?.startTime <= dateNow && dateNow <= time.endTime ? (
             <div>
               <Table
@@ -101,6 +111,8 @@ function InfoStudent({
                 rowKey="_id"
                 columns={columns}
                 dataSource={list}
+          scroll={{ x: 'calc(1000px + 50%)' }}
+
                 pagination={{
                   pageSize: page.limit,
                   total: total,
@@ -144,11 +156,9 @@ InfoStudent.propTypes = {
 export default connect(
   ({
     students: { studentById },
-    auth: { infoUser },
     business: { listBusiness, loading },
   }) => ({
     studentById,
-    infoUser,
     listBusiness,
     loading,
   })

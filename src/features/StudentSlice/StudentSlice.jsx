@@ -5,7 +5,8 @@ import { Button } from 'antd';
 export const getStudent = createAsyncThunk('student/getStudent', async (page) => {
   const {onShowDetail} = page
   const { data } = await StudentAPI.getAll(page);
-  return {data: data,func: onShowDetail}
+  return {data: data,
+    func: onShowDetail}
 });
 export const insertStudent = createAsyncThunk('student/insertStudent', async (action) => {
   const { data } = await StudentAPI.add(action);
@@ -30,6 +31,7 @@ const studentSlice = createSlice({
     listStudent: {},
     loading: false,
     listSmester: [],
+    defaultSemester:{},
     studentById:{},
     error: ''
   },
@@ -73,9 +75,10 @@ const studentSlice = createSlice({
     builder.addCase(getSmester.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(getSmester.fulfilled, (state, action) => {
+    builder.addCase(getSmester.fulfilled, (state, {payload}) => {
       state.loading = false;
-      state.listSmester = action.payload;
+      state.listSmester = payload.listSemesters;
+      state.defaultSemester = payload.defaultSemester
     });
     builder.addCase(getSmester.rejected, (state, action) => {
       state.loading = false;

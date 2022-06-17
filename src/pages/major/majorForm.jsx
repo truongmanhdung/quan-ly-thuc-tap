@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row, Button, Select } from 'antd';
+import { Col, Form, Input, Row, Button, Select} from 'antd';
 import { Option } from 'antd/lib/mentions';
 import React from 'react';
 
@@ -9,15 +9,18 @@ const FormMajor = ({
   forms, 
   type, 
   listMajors,
-  change
+  dataEdit,
+  setChange
 }) => {
   const [data, setData] = React.useState({});
 
   const onFinishForm = (values) => {
     switch (type) {
       case 'majors':
-        if (text.toLowerCase() === 'sửa ngành học') {
-          onFinish(values);
+        if (text.toLowerCase() === 'sửa ngành') {
+          onFinish({
+            ...values,
+          });
         } else {
           onFinish(values);
         }
@@ -27,6 +30,7 @@ const FormMajor = ({
           ...values,
           id_majors: data,
         });
+        setData({})
         break;
       default:
         break;
@@ -52,6 +56,7 @@ const FormMajor = ({
                     message: 'Vui lòng nhập tên ngành học!',
                   },
                 ]}
+                initialValue={Object.keys(dataEdit).length > 0 ? dataEdit.name : null}
               >
                 <Input />
               </Form.Item>
@@ -98,7 +103,8 @@ const FormMajor = ({
                       : 'Vui lòng nhập tên ngành hẹp',
                 },
               ]}
-            >
+              initialValue={Object.keys(dataEdit).length > 0 ? dataEdit.majorCode : null}
+              >
               <Input />
             </Form.Item>
           </Col>
@@ -110,7 +116,10 @@ const FormMajor = ({
               <Button
                 style={{ marginLeft: '10px' }}
                 type="danger"
-                onClick={() => sethButton(false)}
+                onClick={() => {
+                  sethButton(false)
+                  setChange()
+                }}
               >
                 Huỷ
               </Button>

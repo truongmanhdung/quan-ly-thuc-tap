@@ -47,7 +47,7 @@ const Reviewform = ({
     };
     dispatch(listStudentForm(data));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
 
   const onShowDetail = (mssv, key) => {
     onShowModal();

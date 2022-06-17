@@ -2,13 +2,13 @@ import { any } from 'prop-types';
 import React from 'react';
 import {  Navigate } from "react-router-dom";
 import { getLocal } from '../../ultis/storage';
-const Privateadmin = ({children}) => {
+const PrivateStudent = ({children}) => {
   const {isAdmin} = getLocal()
-    return isAdmin ? children : <Navigate to='/404' />
+    return !isAdmin ? children : <Navigate to='/404' />
 }
-Privateadmin.propTypes = {
+PrivateStudent.propTypes = {
     children: any
   }
-export default Privateadmin;
+export default PrivateStudent;
 
 

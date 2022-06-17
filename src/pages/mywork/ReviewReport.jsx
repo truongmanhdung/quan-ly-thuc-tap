@@ -52,7 +52,7 @@ const ReviewReport = () => {
     };
     dispatch(listStudentReport(data));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, infoUser]);
+  }, [page]);
   const onShowDetail = (mssv, key) => {
     onShowModal();
     setStudentDetail(key._id);

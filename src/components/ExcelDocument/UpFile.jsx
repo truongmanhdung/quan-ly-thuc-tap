@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 import { insertBusiness } from '../../features/businessSlice/businessSlice';
 import { insertStudent } from '../../features/StudentSlice/StudentSlice';
-const UpFile = ({ smester_id, name, keys, major }) => {
+const UpFile = ({  keys, parentMethods}) => {
+  const {major, smester_id} = parentMethods
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const UpFile = ({ smester_id, name, keys, major }) => {
           headers = fileData[0];
         }
         const rows = [];
+
         fileData.forEach((item) => {
           let rowData = {};
           item.forEach((element, index) => {
@@ -48,6 +50,7 @@ const UpFile = ({ smester_id, name, keys, major }) => {
             const newObject = {};
             if (manager) {
               switch (keys) {
+
                 case 'status':
                   if (item['MSSV'] !== undefined) {
                     newObject['mssv'] = item['MSSV'];
@@ -63,12 +66,15 @@ const UpFile = ({ smester_id, name, keys, major }) => {
                   }
                   break;
                 case 'business':
-                  if (item['Tên doanh nghiệp'] !== undefined) {
-                    newObject['name'] = item['Tên doanh nghiệp'];
-                    newObject['internshipPosition'] = item['Vị trí thực tập'];
+                  if (item['Tên Doanh nghiệp'] !== undefined) {
+                    newObject['name'] = item['Tên Doanh nghiệp'];
+                    newObject['internshipPosition'] = item['Vị trí tuyển dụng'];
                     newObject['amount'] = item['Số lượng'];
                     newObject['address'] = item['Địa chỉ doanh nghiệp'];
-                    newObject['majors'] = item['Ngành']
+                    newObject['majors'] = major
+                    newObject["description"] = item['Mô tả']
+                    newObject["request"] = item['Yêu cầu ứng viên']
+                    newObject["code_request"] = item["Mã ứng tuyển"]
                     newObject['campus_id'] = manager.campus_id;
                     newObject['smester_id'] = smester_id;
                     return datas.push(newObject);
@@ -90,7 +96,7 @@ const UpFile = ({ smester_id, name, keys, major }) => {
 
   };
   const submitSave = () => {
-    const dataUpload = { data: dataNew, smester_id };
+    const dataUpload = { data: dataNew, smester_id, majors: major };
     switch (keys) {
       case 'status':
         if (major.length > 0) {
