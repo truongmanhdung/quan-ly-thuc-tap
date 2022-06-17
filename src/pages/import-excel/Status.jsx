@@ -364,7 +364,7 @@ const Status = ({
         )}
         <br />
         <Row>
-          <Col span={7} style={{ padding: "0 10px" }}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: 'flex',
@@ -390,7 +390,7 @@ const Status = ({
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: '0 10px' }}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
             <div
               style={{
                 display: 'flex',
@@ -419,7 +419,7 @@ const Status = ({
 
           <br />
           <br />
-          <Col span={7} style={{ padding: '0 10px' }}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
             <div
               style={{
                 display: 'flex',
