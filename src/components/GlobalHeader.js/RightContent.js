@@ -87,7 +87,7 @@ const Rightcontent = () => {
                                         key="4"
                                         icon={<ProfileOutlined className="icon-link" />}
                                     >
-                                        <NavLink onClick={offMenuMoble} to="status">Danh sách đăng ký</NavLink>
+                                        <NavLink onClick={offMenuMoble} to="">Danh sách đăng ký</NavLink>
                                     </Menu.Item>
                                     <SubMenu
                                         key="sub1"

@@ -48,12 +48,6 @@ const Status = ({
   const onShowDetail = (mssv, key) => {
     setStudentDetail(key);
     setModal(true);
-    dispatch(
-      getBusiness({
-        campus_id: key.campus_id._id,
-        smester_id: key.smester_id._id,
-      }),
-    );
   };
   useEffect(() => {
     dispatch(getSemesters());
@@ -63,7 +57,6 @@ const Status = ({
       getStudent({
         ...page,
         ...filter,
-        onShowDetail,
       }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +67,13 @@ const Status = ({
       dataIndex: 'mssv',
       width: 100,
       fixed: 'left',
+      render: (val, key) => {
+        return (
+          <p style={{ margin: 0, cursor: 'pointer', color: 'blue' }} onClick={() => onShowDetail(val, key)}>
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: 'Họ và Tên',
@@ -536,45 +536,45 @@ const parentMethods = {
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div style={{ marginTop: '10px' }}>
-                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ''
-                ) : (
-                  <>
-                    <p className="list-detail">Email: {record.email}</p>
-                    <br />
-                  </>
-                )}
-                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-                <br />
-                <p className="list-detail">Ngành: {record.majors}</p>
-                <br />
-                <p className="list-detail">
-                  Phân loại:
-                  {record.support === 1 && 'Hỗ trợ'}
-                  {record.support === 0 && 'Tự tìm'}
-                  {record.support !== 1 && record.support !== 0 && ''}
-                </p>
-                <br />
-                <p className="list-detail">
-                  CV:{' '}
-                  {record.CV ? (
-                    <EyeOutlined
-                      style={{ fontSize: '.9rem' }}
-                      onClick={() => window.open(record.CV)}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </p>
-                <br />
-                <p className="list-detail">Người review: {record.reviewer}</p>
-                <br />
-              </div>
-            ),
-          }}
+          // expandable={{
+          //   expandedRowRender: (record) => (
+          //     <div style={{ marginTop: '10px' }}>
+          //       {window.innerWidth < 1023 && window.innerWidth > 739 ? (
+          //         ''
+          //       ) : (
+          //         <>
+          //           <p className="list-detail">Email: {record.email}</p>
+          //           <br />
+          //         </>
+          //       )}
+          //       <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
+          //       <br />
+          //       <p className="list-detail">Ngành: {record.majors}</p>
+          //       <br />
+          //       <p className="list-detail">
+          //         Phân loại:
+          //         {record.support === 1 && 'Hỗ trợ'}
+          //         {record.support === 0 && 'Tự tìm'}
+          //         {record.support !== 1 && record.support !== 0 && ''}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">
+          //         CV:{' '}
+          //         {record.CV ? (
+          //           <EyeOutlined
+          //             style={{ fontSize: '.9rem' }}
+          //             onClick={() => window.open(record.CV)}
+          //           />
+          //         ) : (
+          //           ''
+          //         )}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">Người review: {record.reviewer}</p>
+          //       <br />
+          //     </div>
+          //   ),
+          // }}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
           <Column title="Họ và Tên" dataIndex="name" key="_id" />
