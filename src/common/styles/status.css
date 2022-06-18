@@ -264,3 +264,8 @@ table tbody td {
     }
     
 }
+/* @media (max-width: 414px) {
+    .select-branch{
+        display: flex;
+    }
+} */

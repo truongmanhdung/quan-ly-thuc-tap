@@ -67,7 +67,7 @@ function InfoStudent({
   return (
     <div>
       <Row>
-        <Col span={8} className=" border-end p-3">
+        <Col sm={{ span:24 }} md={{span: 12}} className=" border-end p-3">
           <div>
             <h4>Thông tin đăng ký</h4>
           </div>
@@ -102,7 +102,7 @@ function InfoStudent({
             </p>
           </div>
         </Col>
-        <Col span={16} className="p-3">
+        <Col sm={{ span:24 }} md={{span: 12}} className="p-3">
           <h4>Thông tin tuyển dụng</h4>
           {time?.startTime <= dateNow && dateNow <= time.endTime ? (
             <div>
