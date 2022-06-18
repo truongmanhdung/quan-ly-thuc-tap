@@ -95,7 +95,7 @@ const Status = ({
       title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
-      render: val =>val.name,
+      render: val => val.name,
     },
     {
       title: 'Phân loại',
@@ -208,9 +208,9 @@ const Status = ({
     const newValue =
       value.length > 0 || (value < 11 && value !== '')
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -273,10 +273,10 @@ const Status = ({
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
-const parentMethods = {
-  major,
-  ...page
-}
+  const parentMethods = {
+    major,
+    ...page
+  }
   return (
     <div className="status">
       <div className="flex-header">
@@ -290,7 +290,7 @@ const parentMethods = {
             }}
           >
             <h4 style={{ fontSize: ".9rem", margin: "0 -15px" }}>Sinh viên đăng ký thực tập</h4>
-            <Col span={4} style={{ padding: "0 3px" }}>
+            <Col xs={{ span: 12 }} md={{ span: 8 }} style={{ padding: "0 15px" }}>
               <div
                 style={{
                   display: 'flex',
@@ -298,10 +298,10 @@ const parentMethods = {
                   justifyContent: 'space-between',
                 }}
               >
-                <span style={{ width: "45%",display: "flex",flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
+                <span style={{ width: "45%", display: "flex", flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
-                  style={{ width: "100%", margin: "0 20px" }}
+                  style={{ width: "100%", margin: "0 20px",}}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   defaultValue={defaultSemester?._id}
                   placeholder={defaultSemester?.name}
@@ -316,7 +316,7 @@ const parentMethods = {
             </Col>
             <Button
               variant="warning"
-              style={{ marginRight: 5, height: 33 }}
+              style={{ marginRight: 15, height: 33 }}
               onClick={(e) => exportToCSV(list)}
             >
               Export
@@ -325,7 +325,7 @@ const parentMethods = {
         ) : (
           <>
             <h4>Sinh viên đăng ký thực tập</h4>
-            <Col span={4} style={{ padding: "0 3px" }}>
+            <Col xs={{ span: 12 }} md={{ span: 8 }} style={{ padding: "0 3px" }}>
               <div
                 style={{
                   display: 'flex',
@@ -364,7 +364,7 @@ const parentMethods = {
                 onChange={(val) => setMajor(val)}
                 placeholder="Chọn ngành"
               >
-                { listMajors && listMajors?.map((item, index) => (
+                {listMajors && listMajors?.map((item, index) => (
                   <Option value={item._id} key={index}>
                     {item.name}
                   </Option>
@@ -372,22 +372,23 @@ const parentMethods = {
               </Select>
             </div>
             <div style={{ display: 'flex' }} className="bnt-export" >
-
-              <Button
-                variant="warning"
-                style={{ marginRight: 5, height: 36 }}
-                onClick={(e) => exportToCSV(list)}
-              >
-                Export
-              </Button>
-              <UpFile parentMethods={parentMethods} keys="status"  />
+              
+                <Button
+                  variant="warning"
+                  style={{ marginRight: 5, height: 36 }}
+                  onClick={(e) => exportToCSV(list)}
+                >
+                  Export
+                </Button>
+                <UpFile parentMethods={parentMethods} keys="status" />
+              
             </div>
           </>
         )}
       </div>
       <div className="filter" style={{ marginTop: '20px' }}>
         {window.innerWidth < 739 && (
-          <UpFile parentMethods={parentMethods}  keys="status" style={{ fontSize: '.9rem' }} />
+          <UpFile parentMethods={parentMethods} keys="status" style={{ fontSize: '.9rem' }} />
         )}
         <br />
         <Row>
@@ -401,11 +402,12 @@ const parentMethods = {
             >
               <span className="select-status" style={{ width: '30%' }}>Ngành : </span>
               <Select
+                className='select-branch'
                 style={{ width: '100%' }}
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
-                { listMajors && listMajors.map((item, index) => (
+                {listMajors && listMajors.map((item, index) => (
                   <>
                     <Option value={item._id} key={index}>
                       {item.name}
@@ -427,7 +429,7 @@ const parentMethods = {
             >
               <span style={{ width: '45%' }}>Trạng thái :</span>
               <Select
-              
+
                 className="filter-status"
                 style={{ width: '100%' }}
                 onChange={(val) => handleStandardTableChange('statusCheck', val)}
@@ -666,7 +668,7 @@ const parentMethods = {
         listBusiness={listBusiness}
         listManager={listManager}
       />}
-      
+
     </div>
   );
 };
@@ -679,7 +681,7 @@ Status.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ students,semester, manager, business, major }) => ({
+export default connect(({ students, semester, manager, business, major }) => ({
   listStudent: students.listStudent,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,
