@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 import { insertBusiness } from '../../features/businessSlice/businessSlice';
 import { insertStudent } from '../../features/StudentSlice/StudentSlice';
 const UpFile = ({  keys, parentMethods}) => {
-  const {major, smester_id} = parentMethods
+  const {major, smester_id, campus_id} = parentMethods
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState('');
   const dispatch = useDispatch();
@@ -96,7 +96,7 @@ const UpFile = ({  keys, parentMethods}) => {
 
   };
   const submitSave = () => {
-    const dataUpload = { data: dataNew, smester_id, majors: major };
+    const dataUpload = { data: dataNew, smester_id, majors: major, campus_id };
     switch (keys) {
       case 'status':
         if (major.length > 0) {
