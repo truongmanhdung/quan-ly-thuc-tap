@@ -469,7 +469,7 @@ const StudentDetail = (props) => {
                   )}
                 </Col>
 
-                <Col span={12} className="d-flex">
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Sinh viên đã được hỗ trợ thực tập: </h6>
                   {studentId.support ? (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
@@ -484,7 +484,7 @@ const StudentDetail = (props) => {
                   )}
                 </Col>
 
-                <Col span={12} className="d-flex">
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Báo cáo: </h6>
                   {student.report ? (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
