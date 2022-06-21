@@ -325,7 +325,7 @@ const Reviewform = ({
             <div className="search">
               <span style={{ width: "40%" }}>Ngành: </span>
               <Select
-                style={{ width: "100%" }}
+                style={{ width: "100%", position: 'relative', right: '70px' }}
                 onChange={(val) => handleStandardTableChange("majors", val)}
                 placeholder="Lọc theo ngành"
               >
@@ -353,7 +353,7 @@ const Reviewform = ({
               <span style={{ width: "40%" }}>Trạng thái:</span>
               <Select
                 className="filter-status"
-                style={{ width: "100%" }}
+                style={{ width: "100%",position: 'relative', right: '49px' }}
                 onChange={(val) =>
                   handleStandardTableChange("statusCheck", val)
                 }
@@ -380,7 +380,7 @@ const Reviewform = ({
             <div className="search">
               <span style={{ width: "40%" }}>Tìm Kiếm1: </span>
               <Input
-                style={{ width: "100%" }}
+                style={{ width: "100%", position: 'relative', right: '38px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
                   handleStandardTableChange("mssv", val.target.value)

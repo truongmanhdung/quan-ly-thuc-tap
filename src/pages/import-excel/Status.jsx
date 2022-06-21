@@ -301,7 +301,7 @@ const Status = ({
                 <span style={{ width: "45%", display: "flex", flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
-                  style={{ width: "100%", margin: "0 20px",}}
+                  style={{ width: "100%", margin: "0 20px"}}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   defaultValue={defaultSemester?._id}
                   placeholder={defaultSemester?.name}
@@ -336,7 +336,7 @@ const Status = ({
                 <span style={{ width: "45%", display: "flex", flexWrap: "wrap" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', position: 'relative',right: '18%' }}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   placeholder={defaultSemester.name}
                   defaultValue={defaultSemester._id}
@@ -360,7 +360,7 @@ const Status = ({
               <span style={{ width: '45%' }}>Ngành: </span>
               <Select
                 className="filter-status"
-                style={{ width: '100%' }}
+                style={{ width: '100%', padding: '0 5px' }}
                 onChange={(val) => setMajor(val)}
                 placeholder="Chọn ngành"
               >
@@ -403,7 +403,7 @@ const Status = ({
               <span className="select-status" style={{ width: '30%' }}>Ngành : </span>
               <Select
                 className='select-branch'
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '9%'}}
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
@@ -431,7 +431,7 @@ const Status = ({
               <Select
 
                 className="filter-status"
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '12%' }}
                 onChange={(val) => handleStandardTableChange('statusCheck', val)}
                 placeholder="Lọc theo trạng thái"
               >
@@ -458,7 +458,7 @@ const Status = ({
             >
               <span className="select-status" style={{ width: '40%' }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '11%' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
               />
@@ -471,6 +471,7 @@ const Status = ({
               style={{
                 color: '#fff',
                 background: '#ee4d2d',
+                display: 'flex'
               }}
               onClick={handleSearch}
             >
