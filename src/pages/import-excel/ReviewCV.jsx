@@ -308,7 +308,7 @@ const ReviewCV = () => {
             <div className="search">
               <span style={{ width: '40%' }}>Ngành: </span>
               <Select
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '70px' }}
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
@@ -329,7 +329,7 @@ const ReviewCV = () => {
               <span style={{ width: '40%' }}>Trạng thái:</span>
               <Select
                 className="filter-status"
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '46px' }}
                 onChange={(val) => handleStandardTableChange('statusCheck', val)}
                 placeholder="Lọc theo trạng thái"
               >
@@ -347,7 +347,7 @@ const ReviewCV = () => {
             <div className="search">
               <span style={{ width: '40%' }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: '100%' }}
+                style={{ width: '100%',  position: 'relative', right: '50px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) => handleStandardTableChange('mssv', val.target.value)}
               />
