@@ -21,6 +21,7 @@ import FormSemester from '../pages/semesters/semesters';
 import Major from '../pages/major/major';
 import PrivateStudent from './private/privateStudent';
 import CampusManager from '../pages/campus/Campus';
+import PrivateSupperAdmin from './private/privateSupperAdmin';
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -98,17 +99,17 @@ const Router = () => {
         <Route
           path="/employee-manager"
           element={
-              <Privateadmin>
+              <PrivateSupperAdmin>
                 <EmployeeManager />
-              </Privateadmin>
+              </PrivateSupperAdmin>
           }
         />
         <Route
           path="/campus-manager"
           element={
-              <Privateadmin>
+              <PrivateSupperAdmin>
                 <CampusManager />
-              </Privateadmin>
+              </PrivateSupperAdmin>
           }
         />
         <Route
