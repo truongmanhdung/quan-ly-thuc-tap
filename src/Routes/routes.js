@@ -68,6 +68,7 @@ const Router = () => {
           }
         />
         <Route
+            index
           element={
             <Privateadmin>
               <Status />
