@@ -78,6 +78,7 @@ const Router = () => {
         />
         <Route
           path='/status'
+
           element={
             <Privateadmin>
               <Status />
