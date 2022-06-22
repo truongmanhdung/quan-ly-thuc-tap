@@ -1,18 +1,19 @@
-import { Button, Form, Input, message, Radio, Select, Spin } from 'antd';
-import { array, object } from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import RegisterInternAPI from '../../API/RegisterInternAPI';
-import CountDownCustorm from '../../components/CountDownCustorm';
-import { getBusiness } from '../../features/businessSlice/businessSlice';
-import { getNarow } from '../../features/narrow';
-import { getListSpecialization } from '../../features/specializationSlice/specializationSlice';
-import { getStudentId } from '../../features/StudentSlice/StudentSlice';
-import { getTimeForm } from '../../features/timeDateSlice/timeDateSlice';
-import { getLocal } from '../../ultis/storage';
-import Proactive from './Proactive';
-import Support from './Support';
-import styles from './SupportStudent.module.css';
+import { Button, Form, Input, message, Radio, Select, Spin } from "antd";
+import { array, object } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import RegisterInternAPI from "../../API/RegisterInternAPI";
+import CountDownCustorm from "../../components/CountDownCustorm";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
+import { getNarow } from "../../features/narrow";
+import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import { getLocal } from "../../ultis/storage";
+import Proactive from "./Proactive";
+import Support from "./Support";
+import styles from "./SupportStudent.module.css";
 
 const { Option } = Select;
 const formItemLayout = {
@@ -45,7 +46,11 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNarrow } }) => {
+const SupportStudent = ({
+  studentById,
+  listBusiness: { list },
+  narrow: { listNarrow },
+}) => {
   const infoUser = getLocal();
   const dispatch = useDispatch();
   const [file, setFile] = useState();
@@ -64,9 +69,10 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
         campus_id: infoUser.student.campus_id,
         smester_id: infoUser.student.smester_id,
         majors: infoUser.student.majors,
-      }),
+      })
     );
     dispatch(getNarow());
+    dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -77,15 +83,15 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
       //.. once finished..
-      var rawLog = reader.result.split(',')[1]; //extract only thee file data part
+      var rawLog = reader.result.split(",")[1]; //extract only thee file data part
       var dataSend = {
         dataReq: { data: rawLog, name: file.name, type: file.type },
-        fname: 'uploadFilesToGoogleDrive',
+        fname: "uploadFilesToGoogleDrive",
       }; //preapre info to send to API
       fetch(
         `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
     `, //your AppsScript URL
-        { method: 'POST', body: JSON.stringify(dataSend) },
+        { method: "POST", body: JSON.stringify(dataSend) }
       ) //send to Api
         .then((res) => res.json())
         .then((a) => {
@@ -110,7 +116,7 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
           setSpin(false);
         })
         .catch((e) => {
-          message.success('Có lỗi xảy ra! Vui lòng đăng ký lại');
+          message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
           form.resetFields();
           setSpin(false);
         }); // Or Error in console
@@ -120,10 +126,10 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
   const normFile = (e) => {
     const valueFile = e.file.originFileObj;
 
-    const isPDF = valueFile.type === 'application/pdf';
+    const isPDF = valueFile.type === "application/pdf";
 
     if (!isPDF) {
-      message.error('Vui lòng nhập file đúng định dạng PDF');
+      message.error("Vui lòng nhập file đúng định dạng PDF");
     }
     setFile(e.file.originFileObj);
   };
@@ -160,8 +166,11 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
     setValue(e.target.value);
   };
 
+  console.log(listNarrow);
+
   const check = time.endTime > new Date().getTime();
-  const isCheck = studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+  const isCheck =
+    studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
   return (
     <>
       <Spin spinning={spin}>
@@ -172,16 +181,17 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
           name="register"
           onFinish={onFinish}
           initialValues={{
-            residence: ['zhejiang', 'hangzhou', 'xihu'],
-            prefix: '86',
+            residence: ["zhejiang", "hangzhou", "xihu"],
+            prefix: "86",
           }}
           scrollToFirstError
         >
           {check ? (
-            <>{isCheck ? <CountDownCustorm time={time} /> : ''}</>
+            <>{isCheck ? <CountDownCustorm time={time} /> : ""}</>
           ) : (
-            <p style={{ marginBottom: '16px' }}>
-              Thời gian đăng ký form chưa được mở, sinh viên vui lòng chờ thông báo từ phòng QHDN
+            <p style={{ marginBottom: "16px" }}>
+              Thời gian đăng ký form chưa được mở, sinh viên vui lòng chờ thông
+              báo từ phòng QHDN
             </p>
           )}
           {isCheck ? (
@@ -198,7 +208,9 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                     // name="user_code"
                     label="Mã sinh viên"
                   >
-                    <p className={styles.text_form_label}>{studentById.mssv.toUpperCase()}</p>
+                    <p className={styles.text_form_label}>
+                      {studentById.mssv.toUpperCase()}
+                    </p>
                   </Form.Item>
 
                   <Form.Item label="Họ và Tên">
@@ -210,8 +222,8 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                     rules={[
                       {
                         required: true,
-                        pattern: new RegExp('(84|0[3|5|7|8|9])+([0-9]{8})'),
-                        message: 'Vui lòng nhập đúng số điện thoại',
+                        pattern: new RegExp("(84|0[3|5|7|8|9])+([0-9]{8})"),
+                        message: "Vui lòng nhập đúng số điện thoại",
                       },
                     ]}
                   >
@@ -224,7 +236,7 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                     rules={[
                       {
                         required: true,
-                        message: 'Vui lòng nhập địa chỉ',
+                        message: "Vui lòng nhập địa chỉ",
                       },
                     ]}
                   >
@@ -234,17 +246,19 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                   <Form.Item
                     name="narrow"
                     label="Chuyên ngành"
-                    rules={[{ required: true, message: 'Vui lòng chọn chuyên ngành' }]}
+                    rules={[
+                      { required: true, message: "Vui lòng chọn chuyên ngành" },
+                    ]}
                   >
                     <Select
                       placeholder="Chọn chuyên ngành"
                       style={{
-                        width: '50%',
-                        marginLeft: '20px',
+                        width: "50%",
+                        marginLeft: "20px",
                       }}
                     >
                       {listNarrow
-                        .filter((i) => i.id_majors._id === studentById.majors._id)
+                        // .filter((i) => i.id_majors === studentById.majors._id)
                         .map((i, k) => (
                           <Option key={k} value={i._id}>
                             {i.name}
@@ -254,17 +268,21 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                   </Form.Item>
 
                   {value === 1 && (
-                    <Form.Item name="business" label="Đơn vị thực tập" rules={[{ required: true }]}>
+                    <Form.Item
+                      name="business"
+                      label="Đơn vị thực tập"
+                      rules={[{ required: true }]}
+                    >
                       <Select
                         style={{
-                          width: '50%',
-                          marginLeft: '20px',
+                          width: "50%",
+                          marginLeft: "20px",
                         }}
                         placeholder="Chọn doanh nghiệp"
                       >
                         {list?.map((item) => (
                           <Option key={item._id} value={item._id}>
-                            {item.name + '-' + item.internshipPosition}
+                            {item.name + "-" + item.internshipPosition}
                           </Option>
                         ))}
                       </Select>
@@ -276,25 +294,31 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                     rules={[
                       {
                         required: true,
-                        message: 'Vui lòng nhập địa chỉ',
+                        message: "Vui lòng nhập địa chỉ",
                       },
                     ]}
                   >
                     <Input placeholder="VD: Web Back-end, Dựng phim, Thiết kế nội thất" />
                   </Form.Item>
-                  {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
+                  {value === 1 ? (
+                    <Support normFile={normFile} />
+                  ) : (
+                    <Proactive />
+                  )}
                   <Form.Item {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit">
-                      {studentById?.statusCheck === 1 ? 'Sửa thông tin' : 'Đăng ký'}
+                      {studentById?.statusCheck === 1
+                        ? "Sửa thông tin"
+                        : "Đăng ký"}
                     </Button>
                   </Form.Item>
                 </>
               ) : (
-                ''
+                ""
               )}
             </>
           ) : (
-            'Đăng ký thông tin thành công'
+            "Đăng ký thông tin thành công"
           )}
         </Form>
       </Spin>
@@ -308,10 +332,15 @@ SupportStudent.propTypes = {
   narrow: array,
 };
 export default connect(
-  ({ auth: { infoUser }, students: { studentById }, business: { listBusiness }, narrow }) => ({
+  ({
+    auth: { infoUser },
+    students: { studentById },
+    business: { listBusiness },
+    narrow,
+  }) => ({
     studentById,
     infoUser,
     listBusiness,
     narrow,
-  }),
+  })
 )(SupportStudent);

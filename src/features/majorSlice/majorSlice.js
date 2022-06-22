@@ -1,25 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import majorAPI from "../../API/majorAPi";
-export const getListMajor = createAsyncThunk(
-  "major/getListMajor", 
-  async () => {
+export const getListMajor = createAsyncThunk("major/getListMajor", async () => {
   const { data } = await majorAPI.getList();
   return data?.majors;
 });
 
-
-
-export const updateMajor = createAsyncThunk(
-  "major/updateMajor",
-  async (z) => {
-    const { data } = await majorAPI.update(z._id, z);
-    return data
-  }
-);
+export const updateMajor = createAsyncThunk("major/updateMajor", async (z) => {
+  const { data } = await majorAPI.update(z._id, z);
+  return data;
+});
 
 export const removeMajor = createAsyncThunk("major,removeMajor", async (id) => {
   const { data } = await majorAPI.remove(id);
-  return data
+  return data;
 });
 const majorSlice = createSlice({
   name: "major",
@@ -63,9 +56,11 @@ const majorSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateMajor.fulfilled, (state, { payload }) => {
-      let data = state.listMajor.filter(item => item._id !== payload.major._id)
-      state.listMajor = [ ...data,payload.major,]
-      state.message = payload.message
+      let data = state.listMajor.filter(
+        (item) => item._id !== payload.major._id
+      );
+      state.listMajor = [...data, payload.major];
+      state.message = payload.message;
       state.loading = false;
     });
     builder.addCase(updateMajor.rejected, (state) => {
@@ -77,8 +72,10 @@ const majorSlice = createSlice({
     builder.addCase(removeMajor.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(removeMajor.fulfilled, (state, {payload}) => {
-      state.listMajor = state.listMajor.filter(item => item._id !== payload.major._id)
+    builder.addCase(removeMajor.fulfilled, (state, { payload }) => {
+      state.listMajor = state.listMajor.filter(
+        (item) => item._id !== payload.major._id
+      );
       state.message = payload.message;
       state.loading = false;
     });
