@@ -107,7 +107,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         })
         .catch((e) => {
           message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
-          // form.resetFields();
+          form.resetFields();
           setSpin(false);
         }); // Or Error in console
     };
