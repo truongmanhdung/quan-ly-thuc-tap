@@ -65,7 +65,7 @@ const Rightcontent = () => {
                 }} >
                     <Dropdown overlay={menu} placement="bottomLeft" arrow>
                         <span>
-                            <Avatar size={35} src={infoUser.picture} />  <span>{infoUser.name}</span>
+                            <Avatar size={35} src={infoUser.picture} />  <span>{infoUser.name.length > 20 ? infoUser.name.slice(0,20) + "..." : infoUser.name }</span>
                         </span>
                     </Dropdown>
                 </div>
@@ -87,7 +87,7 @@ const Rightcontent = () => {
                                         key="4"
                                         icon={<ProfileOutlined className="icon-link" />}
                                     >
-                                        <NavLink onClick={offMenuMoble} to="status">Danh sách đăng ký</NavLink>
+                                        <NavLink onClick={offMenuMoble} to="">Danh sách đăng ký</NavLink>
                                     </Menu.Item>
                                     <SubMenu
                                         key="sub1"

@@ -10,6 +10,10 @@ import { optionStatus } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const columns = [
   {
+    title: "Mã",
+    dataIndex: "code_request"
+  },
+  {
     title: "Tên doanh nghiệp",
     dataIndex: "name",
   },
@@ -26,13 +30,14 @@ const columns = [
     dataIndex: "address",
   },
   {
-    title: "Ngành",
-    dataIndex: "majors",
+    title: "Yêu cầu",
+    dataIndex: "request"
   },
   {
     title: "Chi tiết",
-    dataIndex: ""
-  }
+    dataIndex: "description"
+  },
+
 ];
 function InfoStudent({
   studentById,
@@ -62,7 +67,7 @@ function InfoStudent({
   return (
     <div>
       <Row>
-        <Col span={12} className=" border-end p-3">
+        <Col sm={{ span:24 }} md={{span: 12}} className=" border-end p-3">
           <div>
             <h4>Thông tin đăng ký</h4>
           </div>
@@ -97,8 +102,8 @@ function InfoStudent({
             </p>
           </div>
         </Col>
-        <Col span={12} className="p-3">
-          <h4>Chọn công ty</h4>
+        <Col sm={{ span:24 }} md={{span: 12}} className="p-3">
+          <h4>Thông tin tuyển dụng</h4>
           {time?.startTime <= dateNow && dateNow <= time.endTime ? (
             <div>
               <Table
@@ -106,6 +111,8 @@ function InfoStudent({
                 rowKey="_id"
                 columns={columns}
                 dataSource={list}
+          scroll={{ x: 'calc(1000px + 50%)' }}
+
                 pagination={{
                   pageSize: page.limit,
                   total: total,

@@ -48,24 +48,17 @@ const Status = ({
   const onShowDetail = (mssv, key) => {
     setStudentDetail(key);
     setModal(true);
-    dispatch(
-      getBusiness({
-        campus_id: key.campus_id._id,
-        smester_id: key.smester_id._id,
-      }),
-    );
   };
   useEffect(() => {
+    dispatch(getSemesters());
+    dispatch(getListMajor());
     dispatch(fetchManager());
     dispatch(
       getStudent({
         ...page,
         ...filter,
-        onShowDetail,
       }),
     );
-    dispatch(getSemesters());
-    dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const columns = [
@@ -74,6 +67,13 @@ const Status = ({
       dataIndex: 'mssv',
       width: 100,
       fixed: 'left',
+      render: (val, key) => {
+        return (
+          <p style={{ margin: 0, cursor: 'pointer', color: 'blue' }} onClick={() => onShowDetail(val, key)}>
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: 'Họ và Tên',
@@ -95,7 +95,7 @@ const Status = ({
       title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
-      render: val =>val.name,
+      render: val => val.name,
     },
     {
       title: 'Phân loại',
@@ -208,9 +208,9 @@ const Status = ({
     const newValue =
       value.length > 0 || (value < 11 && value !== '')
         ? {
-            ...filter,
-            [key]: value,
-          }
+          ...filter,
+          [key]: value,
+        }
         : omit(filter, [key]);
     setFiler(newValue);
   };
@@ -273,10 +273,10 @@ const Status = ({
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
-const parentMethods = {
-  major,
-  ...page
-}
+  const parentMethods = {
+    major,
+    ...page
+  }
   return (
     <div className="status">
       <div className="flex-header">
@@ -290,7 +290,7 @@ const parentMethods = {
             }}
           >
             <h4 style={{ fontSize: ".9rem", margin: "0 -15px" }}>Sinh viên đăng ký thực tập</h4>
-            <Col span={4} style={{ padding: "0 3px" }}>
+            <Col xs={{ span: 12 }} md={{ span: 8 }} style={{ padding: "0 15px" }}>
               <div
                 style={{
                   display: 'flex',
@@ -298,10 +298,10 @@ const parentMethods = {
                   justifyContent: 'space-between',
                 }}
               >
-                <span style={{ width: "45%",display: "flex",flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
+                <span style={{ width: "45%", display: "flex", flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
-                  style={{ width: "100%", margin: "0 20px" }}
+                  style={{ width: "100%", margin: "0 20px"}}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   defaultValue={defaultSemester?._id}
                   placeholder={defaultSemester?.name}
@@ -316,7 +316,7 @@ const parentMethods = {
             </Col>
             <Button
               variant="warning"
-              style={{ marginRight: 5, height: 33 }}
+              style={{ marginRight: 15, height: 33 }}
               onClick={(e) => exportToCSV(list)}
             >
               Export
@@ -325,7 +325,7 @@ const parentMethods = {
         ) : (
           <>
             <h4>Sinh viên đăng ký thực tập</h4>
-            <Col span={4} style={{ padding: "0 3px" }}>
+            <Col xs={{ span: 12 }} md={{ span: 8 }} style={{ padding: "0 3px" }}>
               <div
                 style={{
                   display: 'flex',
@@ -336,7 +336,7 @@ const parentMethods = {
                 <span style={{ width: "45%", display: "flex", flexWrap: "wrap" }}>Học Kỳ : </span>
                 <Select
                   className="filter-status"
-                  style={{ width: '100%' }}
+                  style={{ width: '100%', position: 'relative',right: '18%' }}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   placeholder={defaultSemester.name}
                   defaultValue={defaultSemester._id}
@@ -360,11 +360,11 @@ const parentMethods = {
               <span style={{ width: '45%' }}>Ngành: </span>
               <Select
                 className="filter-status"
-                style={{ width: '100%' }}
+                style={{ width: '100%', padding: '0 5px' }}
                 onChange={(val) => setMajor(val)}
                 placeholder="Chọn ngành"
               >
-                { listMajors && listMajors?.map((item, index) => (
+                {listMajors && listMajors?.map((item, index) => (
                   <Option value={item._id} key={index}>
                     {item.name}
                   </Option>
@@ -372,26 +372,27 @@ const parentMethods = {
               </Select>
             </div>
             <div style={{ display: 'flex' }} className="bnt-export" >
-
-              <Button
-                variant="warning"
-                style={{ marginRight: 5, height: 36 }}
-                onClick={(e) => exportToCSV(list)}
-              >
-                Export
-              </Button>
-              <UpFile parentMethods={parentMethods} keys="status"  />
+              
+                <Button
+                  variant="warning"
+                  style={{ marginRight: 5, height: 36 }}
+                  onClick={(e) => exportToCSV(list)}
+                >
+                  Export
+                </Button>
+                <UpFile parentMethods={parentMethods} keys="status" />
+              
             </div>
           </>
         )}
       </div>
       <div className="filter" style={{ marginTop: '20px' }}>
         {window.innerWidth < 739 && (
-          <UpFile smester_id={page?.smester_id} style={{ fontSize: '.9rem' }} />
+          <UpFile parentMethods={parentMethods} keys="status" style={{ fontSize: '.9rem' }} />
         )}
         <br />
         <Row>
-          <Col span={7} style={{ padding: "0 10px" }}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: "0 10px" }}>
             <div
               style={{
                 display: 'flex',
@@ -401,11 +402,12 @@ const parentMethods = {
             >
               <span className="select-status" style={{ width: '30%' }}>Ngành : </span>
               <Select
-                style={{ width: '100%' }}
+                className='select-branch'
+                style={{ width: '100%', position: 'relative', right: '9%'}}
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
-                { listMajors && listMajors.map((item, index) => (
+                {listMajors && listMajors.map((item, index) => (
                   <>
                     <Option value={item._id} key={index}>
                       {item.name}
@@ -417,7 +419,7 @@ const parentMethods = {
           </Col>
           <br />
           <br />
-          <Col span={6} style={{ padding: '0 10px' }}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
             <div
               style={{
                 display: 'flex',
@@ -427,9 +429,9 @@ const parentMethods = {
             >
               <span style={{ width: '45%' }}>Trạng thái :</span>
               <Select
-              
+
                 className="filter-status"
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '12%' }}
                 onChange={(val) => handleStandardTableChange('statusCheck', val)}
                 placeholder="Lọc theo trạng thái"
               >
@@ -446,7 +448,7 @@ const parentMethods = {
 
           <br />
           <br />
-          <Col span={7} style={{ padding: '0 10px' }}>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
             <div
               style={{
                 display: 'flex',
@@ -456,7 +458,7 @@ const parentMethods = {
             >
               <span className="select-status" style={{ width: '40%' }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '11%' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
               />
@@ -469,6 +471,7 @@ const parentMethods = {
               style={{
                 color: '#fff',
                 background: '#ee4d2d',
+                display: 'flex'
               }}
               onClick={handleSearch}
             >
@@ -536,45 +539,45 @@ const parentMethods = {
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div style={{ marginTop: '10px' }}>
-                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ''
-                ) : (
-                  <>
-                    <p className="list-detail">Email: {record.email}</p>
-                    <br />
-                  </>
-                )}
-                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-                <br />
-                <p className="list-detail">Ngành: {record.majors}</p>
-                <br />
-                <p className="list-detail">
-                  Phân loại:
-                  {record.support === 1 && 'Hỗ trợ'}
-                  {record.support === 0 && 'Tự tìm'}
-                  {record.support !== 1 && record.support !== 0 && ''}
-                </p>
-                <br />
-                <p className="list-detail">
-                  CV:{' '}
-                  {record.CV ? (
-                    <EyeOutlined
-                      style={{ fontSize: '.9rem' }}
-                      onClick={() => window.open(record.CV)}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </p>
-                <br />
-                <p className="list-detail">Người review: {record.reviewer}</p>
-                <br />
-              </div>
-            ),
-          }}
+          // expandable={{
+          //   expandedRowRender: (record) => (
+          //     <div style={{ marginTop: '10px' }}>
+          //       {window.innerWidth < 1023 && window.innerWidth > 739 ? (
+          //         ''
+          //       ) : (
+          //         <>
+          //           <p className="list-detail">Email: {record.email}</p>
+          //           <br />
+          //         </>
+          //       )}
+          //       <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
+          //       <br />
+          //       <p className="list-detail">Ngành: {record.majors}</p>
+          //       <br />
+          //       <p className="list-detail">
+          //         Phân loại:
+          //         {record.support === 1 && 'Hỗ trợ'}
+          //         {record.support === 0 && 'Tự tìm'}
+          //         {record.support !== 1 && record.support !== 0 && ''}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">
+          //         CV:{' '}
+          //         {record.CV ? (
+          //           <EyeOutlined
+          //             style={{ fontSize: '.9rem' }}
+          //             onClick={() => window.open(record.CV)}
+          //           />
+          //         ) : (
+          //           ''
+          //         )}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">Người review: {record.reviewer}</p>
+          //       <br />
+          //     </div>
+          //   ),
+          // }}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
           <Column title="Họ và Tên" dataIndex="name" key="_id" />
@@ -666,7 +669,7 @@ const parentMethods = {
         listBusiness={listBusiness}
         listManager={listManager}
       />}
-      
+
     </div>
   );
 };
@@ -679,7 +682,7 @@ Status.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ students,semester, manager, business, major }) => ({
+export default connect(({ students, semester, manager, business, major }) => ({
   listStudent: students.listStudent,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,

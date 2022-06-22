@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
 import SemestersAPI from "../../API/SemestersAPI";
 import { saveLocal } from "../../ultis/storage";
+import { getSemesters } from "../../features/semesters/semestersSlice";
 const { Option } = Select;
 
 const Login = () => {
@@ -16,7 +17,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { listCumpus } = useSelector((state) => state.cumpus);
   const handleFailure = (result) => {
-    alert(result);
+    message.error("error")
   };
 
   const handleLogin = (googleData) => {
@@ -36,7 +37,7 @@ const Login = () => {
   };
   const redirect = ({ payload: { isAdmin } }) => {
     message.success("Đăng nhập thành công");
-    return isAdmin ? navigate("/status") : navigate("/info-student");
+    return isAdmin ? navigate("/") : navigate("/info-student");
   };
   const handleChange = (value) => {
     setCumpus(value);
@@ -44,6 +45,7 @@ const Login = () => {
 
   useEffect(() => {
     dispatch(getListCumpus());
+    dispatch(getSemesters());
   }, [dispatch]);
 
   return (

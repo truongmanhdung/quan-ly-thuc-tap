@@ -15,6 +15,9 @@
 .detal-form-status{
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 15px;
+    position: relative;
+    top: 10px;
+    left: 23px
 }
 
 .ant-modal-footer{
@@ -24,17 +27,3 @@
 .text-header-abc{
     width: 120px;
 }
-/* @media only screen and (min-width:46.25em) {
-    .detal-form-status{
-        display: flex;
-        flex-wrap: wrap-reverse;
-        position: relative;
-        top: 100px;
-    }
-    .showModal{
-        width:50%
-    }
-    .text-header-abc{
-        display: none;
-    }
-} */

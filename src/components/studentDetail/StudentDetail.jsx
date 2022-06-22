@@ -1,5 +1,5 @@
 import { EditOutlined } from "@ant-design/icons";
-import { Button, Col, Input, message, Modal, Row, Select } from "antd";
+import { Button, Col, Input, message, Modal, Row, Select, Spin } from "antd";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import StudentAPI from "../../API/StudentAPI";
@@ -33,14 +33,17 @@ const StudentDetail = (props) => {
   const [isSetNote, setIsSetNote] = useState(false);
   const [noteDetail, setNoteDetail] = useState("");
   const [listOption, setListOption] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const getDataStudent = useCallback(async () => {
+    setIsLoading(true);
     const { data } = await StudentAPI.getStudentById(studentId);
     if (data) {
       setStudent(data);
       setNoteDetail(data.note);
     }
+    setIsLoading(false);
   }, [studentId]);
 
   useEffect(() => {
@@ -249,330 +252,33 @@ const StudentDetail = (props) => {
       onCancel={closeModal}
       visible={onShowModal}
     >
-      <h4>Thông tin sinh viên</h4>
-      <Row>
-        <Col span={16} className="border-right" style={{ paddingRight: 20 }}>
-          <Row className="d-flex align-items-center">
-            <Col span={12} className="d-flex">
-              <h6>Họ tên: </h6>
-              <span className="ms-2">
-                {student.name ? student.name : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Tên công ty: </h6>
-              {student.support === 1 ? (
-                <span className="ms-2">
-                  {student.business?.name
-                    ? student.business?.name
-                    : "Không có"}
-                </span>
-              ) : (
-                <span className="ms-2">
-                  {student.nameCompany ? student.nameCompany : "Không có"}
-                </span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Mã sinh viên: </h6>
-              <span className="ms-2">
-                {student.mssv ? student.mssv : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Địa chỉ công ty: </h6>
-              {student.support === 1 ? (
-                <span className="ms-2">
-                  {student.business?.address
-                    ? student.business?.address
-                    : "Không có"}
-                </span>
-              ) : (
-                <span className="ms-2">
-                  {student.addressCompany
-                    ? student.addressCompany
-                    : "Không có"}
-                </span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Email: </h6>
-              <span className="ms-2">
-                {student.email ? student.email : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Mã số thuế: </h6>
-              {student.support === 1 ? (
-                <span className="ms-2">
-                  {student.business?.taxCode
-                    ? student.business?.taxCode
-                    : "Không có"}
-                </span>
-              ) : (
-                <span className="ms-2">
-                  {student.taxCode ? student.taxCode : "Không có"}
-                </span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Chuyên ngành: </h6>
-              <span className="ms-2">
-                {student.majors ? student.majors.name : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Vị trí thực tập: </h6>
-              {student.support === 1 ? (
-                <span className="ms-2">
-                  {student.business?.internshipPosition
-                    ? student.business?.internshipPosition
-                    : "Không có"}
-                </span>
-              ) : (
-                <span className="ms-2">
-                  {student.position ? student.position : "Không có"}
-                </span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Khoá học: </h6>
-              <span className="ms-2">
-                {student.course ? student.course : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>SĐT công ty: </h6>
-              <span className="ms-2">
-                {student.phoneNumberCompany
-                  ? student.phoneNumberCompany
-                  : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Kỳ thực tập: </h6>
-              <span className="ms-2">
-                {student?.smester_id?.name
-                  ? student.smester_id?.name
-                  : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Email người xác nhận: </h6>
-              <span className="ms-2">
-                {student.emailEnterprise
-                  ? student.emailEnterprise
-                  : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Số điện thoại: </h6>
-              <span className="ms-2">
-                {student?.phoneNumber ? student?.phoneNumber : "không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Ngày bắt đầu thực tập: </h6>
-              <span className="ms-2">
-                {student.internshipTime
-                  ? student.internshipTime
-                  : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Địa chỉ: </h6>
-              <span className="ms-2">
-                {student?.address ? student?.address : "không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Ngày kết thúc thực tập: </h6>
-              <span className="ms-2">
-                {student.endInternShipTime
-                  ? student.endInternShipTime
-                  : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Phân loại: </h6>
-              {student.support ? (
-                <span className="ms-2">
-                  {student.support === 1 ? "Nhờ nhà trường hỗ trợ" : "Tự tìm"}
-                </span>
-              ) : (
-                <span className="ms-2">Chưa nhập form</span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Điểm thái độ: </h6>
-              <span className="ms-2">
-                {student.attitudePoint ? student.attitudePoint : "Không có"}
-              </span>
-            </Col>
-
-            <Col span={12} className="d-flex">
-              <h6 className="me-2">Trạng thái: </h6>
-              {renderStatus(student.statusCheck)}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Điểm kết thúc: </h6>
-              <span className="ms-2">
-                {student.resultScore ? student.resultScore : "Không có"}
-              </span>
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>CV: </h6>
-              {student.CV ? (
-                // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                <a
-                  className="ms-2 text-one-row"
-                  onClick={() => window.open(student.CV)}
-                >
-                  {student.CV}
-                </a>
-              ) : (
-                <span className="ms-2">Chưa nộp</span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Biên bản: </h6>
-              {student.form ? (
-                // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                <a
-                  className="ms-2 text-one-row"
-                  onClick={() => window.open(student.form)}
-                >
-                  {student.form}
-                </a>
-              ) : (
-                <span className="ms-2">Chưa nộp</span>
-              )}
-            </Col>
-            <Col span={12} className="d-flex">
-              <h6>Báo cáo: </h6>
-              {student.report ? (
-                // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                <a
-                  className="ms-2 text-one-row"
-                  onClick={() => window.open(student.report)}
-                >
-                  {student.report}
-                </a>
-              ) : (
-                <span className="ms-2">Chưa nộp</span>
-              )}
-            </Col>
-
-            <Col style={{ marginTop: 40 }} span={24}>
-              <h6>Ghi chú cho sinh viên</h6>
-            </Col>
-            <Col span={24}>
-              <TextArea
-                value={noteDetail}
-                showCount
-                maxLength={100}
-                style={{ height: 80, marginBottom: 10 }}
-                onChange={onChangeTextArea}
-              />
-              {isSetNote && (
-                <Button type="primary" onClick={onUpdateNote}>
-                  Cập nhật ghi chú
-                </Button>
-              )}
-            </Col>
-          </Row>
-        </Col>
-        <Col span={8}>
-          <div className="detal-form-status">
-            <div
-              className="d-flex justify-content-between align-items-center mb-3"
-              style={{ flexWrap: "wrap" }}
+      {isLoading ? (
+        <div className="d-flex m-5 p-5 justify-content-center">
+          <Spin />
+        </div>
+      ) : (
+        <div>
+          <h4 className="text-center">Thông tin sinh viên</h4>
+          <Row className="col-md-16">
+            <Col
+              span={16}
+              className="border-right ms-4"
+              style={{ paddingRight: 20 }}
             >
-              <h6 className="mb-0 me-2 text-header-abc">Trạng thái: </h6>
-              {isShowSelectStatus ? (
-                <Select
-                  onChange={onSelectStatus}
-                  defaultValue="Trạng thái"
-                  style={{ width: "50%" }}
+              <Row className="d-flex align-items-center">
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 12 }}
+                  className="d-flex"
                 >
-                  {listOption &&
-                    listOption.length > 0 &&
-                    listOption.map((item, index) => (
-                      <Option value={item.value} key={index}>
-                        {item.title}
-                      </Option>
-                    ))}
-                </Select>
-              ) : (
-                renderStatus(student.statusCheck)
-              )}
-
-              {isShowNote && (
-                <Input
-                  style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
-                  onChange={handelChangeText}
-                  placeholder="Nhập text note"
-                />
-              )}
-              {listOption && listOption.length > 0 ? (
-                submitStatus ? (
-                  <Button type="primary" onClick={onUpdateStatus}>
-                    Thực hiện
-                  </Button>
-                ) : (
-                  !isShowNote && <EditOutlined onClick={onSetStatus} />
-                )
-              ) : (
-                <span></span>
-              )}
-            </div>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h6 className="mb-0 me-2 text-header-abc">Người review: </h6>
-              {isEditReviewer ? (
-                <Select
-                  onChange={onSetReviewer}
-                  defaultValue="Chọn người review"
-                  style={{ width: "50%" }}
-                >
-                  {listManager.length > 0 &&
-                    listManager.map((item) => (
-                      <Option key={item._id} value={item.email}>
-                        {item.name} - {item.email}
-                      </Option>
-                    ))}
-                </Select>
-              ) : student.reviewer ? (
-                student.reviewer
-              ) : (
-                "Chưa có"
-              )}
-
-              {listOption && listOption.length > 0 ? (
-                <EditOutlined onClick={onShowEditReviewer} />
-              ) : (
-                <span></span>
-              )}
-            </div>
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h6 className="mb-0 me-2 text-header-abc">Công ty: </h6>
-              {isEditBusiness && student.support === 1 ? (
-                <Select
-                  onChange={onSelectBusiness}
-                  // defaultValue="Chọn công ty"
-                  style={{ width: "60%" }}
-                  defaultValue={student.business?._id}
-                >
-                  {listBusiness &&
-                    listBusiness.list &&
-                    listBusiness.list.length > 0 &&
-                    listBusiness.list.map((item) => (
-                      <Option key={item._id} value={item._id}>
-                        {item.name} - {item.internshipPosition} - {item.majors}
-                      </Option>
-                    ))}
-                </Select>
-              ) : (
-                <span>
+                  <h6>Họ tên: </h6>
+                  <span className="ms-2">
+                    {student.name ? student.name : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Tên công ty: </h6>
                   {student.support === 1 ? (
                     <span className="ms-2">
                       {student.business?.name
@@ -581,26 +287,359 @@ const StudentDetail = (props) => {
                     </span>
                   ) : (
                     <span className="ms-2">
-                      {student.nameCompany
-                        ? student.nameCompany
+                      {student.nameCompany ? student.nameCompany : "Không có"}
+                    </span>
+                  )}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Mã sinh viên: </h6>
+                  <span className="ms-2">
+                    {student.mssv ? student.mssv : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Địa chỉ công ty: </h6>
+                  {student.support === 1 ? (
+                    <span className="ms-2">
+                      {student.business?.address
+                        ? student.business?.address
+                        : "Không có"}
+                    </span>
+                  ) : (
+                    <span className="ms-2">
+                      {student.addressCompany
+                        ? student.addressCompany
                         : "Không có"}
                     </span>
                   )}
-                </span>
-              )}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Email: </h6>
+                  <span className="ms-2">
+                    {student.email ? student.email : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Mã số thuế: </h6>
+                  {student.support === 1 ? (
+                    <span className="ms-2">
+                      {student.business?.taxCode
+                        ? student.business?.taxCode
+                        : "Không có"}
+                    </span>
+                  ) : (
+                    <span className="ms-2">
+                      {student.taxCode ? student.taxCode : "Không có"}
+                    </span>
+                  )}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Chuyên ngành: </h6>
+                  <span className="ms-2">
+                    {student.majors ? student.majors.name : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Vị trí thực tập: </h6>
+                  {student.support === 1 ? (
+                    <span className="ms-2">
+                      {student.business?.internshipPosition
+                        ? student.business?.internshipPosition
+                        : "Không có"}
+                    </span>
+                  ) : (
+                    <span className="ms-2">
+                      {student.position ? student.position : "Không có"}
+                    </span>
+                  )}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Khoá học: </h6>
+                  <span className="ms-2">
+                    {student.course ? student.course : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>SĐT công ty: </h6>
+                  <span className="ms-2">
+                    {student.phoneNumberCompany
+                      ? student.phoneNumberCompany
+                      : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Kỳ thực tập: </h6>
+                  <span className="ms-2">
+                    {student?.smester_id?.name
+                      ? student.smester_id?.name
+                      : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Email người xác nhận: </h6>
+                  <span className="ms-2">
+                    {student.emailEnterprise
+                      ? student.emailEnterprise
+                      : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Số điện thoại: </h6>
+                  <span className="ms-2">
+                    {student?.phoneNumber ? student?.phoneNumber : "không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Ngày bắt đầu thực tập: </h6>
+                  <span className="ms-2">
+                    {student.internshipTime
+                      ? student.internshipTime
+                      : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Địa chỉ: </h6>
+                  <span className="ms-2">
+                    {student?.address ? student?.address : "không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Ngày kết thúc thực tập: </h6>
+                  <span className="ms-2">
+                    {student.endInternShipTime
+                      ? student.endInternShipTime
+                      : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Phân loại: </h6>
+                  {student.support ? (
+                    <span className="ms-2">
+                      {student.support === 1
+                        ? "Nhờ nhà trường hỗ trợ"
+                        : "Tự tìm"}
+                    </span>
+                  ) : (
+                    <span className="ms-2">Chưa nhập form</span>
+                  )}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Điểm thái độ: </h6>
+                  <span className="ms-2">
+                    {student.attitudePoint ? student.attitudePoint : "Không có"}
+                  </span>
+                </Col>
 
-              {listBusiness &&
-              listBusiness.list &&
-              listBusiness.list.length > 0 &&
-              student.support === 1 ? (
-                <EditOutlined onClick={onShowEditBusiness} />
-              ) : (
-                <span></span>
-              )}
-            </div>
-          </div>
-        </Col>
-      </Row>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6 className="me-2">Trạng thái: </h6>
+                  {renderStatus(student.statusCheck)}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Điểm kết thúc: </h6>
+                  <span className="ms-2">
+                    {student.resultScore ? student.resultScore : "Không có"}
+                  </span>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>CV: </h6>
+                  {student.CV ? (
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                    <a
+                      className="ms-2 text-one-row"
+                      onClick={() => window.open(student.CV)}
+                    >
+                      {student.CV}
+                    </a>
+                  ) : (
+                    <span className="ms-2">Chưa nộp</span>
+                  )}
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Biên bản: </h6>
+                  {student.form ? (
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                    <a
+                      className="ms-2 text-one-row"
+                      onClick={() => window.open(student.form)}
+                    >
+                      {student.form}
+                    </a>
+                  ) : (
+                    <span className="ms-2">Chưa nộp</span>
+                  )}
+                </Col>
+
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Sinh viên đã được hỗ trợ thực tập: </h6>
+                  {studentId.support ? (
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                    <a
+                      className="ms-2 text-one-row"
+                      onClick={() => window.open(studentId.support)}
+                    >
+                      {studentId.support}
+                    </a>
+                  ) : (
+                    <span className="ms-2">Chưa được hỗ trợ</span>
+                  )}
+                </Col>
+
+                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
+                  <h6>Báo cáo: </h6>
+                  {student.report ? (
+                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                    <a
+                      className="ms-2 text-one-row"
+                      onClick={() => window.open(student.report)}
+                    >
+                      {student.report}
+                    </a>
+                  ) : (
+                    <span className="ms-2">Chưa nộp</span>
+                  )}
+                </Col>
+
+                <Col style={{ marginTop: 40 }} span={24}>
+                  <h6>Ghi chú cho sinh viên</h6>
+                </Col>
+                <Col span={24}>
+                  <TextArea
+                    value={noteDetail}
+                    showCount
+                    maxLength={100}
+                    style={{ height: 80, marginBottom: 10 }}
+                    onChange={onChangeTextArea}
+                  />
+                  {isSetNote && (
+                    <Button type="primary" onClick={onUpdateNote}>
+                      Cập nhật ghi chú
+                    </Button>
+                  )}
+                </Col>
+              </Row>
+            </Col>
+            <Col span={8}>
+              <div className="detal-form-status">
+                <div
+                  className="d-flex justify-content-between align-items-center mb-3"
+                  style={{ flexWrap: "wrap" }}
+                >
+                  <h6 className="mb-0 me-2 text-header-abc">Trạng thái: </h6>
+                  {isShowSelectStatus ? (
+                    <Select
+                      onChange={onSelectStatus}
+                      defaultValue="Trạng thái"
+                      style={{ width: "50%" }}
+                    >
+                      {listOption &&
+                        listOption.length > 0 &&
+                        listOption.map((item, index) => (
+                          <Option value={item.value} key={index}>
+                            {item.title}
+                          </Option>
+                        ))}
+                    </Select>
+                  ) : (
+                    renderStatus(student.statusCheck)
+                  )}
+
+                  {isShowNote && (
+                    <Input
+                      style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+                      onChange={handelChangeText}
+                      placeholder="Nhập text note"
+                    />
+                  )}
+                  {listOption && listOption.length > 0 ? (
+                    submitStatus ? (
+                      <Button type="primary" onClick={onUpdateStatus}>
+                        Thực hiện
+                      </Button>
+                    ) : (
+                      !isShowNote && <EditOutlined onClick={onSetStatus} />
+                    )
+                  ) : (
+                    <span></span>
+                  )}
+                </div>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h6 className="mb-0 me-2 text-header-abc">Người review: </h6>
+                  {isEditReviewer ? (
+                    <Select
+                      onChange={onSetReviewer}
+                      defaultValue="Chọn người review"
+                      style={{ width: "50%" }}
+                    >
+                      {listManager.length > 0 &&
+                        listManager.map((item, index) => (
+                          <Option key={index} value={item.email}>
+                            {item.name} - {item.email}
+                          </Option>
+                        ))}
+                    </Select>
+                  ) : student.reviewer ? (
+                    student.reviewer
+                  ) : (
+                    "Chưa có"
+                  )}
+
+                  {listOption && listOption.length > 0 ? (
+                    <EditOutlined onClick={onShowEditReviewer} />
+                  ) : (
+                    <span></span>
+                  )}
+                </div>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h6 className="mb-0 me-2 text-header-abc">Công ty: </h6>
+                  {isEditBusiness && student.support === 1 ? (
+                    <Select
+                      onChange={onSelectBusiness}
+                      // defaultValue="Chọn công ty"
+                      style={{ width: "60%" }}
+                      defaultValue={student.business?._id}
+                    >
+                      {listBusiness &&
+                        listBusiness.list &&
+                        listBusiness.list.length > 0 &&
+                        listBusiness.list.map((item, index) => (
+                          <Option key={index} value={item._id}>
+                            {item.name} - {item.internshipPosition} -{" "}
+                            {item.majors}
+                          </Option>
+                        ))}
+                    </Select>
+                  ) : (
+                    <span>
+                      {student.support === 1 ? (
+                        <span className="ms-2">
+                          {student.business?.name
+                            ? student.business?.name
+                            : "Không có"}
+                        </span>
+                      ) : (
+                        <span className="ms-2">
+                          {student.nameCompany
+                            ? student.nameCompany
+                            : "Không có"}
+                        </span>
+                      )}
+                    </span>
+                  )}
+
+                  {listBusiness &&
+                  listBusiness.list &&
+                  listBusiness.list.length > 0 &&
+                  student.support === 1 ? (
+                    <EditOutlined onClick={onShowEditBusiness} />
+                  ) : (
+                    <span></span>
+                  )}
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      )}
     </Modal>
   );
 };

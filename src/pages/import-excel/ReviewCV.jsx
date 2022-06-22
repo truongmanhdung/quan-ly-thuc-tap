@@ -63,14 +63,7 @@ const ReviewCV = () => {
       dataIndex: 'mssv',
       width: 100,
       fixed: 'left',
-      render: (val, key) => {
-        return (
-          <p style={{ margin: 0, cursor: 'pointer' }} onClick={() => onShowDetail(val, key)}>
-            <EyeOutlined className="icon-cv" style={{marginRight: '5px', color: 'blue'}} />
-            {val}
-          </p>
-        );
-      },
+      color: 'blue'
     },
     {
       title: 'Họ và Tên',
@@ -315,7 +308,7 @@ const ReviewCV = () => {
             <div className="search">
               <span style={{ width: '40%' }}>Ngành: </span>
               <Select
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '70px' }}
                 onChange={(val) => handleStandardTableChange('majors', val)}
                 placeholder="Lọc theo ngành"
               >
@@ -336,7 +329,7 @@ const ReviewCV = () => {
               <span style={{ width: '40%' }}>Trạng thái:</span>
               <Select
                 className="filter-status"
-                style={{ width: '100%' }}
+                style={{ width: '100%', position: 'relative', right: '46px' }}
                 onChange={(val) => handleStandardTableChange('statusCheck', val)}
                 placeholder="Lọc theo trạng thái"
               >
@@ -354,7 +347,7 @@ const ReviewCV = () => {
             <div className="search">
               <span style={{ width: '40%' }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: '100%' }}
+                style={{ width: '100%',  position: 'relative', right: '50px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) => handleStandardTableChange('mssv', val.target.value)}
               />
@@ -464,45 +457,45 @@ const ReviewCV = () => {
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div style={{ marginTop: '10px' }}>
-                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ''
-                ) : (
-                  <>
-                    <p className="list-detail">Email: {record.email}</p>
-                    <br />
-                  </>
-                )}
-                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-                <br />
-                <p className="list-detail">Ngành: {record.majors}</p>
-                <br />
-                <p className="list-detail">
-                  Phân loại:
-                  {record.support === 1 && 'Hỗ trợ'}
-                  {record.support === 0 && 'Tự tìm'}
-                  {record.support !== 1 && record.support !== 0 && ''}
-                </p>
-                <br />
-                <p className="list-detail">
-                  CV:{' '}
-                  {record.CV ? (
-                    <EyeOutlined
-                      style={{ fontSize: '.9rem' }}
-                      onClick={() => window.open(record.CV)}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </p>
-                <br />
-                <p className="list-detail">Người review: {record.reviewer}</p>
-                <br />
-              </div>
-            ),
-          }}
+          // expandable={{
+          //   expandedRowRender: (record) => (
+          //     <div style={{ marginTop: '10px' }}>
+          //       {window.innerWidth < 1023 && window.innerWidth > 739 ? (
+          //         ''
+          //       ) : (
+          //         <>
+          //           <p className="list-detail">Email: {record.email}</p>
+          //           <br />
+          //         </>
+          //       )}
+          //       <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
+          //       <br />
+          //       <p className="list-detail">Ngành: {record.majors}</p>
+          //       <br />
+          //       <p className="list-detail">
+          //         Phân loại:
+          //         {record.support === 1 && 'Hỗ trợ'}
+          //         {record.support === 0 && 'Tự tìm'}
+          //         {record.support !== 1 && record.support !== 0 && ''}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">
+          //         CV:{' '}
+          //         {record.CV ? (
+          //           <EyeOutlined
+          //             style={{ fontSize: '.9rem' }}
+          //             onClick={() => window.open(record.CV)}
+          //           />
+          //         ) : (
+          //           ''
+          //         )}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">Người review: {record.reviewer}</p>
+          //       <br />
+          //     </div>
+          //   ),
+          // }}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
           <Column title="Họ và Tên" dataIndex="name" key="_id" />

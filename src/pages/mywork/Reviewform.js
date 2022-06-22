@@ -325,7 +325,7 @@ const Reviewform = ({
             <div className="search">
               <span style={{ width: "40%" }}>Ngành: </span>
               <Select
-                style={{ width: "100%" }}
+                style={{ width: "100%", position: 'relative', right: '70px' }}
                 onChange={(val) => handleStandardTableChange("majors", val)}
                 placeholder="Lọc theo ngành"
               >
@@ -353,7 +353,7 @@ const Reviewform = ({
               <span style={{ width: "40%" }}>Trạng thái:</span>
               <Select
                 className="filter-status"
-                style={{ width: "100%" }}
+                style={{ width: "100%",position: 'relative', right: '49px' }}
                 onChange={(val) =>
                   handleStandardTableChange("statusCheck", val)
                 }
@@ -380,7 +380,7 @@ const Reviewform = ({
             <div className="search">
               <span style={{ width: "40%" }}>Tìm Kiếm1: </span>
               <Input
-                style={{ width: "100%" }}
+                style={{ width: "100%", position: 'relative', right: '38px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
                   handleStandardTableChange("mssv", val.target.value)
@@ -507,45 +507,45 @@ const Reviewform = ({
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div style={{ marginTop: "10px" }}>
-                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ""
-                ) : (
-                  <>
-                    <p className="list-detail">Email: {record.email}</p>
-                    <br />
-                  </>
-                )}
-                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-                <br />
-                <p className="list-detail">Ngành: {record.majors}</p>
-                <br />
-                <p className="list-detail">
-                  Phân loại:
-                  {record.support === 1 && "Hỗ trợ"}
-                  {record.support === 0 && "Tự tìm"}
-                  {record.support !== 1 && record.support !== 0 && ""}
-                </p>
-                <br />
-                <p className="list-detail">
-                  CV:{" "}
-                  {record.CV ? (
-                    <EyeOutlined
-                      style={{ fontSize: ".9rem" }}
-                      onClick={() => window.open(record.CV)}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </p>
-                <br />
-                <p className="list-detail">Người review: {record.reviewer}</p>
-                <br />
-              </div>
-            ),
-          }}
+          // expandable={{
+          //   expandedRowRender: (record) => (
+          //     <div style={{ marginTop: "10px" }}>
+          //       {window.innerWidth < 1023 && window.innerWidth > 739 ? (
+          //         ""
+          //       ) : (
+          //         <>
+          //           <p className="list-detail">Email: {record.email}</p>
+          //           <br />
+          //         </>
+          //       )}
+          //       <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
+          //       <br />
+          //       <p className="list-detail">Ngành: {record.majors}</p>
+          //       <br />
+          //       <p className="list-detail">
+          //         Phân loại:
+          //         {record.support === 1 && "Hỗ trợ"}
+          //         {record.support === 0 && "Tự tìm"}
+          //         {record.support !== 1 && record.support !== 0 && ""}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">
+          //         CV:{" "}
+          //         {record.CV ? (
+          //           <EyeOutlined
+          //             style={{ fontSize: ".9rem" }}
+          //             onClick={() => window.open(record.CV)}
+          //           />
+          //         ) : (
+          //           ""
+          //         )}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">Người review: {record.reviewer}</p>
+          //       <br />
+          //     </div>
+          //   ),
+          // }}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
           <Column title="Họ và Tên" dataIndex="name" key="_id" />
