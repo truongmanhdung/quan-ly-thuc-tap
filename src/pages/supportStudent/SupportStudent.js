@@ -1,5 +1,5 @@
 import { Button, Form, Input, message, Radio, Select, Spin } from "antd";
-import { array, object } from "prop-types";
+import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
@@ -7,8 +7,6 @@ import CountDownCustorm from "../../components/CountDownCustorm";
 import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { getListMajor } from "../../features/majorSlice/majorSlice";
 import { getNarow } from "../../features/narrow";
-// import { getNarow } from "../../features/narrow";
-import { getListSpecialization } from "../../features/specializationSlice/specializationSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { getLocal } from "../../ultis/storage";
@@ -61,7 +59,6 @@ const SupportStudent = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // dispatch(getListSpecialization());
     dispatch(getTimeForm(value));
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(
@@ -74,7 +71,7 @@ const SupportStudent = ({
     dispatch(getListMajor());
     dispatch(getNarow());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, value, studentById]);
+  }, [dispatch, value]);
   function guardarArchivo(files, data) {
     const file = files; //the file
 
@@ -172,6 +169,7 @@ const SupportStudent = ({
   const dataNarrow = listNarrow.filter(
     (item) => item.id_majors._id === studentById?.majors?._id
   );
+
   return (
     <>
       <Spin spinning={spin}>
@@ -185,6 +183,12 @@ const SupportStudent = ({
             residence: ["zhejiang", "hangzhou", "xihu"],
             prefix: "86",
           }}
+          fields={[
+            {
+              name: ["support"],
+              value: value,
+            },
+          ]}
           scrollToFirstError
         >
           {isCheck ? (
@@ -204,7 +208,7 @@ const SupportStudent = ({
               )}
               <>
                 <Form.Item name="support" label="Kiểu đăng ký">
-                  <Radio.Group onChange={onChange} defaultValue={value}>
+                  <Radio.Group onChange={onChange}>
                     <Radio value={1}>Nhà trường hỗ trợ</Radio>
                     <Radio value={0}>Tự tìm nơi thực tập</Radio>
                   </Radio.Group>
@@ -343,7 +347,7 @@ SupportStudent.propTypes = {
   studentById: object,
   infoUser: object,
   business: object,
-  narrow: array,
+  narrow: object,
 };
 export default connect(
   ({
