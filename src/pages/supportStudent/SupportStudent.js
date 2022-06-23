@@ -323,7 +323,7 @@ const SupportStudent = ({
                       <Proactive />
                     )}
                     <Form.Item {...tailFormItemLayout}>
-                      <Button type="primary" htmlType="submit">
+                      <Button className={styles.button2} type="primary" htmlType="submit">
                         {studentById?.statusCheck === 1
                           ? "Sửa thông tin"
                           : "Đăng ký"}
