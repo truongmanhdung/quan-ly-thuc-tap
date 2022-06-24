@@ -1,13 +1,14 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Button, Col, Input, message, Modal, Row, Select, Spin } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import StudentAPI from "../../API/StudentAPI";
+import { getListTime } from "../../features/timeDateSlice/timeDateSlice";
 
 import {
   statusConfigCV,
   statusConfigForm,
-  statusConfigReport,
+  statusConfigReport
 } from "../../ultis/constConfig";
 import "./studentDetail.css";
 const optionCheck = [1, 5, 8, 3];
@@ -22,6 +23,10 @@ const StudentDetail = (props) => {
     listBusiness,
     infoUser,
   } = props;
+  const {
+    formTime: { times },
+    loading,
+  } = useSelector((state) => state.time);
   const [student, setStudent] = useState({});
   const [isShowSelectStatus, setIsShowSelectStatus] = useState(false);
   const [isEditReviewer, setIsEditReviewer] = useState(false);
@@ -48,6 +53,7 @@ const StudentDetail = (props) => {
 
   useEffect(() => {
     getDataStudent();
+    dispatch(getListTime());
   }, [dispatch, getDataStudent, studentId]);
 
   const renderStatus = (status) => {
@@ -259,10 +265,10 @@ const StudentDetail = (props) => {
       ) : (
         <div>
           <h4 className="text-center">Thông tin sinh viên</h4>
-          <Row className="col-md-16">
+          <Row className="col-md-16 px-3">
             <Col
               span={16}
-              className="border-right ms-4"
+              className="border-right"
               style={{ paddingRight: 20 }}
             >
               <Row className="d-flex align-items-center">
@@ -470,7 +476,7 @@ const StudentDetail = (props) => {
                 </Col>
 
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
-                  <h6>Sinh viên đã được hỗ trợ thực tập: </h6>
+                  <h6>SV đã được hỗ trợ thực tập: </h6>
                   {studentId.support ? (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
@@ -496,24 +502,6 @@ const StudentDetail = (props) => {
                     </a>
                   ) : (
                     <span className="ms-2">Chưa nộp</span>
-                  )}
-                </Col>
-
-                <Col style={{ marginTop: 40 }} span={24}>
-                  <h6>Ghi chú cho sinh viên</h6>
-                </Col>
-                <Col span={24}>
-                  <TextArea
-                    value={noteDetail}
-                    showCount
-                    maxLength={100}
-                    style={{ height: 80, marginBottom: 10 }}
-                    onChange={onChangeTextArea}
-                  />
-                  {isSetNote && (
-                    <Button type="primary" onClick={onUpdateNote}>
-                      Cập nhật ghi chú
-                    </Button>
                   )}
                 </Col>
               </Row>
@@ -635,9 +623,37 @@ const StudentDetail = (props) => {
                     <span></span>
                   )}
                 </div>
+                <div className=" mb-3">
+                  <h6 className="m-0">Thời gian hiển thị form nhập </h6>
+                </div>
+                <div>
+                  <ul className="m-0 p-0 ms-3">
+                    <li className="form-time-text">Form tự đăng ký</li>
+                    <li className="form-time-text"></li>
+                    <li className="form-time-text"></li>
+                    <li className="form-time-text"></li>
+                  </ul>
+                </div>
               </div>
             </Col>
           </Row>
+          <Col style={{ marginTop: 40 }} span={24}>
+            <h6>Ghi chú cho sinh viên</h6>
+          </Col>
+          <Col span={24}>
+            <TextArea
+              value={noteDetail}
+              showCount
+              maxLength={100}
+              style={{ height: 80, marginBottom: 10 }}
+              onChange={onChangeTextArea}
+            />
+            {isSetNote && (
+              <Button type="primary" onClick={onUpdateNote}>
+                Cập nhật ghi chú
+              </Button>
+            )}
+          </Col>
         </div>
       )}
     </Modal>
