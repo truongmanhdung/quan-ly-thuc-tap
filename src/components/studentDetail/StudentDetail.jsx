@@ -152,7 +152,7 @@ const StudentDetail = (props) => {
     }
   };
 
-  const onSaveTimeStudent = () => {
+  const onSaveTimeStudent = async () => {
     if (date && date.length > 0) {
       const startTime = date[0]._d.getTime();
       const endTime = date[1]._d.getTime();
@@ -167,14 +167,20 @@ const StudentDetail = (props) => {
         if(timeCheck){
           timeCheck.startTime = startTime
           timeCheck.endTime = endTime
+        }{
+          student.listTimeForm.push(timeObject);
         }
       } else {
         student.listTimeForm.push(timeObject);
       }
       setTimeStudent(null)
-      console.log('====================================');
-      console.log(student.listTimeForm);
-      console.log('====================================');
+      setIsLoading(true);
+      const { data } = await StudentAPI.updateStudent(student);
+      if (data) {
+        setStudent(data);
+        message.success("Thay đổi thời gian form thành công");
+        setIsLoading(false)
+      }
     }
   };
 
@@ -302,6 +308,20 @@ const StudentDetail = (props) => {
     }
   }, [student.CV, student.form, student.report, student.statusCheck]);
 
+  const checkFormTime = (time) => {
+    if (
+      student.listTimeForm &&
+      student.listTimeForm.length > 0
+    ) {
+      const check = student.listTimeForm.find(
+        (item) => item.typeNumber === time.typeNumber
+      );
+      if(check){
+        return check;
+      }
+    }
+    return time
+  }
   return (
     <Modal
       className="showModal"
@@ -692,15 +712,7 @@ const StudentDetail = (props) => {
                       times.length > 0 &&
                       times.map((time) => {
                         if (time.typeNumber !== 4) {
-                          let studentFormTime = time;
-                          if (
-                            student.listTimeForm &&
-                            student.listTimeForm.length > 0
-                          ) {
-                            studentFormTime = student.listTimeForm.find(
-                              (item) => item.typeNumber === time.typeNumber
-                            );
-                          }
+                          const studentFormTime = checkFormTime(time)
                           return (
                             <li
                               key={time._id}

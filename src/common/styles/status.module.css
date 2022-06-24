@@ -261,7 +261,7 @@ table tbody td {
     justify-content: space-between;
 }
 .span{
-     width: 45%; display: flex; flex-wrap: 'wrap'; 
+     width: 60%; display: flex; flex-wrap: 'wrap'; 
 }
 .select {
      width: 100%; position: relative; right: 18%; 
