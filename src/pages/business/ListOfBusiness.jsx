@@ -6,6 +6,7 @@ import UpFile from '../../components/ExcelDocument/UpFile';
 import { getBusiness } from '../../features/businessSlice/businessSlice';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
 import { getSemesters } from '../../features/semesters/semestersSlice';
+import styles from "./bussiness.module.css"
 const { Option } = Select;
 const { Column } = Table;
 const ListOfBusiness = ({
@@ -15,6 +16,7 @@ const ListOfBusiness = ({
   listMajors,
   listBusiness,
   loading,
+  isMobile
 }) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState({
@@ -87,19 +89,68 @@ const ListOfBusiness = ({
  
   
   return (
-    <div className="status">
+    <div className={styles.status}>
+     
       <Row>
-        {window.innerWidth < 739 ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
-            }}
-          >
-            <h4 style={{ fontSize: '.9rem' }}>Doanh nghiệp đăng ký</h4>
+        {isMobile ? (
+          <>
+           <div
+           className={styles.header_flex}
+           >
+            <h1   >Doanh nghiệp đăng ký</h1>
+             
+           </div>
+          
+          <div className={styles.status}>
+          <Row  >
+            <Col span={12} >
+            <Select
+                className="filter-status"
+                onChange={(val) =>
+                  setMajor(val)
+                }
+                style={{
+                  width: "95%"
+                }}
+                placeholder="Chọn ngành"
+              >
+                {listMajors.map((item, index) => (
+                  <Option value={item._id} key={index}>
+                    {item.name}
+                  </Option>
+                ))}
+              </Select>
+
+            </Col>
+            <Col span={12} >
+
+            <Select
+                    className="filter-status"
+                    placeholder={defaultSemester.name}
+                    onChange={(val) =>
+                      setPage({
+                        ...page,
+                        smester_id: val,
+                      })
+                    }
+                    style={{
+                      width: "100%"
+                    }}
+                    defaultValue={defaultSemester._id}
+                  >
+                    {listSemesters.map((item, index) => (
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+            </Col>
+
+          </Row>
           </div>
+           </>
+
+
         ) : (
           <>
             <Col xs={2} sm={4} md={6} lg={8} xl={10}>
@@ -163,7 +214,7 @@ const ListOfBusiness = ({
                   }} style={{ fontSize: '.9rem' }} />}
         <br />
       </div>
-      {window.innerWidth > 1024 ? (
+      {!isMobile ? (
         <Table
           pagination={{
             pageSize: page.limit,
@@ -235,11 +286,12 @@ ListOfBusiness.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ auth: { infoUser }, semester, major, business }) => ({
+export default connect(({ auth: { infoUser }, semester, major, business, global }) => ({
   infoUser,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,
   listMajors: major.listMajor,
   listBusiness: business.listBusiness,
   loading: business.loading,
+  isMobile: global.isMobile
 }))(ListOfBusiness);

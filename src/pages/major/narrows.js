@@ -1,7 +1,7 @@
 import { Button, Drawer, Form, Input, message, Select, Space, Table } from 'antd';
 import { Option } from 'antd/lib/mentions';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
 import { createNarrows, getNarow, updateNarow } from '../../features/narrow';
 const formItemLayout = {
@@ -14,7 +14,7 @@ const formItemLayout = {
       sm: { span: 16 },
     },
   };
-const Narrows = () => {
+const Narrows = ({isMobile}) => {
   const dispatch = useDispatch();
   const [hideForm, setHideForm] = useState(false);
   const [change, setChange] = useState(false);
@@ -130,7 +130,7 @@ const Narrows = () => {
             placement="left"
             onClose={onClose}
             visible={hideForm}
-            width={600}
+            width= { !isMobile && 600}
           >
             <Form
             {...formItemLayout}
@@ -194,4 +194,6 @@ const Narrows = () => {
   );
 };
 
-export default Narrows;
+export default connect(({global})=> ({
+  isMobile: global.isMobile
+}))(Narrows);
