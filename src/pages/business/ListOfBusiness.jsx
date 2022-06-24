@@ -5,7 +5,7 @@ import { connect, useDispatch } from 'react-redux';
 import UpFile from '../../components/ExcelDocument/UpFile';
 import { getBusiness } from '../../features/businessSlice/businessSlice';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
-import { getSmester } from '../../features/StudentSlice/StudentSlice';
+import { getSemesters } from '../../features/semesters/semestersSlice';
 const { Option } = Select;
 const { Column } = Table;
 const ListOfBusiness = ({
@@ -25,7 +25,7 @@ const ListOfBusiness = ({
   });
   const [major, setMajor] = React.useState('')
   useEffect(() => {
-    dispatch(getSmester());
+    dispatch(getSemesters());
     dispatch(getListMajor());
     dispatch(getBusiness(page));
   }, [page, dispatch]);
