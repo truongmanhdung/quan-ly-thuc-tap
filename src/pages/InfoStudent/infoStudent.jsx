@@ -62,7 +62,7 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
   return (
     <div>
       <Row>
-        <Col sm={{ span: 24 }} md={{ span: 12 }} className=" border-end p-3">
+        <Col sm={{ span: 12 }} md={{ span: 24 }} className=" border-end p-3">
           <div>
             <h4>Thông tin đăng ký</h4>
           </div>
@@ -97,7 +97,7 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
             </p>
           </div>
         </Col>
-        <Col sm={{ span: 24 }} md={{ span: 12 }} className="p-3">
+        <Col sm={{ span: 24 }} md={{ span: 24 }} className="p-3">
           <h4>Thông tin tuyển dụng</h4>
           {time?.startTime <= dateNow && dateNow <= time.endTime ? (
             <div>
