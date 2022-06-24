@@ -16,6 +16,9 @@ const UpFile = ({  keys, parentMethods}) => {
   } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
   const importData = (e) => {
+    console.log('====================================');
+    console.log(e);
+    console.log('====================================');
     if (major.length > 0) {
       const file = e.target.files[0];
       setNameFile(file.name);
@@ -137,8 +140,8 @@ const UpFile = ({  keys, parentMethods}) => {
   return (
     <div className={styles.header}>
       <label htmlFor="up-file">
-        <div className={styles.buttonUpfile}>
-          <UploadOutlined className={styles.icon} /> Tải file excel
+        <div  className={styles.buttonUpfile}>
+          <UploadOutlined   className={styles.icon} /> Tải file excel
         </div>
         {nameFile && dataNew.length > 0 && <span className={styles.spanUploadName}>{nameFile}</span>}
       </label>

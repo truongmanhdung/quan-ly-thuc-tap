@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import '../../common/styles/status.css';
+import style from '../../common/styles/status.module.css';
 import UpFile from '../../components/ExcelDocument/UpFile';
 import StudentDetail from '../../components/studentDetail/StudentDetail';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
@@ -28,6 +28,7 @@ const Status = ({
   listManager,
   listBusiness,
   listMajors,
+  isMobile,
 }) => {
   const infoUser = getLocal();
   const [studentdetail, setStudentDetail] = useState('');
@@ -280,74 +281,16 @@ const Status = ({
     ...page,
   };
   return (
-    <div className="status">
-      <div className="flex-header">
-        {window.innerWidth < 739 ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
-            }}
-          >
-            <h4 style={{ fontSize: '.9rem', margin: '0 -15px' }}>Sinh viên đăng ký thực tập</h4>
-            <Col xs={{ span: 12 }} md={{ span: 8 }} style={{ padding: '0 15px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span
-                  style={{
-                    width: '45%',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    margin: '0 -10px',
-                  }}
-                >
-                  Học Kỳ :{' '}
-                </span>
-                <Select
-                  className="filter-status"
-                  style={{ width: '100%', margin: '0 20px' }}
-                  onChange={(val) => setPage({ ...page, smester_id: val })}
-                  defaultValue={defaultSemester?._id}
-                  placeholder={defaultSemester?.name}
-                >
-                  {listSemesters?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-              </div>
-            </Col>
-            <Button
-              variant="warning"
-              style={{ marginRight: 15, height: 33 }}
-              onClick={(e) => exportToCSV(list)}
-            >
-              Export
-            </Button>
-          </div>
-        ) : (
+    <div className={style.status}>
+      <div className={style.flex_header}>
+        <h4 className={style.flex_header.h4}>Sinh viên đăng ký thực tập</h4>
+        {!isMobile && (
           <>
-            <h4>Sinh viên đăng ký thực tập</h4>
-            <Col xs={{ span: 12 }} md={{ span: 8 }} style={{ padding: '0 3px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span style={{ width: '45%', display: 'flex', flexWrap: 'wrap' }}>Học Kỳ : </span>
+            <Col xs={{ span: 12 }} md={{ span: 8 }}>
+              <div className={style.div}>
+                <span className={style.span}>Học Kỳ : </span>
                 <Select
-                  className="filter-status"
-                  style={{ width: '100%', position: 'relative', right: '18%' }}
+                  className={style.select}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
                   placeholder={defaultSemester.name}
                   defaultValue={defaultSemester._id}
@@ -360,17 +303,10 @@ const Status = ({
                 </Select>
               </div>
             </Col>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <span style={{ width: '45%' }}>Ngành: </span>
+            <div className={style.div} style={{ paddingRight: '30px' }}>
+              <span style={{ padding: '10px' }}>Ngành:</span>
               <Select
                 className="filter-status"
-                style={{ width: '100%', padding: '0 5px' }}
                 onChange={(val) => setMajor(val)}
                 placeholder="Chọn ngành"
               >
@@ -382,40 +318,154 @@ const Status = ({
                   ))}
               </Select>
             </div>
-            <div style={{ display: 'flex' }} className="bnt-export">
-              <Button
-                variant="warning"
-                style={{ marginRight: 5, height: 36 }}
-                onClick={(e) => exportToCSV(list)}
-              >
+
+            <div
+              style={isMobile ? { display: 'none' } : { display: 'flex' }}
+              className={style.btn_export}
+            >
+              <Button variant="warning" className={style.button} onClick={(e) => exportToCSV(list)}>
                 Export
               </Button>
+            </div>
+
+            <div style={{ display: 'flex', paddingLeft: '10px' }} className={style.btn_export}>
               <UpFile parentMethods={parentMethods} keys="status" />
             </div>
           </>
         )}
       </div>
-      <div className="filter" style={{ marginTop: '20px' }}>
-        {window.innerWidth < 739 && (
-          <UpFile parentMethods={parentMethods} keys="status" style={{ fontSize: '.9rem' }} />
-        )}
-        <br />
-        <Row>
-          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
-            <div
+      <div>
+        {isMobile ? (
+          <>
+            <Row
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                marginTop: 20,
               }}
             >
-              <span className="select-status" style={{ width: '30%' }}>
-                Ngành :{' '}
+              <Col span={12}>
+                <div>
+                  <Select
+                    onChange={(val) => setPage({ ...page, smester_id: val })}
+                    defaultValue={defaultSemester?._id}
+                    placeholder={defaultSemester?.name}
+                    style={{ width: '95%', position: 'relative' }}
+                  >
+                    {listSemesters?.map((item, index) => (
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Col>
+
+              <Col span={12}>
+                <div className={style.div}>
+                  <Select
+                    className="select-branch"
+                    style={{ width: '100%', position: 'relative' }}
+                    onChange={(val) => handleStandardTableChange('majors', val)}
+                    placeholder="Lọc theo ngành"
+                  >
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
+                  </Select>
+                </div>
+              </Col>
+            </Row>
+
+            <Row
+              style={{
+                marginTop: 20,
+              }}
+            >
+              <Col span={12}>
+                <div className={style.div}>
+                  <Select
+                    className="filter-status"
+                    style={{ width: '95%' }}
+                    onChange={(val) => handleStandardTableChange('statusCheck', val)}
+                    placeholder="Lọc theo trạng thái"
+                  >
+                    {filterStatuss.map((item, index) => (
+                      <Option value={item.id} key={index}>
+                        {item.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Col>
+              <Col span={12}>
+                <div className={style.div}>
+                  <Input
+                    style={{ width: '100%' }}
+                    placeholder="Tìm kiếm theo mã sinh viên"
+                    onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
+                  />
+                </div>
+              </Col>
+            </Row>
+            <Row style={{
+              marginTop:20
+            }} >
+              <Col span={12}>
+                <UpFile parentMethods={parentMethods} keys="status" style={{ fontSize: '.9rem' }} />
+              </Col>
+              <Col span={12}>
+                <Button
+                  type="primary"
+                  variant="warning"
+                  className={style.button}
+                  style={{
+                    width: "100%"
+                  }}
+                  onClick={(e) => exportToCSV(list)}
+                >
+                  Export
+                </Button>
+              </Col>
+            </Row>
+            <Row style={{
+              marginTop:20
+            }} >
+              <Col span={12}>
+                <Button style={{
+                  width: "95%"
+                }} type="primary" onClick={handleSearch}>
+                  Tìm kiếm
+                </Button>
+                </Col>
+
+                {chooseIdStudent.length > 0 && (
+                <Col span={12}>
+                  <Button  style={{
+                  width: "100%"
+                }} type="primary" onClick={() => comfirm()}>
+                    Xác nhận
+                  </Button>
+                </Col>
+                )}
+            </Row>
+           
+          </>
+        ) : (
+
+          <Row>
+          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{paddingBottom:'15px'}}>
+            <div className={style.div}>
+              <span className="select-status" style={{ width: "50%" }}>
+                Ngành :{" "}
               </span>
               <Select
                 className="select-branch"
-                style={{ width: '100%', position: 'relative', right: '9%' }}
-                onChange={(val) => handleStandardTableChange('majors', val)}
+                style={{ width: "100%", position: "relative", right: "5%" }}
+                onChange={(val) => handleStandardTableChange("majors", val)}
                 placeholder="Lọc theo ngành"
               >
                 {listMajors &&
@@ -429,21 +479,25 @@ const Status = ({
               </Select>
             </div>
           </Col>
-          <br />
-          <br />
-          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <span style={{ width: '45%' }}>Trạng thái :</span>
+
+          <Col
+            xs={{ span: 24 }}
+            md={{ span: 8 }}
+            style={{ marginBottom: "15px" }}
+          >
+            <div className={style.div}>
+              <span
+                style={{ width: "50%", paddingRight: "10px" }}
+                className={style.span3}
+              >
+                Trạng thái:
+              </span>
               <Select
                 className="filter-status"
-                style={{ width: '100%', position: 'relative', right: '12%' }}
-                onChange={(val) => handleStandardTableChange('statusCheck', val)}
+                style={{ width: "100%", position: "relative", right: "5%" }}
+                onChange={(val) =>
+                  handleStandardTableChange("statusCheck", val)
+                }
                 placeholder="Lọc theo trạng thái"
               >
                 {filterStatuss.map((item, index) => (
@@ -454,37 +508,36 @@ const Status = ({
               </Select>
             </div>
           </Col>
-          <br />
-          <br />
 
-          <br />
-          <br />
-          <Col xs={{ span: 24 }} md={{ span: 8 }} style={{ padding: '0 10px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <span className="select-status" style={{ width: '40%' }}>
-                Tìm Kiếm:{' '}
+          <Col xs={{ span: 24 }} md={{ span: 8 }}>
+            <div className={style.div}>
+              <span style={{ paddingRight: "15px" }} className={style.span3}>
+                Tìm Kiếm:{" "}
               </span>
               <Input
-                style={{ width: '100%', position: 'relative', right: '11%' }}
+                style={{ width: "65%", position: "relative", right: "6%" }}
                 placeholder="Tìm kiếm theo mã sinh viên"
-                onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
+                onChange={(val) =>
+                  handleStandardTableChange("mssv", val.target.value.trim())
+                }
               />
             </div>
           </Col>
           <br />
           <br />
-          <Col xs={24} sm={4} md={24} lg={24} xl={4} style={{ padding: '0 10px' }}>
+          <Col
+            xs={24}
+            sm={4}
+            md={24}
+            lg={24}
+            xl={4}
+            style={{ padding: "0 10px" }}
+          >
             <Button
               style={{
-                color: '#fff',
-                background: '#ee4d2d',
-                display: 'flex',
+                color: "#fff",
+                background: "#ee4d2d",
+                display: "flex",
               }}
               onClick={handleSearch}
             >
@@ -494,9 +547,9 @@ const Status = ({
             {chooseIdStudent.length > 0 && (
               <Button
                 style={{
-                  marginTop: '10px',
-                  color: '#fff',
-                  background: '#ee4d2d',
+                  marginTop: "10px",
+                  color: "#fff",
+                  background: "#ee4d2d",
                 }}
                 onClick={() => comfirm()}
               >
@@ -505,7 +558,12 @@ const Status = ({
             )}
           </Col>
         </Row>
+
+        ) }
       </div>
+
+
+
 
       {window.innerWidth > 1024 ? (
         <Table
@@ -592,23 +650,22 @@ const Status = ({
           //   ),
           // }}
         >
-          <Column title="Mssv" dataIndex="mssv" key="_id"
-              render={(val, key) => {
-                return (
-                  <p
-                    style={{ margin: 0, cursor: 'pointer', color: 'blue' }}
-                    onClick={() => onShowDetail(val, key)}
-                  >
-                    {val}
-                  </p>
-                );
-              }}
-          
+          <Column
+            title="Mssv"
+            dataIndex="mssv"
+            key="_id"
+            render={(val, key) => {
+              return (
+                <p
+                  style={{ margin: 0, cursor: 'pointer', color: 'blue' }}
+                  onClick={() => onShowDetail(val, key)}
+                >
+                  {val}
+                </p>
+              );
+            }}
           />
-          <Column title="Họ và Tên" dataIndex="name"   key="_id"
-      
-          
-          />
+          <Column title="Họ và Tên" dataIndex="name" key="_id" />
           {window.innerWidth > 739 && window.innerWidth < 1023 && (
             <Column title="Email" dataIndex="email" key="_id" />
           )}
@@ -711,7 +768,7 @@ Status.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ students, semester, manager, business, major }) => ({
+export default connect(({ students, semester, manager, business, major, global }) => ({
   listStudent: students.listStudent,
   listSemesters: semester.listSemesters,
   defaultSemester: semester.defaultSemester,
@@ -719,4 +776,5 @@ export default connect(({ students, semester, manager, business, major }) => ({
   listManager: manager.listManager,
   listBusiness: business.listBusiness,
   listMajors: major.listMajor,
+  ...global,
 }))(Status);
