@@ -1,0 +1,7 @@
+.typeName{
+    display: flex;
+    justify-content:flex-start;
+}
+.typeName::first-letter{
+    text-transform: uppercase;
+}
