@@ -157,7 +157,10 @@ const ListOfBusiness = ({
         )}
       </Row>
       <div className="filter" style={{ marginTop: '20px' }}>
-        {window.innerWidth < 739 && <UpFile style={{ fontSize: '.9rem' }} />}
+        {window.innerWidth < 739 && <UpFile  keys="business" parentMethods={{
+                    ...page,
+                    major
+                  }} style={{ fontSize: '.9rem' }} />}
         <br />
       </div>
       {window.innerWidth > 1024 ? (

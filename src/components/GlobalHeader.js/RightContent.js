@@ -89,6 +89,12 @@ const Rightcontent = () => {
                                     >
                                         <NavLink onClick={offMenuMoble} to="">Danh sách đăng ký</NavLink>
                                     </Menu.Item>
+                                    <Menu.Item
+                                        key="4"
+                                        icon={<ProfileOutlined className="icon-link" />}
+                                    >
+                                        <NavLink onClick={offMenuMoble} to="company">Danh sách công ty</NavLink>
+                                    </Menu.Item>
                                     <SubMenu
                                         key="sub1"
                                         icon={<UnorderedListOutlined />}
@@ -136,6 +142,13 @@ const Rightcontent = () => {
                                     </Menu.Item>
                                     <Menu.Item key="4">
                                         <NavLink to="/report-form">Báo cáo</NavLink>
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        key="7"
+                                        icon={<LogoutOutlined className="icon-link" />}
+                                    >
+                                        <Button style={{ padding: 0 }} type='text' onClick={handleLogout}>Đăng xuất</Button>
+
                                     </Menu.Item>
                                 </>
                             )}

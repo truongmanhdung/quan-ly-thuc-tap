@@ -44,7 +44,7 @@ const Formtimepicker = () => {
   };
   return (
     <div>
-      <h3 style={{ marginBottom: 50, color: "#3c3c3c" }}>
+      <h3 style={{ marginBottom: 40, color: "#3c3c3c" ,textAlign:'center' }}>
       Quản lý thời gian các tính năng cho sinh viên
       </h3>
       <Spin spinning={loading} />
@@ -65,6 +65,7 @@ const Formtimepicker = () => {
                   </Col>
                   <Col lg={11} sm={11} xs={11}>
                     <RangePicker
+                      className={styles.RangePicker}
                       onChange={onSetDatePicker}
                       renderExtraFooter={() => "extra footer"}
                       showTime
@@ -72,7 +73,7 @@ const Formtimepicker = () => {
                   </Col>
                   <Col lg={6} sm={6} xs={6}>
                     <Button
-                      style={{ marginLeft: 10 }}
+                      className={styles.button}
                       onClick={() => onSaveTime(item?.typeNumber)}
                       type="primary"
                     >
@@ -84,6 +85,7 @@ const Formtimepicker = () => {
               );
             })}
         </Col>
+
         <Col lg={11} sm={24} style={{ paddingTop: 10 }}>
           <table>
             <thead>

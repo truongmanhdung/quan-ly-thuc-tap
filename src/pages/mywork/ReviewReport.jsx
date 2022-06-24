@@ -393,12 +393,12 @@ const ReviewReport = () => {
             md={12}
             lg={8}
             xl={8}
-            style={{ padding: "0 10px" }}
+           
           >
             <div className="search">
-              <span style={{ width: "40%" }}>Ngành: </span>
+              <span style={{ width: "65%" }}>Ngành: </span>
               <Select
-                style={{ width: "100%" , position: 'relative', right: '70px'}}
+                style={{ width: "100%" , position: 'relative', right: '50px'}}
                 onChange={(val) => handleStandardTableChange("majors", val)}
                 placeholder="Lọc theo ngành"
               >
@@ -420,10 +420,10 @@ const ReviewReport = () => {
             md={12}
             lg={8}
             xl={8}
-            style={{ padding: "0 10px" }}
+           
           >
             <div className="search">
-              <span style={{ width: "40%", }}>Trạng thái:</span>
+              <span style={{ width: "65%", }}>Trạng thái:</span>
               <Select
                 className="filter-status"
                 style={{ width: "100%",position: 'relative', right: '49px' }}
@@ -448,12 +448,12 @@ const ReviewReport = () => {
             md={12}
             lg={8}
             xl={8}
-            style={{ padding: "0 10px" }}
+            
           >
             <div className="search">
-              <span style={{ width: "40%" }}>Tìm Kiếm: </span>
+              <span style={{ width: "65%" }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: "100%", position: 'relative', right: '38px' }}
+                style={{ width: "100%", position: 'relative', right: '43px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
                   handleStandardTableChange("mssv", val.target.value)

@@ -320,10 +320,10 @@ const Reviewform = ({
             md={12}
             lg={8}
             xl={8}
-            style={{ padding: "0 10px" }}
+            
           >
             <div className="search">
-              <span style={{ width: "40%" }}>Ngành: </span>
+              <span style={{ width: "70%", marginRight:'35px' }}>Ngành: </span>
               <Select
                 style={{ width: "100%", position: 'relative', right: '70px' }}
                 onChange={(val) => handleStandardTableChange("majors", val)}
@@ -347,13 +347,13 @@ const Reviewform = ({
             md={12}
             lg={8}
             xl={8}
-            style={{ padding: "0 10px" }}
+            
           >
             <div className="search">
-              <span style={{ width: "40%" }}>Trạng thái:</span>
+              <span style={{ width: "65%" }}>Trạng thái:</span>
               <Select
                 className="filter-status"
-                style={{ width: "100%",position: 'relative', right: '49px' }}
+                style={{ width: "100%",position: 'relative', right: '44px' }}
                 onChange={(val) =>
                   handleStandardTableChange("statusCheck", val)
                 }
@@ -375,12 +375,12 @@ const Reviewform = ({
             md={12}
             lg={8}
             xl={8}
-            style={{ padding: "0 10px" }}
+           
           >
             <div className="search">
-              <span style={{ width: "40%" }}>Tìm Kiếm1: </span>
+              <span style={{ width: "65%" }}>Tìm Kiếm: </span>
               <Input
-                style={{ width: "100%", position: 'relative', right: '38px' }}
+                style={{ width: "100%", position: 'relative', right: '40px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
                 onChange={(val) =>
                   handleStandardTableChange("mssv", val.target.value)
