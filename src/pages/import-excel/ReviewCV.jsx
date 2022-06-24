@@ -304,9 +304,9 @@ const ReviewCV = () => {
 
       <div className="filter" style={{ marginTop: '20px' }}>
         <Row>
-          <Col xs={24} sm={4} md={12} lg={8} xl={8} style={{ padding: '0 10px' }}>
+          <Col xs={24} sm={4} md={12} lg={8} xl={8} >
             <div className="search">
-              <span style={{ width: '40%' }}>Ngành: </span>
+              <span style={{ width: '70%',marginRight:'25px' }}>Ngành: </span>
               <Select
                 style={{ width: '100%', position: 'relative', right: '70px' }}
                 onChange={(val) => handleStandardTableChange('majors', val)}
@@ -324,9 +324,9 @@ const ReviewCV = () => {
           </Col>
           <br />
           <br />
-          <Col xs={24} sm={4} md={12} lg={8} xl={8} style={{ padding: '0 10px' }}>
+          <Col xs={24} sm={4} md={12} lg={8} xl={8} >
             <div className="search">
-              <span style={{ width: '40%' }}>Trạng thái:</span>
+              <span style={{ width: '65%' }}>Trạng thái:</span>
               <Select
                 className="filter-status"
                 style={{ width: '100%', position: 'relative', right: '46px' }}
@@ -343,9 +343,9 @@ const ReviewCV = () => {
           </Col>
           <br />
           <br />
-          <Col xs={24} sm={4} md={12} lg={8} xl={8} style={{ padding: '0 10px' }}>
+          <Col xs={24} sm={4} md={12} lg={8} xl={8} >
             <div className="search">
-              <span style={{ width: '40%' }}>Tìm Kiếm: </span>
+              <span style={{ width: '70%' }}>Tìm Kiếm: </span>
               <Input
                 style={{ width: '100%',  position: 'relative', right: '50px' }}
                 placeholder="Tìm kiếm theo mã sinh viên"
