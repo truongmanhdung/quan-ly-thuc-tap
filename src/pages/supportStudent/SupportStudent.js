@@ -172,7 +172,7 @@ const SupportStudent = ({
 
   return (
     <>
-      <Spin spinning={spin}>
+      <Spin  spinning={spin}>
         <Form
           {...formItemLayout}
           form={form}
@@ -355,10 +355,12 @@ export default connect(
     students: { studentById },
     business: { listBusiness },
     narrow,
+    global
   }) => ({
     studentById,
     infoUser,
     listBusiness,
     narrow,
+    isMobile: global.isMobile
   })
 )(SupportStudent);

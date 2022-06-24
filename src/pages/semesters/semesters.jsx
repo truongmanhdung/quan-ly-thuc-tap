@@ -2,11 +2,13 @@
 import { Button, Table, message, Space, Form, Drawer, DatePicker, Input } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { getSemesters, insertSemester, updateSemester } from '../../features/semesters/semestersSlice';
 const { RangePicker } = DatePicker;
 
-const FormSemester = () => {
+const FormSemester = ({
+  isMobile
+}) => {
   const dispatch = useDispatch();
   const [hideForm, setHideForm] = useState(false);
   const [text, setText] = useState('Thêm kỳ');
@@ -143,7 +145,7 @@ const FormSemester = () => {
             placement="left"
             onClose={onClose}
             visible={hideForm}
-            width={600}
+            width={ !isMobile && 600}
           >
             <Form form={form} onFinish={onFinish}
             
@@ -199,5 +201,6 @@ const FormSemester = () => {
     </>
   );
 };
-
-export default FormSemester;
+export default connect(({global})=> ({
+  isMobile: global.isMobile
+}))(FormSemester);
