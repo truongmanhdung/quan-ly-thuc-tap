@@ -49,7 +49,7 @@ const Formtimepicker = () => {
       </h3>
       <Spin spinning={loading} />
       <Row gutter={[16, 20]}>
-        <Col lg={12}>
+        <Col lg={13} sm={24}>
           {times?.length > 0 &&
             times.map((item, index) => {
               return (
@@ -60,15 +60,17 @@ const Formtimepicker = () => {
                     marginTop: 30,
                   }}
                 >
-                  <Col lg={8}>
+                  <Col lg={7} sm={7} xs={7}>
                     <span className={styles.typeName}>{item?.typeName}:</span>
                   </Col>
-                  <Col lg={16}>
+                  <Col lg={11} sm={11} xs={11}>
                     <RangePicker
                       onChange={onSetDatePicker}
                       renderExtraFooter={() => "extra footer"}
                       showTime
                     />
+                  </Col>
+                  <Col lg={6} sm={6} xs={6}>
                     <Button
                       style={{ marginLeft: 10 }}
                       onClick={() => onSaveTime(item?.typeNumber)}
@@ -76,12 +78,13 @@ const Formtimepicker = () => {
                     >
                       Đặt thời gian
                     </Button>
+                  
                   </Col>
                 </Row>
               );
             })}
         </Col>
-        <Col lg={12} style={{ paddingTop: 10 }}>
+        <Col lg={11} sm={24} style={{ paddingTop: 10 }}>
           <table>
             <thead>
               <tr>
