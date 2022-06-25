@@ -656,7 +656,7 @@ const ReviewReport = ({ isMobile }) => {
           rowKey="_id"
           loading={loading}
           columns={columns}
-          dataSource={list.map(({ internshipTime, endInternShipTime, ...list }) => {
+          dataSource={list && list?.map(({ internshipTime, endInternShipTime, ...list }) => {
             return {
               internshipTime: timestamps(internshipTime),
               endInternShipTime: timestamps(endInternShipTime),

@@ -19,7 +19,7 @@ import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const { Option } = Select;
-const keyMajors = 'majors'
+const keyMajors = "majors";
 const Status = ({
   listStudent: { list, total },
   loading,
@@ -40,8 +40,12 @@ const Status = ({
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSemester._id,
+    campus_id:
+      infoUser && infoUser.manager && infoUser.manager.campus_id
+        ? infoUser.manager.campus_id
+        : "",
+    smester_id:
+      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
   const [major, setMajor] = useState("");
   const [filter, setFiler] = useState();
@@ -56,7 +60,7 @@ const Status = ({
     dispatch(
       getStudent({
         ...page,
-        ...filter,
+        ...filter
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -212,9 +216,8 @@ const Status = ({
     },
   };
   const handleStandardTableChange = (key, value) => {
-    
-    if(key === keyMajors){
-      setMajor(value)
+    if (key === keyMajors) {
+      setMajor(value);
     }
     const newValue =
       value.length > 0 || (value < 11 && value !== "")
@@ -300,14 +303,15 @@ const Status = ({
                 <Select
                   className={style.select}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
-                  placeholder={defaultSemester.name}
-                  defaultValue={defaultSemester._id}
+                  placeholder="Chọn kỳ"
                 >
-                  {listSemesters?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  ))}
+                  {listSemesters &&
+                    listSemesters.length > 0 &&
+                    listSemesters?.map((item, index) => (
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    ))}
                 </Select>
               </div>
             </Col>
@@ -368,20 +372,28 @@ const Status = ({
               }}
             >
               <Col span={12}>
-                <div>
-                  <Select
-                    onChange={(val) => setPage({ ...page, smester_id: val })}
-                    defaultValue={defaultSemester?._id}
-                    placeholder={defaultSemester?.name}
-                    style={{ width: "95%", position: "relative" }}
-                  >
-                    {listSemesters?.map((item, index) => (
+              <Select
+                  className={style.select}
+                  onChange={(val) => setPage({ ...page, smester_id: val })}
+                  placeholder={
+                    defaultSemester && defaultSemester.name
+                      ? defaultSemester.name
+                      : "Chọn kỳ"
+                  }
+                  defaultValue={
+                    defaultSemester && defaultSemester._id
+                      ? defaultSemester._id
+                      : ""
+                  }
+                >
+                  {listSemesters &&
+                    listSemesters.length > 0 &&
+                    listSemesters?.map((item, index) => (
                       <Option value={item._id} key={index}>
                         {item.name}
                       </Option>
                     ))}
-                  </Select>
-                </div>
+                </Select>
               </Col>
 
               <Col span={12}>
