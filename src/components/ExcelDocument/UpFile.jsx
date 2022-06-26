@@ -17,7 +17,11 @@ const UpFile = ({ keys, parentMethods }) => {
   const { loading } = useSelector((state) => state.students);
   const importData = (e) => {
     console.log("addassdsads",major);
-    if (major.length > 0) {
+    if(smester_id.length === 0){
+      refInput.current.value = "";
+      message.warning("Vui lòng chọn kỳ");
+    }
+    else if (major.length > 0) {
       const file = e.target.files[0];
       setNameFile(file.name);
       const reader = new FileReader();

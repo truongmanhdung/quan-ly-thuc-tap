@@ -1,3 +1,7 @@
 body{
     font-family: 'Nunito', sans-serif;
 }
+
+.ant-menu-title-content a{
+    text-decoration: none !important;
+}

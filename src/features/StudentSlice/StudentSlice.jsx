@@ -3,14 +3,8 @@ import StudentAPI from "../../API/StudentAPI";
 export const getStudent = createAsyncThunk(
   "student/getStudent",
   async (page) => {
-    if (page.smester_id.length === 0) {
-      delete page['smester_id'];
-      const { data } = await StudentAPI.getAll(page);
-      return data;
-    } else {
-      const { data } = await StudentAPI.getAll(page);
-      return data;
-    }
+    const { data } = await StudentAPI.getAll(page);
+    return data;
   }
 );
 export const insertStudent = createAsyncThunk(

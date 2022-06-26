@@ -16,6 +16,7 @@ import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import StudentDetail from '../../components/studentDetail/StudentDetail';
 import { getLocal } from '../../ultis/storage';
+import SemestersAPI from '../../API/SemestersAPI';
 const { Column } = Table;
 
 const { Option } = Select;
@@ -33,28 +34,45 @@ const ReviewCV = ({ isMobile }) => {
   const [listEmailStudent, setListEmailStudent] = useState([]);
   const [status, setStatus] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const onShowModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
   });
   const [filter, setFiler] = useState({});
+  const onShowModal = () => {
+    setIsModalVisible(true);
+  };
+  
+  const onCloseModal = () => {
+    setIsModalVisible(false);
+    getDataReviewCV()
+  };
+
+  const getDataReviewCV = () => {
+    SemestersAPI.getDefaultSemester().then((res) => {
+      if(res.status === 200){
+        const data = {
+          ...page,
+          ...filter,
+          smester_id: res.data._id
+        };
+        setChooseIdStudent([]);
+        dispatch(getListStudentAssReviewer(data));
+      }
+    }).catch(() => {
+      
+    })
+  }
   useEffect(() => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    setChooseIdStudent([]);
-    dispatch(getListStudentAssReviewer(data));
+    
+    getDataReviewCV()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const onShowDetail = (mssv, key) => {
-    onShowModal();
     setStudentDetail(key._id);
+    onShowModal();
   };
 
   const columns = [
@@ -64,6 +82,16 @@ const ReviewCV = ({ isMobile }) => {
       width: 100,
       fixed: 'left',
       color: 'blue',
+      render: (val, key) => {
+        return (
+          <p
+            style={{ margin: 0, cursor: "pointer", color: "blue" }}
+            onClick={() => onShowDetail(val, key)}
+          >
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: 'Họ và Tên',
@@ -85,6 +113,9 @@ const ReviewCV = ({ isMobile }) => {
       title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
+      render: (val) => {
+        return val.name
+      },
     },
     {
       title: 'Số lần hỗ trợ',
@@ -710,8 +741,14 @@ const ReviewCV = ({ isMobile }) => {
           />
         </Table>
       )}
-
-      {isModalVisible && <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />}
+      {isModalVisible && (
+        <StudentDetail
+          infoUser={infoUser}
+          studentId={studentdetail}
+          onShowModal={onShowModal}
+          closeModal={onCloseModal  }
+        />
+      )}
     </div>
   );
 };

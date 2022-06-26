@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
+import SemestersAPI from "../../API/SemestersAPI";
 import style from "../../common/styles/status.module.css";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
@@ -53,18 +54,45 @@ const Status = ({
     setStudentDetail(key);
     setModal(true);
   };
+
+  const onCloseModal = () => {
+    setModal(false);
+    getListStudent();
+  };
+
+  const getListStudent = async () => {
+    if (page?.smester_id && page?.smester_id.length > 0) {
+      dispatch(
+        getStudent({
+          ...page,
+          ...filter,
+        })
+      );
+    } else {
+      SemestersAPI.getDefaultSemester()
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(
+              getStudent({
+                ...page,
+                ...filter,
+                smester_id: res.data._id,
+              })
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
+  useEffect(() => {
+    getListStudent();
+  }, [page, dispatch]);
   useEffect(() => {
     dispatch(getSemesters());
     dispatch(getListMajor());
     dispatch(fetchManager());
-    dispatch(
-      getStudent({
-        ...page,
-        ...filter
-      })
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [dispatch]);
   const columns = [
     {
       title: "MSSV",
@@ -87,6 +115,9 @@ const Status = ({
       dataIndex: "name",
       width: 150,
       fixed: "left",
+      render: (val, key) => {
+        return <p style={{ textAlign: "left" }}>{val}</p>;
+      },
     },
     {
       title: "Email",
@@ -372,19 +403,11 @@ const Status = ({
               }}
             >
               <Col span={12}>
-              <Select
-                  className={style.select}
+                <Select
+                  style={{ width: "95%", position: "relative" }}
+                  className="select-branch"
                   onChange={(val) => setPage({ ...page, smester_id: val })}
-                  placeholder={
-                    defaultSemester && defaultSemester.name
-                      ? defaultSemester.name
-                      : "Chọn kỳ"
-                  }
-                  defaultValue={
-                    defaultSemester && defaultSemester._id
-                      ? defaultSemester._id
-                      : ""
-                  }
+                  placeholder="Chọn kỳ"
                 >
                   {listSemesters &&
                     listSemesters.length > 0 &&
@@ -672,45 +695,6 @@ const Status = ({
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          // expandable={{
-          //   expandedRowRender: (record) => (
-          //     <div style={{ marginTop: '10px' }}>
-          //       {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-          //         ''
-          //       ) : (
-          //         <>
-          //           <p className="list-detail">Email: {record.email}</p>
-          //           <br />
-          //         </>
-          //       )}
-          //       <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-          //       <br />
-          //       <p className="list-detail">Ngành: {record.majors}</p>
-          //       <br />
-          //       <p className="list-detail">
-          //         Phân loại:
-          //         {record.support === 1 && 'Hỗ trợ'}
-          //         {record.support === 0 && 'Tự tìm'}
-          //         {record.support !== 1 && record.support !== 0 && ''}
-          //       </p>
-          //       <br />
-          //       <p className="list-detail">
-          //         CV:{' '}
-          //         {record.CV ? (
-          //           <EyeOutlined
-          //             style={{ fontSize: '.9rem' }}
-          //             onClick={() => window.open(record.CV)}
-          //           />
-          //         ) : (
-          //           ''
-          //         )}
-          //       </p>
-          //       <br />
-          //       <p className="list-detail">Người review: {record.reviewer}</p>
-          //       <br />
-          //     </div>
-          //   ),
-          // }}
         >
           <Column
             title="Mssv"
@@ -813,7 +797,7 @@ const Status = ({
           infoUser={infoUser}
           studentId={studentdetail._id}
           onShowModal={modal}
-          closeModal={() => setModal(false)}
+          closeModal={onCloseModal}
           listBusiness={listBusiness}
           listManager={listManager}
         />
