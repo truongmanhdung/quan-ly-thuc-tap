@@ -328,7 +328,7 @@ const StudentDetail = (props) => {
       width="90%"
       title="Chi tiết sinh viên"
       onCancel={closeModal}
-      visible={onShowModal}
+      visible={true}
     >
       {isLoading ? (
         <div className="d-flex m-5 p-5 justify-content-center">
@@ -552,13 +552,13 @@ const StudentDetail = (props) => {
 
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>SV đã được hỗ trợ TT: </h6>
-                  {studentId.support ? (
+                  {student.support ? (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
                       className="ms-2 text-one-row"
-                      onClick={() => window.open(studentId.support)}
+                      onClick={() => window.open(student.support)}
                     >
-                      {studentId.support}
+                      {student.support}
                     </a>
                   ) : (
                     <span className="ms-2">Chưa được hỗ trợ</span>

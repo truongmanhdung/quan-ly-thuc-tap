@@ -19,7 +19,7 @@ import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const { Option } = Select;
-const keyMajors = 'majors'
+const keyMajors = "majors";
 const Status = ({
   listStudent: { list, total },
   loading,
@@ -49,18 +49,22 @@ const Status = ({
     setStudentDetail(key);
     setModal(true);
   };
+
   useEffect(() => {
-    dispatch(getSemesters());
-    dispatch(getListMajor());
-    dispatch(fetchManager());
     dispatch(
       getStudent({
         ...page,
         ...filter,
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+  useEffect(() => {
+    dispatch(getSemesters());
+    dispatch(getListMajor());
+    dispatch(fetchManager());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const columns = [
     {
       title: "MSSV",
@@ -212,9 +216,8 @@ const Status = ({
     },
   };
   const handleStandardTableChange = (key, value) => {
-    
-    if(key === keyMajors){
-      setMajor(value)
+    if (key === keyMajors) {
+      setMajor(value);
     }
     const newValue =
       value.length > 0 || (value < 11 && value !== "")

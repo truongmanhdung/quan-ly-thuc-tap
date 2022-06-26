@@ -53,8 +53,8 @@ const ReviewCV = ({ isMobile }) => {
   }, [page]);
 
   const onShowDetail = (mssv, key) => {
-    onShowModal();
     setStudentDetail(key._id);
+    onShowModal();
   };
 
   const columns = [
@@ -64,6 +64,16 @@ const ReviewCV = ({ isMobile }) => {
       width: 100,
       fixed: 'left',
       color: 'blue',
+      render: (val, key) => {
+        return (
+          <p
+            style={{ margin: 0, cursor: "pointer", color: "blue" }}
+            onClick={() => onShowDetail(val, key)}
+          >
+            {val}
+          </p>
+        );
+      },
     },
     {
       title: 'Họ và Tên',
@@ -85,6 +95,9 @@ const ReviewCV = ({ isMobile }) => {
       title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
+      render: (val) => {
+        return val.name
+      },
     },
     {
       title: 'Số lần hỗ trợ',
@@ -710,8 +723,14 @@ const ReviewCV = ({ isMobile }) => {
           />
         </Table>
       )}
-
-      {isModalVisible && <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />}
+      {isModalVisible && (
+        <StudentDetail
+          infoUser={infoUser}
+          studentId={studentdetail}
+          onShowModal={onShowModal}
+          closeModal={onShowModal}
+        />
+      )}
     </div>
   );
 };
