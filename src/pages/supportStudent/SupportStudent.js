@@ -1,4 +1,14 @@
-import { Button, Form, Input, message, Radio, Select, Spin } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Radio,
+  Select,
+  Spin,
+  Upload,
+} from "antd";
 import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -10,8 +20,6 @@ import { getNarow } from "../../features/narrow";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { getLocal } from "../../ultis/storage";
-import Proactive from "./Proactive";
-import Support from "./Support";
 import styles from "./SupportStudent.module.css";
 
 const { Option } = Select;
@@ -55,6 +63,7 @@ const SupportStudent = ({
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
+  const [status, setStatus] = useState(1);
   const { time } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
 
@@ -71,7 +80,7 @@ const SupportStudent = ({
     dispatch(getListMajor());
     dispatch(getNarow());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, value]);
+  }, [dispatch, value, status]);
   function guardarArchivo(files, data) {
     const file = files; //the file
 
@@ -94,22 +103,19 @@ const SupportStudent = ({
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
+              setSpin(true);
               message.success(res.data.message);
-              setValue([]);
+              setStatus(2);
               setSpin(false);
-              form.resetFields();
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
-                setSpin(false);
               } else {
                 message.error(`${dataErr.message}`);
-                setSpin(false);
               }
             });
-          setSpin(false);
         })
         .catch((e) => {
           message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
@@ -119,15 +125,18 @@ const SupportStudent = ({
     };
   }
 
-  const normFile = (e) => {
-    const valueFile = e.file.originFileObj;
+  const props = {
+    beforeUpload: (file) => {
+      const isPDF = file.type === "application/pdf";
+      if (!isPDF) {
+        message.error(`${file.name} không phải là file PDF`);
+      }
 
-    const isPDF = valueFile.type === "application/pdf";
-
-    if (!isPDF) {
-      message.error("Vui lòng nhập file đúng định dạng PDF");
-    }
-    setFile(e.file.originFileObj);
+      return isPDF || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      setFile(info.file.originFileObj);
+    },
   };
 
   const onFinish = async (values) => {
@@ -145,10 +154,12 @@ const SupportStudent = ({
         ///dispatch Redux
       };
       if (value === 0) {
+        setSpin(true);
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
-        form.resetFields();
-      } else {
+        setStatus(2);
+        setSpin(false);
+      } else if (value === 1) {
         await guardarArchivo(file, data);
       }
     } catch (error) {
@@ -288,7 +299,12 @@ const SupportStudent = ({
                       <Form.Item
                         name="business"
                         label="Đơn vị thực tập"
-                        rules={[{ required: true }]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Vui lòng chọn doanh nghiệp",
+                          },
+                        ]}
                       >
                         <Select
                           style={{
@@ -318,9 +334,103 @@ const SupportStudent = ({
                       <Input placeholder="VD: Web Back-end, Dựng phim, Thiết kế nội thất" />
                     </Form.Item>
                     {value === 1 ? (
-                      <Support normFile={normFile} />
+                      <Form.Item
+                        valuePropName="upload"
+                        name="upload"
+                        label="Upload CV (PDF)"
+                      >
+                        <Upload {...props} maxCount={1}>
+                          <Button
+                            style={{
+                              marginLeft: "20px",
+                            }}
+                            icon={<UploadOutlined />}
+                          >
+                            Click to upload
+                          </Button>
+                        </Upload>
+                      </Form.Item>
                     ) : (
-                      <Proactive />
+                      <>
+                        <Form.Item
+                          name="unit"
+                          className={styles.form.input}
+                          label="Đơn vị thực tập"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập đơn vị thực tập",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
+                        </Form.Item>
+                        <Form.Item
+                          name="unitAddress"
+                          label="Địa chỉ thực tập"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập địa chỉ thực tập",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Địa chỉ đơn vị thực tập" />
+                        </Form.Item>
+                        <Form.Item
+                          name="taxCode"
+                          label="Mã số thuế"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập Mã số thuế",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Mã số thuế" />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="position"
+                          label="Chức vụ người tiếp nhận"
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                "Vui lòng nhập chức vụ người tiếp nhận sinh viên",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Chức vụ người tiếp nhận" />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="numberEnterprise"
+                          label="Số điện thoại doanh nghiệp"
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                "Vui lòng nhập Số điện thoại doanh nghiệp",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Số điện thoại doanh nghiệp(VD:Giám đốc, Leader, Hr)" />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="emailEnterprise"
+                          label="Email người tiếp nhận"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập Email người tiếp nhận",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Email người tiếp nhận" />
+                        </Form.Item>
+                      </>
                     )}
                     <Form.Item {...tailFormItemLayout}>
                       <Button
