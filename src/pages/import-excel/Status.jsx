@@ -40,8 +40,12 @@ const Status = ({
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSemester._id,
+    campus_id:
+      infoUser && infoUser.manager && infoUser.manager.campus_id
+        ? infoUser.manager.campus_id
+        : "",
+    smester_id:
+      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
   const [major, setMajor] = useState("");
   const [filter, setFiler] = useState();
@@ -54,7 +58,7 @@ const Status = ({
     dispatch(
       getStudent({
         ...page,
-        ...filter,
+        ...filter
       })
     );
   }, [page]);
@@ -303,14 +307,15 @@ const Status = ({
                 <Select
                   className={style.select}
                   onChange={(val) => setPage({ ...page, smester_id: val })}
-                  placeholder={defaultSemester.name}
-                  defaultValue={defaultSemester._id}
+                  placeholder="Chọn kỳ"
                 >
-                  {listSemesters?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  ))}
+                  {listSemesters &&
+                    listSemesters.length > 0 &&
+                    listSemesters?.map((item, index) => (
+                      <Option value={item._id} key={index}>
+                        {item.name}
+                      </Option>
+                    ))}
                 </Select>
               </div>
             </Col>
@@ -371,20 +376,28 @@ const Status = ({
               }}
             >
               <Col span={12}>
-                <div>
-                  <Select
-                    onChange={(val) => setPage({ ...page, smester_id: val })}
-                    defaultValue={defaultSemester?._id}
-                    placeholder={defaultSemester?.name}
-                    style={{ width: "95%", position: "relative" }}
-                  >
-                    {listSemesters?.map((item, index) => (
+              <Select
+                  className={style.select}
+                  onChange={(val) => setPage({ ...page, smester_id: val })}
+                  placeholder={
+                    defaultSemester && defaultSemester.name
+                      ? defaultSemester.name
+                      : "Chọn kỳ"
+                  }
+                  defaultValue={
+                    defaultSemester && defaultSemester._id
+                      ? defaultSemester._id
+                      : ""
+                  }
+                >
+                  {listSemesters &&
+                    listSemesters.length > 0 &&
+                    listSemesters?.map((item, index) => (
                       <Option value={item._id} key={index}>
                         {item.name}
                       </Option>
                     ))}
-                  </Select>
-                </div>
+                </Select>
               </Col>
 
               <Col span={12}>
