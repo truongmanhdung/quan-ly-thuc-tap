@@ -112,20 +112,21 @@ const ReportForm = ({ infoUser, studentById }) => {
         }); // Or Error in console
     };
   }
-  const normFile = (e) => {
-    const valueFile = e.file.originFileObj.type;
-    const isFile = valueFile;
+  const props = {
+    beforeUpload: (file) => {
+      const isFile =
+        file.type === "application/pdf" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      if (!isFile) {
+        message.error(`${file.name} không phải là file PDF hoặc Docx`);
+      }
 
-    if (
-      isFile === "application/pdf" ||
-      isFile ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ) {
-      setFile(e.file.originFileObj);
-    } else {
-      form.resetFields();
-      message.error("Vui lòng nhập file đúng định dạng PDF hoặc .docx");
-    }
+      return isFile || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      setFile(info.file.originFileObj);
+    },
   };
 
   const onFinish = async (values) => {
@@ -180,7 +181,7 @@ const ReportForm = ({ infoUser, studentById }) => {
                 }}
                 scrollToFirstError
               >
-                <Form.Item  label="Họ và Tên">
+                <Form.Item label="Họ và Tên">
                   <p className={styles.text_form_label}>{studentById.name}</p>
                 </Form.Item>
                 <Form.Item label="Mã sinh viên">
@@ -266,10 +267,9 @@ const ReportForm = ({ infoUser, studentById }) => {
                 <Form.Item
                   name="upload"
                   label="Upload báo cáo (Docx hoặc PDF)"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
+                  valuePropName="upload"
                 >
-                  <Upload name="logo" action="/upload.do" listType="picture">
+                  <Upload {...props} maxCount={1}>
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
