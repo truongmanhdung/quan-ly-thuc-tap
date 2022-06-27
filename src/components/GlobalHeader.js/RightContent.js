@@ -154,11 +154,6 @@ const Rightcontent = () => {
                   <Menu.Item key="4">
                     <NavLink to="/report-form">Báo cáo</NavLink>
                   </Menu.Item>
-                  <Menu.Item key="7" icon={<LogoutOutlined className="icon-link" />}>
-                    <Button style={{ padding: 0 }} type="text" onClick={handleLogout}>
-                      Đăng xuất
-                    </Button>
-                  </Menu.Item>
                 </>
               )}
               <Menu.Item key="7" icon={<LogoutOutlined className="icon-link" />}>
