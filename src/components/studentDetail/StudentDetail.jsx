@@ -554,12 +554,11 @@ const StudentDetail = (props) => {
                   <h6>SV đã được hỗ trợ TT: </h6>
                   {student.support ? (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                    <a
+                    <p
                       className="ms-2 text-one-row"
-                      onClick={() => window.open(student.support)}
                     >
                       {student.support}
-                    </a>
+                    </p>
                   ) : (
                     <span className="ms-2">Chưa được hỗ trợ</span>
                   )}
