@@ -260,11 +260,7 @@ const Status = ({
     setFiler(newValue);
   };
   const handleSearch = () => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(getStudent(data));
+    getListStudent();
   };
 
   const comfirm = () => {
