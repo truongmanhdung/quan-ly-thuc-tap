@@ -15,6 +15,7 @@ import TextArea from "antd/lib/input/TextArea";
 import { bool, object } from "prop-types";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
 import SemestersAPI from "../../API/SemestersAPI";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
 const { Column } = Table;
 const { Option } = Select;
 const Reviewform = ({
@@ -22,6 +23,7 @@ const Reviewform = ({
   listStudentAssReviewer: { total, list },
   loading,
   isMobile,
+  listMajors
 }) => {
   const dispatch = useDispatch();
   const [status, setStatus] = useState({});
@@ -74,6 +76,11 @@ const Reviewform = ({
     onShowModal();
     setStudentDetail(key._id);
   };
+
+  useEffect(() => {
+    dispatch(getListMajor());
+  }, [dispatch]);
+
 
   const columns = [
     {
@@ -250,11 +257,7 @@ const Reviewform = ({
     setFiler(newValue);
   };
   const handleSearch = () => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(listStudentForm(data));
+    getDataReviewForm()
   };
   const actionOnchange = (value) => {
     switch (value) {
@@ -338,13 +341,14 @@ const Reviewform = ({
                   onChange={(val) => handleStandardTableChange("majors", val)}
                   placeholder="Lọc theo ngành"
                 >
-                  {filterBranch.map((item, index) => (
-                    <>
-                      <Option value={item.value} key={index}>
-                        {item.title}
-                      </Option>
-                    </>
-                  ))}
+                  {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
                 </Select>
               </div>
             </Col>
@@ -420,13 +424,14 @@ const Reviewform = ({
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
-                    {filterBranch.map((item, index) => (
-                      <>
-                        <Option value={item.value} key={index}>
-                          {item.title}
-                        </Option>
-                      </>
-                    ))}
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
                   </Select>
                 </div>
               </Col>
@@ -708,10 +713,12 @@ export default connect(
     auth: { infoUser },
     reviewer: { listStudentAssReviewer, loading },
     global,
+    major
   }) => ({
     listStudentAssReviewer,
     infoUser,
     loading,
     isMobile: global.isMobile,
+    listMajors: major.listMajor,
   })
 )(Reviewform);

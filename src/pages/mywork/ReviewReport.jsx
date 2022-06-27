@@ -17,11 +17,12 @@ import TextArea from "antd/lib/input/TextArea";
 import { timestamps } from "../../ultis/timestamps";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
 import SemestersAPI from "../../API/SemestersAPI";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
 const { Column } = Table;
 
 const { Option } = Select;
 
-const ReviewReport = ({ isMobile }) => {
+const ReviewReport = ({ isMobile, listMajors }) => {
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const {
@@ -44,13 +45,16 @@ const ReviewReport = ({ isMobile }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const onShowModal = () => {
     setIsModalVisible(true);
-    
   };
+
+  useEffect(() => {
+    dispatch(getListMajor());
+  }, [dispatch]);
 
   const onCloseModal = () => {
     setIsModalVisible(false);
     getDataReviewReport();
-  }
+  };
 
   const [filter, setFiler] = useState({});
   const getDataReviewReport = () => {
@@ -259,11 +263,7 @@ const ReviewReport = ({ isMobile }) => {
     setFiler(newValue);
   };
   const handleSearch = () => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(listStudentReport(data));
+    getDataReviewReport();
   };
 
   const fileType =
@@ -410,13 +410,14 @@ const ReviewReport = ({ isMobile }) => {
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
-                    {filterBranch.map((item, index) => (
-                      <>
-                        <Option value={item.value} key={index}>
-                          {item.title}
-                        </Option>
-                      </>
-                    ))}
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
                   </Select>
                 </div>
               </Col>
@@ -545,13 +546,14 @@ const ReviewReport = ({ isMobile }) => {
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
-                    {filterBranch.map((item, index) => (
-                      <>
-                        <Option value={item.value} key={index}>
-                          {item.title}
-                        </Option>
-                      </>
-                    ))}
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
                   </Select>
                 </div>
               </Col>
@@ -880,6 +882,7 @@ const ReviewReport = ({ isMobile }) => {
   );
 };
 
-export default connect(({ global }) => ({
+export default connect(({ global, major }) => ({
   isMobile: global.isMobile,
+  listMajors: major.listMajor,
 }))(ReviewReport);
