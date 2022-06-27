@@ -14,7 +14,6 @@ const Formtimepicker = () => {
     formTime: { times },
     loading,
   } = useSelector((state) => state.time);
-  console.log(times);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();
   const onSetDatePicker = (date) => {
@@ -26,7 +25,6 @@ const Formtimepicker = () => {
   }, [dispatch]);
 
   const onSaveTime = async (typeNumber) => {
-    console.log(typeNumber);
     const startTime = date[0]._d.getTime();
     const endTime = date[1]._d.getTime();
     const timeObject = {
