@@ -61,7 +61,7 @@ const ListOfBusiness = ({
     {
       title: "Ngành",
       dataIndex: "majors",
-      render: (val) => val.name,
+      render: (val) => val?.name,
     },
     {
       title: "Yêu cầu",
