@@ -1,8 +1,8 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row, Select, Table } from "antd";
+import { Button, Col, Drawer, Input, Row, Select, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
-import { get, omit } from "lodash";
+import { omit } from "lodash";
 import { array, object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
@@ -16,14 +16,10 @@ import { getListMajor } from "../../features/majorSlice/majorSlice";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
 import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
 import { getSemesters } from "../../features/semesters/semestersSlice";
-import {
-  getStudent,
-  getAllStudent,
-} from "../../features/StudentSlice/StudentSlice";
+import { getStudent } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const { Option } = Select;
-const keyMajors = "majors";
 const Status = ({
   listStudent: { list, total },
   listAllStudent,
@@ -38,6 +34,7 @@ const Status = ({
   const infoUser = getLocal();
   const [studentdetail, setStudentDetail] = useState("");
   const [modal, setModal] = useState(false);
+  const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
@@ -52,7 +49,7 @@ const Status = ({
     smester_id:
       defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
-  const [major, setMajor] = useState("");
+  const [majorImport, setMajorImport] = useState("");
   const [filter, setFiler] = useState();
   const onShowDetail = (mssv, key) => {
     setStudentDetail(key);
@@ -115,6 +112,7 @@ const Status = ({
   useEffect(() => {
     getListStudent();
     getStudentExportExcel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, dispatch]);
   useEffect(() => {
     dispatch(getSemesters());
@@ -275,9 +273,6 @@ const Status = ({
     },
   };
   const handleStandardTableChange = (key, value) => {
-    if (key === keyMajors) {
-      setMajor(value);
-    }
     const newValue =
       value.length > 0 || (value < 11 && value !== "")
         ? {
@@ -305,7 +300,7 @@ const Status = ({
   const fileType =
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
   const fileExtension = ".xlsx";
-  console.log(list);
+
   const exportToCSV = (list) => {
     const newData = [];
     list.filter((item) => {
@@ -350,9 +345,23 @@ const Status = ({
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
+
+  const openVisible = () => {
+    setVisible(true);
+  };
+
+  const closeVisible = () => {
+    setMajorImport("");
+    setPage({
+      ...page,
+      smester_id: "",
+    });
+    setVisible(false);
+  };
   const parentMethods = {
-    major,
+    majorImport,
     ...page,
+    closeVisible,
   };
   return (
     <div className={style.status}>
@@ -360,68 +369,28 @@ const Status = ({
         <h4 className={style.flex_header.h4}>Sinh viên đăng ký thực tập</h4>
         {!isMobile && (
           <>
-            <Col xs={{ span: 12 }} md={{ span: 8 }}>
-              <div className={style.div}>
-                <span className={style.span}>Học Kỳ : </span>
-                <Select
-                  className={style.select}
-                  onChange={(val) => setPage({ ...page, smester_id: val })}
-                  placeholder="Chọn kỳ"
-                >
-                  {listSemesters &&
-                    listSemesters.length > 0 &&
-                    listSemesters?.map((item, index) => (
-                      <Option value={item._id} key={index}>
-                        {item.name}
-                      </Option>
-                    ))}
-                </Select>
-              </div>
-            </Col>
-            <div className={style.div} style={{ paddingRight: "30px" }}>
-              <span style={{ padding: "10px" }}>Ngành:</span>
-              <Select
-                className="filter-status"
-                onChange={(val) => setMajor(val)}
-                placeholder="Chọn ngành"
-              >
-                {listMajors &&
-                  listMajors?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  ))}
-              </Select>
-            </div>
-
             <div
               style={isMobile ? { display: "none" } : { display: "flex" }}
               className={style.btn_export}
             >
               <Button
                 variant="warning"
+                style={{
+                  marginRight: 20,
+                }}
                 className={style.button}
                 onClick={(e) => exportToCSV(getListAllStudent)}
               >
                 Export
               </Button>
-            </div>
-
-            <div
-              style={{ display: "flex", paddingLeft: "10px" }}
-              className={style.btn_export}
-            >
-              <UpFile
-                parentMethods={{
-                  ...parentMethods,
-                  major: parentMethods.major
-                    ? listMajors && listMajors.length > 0
-                      ? listMajors[0]._id
-                      : ""
-                    : "",
-                }}
-                keys="status"
-              />
+              <Button
+                type="primary"
+                variant="warning"
+                className={style.button}
+                onClick={openVisible}
+              >
+                Thêm Sinh Viên
+              </Button>
             </div>
           </>
         )}
@@ -513,18 +482,17 @@ const Status = ({
               }}
             >
               <Col span={12}>
-                <UpFile
-                  parentMethods={{
-                    ...parentMethods,
-                    major: parentMethods.major
-                      ? listMajors && listMajors.length > 0
-                        ? listMajors[0]._id
-                        : ""
-                      : "",
+                <Button
+                  type="primary"
+                  variant="warning"
+                  className={style.button}
+                  style={{
+                    width: "95%",
                   }}
-                  keys="status"
-                  style={{ fontSize: ".9rem" }}
-                />
+                  onClick={openVisible}
+                >
+                  Thêm Sinh Viên
+                </Button>
               </Col>
               <Col span={12}>
                 <Button
@@ -644,8 +612,7 @@ const Status = ({
                 />
               </div>
             </Col>
-            <br />
-            <br />
+
             <Col
               xs={24}
               sm={4}
@@ -834,6 +801,69 @@ const Status = ({
           listManager={listManager}
         />
       )}
+
+      <div>
+        <Drawer
+          title="Thêm Sinh"
+          placement="left"
+          onClose={closeVisible}
+          visible={visible}
+        >
+          <Row>
+            <Col span={6}>
+              <p className={style.pDrawer}>Học Kỳ : </p>
+            </Col>
+            <Col span={18}>
+              <Select
+                style={{
+                  width: "100%",
+                }}
+                onChange={(val) => setPage({ ...page, smester_id: val })}
+                placeholder="Chọn kỳ"
+                defaultValue={page.smester_id}
+              >
+                {listSemesters &&
+                  listSemesters.length > 0 &&
+                  listSemesters?.map((item, index) => (
+                    <Option value={item._id} key={index}>
+                      {item.name}
+                    </Option>
+                  ))}
+              </Select>
+            </Col>
+          </Row>
+
+          <Row
+            style={{
+              marginTop: 20,
+            }}
+          >
+            <Col span={6}>
+              <p className={style.pDrawer}>Ngành:</p>
+            </Col>
+            <Col span={18}>
+              <Select
+                style={{
+                  width: "100%",
+                }}
+                onChange={(val) => setMajorImport(val)}
+                placeholder="Chọn ngành"
+                defaultValue={majorImport}
+              >
+                {listMajors &&
+                  listMajors?.map((item, index) => (
+                    <Option value={item._id} key={index}>
+                      {item.name}
+                    </Option>
+                  ))}
+              </Select>
+            </Col>
+          </Row>
+          <div className={style.upFile}>
+            <UpFile parentMethods={parentMethods} keys="status" />
+          </div>
+        </Drawer>
+      </div>
     </div>
   );
 };
@@ -849,7 +879,6 @@ Status.propTypes = {
 export default connect(
   ({ students, semester, manager, business, major, global }) => ({
     listStudent: students.listStudent,
-    listAllStudent: students.listAllStudent,
     listSemesters: semester.listSemesters,
     defaultSemester: semester.defaultSemester,
     loading: students.loading,
