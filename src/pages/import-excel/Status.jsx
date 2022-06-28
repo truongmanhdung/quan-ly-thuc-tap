@@ -16,7 +16,10 @@ import { getListMajor } from "../../features/majorSlice/majorSlice";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
 import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
 import { getSemesters } from "../../features/semesters/semestersSlice";
-import { getStudent } from "../../features/StudentSlice/StudentSlice";
+import {
+  getAllStudent,
+  getStudent,
+} from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const { Option } = Select;
