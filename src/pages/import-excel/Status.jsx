@@ -110,7 +110,7 @@ const Status = ({
         .catch(() => {});
     }
   };
-  const getListAllStudent = listAllStudent.list;
+  const getListAllStudent = listAllStudent?.list;
 
   useEffect(() => {
     getListStudent();
@@ -416,8 +416,8 @@ const Status = ({
                   {listSemesters &&
                     listSemesters.length > 0 &&
                     listSemesters?.map((item, index) => (
-                      <Option value={item._id} key={index}>
-                        {item.name}
+                      <Option value={item?._id} key={index}>
+                        {item?.name}
                       </Option>
                     ))}
                 </Select>
@@ -434,8 +434,8 @@ const Status = ({
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
-                          <Option value={item._id} key={index}>
-                            {item.name}
+                          <Option value={item?._id} key={index}>
+                            {item?.name}
                           </Option>
                         </>
                       ))}
@@ -460,8 +460,8 @@ const Status = ({
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatuss.map((item, index) => (
-                      <Option value={item.id} key={index}>
-                        {item.title}
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
                       </Option>
                     ))}
                   </Select>
@@ -563,8 +563,8 @@ const Status = ({
                   {listMajors &&
                     listMajors.map((item, index) => (
                       <>
-                        <Option value={item._id} key={index}>
-                          {item.name}
+                        <Option value={item?._id} key={index}>
+                          {item?.name}
                         </Option>
                       </>
                     ))}
@@ -593,8 +593,8 @@ const Status = ({
                   placeholder="Lọc theo trạng thái"
                 >
                   {filterStatuss.map((item, index) => (
-                    <Option value={item.id} key={index}>
-                      {item.title}
+                    <Option value={item?.id} key={index}>
+                      {item?.title}
                     </Option>
                   ))}
                 </Select>
@@ -828,8 +828,8 @@ const Status = ({
                 {listSemesters &&
                   listSemesters.length > 0 &&
                   listSemesters?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
+                    <Option value={item?._id} key={index}>
+                      {item?.name}
                     </Option>
                   ))}
               </Select>
@@ -855,8 +855,8 @@ const Status = ({
               >
                 {listMajors &&
                   listMajors?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
+                    <Option value={item?._id} key={index}>
+                      {item?.name}
                     </Option>
                   ))}
               </Select>
