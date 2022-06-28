@@ -10,6 +10,7 @@ import {
   Select,
   Spin,
   Form,
+  InputNumber,
 } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 const dateFormat = "DD/MM/YYYY hh:mm:ss";
+const dateFormatInput = "YYYY/MM/DD";
 const StudentDetail = (props) => {
   const { studentId, closeModal, listManager, infoUser } = props;
   const {
@@ -533,7 +535,13 @@ const StudentDetail = (props) => {
                           },
                         ]}
                       >
-                        <DatePicker />
+                        <DatePicker
+                          defaultValue={moment(
+                            student.internshipTime,
+                            dateFormatInput
+                          )}
+                          format={dateFormatInput}
+                        />
                       </Form.Item>
 
                       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -594,7 +602,12 @@ const StudentDetail = (props) => {
                             },
                           ]}
                         >
-                          <DatePicker />
+                          <DatePicker
+                            defaultValue={moment(
+                              student.endInternShipTime,
+                              dateFormatInput
+                            )}
+                          />
                         </Form.Item>
 
                         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -650,19 +663,13 @@ const StudentDetail = (props) => {
                       onFinish={onFinish}
                       autoComplete="off"
                     >
-                      <Form.Item
-                        label="Nhập điểm thái độ"
-                        name="attitudePoint"
-                        rules={[
-                          {
-                            message: "Điểm thái độ không được quá 10",
-                            max: 2,
-                            min: 0,
-                            maxLength: 2,
-                          },
-                        ]}
-                      >
-                        <Input maxLength="2" type="number" max="10" min="0" />
+                      <Form.Item label="Nhập điểm thái độ" name="attitudePoint">
+                        <InputNumber
+                          defaultValue={student.attitudePoint}
+                          type="number"
+                          max={10}
+                          min={0}
+                        />
                       </Form.Item>
 
                       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -709,19 +716,13 @@ const StudentDetail = (props) => {
                       onFinish={onFinish}
                       autoComplete="off"
                     >
-                      <Form.Item
-                        label="Nhập điểm kết thúc"
-                        name="resultScore"
-                        rules={[
-                          {
-                            message: "Điểm kết thúc không được quá 10",
-                            max: 2,
-                            min: 0,
-                            maxLength: 2,
-                          },
-                        ]}
-                      >
-                        <Input maxLength="2" type="number" max="10" min="0" />
+                      <Form.Item label="Nhập điểm kết thúc" name="resultScore">
+                        <InputNumber
+                          defaultValue={student.resultScore}
+                          type="number"
+                          max={10}
+                          min={0}
+                        />
                       </Form.Item>
 
                       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
