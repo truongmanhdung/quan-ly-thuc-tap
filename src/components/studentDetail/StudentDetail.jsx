@@ -9,6 +9,7 @@ import {
   Row,
   Select,
   Spin,
+  Form,
 } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,20 +22,14 @@ import {
   statusConfigReport,
 } from "../../ultis/constConfig";
 import "./studentDetail.css";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
 const optionCheck = [1, 5, 8, 3];
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 const dateFormat = "DD/MM/YYYY hh:mm:ss";
 const StudentDetail = (props) => {
-  const {
-    onShowModal,
-    studentId,
-    closeModal,
-    listManager,
-    listBusiness,
-    infoUser,
-  } = props;
+  const { studentId, closeModal, listManager, infoUser } = props;
   const {
     formTime: { times },
   } = useSelector((state) => state.time);
@@ -51,7 +46,9 @@ const StudentDetail = (props) => {
   const [listOption, setListOption] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [timeStudent, setTimeStudent] = useState({});
+  const { listBusiness } = useSelector((state) => state.business);
   const [date, setDate] = useState(null);
+  const [fieldStudent, setFieldStudent] = useState("");
   const dispatch = useDispatch();
   const onSetDatePicker = (date) => {
     setDate(date);
@@ -62,13 +59,17 @@ const StudentDetail = (props) => {
     if (data) {
       setStudent(data);
       setNoteDetail(data.note);
+      dispatch(getBusiness({ majors: data.majors._id }));
     }
     setIsLoading(false);
   }, [studentId]);
 
   useEffect(() => {
-    getDataStudent();
     dispatch(getListTime());
+  }, []);
+
+  useEffect(() => {
+    getDataStudent();
   }, [dispatch, getDataStudent, studentId]);
 
   const renderTime = (time) => {
@@ -79,6 +80,10 @@ const StudentDetail = (props) => {
 
   const onSetIsUpdateStudentTime = (time) => {
     setTimeStudent(time);
+  };
+
+  const onEditField = (field) => {
+    setFieldStudent(field);
   };
 
   const renderStatus = (status) => {
@@ -163,28 +168,54 @@ const StudentDetail = (props) => {
         typeName: timeStudent.typeName,
       };
       if (student.listTimeForm && student.listTimeForm.length > 0) {
-        const timeCheck = student.listTimeForm.find((item) => item.typeNumber === timeStudent.typeNumber)
-        if(timeCheck){
-          timeCheck.startTime = startTime
-          timeCheck.endTime = endTime
-        }{
+        const timeCheck = student.listTimeForm.find(
+          (item) => item.typeNumber === timeStudent.typeNumber
+        );
+        if (timeCheck) {
+          timeCheck.startTime = startTime;
+          timeCheck.endTime = endTime;
+        }
+        {
           student.listTimeForm.push(timeObject);
         }
       } else {
         student.listTimeForm.push(timeObject);
       }
-      setTimeStudent(null)
+      setTimeStudent(null);
       setIsLoading(true);
       const { data } = await StudentAPI.updateStudent(student);
       if (data) {
         setStudent(data);
         message.success("Thay đổi thời gian form thành công");
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
   };
 
-  
+  // chỉnh sửa thông tin từng trường sinh viên
+  const onFinish = (values) => {
+    values._id = studentId;
+    if (values.internshipTime) {
+      values.internshipTime = values.internshipTime._d;
+    } else if (values.endInternShipTime) {
+      values.endInternShipTime = values.endInternShipTime._d;
+    }
+    StudentAPI.updateStudent(values).then((res) => {
+      if (res.status === 200) {
+        message.success("Thành công");
+        setStudent(res.data);
+        onCloseFormField();
+      } else {
+        message.success("Thất bại");
+        onCloseFormField();
+      }
+    });
+  };
+
+  const onCloseFormField = () => {
+    setFieldStudent("");
+  };
+
   const handelChangeText = (e) => {
     if (e.target.value !== "") {
       setNote(e.target.value);
@@ -309,19 +340,16 @@ const StudentDetail = (props) => {
   }, [student.CV, student.form, student.report, student.statusCheck]);
 
   const checkFormTime = (time) => {
-    if (
-      student.listTimeForm &&
-      student.listTimeForm.length > 0
-    ) {
+    if (student.listTimeForm && student.listTimeForm.length > 0) {
       const check = student.listTimeForm.find(
         (item) => item.typeNumber === time.typeNumber
       );
-      if(check){
+      if (check) {
         return check;
       }
     }
-    return time
-  }
+    return time;
+  };
   return (
     <Modal
       className="showModal"
@@ -470,13 +498,59 @@ const StudentDetail = (props) => {
                     {student?.phoneNumber ? student?.phoneNumber : "không có"}
                   </span>
                 </Col>
-                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
-                  <h6>Ngày bắt đầu thực tập: </h6>
-                  <span className="ms-2">
-                    {student.internshipTime
-                      ? student.internshipTime
-                      : "Không có"}
-                  </span>
+                <Col xs={{ span: 24 }} md={{ span: 12 }}>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex">
+                      <h6>Ngày bắt đầu thực tập: </h6>
+                      <span className="ms-2">
+                        {student.internshipTime
+                          ? renderTime(student.internshipTime)
+                          : "Không có"}
+                      </span>
+                    </div>
+                    {student.internshipTime && (
+                      <EditOutlined
+                        onClick={() => onEditField("internshipTime")}
+                      />
+                    )}
+                  </div>
+                  {fieldStudent === "internshipTime" && student.internshipTime && (
+                    <Form
+                      name="basic"
+                      // labelCol={{ span: 8 }}
+                      // wrapperCol={{ span: 16 }}
+                      initialValues={{ remember: true }}
+                      onFinish={onFinish}
+                      autoComplete="off"
+                    >
+                      <Form.Item
+                        label="Chọn thời gian"
+                        name="internshipTime"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Bạn phải chọn thời gian",
+                          },
+                        ]}
+                      >
+                        <DatePicker />
+                      </Form.Item>
+
+                      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button
+                          onClick={onCloseFormField}
+                          type="danger"
+                          htmlType="button"
+                          className="me-4"
+                        >
+                          Huỷ
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                          Lưu
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  )}
                 </Col>
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Địa chỉ: </h6>
@@ -484,13 +558,60 @@ const StudentDetail = (props) => {
                     {student?.address ? student?.address : "không có"}
                   </span>
                 </Col>
-                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
-                  <h6>Ngày kết thúc thực tập: </h6>
-                  <span className="ms-2">
-                    {student.endInternShipTime
-                      ? student.endInternShipTime
-                      : "Không có"}
-                  </span>
+                <Col xs={{ span: 24 }} md={{ span: 12 }}>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex">
+                      <h6>Ngày kết thúc thực tập: </h6>
+                      <span className="ms-2">
+                        {student.endInternShipTime
+                          ? renderTime(student.endInternShipTime)
+                          : "Không có"}
+                      </span>
+                    </div>
+                    {student.endInternShipTime && (
+                      <EditOutlined
+                        onClick={() => onEditField("endInternShipTime")}
+                      />
+                    )}
+                  </div>
+                  {fieldStudent === "endInternShipTime" &&
+                    student.internshipTime && (
+                      <Form
+                        name="basic"
+                        // labelCol={{ span: 8 }}
+                        // wrapperCol={{ span: 16 }}
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        autoComplete="off"
+                      >
+                        <Form.Item
+                          label="Chọn thời gian"
+                          name="endInternShipTime"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Bạn phải chọn thời gian",
+                            },
+                          ]}
+                        >
+                          <DatePicker />
+                        </Form.Item>
+
+                        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                          <Button
+                            onClick={onCloseFormField}
+                            type="danger"
+                            htmlType="button"
+                            className="me-4"
+                          >
+                            Huỷ
+                          </Button>
+                          <Button type="primary" htmlType="submit">
+                            Lưu
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    )}
                 </Col>
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Phân loại: </h6>
@@ -504,22 +625,120 @@ const StudentDetail = (props) => {
                     <span className="ms-2">Chưa nhập form</span>
                   )}
                 </Col>
-                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
-                  <h6>Điểm thái độ: </h6>
-                  <span className="ms-2">
-                    {student.attitudePoint ? student.attitudePoint : "Không có"}
-                  </span>
+                <Col xs={{ span: 24 }} md={{ span: 12 }}>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex">
+                      <h6>Điểm thái độ: </h6>
+                      <span className="ms-2">
+                        {student.attitudePoint
+                          ? student.attitudePoint
+                          : "Không có"}
+                      </span>
+                    </div>
+                    {student.attitudePoint && (
+                      <EditOutlined
+                        onClick={() => onEditField("attitudePoint")}
+                      />
+                    )}
+                  </div>
+                  {fieldStudent === "attitudePoint" && student.attitudePoint && (
+                    <Form
+                      name="basic"
+                      // labelCol={{ span: 8 }}
+                      // wrapperCol={{ span: 16 }}
+                      initialValues={{ remember: true }}
+                      onFinish={onFinish}
+                      autoComplete="off"
+                    >
+                      <Form.Item
+                        label="Nhập điểm thái độ"
+                        name="attitudePoint"
+                        rules={[
+                          {
+                            message: "Điểm thái độ không được quá 10",
+                            max: 2,
+                            min: 0,
+                            maxLength: 2,
+                          },
+                        ]}
+                      >
+                        <Input maxLength="2" type="number" max="10" min="0" />
+                      </Form.Item>
+
+                      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button
+                          onClick={onCloseFormField}
+                          type="danger"
+                          htmlType="button"
+                          className="me-4"
+                        >
+                          Huỷ
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                          Lưu
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  )}
                 </Col>
 
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6 className="me-2">Trạng thái: </h6>
                   {renderStatus(student.statusCheck)}
                 </Col>
-                <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
-                  <h6>Điểm kết thúc: </h6>
-                  <span className="ms-2">
-                    {student.resultScore ? student.resultScore : "Không có"}
-                  </span>
+                <Col xs={{ span: 24 }} md={{ span: 12 }}>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex">
+                      <h6>Điểm kết thúc: </h6>
+                      <span className="ms-2">
+                        {student.resultScore ? student.resultScore : "Không có"}
+                      </span>
+                    </div>
+                    {student.resultScore && (
+                      <EditOutlined
+                        onClick={() => onEditField("resultScore")}
+                      />
+                    )}
+                  </div>
+                  {fieldStudent === "resultScore" && student.resultScore && (
+                    <Form
+                      name="basic"
+                      // labelCol={{ span: 8 }}
+                      // wrapperCol={{ span: 16 }}
+                      initialValues={{ remember: true }}
+                      onFinish={onFinish}
+                      autoComplete="off"
+                    >
+                      <Form.Item
+                        label="Nhập điểm kết thúc"
+                        name="resultScore"
+                        rules={[
+                          {
+                            message: "Điểm kết thúc không được quá 10",
+                            max: 2,
+                            min: 0,
+                            maxLength: 2,
+                          },
+                        ]}
+                      >
+                        <Input maxLength="2" type="number" max="10" min="0" />
+                      </Form.Item>
+
+                      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button
+                          onClick={onCloseFormField}
+                          type="danger"
+                          htmlType="button"
+                          className="me-4"
+                        >
+                          Huỷ
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                          Lưu
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  )}
                 </Col>
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>CV: </h6>
@@ -538,7 +757,6 @@ const StudentDetail = (props) => {
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Biên bản: </h6>
                   {student.form ? (
-                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
                       className="ms-2 text-one-row"
                       onClick={() => window.open(student.form)}
@@ -554,12 +772,7 @@ const StudentDetail = (props) => {
                   <h6>SV đã được hỗ trợ TT: </h6>
                   {student.support ? (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                    <a
-                      className="ms-2 text-one-row"
-                      onClick={() => window.open(student.support)}
-                    >
-                      {student.support}
-                    </a>
+                    <p className="ms-2 text-one-row">{student.support}</p>
                   ) : (
                     <span className="ms-2">Chưa được hỗ trợ</span>
                   )}
@@ -568,7 +781,6 @@ const StudentDetail = (props) => {
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Báo cáo: </h6>
                   {student.report ? (
-                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a
                       className="ms-2 text-one-row"
                       onClick={() => window.open(student.report)}
@@ -659,20 +871,21 @@ const StudentDetail = (props) => {
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h6 className="mb-0 me-2 text-header-abc">Công ty: </h6>
-                  {isEditBusiness && student.support === 1 ? (
+                  {isEditBusiness && student.support === 1 && student.CV ? (
                     <Select
                       onChange={onSelectBusiness}
                       // defaultValue="Chọn công ty"
                       style={{ width: "60%" }}
-                      defaultValue={student.business?._id}
+                      defaultValue={student?.business?._id}
                     >
                       {listBusiness &&
+                        student.CV &&
                         listBusiness.list &&
                         listBusiness.list.length > 0 &&
                         listBusiness.list.map((item, index) => (
                           <Option key={index} value={item._id}>
                             {item.name} - {item.internshipPosition} -{" "}
-                            {item.majors}
+                            {item.majors.name}
                           </Option>
                         ))}
                     </Select>
@@ -696,6 +909,7 @@ const StudentDetail = (props) => {
 
                   {listBusiness &&
                   listBusiness.list &&
+                  student.CV &&
                   listBusiness.list.length > 0 &&
                   student.support === 1 ? (
                     <EditOutlined onClick={onShowEditBusiness} />
@@ -712,7 +926,7 @@ const StudentDetail = (props) => {
                       times.length > 0 &&
                       times.map((time) => {
                         if (time.typeNumber !== 4) {
-                          const studentFormTime = checkFormTime(time)
+                          const studentFormTime = checkFormTime(time);
                           return (
                             <li
                               key={time._id}
@@ -722,7 +936,9 @@ const StudentDetail = (props) => {
                                 {time.typeName}
                               </span>{" "}
                               :{" "}
-                              {timeStudent && timeStudent?.typeNumber === studentFormTime.typeNumber ? (
+                              {timeStudent &&
+                              timeStudent?.typeNumber ===
+                                studentFormTime.typeNumber ? (
                                 <div>
                                   <RangePicker
                                     onChange={onSetDatePicker}
