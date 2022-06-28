@@ -14,7 +14,6 @@ const Formtimepicker = () => {
     formTime: { times },
     loading,
   } = useSelector((state) => state.time);
-  console.log(times);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();
   const onSetDatePicker = (date) => {
@@ -26,7 +25,6 @@ const Formtimepicker = () => {
   }, [dispatch]);
 
   const onSaveTime = async (typeNumber) => {
-    console.log(typeNumber);
     const startTime = date[0]._d.getTime();
     const endTime = date[1]._d.getTime();
     const timeObject = {
@@ -44,8 +42,8 @@ const Formtimepicker = () => {
   };
   return (
     <div>
-      <h3 style={{ marginBottom: 40, color: "#3c3c3c" ,textAlign:'center' }}>
-      Quản lý thời gian các tính năng cho sinh viên
+      <h3 style={{ marginBottom: 40, color: "#3c3c3c", textAlign: "center" }}>
+        Quản lý thời gian các tính năng cho sinh viên
       </h3>
       <Spin spinning={loading} />
       <Row gutter={[16, 20]}>
@@ -79,7 +77,6 @@ const Formtimepicker = () => {
                     >
                       Đặt thời gian
                     </Button>
-                  
                   </Col>
                 </Row>
               );

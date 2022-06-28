@@ -16,12 +16,10 @@ const UpFile = ({ keys, parentMethods }) => {
   } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
   const importData = (e) => {
-    console.log("addassdsads",major);
-    if(smester_id.length === 0){
+    if (smester_id.length === 0) {
       refInput.current.value = "";
       message.warning("Vui lòng chọn kỳ");
-    }
-    else if (major.length > 0) {
+    } else if (major.length > 0) {
       const file = e.target.files[0];
       setNameFile(file.name);
       const reader = new FileReader();
@@ -138,7 +136,7 @@ const UpFile = ({ keys, parentMethods }) => {
 
   return (
     <div className={styles.header}>
-      <Button  style={{width: '95%'}}>
+      <Button style={{ width: "95%" }}>
         <label htmlFor="up-file">
           {!nameFile && dataNew.length === 0 && (
             <div className={styles.buttonUpfile}>
@@ -158,15 +156,22 @@ const UpFile = ({ keys, parentMethods }) => {
         id="up-file"
       />
       {dataNew.length > 0 && (
-        <div className="mt-2 d-flex align-items-center justify-content-between" style={{width: '95%'}}>
+        <div
+          className="mt-2 d-flex align-items-center justify-content-between"
+          style={{ width: "95%" }}
+        >
           <Button
-            style={{ width: '45%' }}
+            style={{ width: "45%" }}
             onClick={() => submitSave()}
             type="primary"
           >
             Lưu
           </Button>
-          <Button style={{ width: '45%' }} onClick={() => submitCole()} type="danger">
+          <Button
+            style={{ width: "45%" }}
+            onClick={() => submitCole()}
+            type="danger"
+          >
             Huỷ
           </Button>
         </div>

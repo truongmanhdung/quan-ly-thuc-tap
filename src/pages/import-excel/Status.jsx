@@ -2,7 +2,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import { Button, Col, Input, Row, Select, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
-import { omit } from "lodash";
+import { get, omit } from "lodash";
 import { array, object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
@@ -16,13 +16,17 @@ import { getListMajor } from "../../features/majorSlice/majorSlice";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
 import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
 import { getSemesters } from "../../features/semesters/semestersSlice";
-import { getStudent } from "../../features/StudentSlice/StudentSlice";
+import {
+  getStudent,
+  getAllStudent,
+} from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const { Option } = Select;
 const keyMajors = "majors";
 const Status = ({
   listStudent: { list, total },
+  listAllStudent,
   loading,
   listSemesters,
   defaultSemester,
@@ -85,8 +89,32 @@ const Status = ({
     }
   };
 
+  const getStudentExportExcel = async () => {
+    if (page?.smester_id && page?.smester_id.length > 0) {
+      dispatch(
+        getAllStudent({
+          ...filter,
+        })
+      );
+    } else {
+      SemestersAPI.getDefaultSemester()
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(
+              getAllStudent({
+                smester_id: res.data._id,
+              })
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  };
+  const getListAllStudent = listAllStudent.list;
+
   useEffect(() => {
     getListStudent();
+    getStudentExportExcel();
   }, [page, dispatch]);
   useEffect(() => {
     dispatch(getSemesters());
@@ -277,15 +305,22 @@ const Status = ({
   const fileType =
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
   const fileExtension = ".xlsx";
-
+  console.log(list);
   const exportToCSV = (list) => {
     const newData = [];
     list.filter((item) => {
       const newObject = {};
+      newObject["Kỳ học"] = item["smester_id"].name;
+      newObject["Cơ sở"] = item["campus_id"].name;
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
-      newObject["Ngành"] = item["majors"];
+      newObject["Ngành"] = item["majors"].name;
+      newObject["Mã ngành"] = item["majors"].majorCode;
+      newObject["CV"] = item["CV"];
+      newObject["Biên bản"] = item["form"];
+      newObject["Báo cáo"] = item["report"];
+      newObject["Người review"] = item["reviewer"];
       newObject["Số điện thoại"] = item["phoneNumber"];
       newObject["Tên công ty"] = item["nameCompany"];
       newObject["Địa chỉ công ty"] = item["addressCompany"];
@@ -295,6 +330,7 @@ const Status = ({
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Thời gian thực tập"] = item["internshipTime"];
       newObject["Hình thức"] = item["support"];
+      newObject["Ghi chú"] = item["note"];
       return newData.push(newObject);
     });
     // eslint-disable-next-line array-callback-return
@@ -365,7 +401,7 @@ const Status = ({
               <Button
                 variant="warning"
                 className={style.button}
-                onClick={(e) => exportToCSV(list)}
+                onClick={(e) => exportToCSV(getListAllStudent)}
               >
                 Export
               </Button>
@@ -498,7 +534,7 @@ const Status = ({
                   style={{
                     width: "100%",
                   }}
-                  onClick={(e) => exportToCSV(list)}
+                  onClick={(e) => exportToCSV(getListAllStudent)}
                 >
                   Export
                 </Button>
@@ -813,6 +849,7 @@ Status.propTypes = {
 export default connect(
   ({ students, semester, manager, business, major, global }) => ({
     listStudent: students.listStudent,
+    listAllStudent: students.listAllStudent,
     listSemesters: semester.listSemesters,
     defaultSemester: semester.defaultSemester,
     loading: students.loading,

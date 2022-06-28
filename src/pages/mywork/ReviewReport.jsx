@@ -279,7 +279,9 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
       newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Công ty"] = item["business"].name;
+      newObject["Tên công ty"] = item["business"].name;
+      newObject["Địa chỉ công ty"] = item["business"].address;
+      newObject["Vị trí thực tập"] = item["business"].internshipPosition;
       newObject["Điểm thái độ"] = item["attitudePoint"];
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
