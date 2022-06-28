@@ -279,9 +279,9 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
       newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Tên công ty"] = item["business"].name;
-      newObject["Địa chỉ công ty"] = item["business"].address;
-      newObject["Vị trí thực tập"] = item["business"].internshipPosition;
+      newObject["Tên công ty"] = item["business"]?.name;
+      newObject["Địa chỉ công ty"] = item["business"]?.address;
+      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
       newObject["Điểm thái độ"] = item["attitudePoint"];
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
@@ -434,8 +434,8 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatusReport.map((item, index) => (
-                      <Option value={item.id} key={index}>
-                        {item.title}
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
                       </Option>
                     ))}
                   </Select>
@@ -582,8 +582,8 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatusReport.map((item, index) => (
-                      <Option value={item.id} key={index}>
-                        {item.title}
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
                       </Option>
                     ))}
                   </Select>

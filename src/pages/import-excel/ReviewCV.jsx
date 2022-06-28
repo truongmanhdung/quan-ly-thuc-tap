@@ -345,7 +345,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   };
 
   const dataExportExcel = listStudentAssReviewerExportExcel?.list;
-  console.log(dataExportExcel);
   return (
     <div className={styles.status}>
       <div className={styles.header_flex}>
@@ -366,8 +365,8 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
-                          <Option value={item._id} key={index}>
-                            {item.name}
+                          <Option value={item?._id} key={index}>
+                            {item?.name}
                           </Option>
                         </>
                       ))}
@@ -385,8 +384,8 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatusCV.map((item, index) => (
-                      <Option value={item.id} key={index}>
-                        {item.title}
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
                       </Option>
                     ))}
                   </Select>
@@ -510,8 +509,8 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
-                          <Option value={item._id} key={index}>
-                            {item.name}
+                          <Option value={item?._id} key={index}>
+                            {item?.name}
                           </Option>
                         </>
                       ))}
@@ -541,8 +540,8 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatusCV.map((item, index) => (
-                      <Option value={item.id} key={index}>
-                        {item.title}
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
                       </Option>
                     ))}
                   </Select>
