@@ -7,6 +7,13 @@ export const getStudent = createAsyncThunk(
     return data;
   }
 );
+export const getAllStudent = createAsyncThunk(
+  "student/getAllStudent",
+  async (params) => {
+    const { data } = await StudentAPI.getAll(params);
+    return data;
+  }
+);
 export const insertStudent = createAsyncThunk(
   "student/insertStudent",
   async (action) => {
@@ -31,6 +38,7 @@ const studentSlice = createSlice({
   name: "student",
   initialState: {
     listStudent: {},
+    listAllStudent: {},
     loading: false,
     listSmester: [],
     defaultSemester: {},
@@ -43,6 +51,16 @@ const studentSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getAllStudent.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.listAllStudent = payload;
+    });
+    builder.addCase(getAllStudent.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(getAllStudent.rejected, (state, action) => {
+      state.error = "Không thể truy vấn";
+    });
     builder.addCase(getStudent.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.listStudent = payload;

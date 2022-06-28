@@ -42,8 +42,8 @@ const Formtimepicker = () => {
   };
   return (
     <div>
-      <h3 style={{ marginBottom: 40, color: "#3c3c3c" ,textAlign:'center' }}>
-      Quản lý thời gian các tính năng cho sinh viên
+      <h3 style={{ marginBottom: 40, color: "#3c3c3c", textAlign: "center" }}>
+        Quản lý thời gian các tính năng cho sinh viên
       </h3>
       <Spin spinning={loading} />
       <Row gutter={[16, 20]}>
@@ -77,7 +77,6 @@ const Formtimepicker = () => {
                     >
                       Đặt thời gian
                     </Button>
-                  
                   </Col>
                 </Row>
               );

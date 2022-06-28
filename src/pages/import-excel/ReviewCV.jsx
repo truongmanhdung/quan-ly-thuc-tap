@@ -12,7 +12,8 @@ import { getListMajor } from "../../features/majorSlice/majorSlice";
 import {
   getListStudentAssReviewer,
   updateReviewerListStudent,
-  updateStatusListStudent
+  updateStatusListStudent,
+  getListStudentAssReviewerExportExcel,
 } from "../../features/reviewerStudent/reviewerSlice";
 import { statusConfigCV } from "../../ultis/constConfig";
 import { filterStatusCV } from "../../ultis/selectOption";
@@ -22,16 +23,13 @@ const { Column } = Table;
 
 const { Option } = Select;
 
-const ReviewCV = ({
-  listBusiness,
-  listMajors,
-  isMobile,
-}) => {
+const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   const dispatch = useDispatch();
   const [studentdetail, setStudentDetail] = useState("");
   const infoUser = getLocal();
   const {
     listStudentAssReviewer: { total, list },
+    listStudentAssReviewerExportExcel,
     loading,
   } = useSelector((state) => state.reviewer);
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
@@ -73,8 +71,23 @@ const ReviewCV = ({
       })
       .catch(() => {});
   };
+  const getListStudentAssReviewerExport = () => {
+    SemestersAPI.getDefaultSemester()
+      .then((res) => {
+        if (res.status === 200) {
+          const data = {
+            ...filter,
+            smester_id: res.data._id,
+          };
+          setChooseIdStudent([]);
+          dispatch(getListStudentAssReviewerExportExcel(data));
+        }
+      })
+      .catch(() => {});
+  };
   useEffect(() => {
     getDataReviewCV();
+    getListStudentAssReviewerExport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
@@ -293,14 +306,21 @@ const ReviewCV = ({
 
     list.filter((item) => {
       const newObject = {};
+      newObject["Kỳ học"] = item["smester_id"]?.name;
+      newObject["Cơ sở"] = item["campus_id"]?.name;
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
-      newObject["Ngành"] = item["majors"];
-      newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Số lần hỗ trợ"] = item["numberOfTime"];
+      newObject["Ngành"] = item["majors"]?.name;
+      newObject["Mã ngành"] = item["majors"]?.majorCode;
       newObject["CV"] = item["CV"];
-      newObject["Trạng thái"] = item["statusCheck"];
+      newObject["Người review"] = item["reviewer"];
+      newObject["Số điện thoại"] = item["phoneNumber"];
+      newObject["Tên công ty"] = item["business"]?.name;
+      newObject["Địa chỉ công ty"] = item["business"]?.address;
+      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
+      newObject["Hình thức"] = item["support"];
+      newObject["Ghi chú"] = item["note"];
       return newData.push(newObject);
     });
     // eslint-disable-next-line array-callback-return
@@ -324,6 +344,8 @@ const ReviewCV = ({
     FileSaver.saveAs(data, fileExtension);
   };
 
+  const dataExportExcel = listStudentAssReviewerExportExcel?.list;
+  console.log(dataExportExcel);
   return (
     <div className={styles.status}>
       <div className={styles.header_flex}>
@@ -341,7 +363,7 @@ const ReviewCV = ({
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
-                   {listMajors &&
+                    {listMajors &&
                       listMajors.map((item, index) => (
                         <>
                           <Option value={item._id} key={index}>
@@ -390,7 +412,7 @@ const ReviewCV = ({
                   type="primary"
                   variant="warning"
                   style={{ width: "95%" }}
-                  onClick={(e) => exportToCSV(list)}
+                  onClick={(e) => exportToCSV(dataExportExcel)}
                 >
                   Export
                 </Button>
@@ -460,7 +482,7 @@ const ReviewCV = ({
           <Button
             variant="warning"
             style={{ marginRight: 10, height: 36 }}
-            onClick={(e) => exportToCSV(list)}
+            onClick={(e) => exportToCSV(dataExportExcel)}
           >
             Export
           </Button>
@@ -485,7 +507,7 @@ const ReviewCV = ({
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
-                     {listMajors &&
+                    {listMajors &&
                       listMajors.map((item, index) => (
                         <>
                           <Option value={item._id} key={index}>
@@ -804,11 +826,9 @@ const ReviewCV = ({
     </div>
   );
 };
-export default connect(
-  ({ students, semester, major, global }) => ({
-    defaultSemester: semester.defaultSemester,
-    loading: students.loading,
-    listMajors: major.listMajor,
-    ...global,
-  })
-)(ReviewCV);
+export default connect(({ students, semester, major, global }) => ({
+  defaultSemester: semester.defaultSemester,
+  loading: students.loading,
+  listMajors: major.listMajor,
+  ...global,
+}))(ReviewCV);
