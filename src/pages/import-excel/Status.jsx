@@ -800,7 +800,7 @@ const Status = ({
 Status.propTypes = {
   listStudent: object,
   infoUser: object,
-  listManager: object,
+  listManager: array,
   listBusiness: object,
   listMajors: array,
 };

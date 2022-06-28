@@ -10,15 +10,8 @@ export const insertBusiness = createAsyncThunk(
 export const getBusiness = createAsyncThunk(
   "business/getBusiness",
   async (action) => {
-    if(action.smester_id && action.smester_id.length > 0){
-      const {data} = await BusinessAPI.get(action)
-      return data
-    }else{
-      delete action['smester_id'];
-      const {data} = await BusinessAPI.get(action)
-      return data
-    }
-    
+    const {data} = await BusinessAPI.get(action)
+    return data
   }
 )
 const businessSlice = createSlice({
