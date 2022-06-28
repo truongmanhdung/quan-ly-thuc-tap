@@ -1,12 +1,12 @@
-import { Col, Row, Select, Table } from "antd";
-import { array, bool, object } from "prop-types";
-import React, { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import UpFile from "../../components/ExcelDocument/UpFile";
-import { getBusiness } from "../../features/businessSlice/businessSlice";
-import { getListMajor } from "../../features/majorSlice/majorSlice";
-import { getSemesters } from "../../features/semesters/semestersSlice";
-import styles from "./bussiness.module.css";
+import { Button, Col, Drawer, Row, Select, Table } from 'antd';
+import { array, bool, object } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
+import UpFile from '../../components/ExcelDocument/UpFile';
+import { getBusiness } from '../../features/businessSlice/businessSlice';
+import { getListMajor } from '../../features/majorSlice/majorSlice';
+import { getSemesters } from '../../features/semesters/semestersSlice';
+import styles from './bussiness.module.css';
 const { Option } = Select;
 const { Column } = Table;
 const ListOfBusiness = ({
@@ -23,10 +23,9 @@ const ListOfBusiness = ({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id:
-      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
+    smester_id: defaultSemester && defaultSemester._id ? defaultSemester._id : '',
   });
-  const [major, setMajor] = React.useState("");
+  const [majorImport, setMajorImport] = React.useState('');
   useEffect(() => {
     dispatch(getSemesters());
     dispatch(getListMajor());
@@ -34,43 +33,43 @@ const ListOfBusiness = ({
   }, [page, dispatch]);
   const columns = [
     {
-      title: "Mã",
-      dataIndex: "code_request",
+      title: 'Mã',
+      dataIndex: 'code_request',
       width: 50,
-      fixed: "left",
+      fixed: 'left',
     },
     {
-      title: "Tên doanh nghiệp",
-      dataIndex: "name",
+      title: 'Tên doanh nghiệp',
+      dataIndex: 'name',
       width: 150,
-      fixed: "left",
+      fixed: 'left',
     },
     {
-      title: "Vị trí thực tập",
-      dataIndex: "internshipPosition",
+      title: 'Vị trí thực tập',
+      dataIndex: 'internshipPosition',
     },
     {
-      title: "Số lượng",
-      dataIndex: "amount",
+      title: 'Số lượng',
+      dataIndex: 'amount',
     },
 
     {
-      title: "Địa chỉ thực tập",
-      dataIndex: "address",
+      title: 'Địa chỉ thực tập',
+      dataIndex: 'address',
     },
     {
-      title: "Ngành",
-      dataIndex: "majors",
+      title: 'Ngành',
+      dataIndex: 'majors',
       render: (val) => val?.name,
     },
     {
-      title: "Yêu cầu",
-      dataIndex: "request",
+      title: 'Yêu cầu',
+      dataIndex: 'request',
       width: 400,
     },
     {
-      title: "Chi tiết",
-      dataIndex: "description",
+      title: 'Chi tiết',
+      dataIndex: 'description',
       width: 400,
     },
   ];
@@ -85,129 +84,32 @@ const ListOfBusiness = ({
   //       : omit(filter, [key]);
   //   setFiler(newValue);
   // };
-
+  const [visible, setVisible] = useState(false);
+  const openVisible = () => {
+    setVisible(true);
+  };
+  const closeVisible = () => {
+    setPage({
+      ...page,
+      smester_id: '',
+    });
+    setVisible(false);
+  };
   return (
     <div className={styles.status}>
-      <Row>
-        {isMobile ? (
-          <>
-            <div className={styles.header_flex}>
-              <h1>Doanh nghiệp đăng ký</h1>
-            </div>
+      <div style={ isMobile ? {
 
-            <div className={styles.status}>
-              <Row>
-                <Col span={12}>
-                  <Select
-                    className="filter-status"
-                    onChange={(val) => setMajor(val)}
-                    style={{
-                      width: "95%",
-                    }}
-                    placeholder="Chọn ngành"
-                  >
-                    {listMajors && listMajors?.map((item, index) => (
-                      <Option value={item._id} key={index}>
-                        {item.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Col>
-                <Col span={12}>
-                  <Select
-                    className="filter-status"
-                    placeholder="Chọn kỳ"
-                    onChange={(val) =>
-                      setPage({
-                        ...page,
-                        smester_id: val,
-                      })
-                    }
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    {listSemesters && listSemesters?.map((item, index) => (
-                      <Option value={item._id} key={index}>
-                        {item.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Col>
-              </Row>
-            </div>
-          </>
-        ) : (
-          <>
-            <Col xs={2} sm={4} md={6} lg={8} xl={10}>
-              <h4>Doanh nghiệp đăng ký</h4>
-            </Col>
-            <Col xs={20} sm={16} md={12} lg={8} xl={4}>
-              <Select
-                className="filter-status"
-                onChange={(val) => setMajor(val)}
-                placeholder="Chọn ngành"
-              >
-                {listMajors && listMajors?.map((item, index) => (
-                  <Option value={item._id} key={index}>
-                    {item.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-            <Col xs={2} sm={4} md={6} lg={8} xl={10}>
-              <div
-                style={{ display: "grid", gridTemplateColumns: "auto auto" }}
-              >
-                <div>
-                  <Select
-                    className="filter-status"
-                    placeholder="Chọn kỳ"
-                    onChange={(val) =>
-                      setPage({
-                        ...page,
-                        smester_id: val,
-                      })
-                    }
-                  >
-                    {listSemesters && listSemesters?.map((item, index) => (
-                      <Option value={item._id} key={index}>
-                        {item.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </div>
-                <div
-                  style={{
-                    marginLeft: "20px",
-                  }}
-                >
-                  <UpFile
-                    keys="business"
-                    parentMethods={{
-                      ...page,
-                      major,
-                    }}
-                  />
-                </div>
-              </div>
-            </Col>
-          </>
-        )}
-      </Row>
-      <div className="filter" style={{ marginTop: "20px" }}>
-        {window.innerWidth < 739 && (
-          <UpFile
-            keys="business"
-            parentMethods={{
-              ...page,
-              major,
-            }}
-            style={{ fontSize: ".9rem" }}
-          />
-        )}
-        <br />
-      </div>
+      } : {display: 'flex'}} >
+              <h2 style={{
+                color: 'black'
+              }} >Doanh nghiệp đăng ký</h2>
+          <Button style={isMobile ? {} : {
+            position: 'absolute',
+            right: 70
+          }}  onClick={openVisible}  type='primary'  >
+            Thêm Doanh nghiệp
+          </Button>
+          </div>
       {!isMobile ? (
         <Table
           pagination={{
@@ -221,7 +123,7 @@ const ListOfBusiness = ({
               });
             },
           }}
-          scroll={{ x: "calc(900px + 50%)" }}
+          scroll={{ x: 'calc(900px + 50%)' }}
           rowKey="_id"
           loading={loading}
           columns={columns}
@@ -245,9 +147,9 @@ const ListOfBusiness = ({
           dataSource={listBusiness?.list}
           expandable={{
             expandedRowRender: (record) => (
-              <div style={{ marginTop: "10px" }}>
+              <div style={{ marginTop: '10px' }}>
                 {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ""
+                  ''
                 ) : (
                   <>
                     <p className="list-detail">Email: {record.email}</p>
@@ -269,6 +171,78 @@ const ListOfBusiness = ({
           )}
         </Table>
       )}
+
+      <div>
+        <Drawer title="Thêm Sinh" placement="left" onClose={closeVisible} visible={visible}>
+          <Row>
+            <Col span={6}>
+              <p>Kỳ:</p>
+            </Col>
+            <Col span={18}>
+              <Select
+                className="filter-status"
+                placeholder="Chọn kỳ"
+                onChange={(val) =>
+                  setPage({
+                    ...page,
+                    smester_id: val,
+                  })
+                }
+                style={{
+                  width: '100%',
+                }}
+              >
+                {listSemesters &&
+                  listSemesters?.map((item, index) => (
+                    <Option value={item._id} key={index}>
+                      {item.name}
+                    </Option>
+                  ))}
+              </Select>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={6}>
+              {' '}
+              <p>Ngành:</p>{' '}
+            </Col>
+            <Col span={18}>
+              <Select
+                className="filter-status"
+                onChange={(val) => setMajorImport(val)}
+                style={{
+                  width: '100%',
+            marginTop: 20
+
+                }}
+                placeholder="Chọn ngành"
+              >
+                {listMajors &&
+                  listMajors?.map((item, index) => (
+                    <Option value={item._id} key={index}>
+                      {item.name}
+                    </Option>
+                  ))}
+              </Select>
+            </Col>
+          </Row>
+          <div style={{
+            width: '50%',
+            margin: 'auto',
+            marginTop: 20
+          }} >
+          <UpFile
+            keys="business"
+            parentMethods={{
+              ...page,
+              majorImport,
+              closeVisible
+            }}
+          />
+          </div>
+        </Drawer>
+      </div>
     </div>
   );
 };
@@ -280,14 +254,12 @@ ListOfBusiness.propTypes = {
   listMajors: array,
 };
 
-export default connect(
-  ({ auth: { infoUser }, semester, major, business, global }) => ({
-    infoUser,
-    listSemesters: semester.listSemesters,
-    defaultSemester: semester.defaultSemester,
-    listMajors: major.listMajor,
-    listBusiness: business.listBusiness,
-    loading: business.loading,
-    isMobile: global.isMobile,
-  })
-)(ListOfBusiness);
+export default connect(({ auth: { infoUser }, semester, major, business, global }) => ({
+  infoUser,
+  listSemesters: semester.listSemesters,
+  defaultSemester: semester.defaultSemester,
+  listMajors: major.listMajor,
+  listBusiness: business.listBusiness,
+  loading: business.loading,
+  isMobile: global.isMobile,
+}))(ListOfBusiness);

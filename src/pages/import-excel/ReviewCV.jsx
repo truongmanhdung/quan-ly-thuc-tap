@@ -306,19 +306,19 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
 
     list.filter((item) => {
       const newObject = {};
-      newObject["Kỳ học"] = item["smester_id"].name;
-      newObject["Cơ sở"] = item["campus_id"].name;
+      newObject["Kỳ học"] = item["smester_id"]?.name;
+      newObject["Cơ sở"] = item["campus_id"]?.name;
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
-      newObject["Ngành"] = item["majors"].name;
-      newObject["Mã ngành"] = item["majors"].majorCode;
+      newObject["Ngành"] = item["majors"]?.name;
+      newObject["Mã ngành"] = item["majors"]?.majorCode;
       newObject["CV"] = item["CV"];
       newObject["Người review"] = item["reviewer"];
       newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Tên công ty"] = item["business"].name;
-      newObject["Địa chỉ công ty"] = item["business"].address;
-      newObject["Vị trí thực tập"] = item["business"].internshipPosition;
+      newObject["Tên công ty"] = item["business"]?.name;
+      newObject["Địa chỉ công ty"] = item["business"]?.address;
+      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
       newObject["Hình thức"] = item["support"];
       newObject["Ghi chú"] = item["note"];
       return newData.push(newObject);

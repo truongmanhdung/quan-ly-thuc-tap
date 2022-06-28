@@ -7,7 +7,8 @@ import { insertBusiness } from "../../features/businessSlice/businessSlice";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import styles from "../../common/styles/upfile.css";
 const UpFile = ({ keys, parentMethods }) => {
-  const { major, smester_id, campus_id } = parentMethods;
+  console.log(parentMethods);
+  const { majorImport, smester_id, campus_id, closeVisible } = parentMethods;
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const UpFile = ({ keys, parentMethods }) => {
     if (smester_id.length === 0) {
       refInput.current.value = "";
       message.warning("Vui lòng chọn kỳ");
-    } else if (major.length > 0) {
+    } else if (majorImport.length > 0) {
       const file = e.target.files[0];
       setNameFile(file.name);
       const reader = new FileReader();
@@ -60,7 +61,7 @@ const UpFile = ({ keys, parentMethods }) => {
                     newObject["name"] = item["Họ tên"];
                     newObject["course"] = item["Khóa nhập học"];
                     newObject["status"] = item["Trạng thái"];
-                    newObject["majors"] = major;
+                    newObject["majors"] = majorImport;
                     newObject["email"] = item["Email"];
                     newObject["supplement"] = item["bổ sung"];
                     newObject["campus_id"] = manager.campus_id;
@@ -74,7 +75,7 @@ const UpFile = ({ keys, parentMethods }) => {
                     newObject["internshipPosition"] = item["Vị trí tuyển dụng"];
                     newObject["amount"] = item["Số lượng"];
                     newObject["address"] = item["Địa chỉ doanh nghiệp"];
-                    newObject["majors"] = major;
+                    newObject["majors"] = majorImport;
                     newObject["description"] = item["Mô tả"];
                     newObject["request"] = item["Yêu cầu ứng viên"];
                     newObject["code_request"] = item["Mã ứng tuyển"];
@@ -98,14 +99,20 @@ const UpFile = ({ keys, parentMethods }) => {
     }
   };
   const submitSave = () => {
-    const dataUpload = { data: dataNew, smester_id, majors: major, campus_id };
+    const dataUpload = {
+      data: dataNew,
+      smester_id,
+      majors: majorImport,
+      campus_id,
+    };
     switch (keys) {
       case "status":
-        if (major.length > 0) {
+        if (majorImport.length > 0) {
           dispatch(insertStudent(dataUpload)).then((res) => {
             notifications(res.payload);
             setDataNew([]);
-            setNameFile();
+            setNameFile("");
+            closeVisible();
           });
         }
 
@@ -114,7 +121,8 @@ const UpFile = ({ keys, parentMethods }) => {
         dispatch(insertBusiness(dataNew)).then((res) => {
           notifications(res.payload);
           setDataNew([]);
-          setNameFile();
+          setNameFile("");
+          closeVisible();
         });
         break;
       default:
