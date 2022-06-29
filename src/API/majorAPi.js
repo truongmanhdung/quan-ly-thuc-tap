@@ -5,7 +5,6 @@ const majorAPI = {
         return axiosClient.get(url);
     },
     get(id) {
-        console.log(id)
         const url = `/major/${id}`;
         return axiosClient.get(url);
     },

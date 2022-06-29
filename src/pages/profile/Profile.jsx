@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Row, Typography, Avatar, Col } from "antd";
 import { useSelector } from "react-redux";
 import styles from "./Profile.module.css";
@@ -11,23 +11,14 @@ const { Title } = Typography;
 const Profile = () => {
   const { infoUser } = useSelector((state) => state.auth);
 
-  const idCampus = infoUser?.manager?.campus_id;
-  const idMajor = infoUser?.student?.campus_id;
-
-  const {
-    data: {
-      data: { cumpus },
-    },
-  } = useQuery("todos", () => {
-    return CumpusApi.get(idCampus);
+  const resCampus = useQuery("campus", () => {
+    return CumpusApi.get(
+      infoUser?.manager?.campus_id || infoUser?.student?.campus_id
+    );
   });
 
-  const {
-    data: {
-      data: { major },
-    },
-  } = useQuery("todos", () => {
-    return majorAPI.get(idMajor);
+  const resMajor = useQuery("major", () => {
+    return majorAPI.get(infoUser?.student?.majors);
   });
 
   return (
@@ -73,7 +64,7 @@ const Profile = () => {
             </Col>
             <Col size={18}>
               <span className={styles.textInfo} style={{ paddingLeft: 20 }}>
-                {cumpus?.name}
+                {!resCampus?.isLoading && resCampus?.data?.data?.cumpus?.name}
               </span>
             </Col>
           </Row>
@@ -95,7 +86,7 @@ const Profile = () => {
                 </Col>
                 <Col size={18}>
                   <span className={styles.textInfo} style={{ paddingLeft: 20 }}>
-                    {major?.name}
+                    {!resMajor?.isLoading && resMajor?.data?.data?.major?.name}
                   </span>
                 </Col>
               </Row>

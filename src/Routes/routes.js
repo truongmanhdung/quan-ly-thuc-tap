@@ -45,6 +45,7 @@ const Router = () => {
             <Navigate to={getLocal().isAdmin ? "/status" : "/info-Student"} />
           }
         />
+        <Route path="profile" element={<Profile />} />
         <Route
           path="/support-student"
           element={
@@ -173,7 +174,6 @@ const Router = () => {
             </Privateadmin>
           }
         />
-        <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/404" element={<Notfound />} />
     </Routes>

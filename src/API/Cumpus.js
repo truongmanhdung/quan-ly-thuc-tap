@@ -5,7 +5,6 @@ const CumpusApi = {
     return axiosClient.get(url);
   },
   get(id) {
-    console.log(id)
     const url = `/cumpus/${id}`;
     return axiosClient.get(url);
   },
