@@ -111,7 +111,6 @@ const Status = ({
     }
   };
   const getListAllStudent = listAllStudent?.list;
-
   useEffect(() => {
     getListStudent();
     getStudentExportExcel();
@@ -306,7 +305,7 @@ const Status = ({
 
   const exportToCSV = (list) => {
     const newData = [];
-     list && list.filter((item) => {
+     list && list.map((item) => {
       const newObject = {};
       newObject["Kỳ học"] = item["smester_id"]?.name;
       newObject["Cơ sở"] = item["campus_id"]?.name;
@@ -332,16 +331,15 @@ const Status = ({
       return newData.push(newObject);
     });
     // eslint-disable-next-line array-callback-return
-    newData.filter((item) => {
+    newData.map((item) => {
       if (item["Hình thức"] === 1) {
-        item["Hình thức"] = 1;
         item["Hình thức"] = "Hỗ trợ";
       } else if (item["Hình thức"] === 0) {
-        item["Hình thức"] = 0;
         item["Hình thức"] = "Tự tìm";
       } else {
       }
     });
+  
     const ws = XLSX.utils.json_to_sheet(newData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
@@ -882,6 +880,7 @@ Status.propTypes = {
 export default connect(
   ({ students, semester, manager, business, major, global }) => ({
     listStudent: students.listStudent,
+    listAllStudent: students.listAllStudent,
     listSemesters: semester.listSemesters,
     defaultSemester: semester.defaultSemester,
     loading: students.loading,
