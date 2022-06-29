@@ -306,7 +306,7 @@ const Status = ({
 
   const exportToCSV = (list) => {
     const newData = [];
-    list.filter((item) => {
+     list && list.filter((item) => {
       const newObject = {};
       newObject["Kỳ học"] = item["smester_id"]?.name;
       newObject["Cơ sở"] = item["campus_id"]?.name;
