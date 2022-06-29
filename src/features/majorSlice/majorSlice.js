@@ -4,6 +4,10 @@ export const getListMajor = createAsyncThunk("major/getListMajor", async () => {
   const { data } = await majorAPI.getList();
   return data?.majors;
 });
+export const getMajor = createAsyncThunk("major/getMajor", async (id) => {
+  const { data } = await majorAPI.get(id);
+  return data?.major;
+});
 export const createMajor = createAsyncThunk("major/createMajor", async z => {
   const {data} = await majorAPI.create(z)
   return data
@@ -22,6 +26,7 @@ const majorSlice = createSlice({
   initialState: {
     listMajor: [],
     loading: false,
+    major:{},
     message: "",
     success: false,
   },
@@ -37,6 +42,19 @@ const majorSlice = createSlice({
     builder.addCase(getListMajor.rejected, (state) => {
       state.loading = false;
     });
+
+    //getMajor
+    builder.addCase(getMajor.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getMajor.fulfilled, (state, action) => {
+      state.major = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getMajor.rejected, (state) => {
+      state.loading = false;
+    });
+
 
     builder.addCase(createMajor.pending, (state, { payload }) => {
       state.loading = true;
