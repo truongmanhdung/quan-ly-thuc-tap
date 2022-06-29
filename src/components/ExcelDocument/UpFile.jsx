@@ -7,7 +7,6 @@ import { insertBusiness } from "../../features/businessSlice/businessSlice";
 import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import styles from "../../common/styles/upfile.css";
 const UpFile = ({ keys, parentMethods }) => {
-  console.log(parentMethods);
   const { majorImport, smester_id, campus_id, closeVisible } = parentMethods;
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
