@@ -272,7 +272,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
 
   const exportToCSV = (list) => {
     const newData = [];
-    list.filter((item) => {
+   list && list.filter((item) => {
       let itemStatus = item["statusCheck"];
       const newObject = {};
       newObject["MSSV"] = item["mssv"];
