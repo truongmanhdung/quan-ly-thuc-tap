@@ -7,7 +7,7 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatusReport } from "../../ultis/selectOption";
+import {  filterStatusReport } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
@@ -272,7 +272,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
 
   const exportToCSV = (list) => {
     const newData = [];
-   list && list.filter((item) => {
+   list && list.map((item) => {
       let itemStatus = item["statusCheck"];
       const newObject = {};
       newObject["MSSV"] = item["mssv"];
