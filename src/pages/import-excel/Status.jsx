@@ -144,7 +144,7 @@ const Status = ({
       width: 150,
       fixed: "left",
       render: (val, key) => {
-        return <p style={{ textAlign: "left" }}>{val}</p>;
+        return <p style={{ textAlign: "left", margin: 0 }}>{val}</p>;
       },
     },
     {
@@ -305,31 +305,32 @@ const Status = ({
 
   const exportToCSV = (list) => {
     const newData = [];
-     list && list.map((item) => {
-      const newObject = {};
-      newObject["Kỳ học"] = item["smester_id"]?.name;
-      newObject["Cơ sở"] = item["campus_id"]?.name;
-      newObject["MSSV"] = item["mssv"];
-      newObject["Họ tên"] = item["name"];
-      newObject["Email"] = item["email"];
-      newObject["Ngành"] = item["majors"]?.name;
-      newObject["Mã ngành"] = item["majors"]?.majorCode;
-      newObject["CV"] = item["CV"];
-      newObject["Biên bản"] = item["form"];
-      newObject["Báo cáo"] = item["report"];
-      newObject["Người review"] = item["reviewer"];
-      newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Tên công ty"] = item["business"]?.name;
-      newObject["Địa chỉ công ty"] = item["business"]?.address;
-      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
-      newObject["Mã số thuế"] = item["taxCode"];
-      newObject["Điểm thái độ"] = item["attitudePoint"];
-      newObject["Điểm kết quả"] = item["resultScore"];
-      newObject["Thời gian thực tập"] = item["internshipTime"];
-      newObject["Hình thức"] = item["support"];
-      newObject["Ghi chú"] = item["note"];
-      return newData.push(newObject);
-    });
+    list &&
+      list.map((item) => {
+        const newObject = {};
+        newObject["Kỳ học"] = item["smester_id"]?.name;
+        newObject["Cơ sở"] = item["campus_id"]?.name;
+        newObject["MSSV"] = item["mssv"];
+        newObject["Họ tên"] = item["name"];
+        newObject["Email"] = item["email"];
+        newObject["Ngành"] = item["majors"]?.name;
+        newObject["Mã ngành"] = item["majors"]?.majorCode;
+        newObject["CV"] = item["CV"];
+        newObject["Biên bản"] = item["form"];
+        newObject["Báo cáo"] = item["report"];
+        newObject["Người review"] = item["reviewer"];
+        newObject["Số điện thoại"] = item["phoneNumber"];
+        newObject["Tên công ty"] = item["business"]?.name;
+        newObject["Địa chỉ công ty"] = item["business"]?.address;
+        newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
+        newObject["Mã số thuế"] = item["taxCode"];
+        newObject["Điểm thái độ"] = item["attitudePoint"];
+        newObject["Điểm kết quả"] = item["resultScore"];
+        newObject["Thời gian thực tập"] = item["internshipTime"];
+        newObject["Hình thức"] = item["support"];
+        newObject["Ghi chú"] = item["note"];
+        return newData.push(newObject);
+      });
     // eslint-disable-next-line array-callback-return
     newData.map((item) => {
       if (item["Hình thức"] === 1) {
@@ -339,7 +340,7 @@ const Status = ({
       } else {
       }
     });
-  
+
     const ws = XLSX.utils.json_to_sheet(newData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
@@ -368,6 +369,23 @@ const Status = ({
     <div className={style.status}>
       <div className={style.flex_header}>
         <h4 className={style.flex_header.h4}>Sinh viên đăng ký thực tập</h4>
+        <Col span={8} className="d-flex">
+          <Select
+            style={{
+              width: "100%",
+            }}
+            onChange={(val) => setPage({ ...page, smester_id: val })}
+            placeholder="Kỳ hiện tại"
+          >
+            {listSemesters &&
+              listSemesters.length > 0 &&
+              listSemesters?.map((item, index) => (
+                <Option value={item?._id} key={index}>
+                  {item?.name}
+                </Option>
+              ))}
+          </Select>
+        </Col>
         {!isMobile && (
           <>
             <div
@@ -404,31 +422,17 @@ const Status = ({
                 marginTop: 20,
               }}
             >
-              <Col span={12}>
-                <Select
-                  style={{ width: "95%", position: "relative" }}
-                  className="select-branch"
-                  onChange={(val) => setPage({ ...page, smester_id: val })}
-                  placeholder="Chọn kỳ"
-                >
-                  {listSemesters &&
-                    listSemesters.length > 0 &&
-                    listSemesters?.map((item, index) => (
-                      <Option value={item?._id} key={index}>
-                        {item?.name}
-                      </Option>
-                    ))}
-                </Select>
-              </Col>
 
               <Col span={12}>
                 <div className={style.div}>
                   <Select
                     className="select-branch"
-                    style={{ width: "100%", position: "relative" }}
+                    style={{ width: "95%", position: "relative" }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
+                    defaultValue=""
                   >
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -440,21 +444,15 @@ const Status = ({
                   </Select>
                 </div>
               </Col>
-            </Row>
-
-            <Row
-              style={{
-                marginTop: 20,
-              }}
-            >
               <Col span={12}>
                 <div className={style.div}>
                   <Select
                     className="filter-status"
-                    style={{ width: "95%" }}
+                    style={{ width: "100%" }}
                     onChange={(val) =>
                       handleStandardTableChange("statusCheck", val)
                     }
+                    defaultValue={11}
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatuss.map((item, index) => (
@@ -465,17 +463,52 @@ const Status = ({
                   </Select>
                 </div>
               </Col>
+            </Row>
+
+            <Row
+              style={{
+                marginTop: 20,
+              }}
+            >
+              
               <Col span={12}>
                 <div className={style.div}>
                   <Input
-                    style={{ width: "100%" }}
+                    style={{ width: "95%" }}
                     placeholder="Tìm kiếm theo mã sinh viên"
                     onChange={(val) =>
                       handleStandardTableChange("mssv", val.target.value.trim())
                     }
                   />
                 </div>
+                
               </Col>
+              <Col span={12}>
+                <Button
+                  style={{
+                    width: "100%",
+                  }}
+                  type="primary"
+                  onClick={handleSearch}
+                >
+                  Tìm kiếm
+                </Button>
+              </Col>
+
+              {chooseIdStudent.length > 0 && (
+                <Col span={12}>
+                  <Button
+                    style={{
+                      width: "95%",
+                      marginTop: '10px'
+                    }}
+                    type="primary"
+                    onClick={() => comfirm()}
+                  >
+                    Xác nhận
+                  </Button>
+                </Col>
+              )}
             </Row>
             <Row
               style={{
@@ -514,31 +547,7 @@ const Status = ({
                 marginTop: 20,
               }}
             >
-              <Col span={12}>
-                <Button
-                  style={{
-                    width: "95%",
-                  }}
-                  type="primary"
-                  onClick={handleSearch}
-                >
-                  Tìm kiếm
-                </Button>
-              </Col>
-
-              {chooseIdStudent.length > 0 && (
-                <Col span={12}>
-                  <Button
-                    style={{
-                      width: "100%",
-                    }}
-                    type="primary"
-                    onClick={() => comfirm()}
-                  >
-                    Xác nhận
-                  </Button>
-                </Col>
-              )}
+              
             </Row>
           </>
         ) : (
@@ -557,7 +566,9 @@ const Status = ({
                   style={{ width: "100%", position: "relative", right: "5%" }}
                   onChange={(val) => handleStandardTableChange("majors", val)}
                   placeholder="Lọc theo ngành"
+                  defaultValue=""
                 >
+                  <Option value="">Tất cả</Option>
                   {listMajors &&
                     listMajors.map((item, index) => (
                       <>
@@ -588,6 +599,7 @@ const Status = ({
                   onChange={(val) =>
                     handleStandardTableChange("statusCheck", val)
                   }
+                  defaultValue={11}
                   placeholder="Lọc theo trạng thái"
                 >
                   {filterStatuss.map((item, index) => (
