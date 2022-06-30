@@ -1,10 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import CumpusApi from "../../API/Cumpus";
+
 export const getListCumpus = createAsyncThunk(
   "cumpus/getListCumpus",
   async () => {
     const { data } = await CumpusApi.getList();
     return data.listCumpus;
+  }
+);
+
+export const getCumpus = createAsyncThunk(
+  "cumpus/getCumpus",
+  async (id) => {
+    const { data } = await CumpusApi.get(id);
+    return data.cumpus;
   }
 );
 
@@ -38,6 +47,7 @@ const cumpusSlice = createSlice({
   name: "cumpus",
   initialState: {
     listCumpus: [],
+    campus:{},
     loading: false,
     message: "",
     error: "",
@@ -55,6 +65,19 @@ const cumpusSlice = createSlice({
     builder.addCase(getListCumpus.rejected, (state) => {
       state.messages = "Get list cumpus fail";
     });
+
+    //getCumpus
+    builder.addCase(getCumpus.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getCumpus.fulfilled, (state, action) => {
+      state.loading = false;
+      state.campus = action.payload;
+    });
+    builder.addCase(getCumpus.rejected, (state) => {
+      state.messages = "Get cumpus fail";
+    });
+
 
     //createCumpus
     builder.addCase(createCumpus.pending, (state, action) => {
