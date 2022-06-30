@@ -199,17 +199,18 @@ table tbody td {
         display: 'flex';
         justify-content: space-between;
         width: '100%';
-        align-items: center,
+        align-items: center;
     }
+    
    
 
     .flex_header h4 {
-        font-size: .9rem;
+        font-size: 16px;
         margin: 0 -15px
     }
 
     .flex_header {
-        padding: 0 15px;
+        padding: 10px 15px;
     }
 
     .col select {
@@ -235,7 +236,10 @@ table tbody td {
 
 
 @media (max-width:538px) {
-
+    .flex_header h4 {
+        font-size: 16px;
+        margin: 0px
+    }
     table th,
     table th,
     table th {
