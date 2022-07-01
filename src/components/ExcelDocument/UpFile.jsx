@@ -48,7 +48,7 @@ const UpFile = ({ keys, parentMethods }) => {
         });
         let datas = [];
         rows
-          .filter((item, index) => Object.keys(item).length > 0 && index > 0)
+          .filter((item, index) => Object.keys(item).length > 0 && item.STT !== "STT")
           // eslint-disable-next-line array-callback-return
           .map((item) => {
             const newObject = {};

@@ -58,7 +58,10 @@ const ReportForm = ({ infoUser, studentById }) => {
   const [endDate, setEndDate] = useState();
   const [form] = Form.useForm();
   useEffect(() => {
-    dispatch(getTimeForm(3));
+    dispatch(getTimeForm({
+      typeNumber: 3,
+      semester_id: infoUser.student.smester_id
+    }));
     dispatch(getStudentId(infoUser.student.mssv));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
@@ -149,7 +152,7 @@ const ReportForm = ({ infoUser, studentById }) => {
     }
   };
 
-  const check = time.endTime > new Date().getTime();
+  const check = time && time.endTime > new Date().getTime();
   const isCheck =
     studentById.statusCheck === 6 ||
     studentById.statusCheck === 8 ||

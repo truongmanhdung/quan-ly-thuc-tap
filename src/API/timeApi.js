@@ -5,11 +5,12 @@ const TimeApi = {
         return axiosClient.post(url, data);
     },
     getTimeForm(data){
-        const url = `/settime/${data}`;
+        const string = `typeNumber=${data.typeNumber}&semester_id=${data.semester_id}`
+        const url = `/settime/find-one?${string}`;
         return axiosClient.get(url);
     },
-    getListTime(){
-        const url = `/settime`;
+    getListTime(semester_id){
+        const url = `/settime?semester_id=${semester_id}`;
         return axiosClient.get(url);
     }
 };

@@ -68,7 +68,10 @@ const SupportStudent = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    dispatch(getTimeForm(value));
+    dispatch(getTimeForm({
+      typeNumber: value,
+      semester_id: infoUser.student.smester_id
+    }));
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(
       getBusiness({
@@ -173,7 +176,7 @@ const SupportStudent = ({
     setValue(e.target.value);
   };
 
-  const check = time.endTime > new Date().getTime();
+  const check = time && time.endTime > new Date().getTime();
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
 

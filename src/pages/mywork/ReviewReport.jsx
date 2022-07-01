@@ -411,7 +411,9 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                     style={{ width: "95%" }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
+                    defaultValue=""
                   >
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -431,6 +433,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                     onChange={(val) =>
                       handleStandardTableChange("statusCheck", val)
                     }
+                    defaultValue={11}
                     placeholder="Lọc theo trạng thái"
                   >
                     {filterStatusReport.map((item, index) => (
@@ -545,9 +548,11 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                       position: "relative",
                       right: "50px",
                     }}
+                    defaultValue=""
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -576,6 +581,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                       position: "relative",
                       right: "49px",
                     }}
+                    defaultValue={11}
                     onChange={(val) =>
                       handleStandardTableChange("statusCheck", val)
                     }
