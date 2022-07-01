@@ -1,11 +1,13 @@
 .typeName{
-    display: flex;
-    justify-content: center;
-    padding-left: 80px;
     font-weight: bold;
+    text-align: left;
+    /* margin-bottom: 10px; */
+    padding-bottom: 10px;
+    display: block;
 }
 .typeName::first-letter{
     text-transform: uppercase;
+    text-align: left;
    
 }
 .button {
@@ -15,20 +17,29 @@
     padding-top: 20px;
 }
 
+.table-formdate{
+    margin-top: 0 !important;
+}
+
+.textTable{
+    padding: 10px 0;
+    font-weight: bold;
+}
+
 
 @media (min-width:739px) and (max-width:1199px) {
     
-    .RangePicker {
+    /* .RangePicker {
         margin-left: 80px;
-    }
-    .Table {
+    } */
+    /* .Table {
         margin-left: 30px;
-    }
+    } */
 }
 
 @media (min-width:539px) and (max-width:739px) {
  .button {
-   margin-left: -50px;
+   /* margin-left: -50px; */
    
  }
  
@@ -46,12 +57,13 @@
   
     .button {
         margin-left: 0px;
-        margin-top: 10px;
+        /* margin-top: 10px; */
       
       }
       .typeName{
         padding-left: 0px;
         justify-content: start;
+        text-align: left;
      }
 
 

@@ -340,7 +340,9 @@ const Reviewform = ({
                   style={{ width: "95%" }}
                   onChange={(val) => handleStandardTableChange("majors", val)}
                   placeholder="Lọc theo ngành"
+                  defaultValue=""
                 >
+                  <Option value="">Tất cả</Option>
                   {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -360,6 +362,7 @@ const Reviewform = ({
                   onChange={(val) =>
                     handleStandardTableChange("statusCheck", val)
                   }
+                  defaultValue={11}
                   placeholder="Lọc theo trạng thái"
                 >
                   {filterStatusForm.map((item, index) => (
@@ -421,9 +424,11 @@ const Reviewform = ({
                       position: "relative",
                       right: "70px",
                     }}
+                    defaultValue=""
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                   >
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -452,6 +457,7 @@ const Reviewform = ({
                       position: "relative",
                       right: "44px",
                     }}
+                    defaultValue={11}
                     onChange={(val) =>
                       handleStandardTableChange("statusCheck", val)
                     }
@@ -496,7 +502,6 @@ const Reviewform = ({
                 md={24}
                 lg={24}
                 xl={16}
-                style={{ padding: "0 10px" }}
               >
                 <div>
                   <Button

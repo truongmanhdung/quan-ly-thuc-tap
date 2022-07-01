@@ -432,7 +432,7 @@ const Status = ({
                     placeholder="Lọc theo ngành"
                     defaultValue=""
                   >
-                    <Option value="">Tất cả</Option>
+                    <Option value="">Tất cả</Option><Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>

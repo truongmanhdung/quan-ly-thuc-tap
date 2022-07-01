@@ -65,9 +65,11 @@ const Formrp = ({ studentById }) => {
     setStartDate(date._d);
   };
   useEffect(() => {
-    dispatch(getTimeForm(2));
+    dispatch(getTimeForm({
+      typeNumber: 2,
+      semester_id: infoUser.student.smester_id
+    }));
     dispatch(getStudentId(infoUser.student.mssv));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -148,7 +150,7 @@ const Formrp = ({ studentById }) => {
       message.error(dataErr.message);
     }
   };
-  const check = time.endTime > new Date().getTime();
+  const check = time && time.endTime > new Date().getTime();
   const isCheck =
     (studentById && studentById.statusCheck === 2) ||
     studentById.statusCheck === 5;

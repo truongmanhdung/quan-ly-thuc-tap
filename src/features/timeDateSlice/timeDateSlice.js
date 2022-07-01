@@ -9,8 +9,8 @@ export const upTimeDate = createAsyncThunk(
   }
 );
 
-export const getListTime = createAsyncThunk("times/getListTime", async () => {
-  const { data } = await TimeApi.getListTime();
+export const getListTime = createAsyncThunk("times/getListTime", async (action) => {
+  const { data } = await TimeApi.getListTime(action);
   return await data.time;
 });
 

@@ -361,7 +361,9 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     style={{ width: "95%" }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
+                    defaultValue=""
                   >
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -382,6 +384,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                       handleStandardTableChange("statusCheck", val)
                     }
                     placeholder="Lọc theo trạng thái"
+                    defaultValue={11}
                   >
                     {filterStatusCV.map((item, index) => (
                       <Option value={item?.id} key={index}>
@@ -505,7 +508,9 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
+                    defaultValue=""
                   >
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -525,6 +530,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     display: "flex",
                   }}
                   className="search"
+                  
                 >
                   <span style={{ width: "65%" }}>Trạng thái:</span>
                   <Select
@@ -538,6 +544,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                       handleStandardTableChange("statusCheck", val)
                     }
                     placeholder="Lọc theo trạng thái"
+                    defaultValue={11}
                   >
                     {filterStatusCV.map((item, index) => (
                       <Option value={item?.id} key={index}>
@@ -578,7 +585,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                 md={24}
                 lg={24}
                 xl={12}
-                style={{ padding: "0 10px" }}
               >
                 <div>
                   <Button
