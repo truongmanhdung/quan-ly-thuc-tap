@@ -68,10 +68,12 @@ const SupportStudent = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
-    dispatch(getTimeForm({
-      typeNumber: value,
-      semester_id: infoUser.student.smester_id
-    }));
+    dispatch(
+      getTimeForm({
+        typeNumber: value,
+        semester_id: infoUser.student.smester_id,
+      })
+    );
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(
       getBusiness({
@@ -177,7 +179,20 @@ const SupportStudent = ({
     setValue(e.target.value);
   };
 
-  const check = time && time.endTime > new Date().getTime();
+  let timeCheck = time;
+  if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
+    const checkTimeStudent = studentById.listTimeForm.find(
+      (item) => item.typeNumber === value
+    );
+    if (checkTimeStudent) {
+      timeCheck = checkTimeStudent;
+    }
+  }
+
+  const check =
+    timeCheck &&
+    timeCheck.endTime > new Date().getTime() &&
+    timeCheck.startTime < new Date().getTime();
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
 
