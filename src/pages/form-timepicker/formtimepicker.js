@@ -11,11 +11,11 @@ import { getSemesters } from "../../features/semesters/semestersSlice";
 import SemestersAPI from "../../API/SemestersAPI";
 const dataRender = [
   {
-    typeNumber: 0,
+    typeNumber: 1,
     name: "Form đăng ký nhờ nhà trường hỗ trợ",
   },
   {
-    typeNumber: 1,
+    typeNumber: 0,
     name: "Form đăng ký sinh viên tự tìm",
   },
   {
