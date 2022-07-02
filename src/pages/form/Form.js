@@ -143,6 +143,7 @@ const Formrp = ({ studentById }) => {
         email: email,
         typeNumber: time.typeNumber,
         internshipTime: startDate,
+        semester_id: infoUser.student.smester_id,
       };
       await guardarArchivo(file, newData);
     } catch (error) {

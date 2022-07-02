@@ -143,6 +143,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         business: studentById.business,
         attitudePoint: values.attitudePoint,
         resultScore: values.resultScore,
+        semester_id: infoUser.student.smester_id,
       };
       await guardarArchivo(file, newData);
     } catch (error) {

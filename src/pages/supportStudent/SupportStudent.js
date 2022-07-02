@@ -154,6 +154,7 @@ const SupportStudent = ({
         user_code: infoUser?.student?.mssv,
         email: infoUser?.student?.email,
         typeNumber: supportForm,
+        semester_id: infoUser.student.smester_id,
         ///dispatch Redux
       };
       if (value === 0) {
