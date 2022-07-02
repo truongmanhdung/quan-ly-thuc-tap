@@ -62,13 +62,10 @@ const StudentDetail = (props) => {
       setStudent(data);
       setNoteDetail(data.note);
       dispatch(getBusiness({ majors: data.majors._id }));
+      dispatch(getListTime(data.smester_id._id));
     }
     setIsLoading(false);
   }, [studentId]);
-
-  useEffect(() => {
-    dispatch(getListTime());
-  }, []);
 
   useEffect(() => {
     getDataStudent();
@@ -955,6 +952,21 @@ const StudentDetail = (props) => {
                                         dateFormat
                                       ),
                                     ]}
+                                    disabledDate={(current) => {
+                                      let startDate = new Date(
+                                        student.smester_id.start_time
+                                      ).getTime();
+                                      let endDate = new Date(
+                                        student.smester_id.end_time
+                                      ).getTime();
+                                      return (
+                                        (current &&
+                                          new Date(current).getTime() <
+                                            startDate) ||
+                                        (current &&
+                                          new Date(current).getTime() > endDate)
+                                      );
+                                    }}
                                   />
                                   <div className="my-2">
                                     <Button
