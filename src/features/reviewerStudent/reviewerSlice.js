@@ -9,6 +9,14 @@ export const getListStudentAssReviewer = createAsyncThunk(
   }
 );
 
+export const getListStudentAssReviewerExportExcel = createAsyncThunk(
+  "reviewer/getListStudentAssReviewerExportExcel",
+  async (dataForm) => {
+    const { data } = await StudentAPI.listStudentAssReviewer(dataForm);
+    return data;
+  }
+);
+
 export const updateReviewerListStudent = createAsyncThunk(
   "student/updateReviewerListStudent",
   async (dataForm) => {
@@ -30,6 +38,7 @@ export const listStudentForm = createAsyncThunk(
     return data;
   }
 );
+
 export const listStudentReport = createAsyncThunk(
   "student/listStudentReport",
   async (dataForm) => {
@@ -41,6 +50,14 @@ const reviewerSlice = createSlice({
   name: "reviewer",
   initialState: {
     listStudentAssReviewer: {
+      list: [],
+      total: 0,
+    },
+    listStudentAssReviewerExportExcel: {
+      list: [],
+      total: 0,
+    },
+    listStudentFormData: {
       list: [],
       total: 0,
     },
@@ -130,6 +147,26 @@ const reviewerSlice = createSlice({
     builder.addCase(getListStudentAssReviewer.rejected, (state, action) => {
       state.error = "get reviewer student fail";
     });
+    //getListStudentAssReviewerExportExcel
+    builder.addCase(
+      getListStudentAssReviewerExportExcel.pending,
+      (state, action) => {
+        state.loading = true;
+      }
+    );
+    builder.addCase(
+      getListStudentAssReviewerExportExcel.fulfilled,
+      (state, action) => {
+        state.loading = false;
+        state.listStudentAssReviewerExportExcel = action.payload;
+      }
+    );
+    builder.addCase(
+      getListStudentAssReviewerExportExcel.rejected,
+      (state, action) => {
+        state.error = "get reviewer student fail";
+      }
+    );
     //list Student form
     builder.addCase(listStudentForm.pending, (state, action) => {
       state.loading = true;

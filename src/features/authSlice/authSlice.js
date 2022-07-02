@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import AuthApi from '../../API/Auth'
+import AuthApi from "../../API/Auth";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
   async (dataForm) => {
-    const { data } = await AuthApi.login(dataForm)
+    const { data } = await AuthApi.login(dataForm);
     if (data?.accessToken) {
       localStorage.setItem("token", data?.accessToken);
       // setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
@@ -15,8 +15,8 @@ export const loginGoogle = createAsyncThunk(
 
 export const logout = createAsyncThunk("auth/logout", async () => {
   const { data } = await AuthApi.logout();
-  if(data){
-    localStorage.removeItem('user')
+  if (data) {
+    localStorage.removeItem("user");
   }
   return data;
 });

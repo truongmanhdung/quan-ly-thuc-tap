@@ -1,0 +1,70 @@
+.typeName{
+    font-weight: bold;
+    text-align: left;
+    /* margin-bottom: 10px; */
+    padding-bottom: 10px;
+    display: block;
+}
+.typeName::first-letter{
+    text-transform: uppercase;
+    text-align: left;
+   
+}
+.button {
+    margin-left: 10px;
+}
+.col {
+    padding-top: 20px;
+}
+
+.table-formdate{
+    margin-top: 0 !important;
+}
+
+.textTable{
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+
+@media (min-width:739px) and (max-width:1199px) {
+    
+    /* .RangePicker {
+        margin-left: 80px;
+    } */
+    /* .Table {
+        margin-left: 30px;
+    } */
+}
+
+@media (min-width:539px) and (max-width:739px) {
+ .button {
+   /* margin-left: -50px; */
+   
+ }
+ 
+ 
+  
+}
+
+@media (max-width:538px) {
+    
+ 
+
+}
+
+@media (max-width: 414px){
+  
+    .button {
+        margin-left: 0px;
+        /* margin-top: 10px; */
+      
+      }
+      .typeName{
+        padding-left: 0px;
+        justify-content: start;
+        text-align: left;
+     }
+
+
+}

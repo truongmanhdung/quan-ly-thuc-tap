@@ -259,7 +259,13 @@ table tbody td {
         font-size: 4rem;
     }
     .select-status{
-        margin: 0 10px;
+        display:flex;
+        margin: auto;
     }
     
 }
+/* @media (max-width: 414px) {
+    .select-branch{
+        display: flex;
+    }
+} */

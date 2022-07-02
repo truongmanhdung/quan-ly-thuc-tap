@@ -1,38 +1,43 @@
-import { EyeOutlined } from '@ant-design/icons';
-import { Button, Col, Input, Row, Select, Table } from 'antd';
-import Column from 'antd/lib/table/Column';
-import * as FileSaver from 'file-saver';
-import { omit } from 'lodash';
-import { array, object } from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import * as XLSX from 'xlsx';
-import '../../common/styles/status.css';
-import UpFile from '../../components/ExcelDocument/UpFile';
-import StudentDetail from '../../components/studentDetail/StudentDetail';
-import { getBusiness } from '../../features/businessSlice/businessSlice';
-import { getListMajor } from '../../features/majorSlice/majorSlice';
-import { fetchManager } from '../../features/managerSlice/managerSlice';
-import { updateReviewerListStudent } from '../../features/reviewerStudent/reviewerSlice';
-import { getSemesters } from '../../features/semesters/semestersSlice';
-import { getStudent } from '../../features/StudentSlice/StudentSlice';
-import { filterStatuss } from '../../ultis/selectOption';
-import { getLocal } from '../../ultis/storage';
+import { EyeOutlined } from "@ant-design/icons";
+import { Button, Col, Drawer, Input, Row, Select, Table } from "antd";
+import Column from "antd/lib/table/Column";
+import * as FileSaver from "file-saver";
+import { omit } from "lodash";
+import { array, object } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import SemestersAPI from "../../API/SemestersAPI";
+import style from "../../common/styles/status.module.css";
+import UpFile from "../../components/ExcelDocument/UpFile";
+import StudentDetail from "../../components/studentDetail/StudentDetail";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
+import { fetchManager } from "../../features/managerSlice/managerSlice";
+import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
+import { getSemesters } from "../../features/semesters/semestersSlice";
+import {
+  getAllStudent,
+  getStudent,
+} from "../../features/StudentSlice/StudentSlice";
+import { filterStatuss } from "../../ultis/selectOption";
+import { getLocal } from "../../ultis/storage";
 const { Option } = Select;
-
 const Status = ({
   listStudent: { list, total },
+  listAllStudent,
   loading,
   listSemesters,
   defaultSemester,
   listManager,
   listBusiness,
   listMajors,
+  isMobile,
 }) => {
-  const infoUser = getLocal()
-  const [studentdetail, setStudentDetail] = useState('');
+  const infoUser = getLocal();
+  const [studentdetail, setStudentDetail] = useState("");
   const [modal, setModal] = useState(false);
+  const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   let navigate = useNavigate();
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
@@ -40,157 +45,222 @@ const Status = ({
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
-    campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSemester._id,
+    campus_id:
+      infoUser && infoUser.manager && infoUser.manager.campus_id
+        ? infoUser.manager.campus_id
+        : "",
+    smester_id:
+      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
-  const [major, setMajor] = useState('');
+  const [majorImport, setMajorImport] = useState("");
   const [filter, setFiler] = useState();
   const onShowDetail = (mssv, key) => {
     setStudentDetail(key);
     setModal(true);
-    dispatch(
-      getBusiness({
-        campus_id: key.campus_id._id,
-        smester_id: key.smester_id._id,
-      }),
-    );
   };
+
+  const onCloseModal = () => {
+    setModal(false);
+    getListStudent();
+  };
+
+  const getListStudent = async () => {
+    if (page?.smester_id && page?.smester_id.length > 0) {
+      dispatch(
+        getStudent({
+          ...page,
+          ...filter,
+        })
+      );
+    } else {
+      SemestersAPI.getDefaultSemester()
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(
+              getStudent({
+                ...page,
+                ...filter,
+                smester_id: res.data._id,
+              })
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
+  const getStudentExportExcel = async () => {
+    if (page?.smester_id && page?.smester_id.length > 0) {
+      dispatch(
+        getAllStudent({
+          ...filter,
+        })
+      );
+    } else {
+      SemestersAPI.getDefaultSemester()
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(
+              getAllStudent({
+                smester_id: res.data._id,
+              })
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  };
+  const getListAllStudent = listAllStudent?.list;
   useEffect(() => {
-    dispatch(fetchManager());
-    dispatch(
-      getStudent({
-        ...page,
-        ...filter,
-        onShowDetail,
-      }),
-    );
+    getListStudent();
+    getStudentExportExcel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, dispatch]);
+  useEffect(() => {
     dispatch(getSemesters());
     dispatch(getListMajor());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+    dispatch(fetchManager());
+  }, [dispatch]);
   const columns = [
     {
-      title: 'MSSV',
-      dataIndex: 'mssv',
+      title: "MSSV",
+      dataIndex: "mssv",
       width: 100,
-      fixed: 'left',
+      fixed: "left",
+      render: (val, key) => {
+        return (
+          <p
+            style={{ margin: 0, cursor: "pointer", color: "blue" }}
+            onClick={() => onShowDetail(val, key)}
+          >
+            {val}
+          </p>
+        );
+      },
     },
     {
-      title: 'Họ và Tên',
-      dataIndex: 'name',
+      title: "Họ và Tên",
+      dataIndex: "name",
       width: 150,
-      fixed: 'left',
+      fixed: "left",
+      render: (val, key) => {
+        return <p style={{ textAlign: "left", margin: 0 }}>{val}</p>;
+      },
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: "Email",
+      dataIndex: "email",
       width: 200,
     },
     {
-      title: 'Điện thoại',
-      dataIndex: 'phoneNumber',
+      title: "Điện thoại",
+      dataIndex: "phoneNumber",
       width: 160,
     },
     {
-      title: 'Ngành',
-      dataIndex: 'majors',
+      title: "Ngành",
+      dataIndex: "majors",
       width: 100,
-      render: val =>val.name,
+      render: (val) => val.name,
     },
     {
-      title: 'Phân loại',
-      dataIndex: 'support',
+      title: "Phân loại",
+      dataIndex: "support",
       width: 90,
       render: (val) => {
         if (val === 1) {
-          return 'Hỗ trợ';
+          return "Hỗ trợ";
         } else if (val === 0) {
-          return 'Tự tìm';
+          return "Tự tìm";
         } else {
-          return '';
+          return "";
         }
       },
     },
     {
-      title: 'CV',
-      dataIndex: 'CV',
+      title: "CV",
+      dataIndex: "CV",
       width: 50,
       render: (val) =>
-        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
+        val ? (
+          <EyeOutlined className="icon-cv" onClick={() => window.open(val)} />
+        ) : (
+          ""
+        ),
     },
     {
-      title: 'Người review',
-      dataIndex: 'reviewer',
+      title: "Người review",
+      dataIndex: "reviewer",
       width: 230,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'statusCheck',
+      title: "Trạng thái",
+      dataIndex: "statusCheck",
       render: (status) => {
         if (status === 0) {
           return (
-            <span className="status-fail" style={{ color: 'orange' }}>
+            <span className="status-fail" style={{ color: "orange" }}>
               Chờ kiểm tra
             </span>
           );
         } else if (status === 1) {
           return (
-            <span className="status-up" style={{ color: 'grey' }}>
+            <span className="status-up" style={{ color: "grey" }}>
               Sửa lại CV
             </span>
           );
         } else if (status === 2) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Nhận CV
             </span>
           );
         } else if (status === 3) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Trượt
             </span>
           );
         } else if (status === 4) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Đã nộp biên bản <br />
             </span>
           );
         } else if (status === 5) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Sửa biên bản
               <br />
             </span>
           );
         } else if (status === 6) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Đang thực tập <br />
             </span>
           );
         } else if (status === 7) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Đã nộp báo cáo <br />
             </span>
           );
         } else if (status === 8) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Sửa báo cáo <br />
             </span>
           );
         } else if (status === 9) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Hoàn thành <br />
             </span>
           );
         } else {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Chưa đăng ký
             </span>
           );
@@ -206,7 +276,7 @@ const Status = ({
   };
   const handleStandardTableChange = (key, value) => {
     const newValue =
-      value.length > 0 || (value < 11 && value !== '')
+      value.length > 0 || (value < 11 && value !== "")
         ? {
             ...filter,
             [key]: value,
@@ -215,11 +285,7 @@ const Status = ({
     setFiler(newValue);
   };
   const handleSearch = () => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(getStudent(data));
+    getListStudent();
   };
 
   const comfirm = () => {
@@ -227,274 +293,379 @@ const Status = ({
       updateReviewerListStudent({
         listIdStudent: listIdStudent,
         email: infoUser?.manager?.email,
-      }),
+      })
     );
-    alert('Thêm thành công ');
-    navigate('/review-cv');
+    alert("Thêm thành công ");
+    navigate("/review-cv");
   };
 
   const fileType =
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  const fileExtension = '.xlsx';
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
 
   const exportToCSV = (list) => {
     const newData = [];
-    list.filter((item) => {
-      const newObject = {};
-      newObject['MSSV'] = item['mssv'];
-      newObject['Họ tên'] = item['name'];
-      newObject['Email'] = item['email'];
-      newObject['Ngành'] = item['majors'];
-      newObject['Số điện thoại'] = item['phoneNumber'];
-      newObject['Tên công ty'] = item['nameCompany'];
-      newObject['Địa chỉ công ty'] = item['addressCompany'];
-      newObject['Mã số thuế'] = item['taxCode'];
-      newObject['Vị trí thực tập'] = item['position'];
-      newObject['Điểm thái độ'] = item['attitudePoint'];
-      newObject['Điểm kết quả'] = item['resultScore'];
-      newObject['Thời gian thực tập'] = item['internshipTime'];
-      newObject['Hình thức'] = item['support'];
-      return newData.push(newObject);
-    });
+    list &&
+      list.map((item) => {
+        const newObject = {};
+        newObject["Kỳ học"] = item["smester_id"]?.name;
+        newObject["Cơ sở"] = item["campus_id"]?.name;
+        newObject["MSSV"] = item["mssv"];
+        newObject["Họ tên"] = item["name"];
+        newObject["Email"] = item["email"];
+        newObject["Ngành"] = item["majors"]?.name;
+        newObject["Mã ngành"] = item["majors"]?.majorCode;
+        newObject["CV"] = item["CV"];
+        newObject["Biên bản"] = item["form"];
+        newObject["Báo cáo"] = item["report"];
+        newObject["Người review"] = item["reviewer"];
+        newObject["Số điện thoại"] = item["phoneNumber"];
+        newObject["Tên công ty"] = item["business"]?.name;
+        newObject["Địa chỉ công ty"] = item["business"]?.address;
+        newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
+        newObject["Mã số thuế"] = item["taxCode"];
+        newObject["Điểm thái độ"] = item["attitudePoint"];
+        newObject["Điểm kết quả"] = item["resultScore"];
+        newObject["Thời gian thực tập"] = item["internshipTime"];
+        newObject["Hình thức"] = item["support"];
+        newObject["Ghi chú"] = item["note"];
+        return newData.push(newObject);
+      });
     // eslint-disable-next-line array-callback-return
-    newData.filter((item) => {
-      if (item['Hình thức'] === 1) {
-        item['Hình thức'] = 1;
-        item['Hình thức'] = 'Hỗ trợ';
-      } else if (item['Hình thức'] === 0) {
-        item['Hình thức'] = 0;
-        item['Hình thức'] = 'Tự tìm';
+    newData.map((item) => {
+      if (item["Hình thức"] === 1) {
+        item["Hình thức"] = "Hỗ trợ";
+      } else if (item["Hình thức"] === 0) {
+        item["Hình thức"] = "Tự tìm";
       } else {
       }
     });
+
     const ws = XLSX.utils.json_to_sheet(newData);
-    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
-const parentMethods = {
-  major,
-  ...page
-}
+
+  const openVisible = () => {
+    setVisible(true);
+  };
+
+  const closeVisible = () => {
+    setMajorImport("");
+    setPage({
+      ...page,
+      smester_id: "",
+    });
+    setVisible(false);
+  };
+  const parentMethods = {
+    majorImport,
+    ...page,
+    closeVisible,
+  };
   return (
-    <div className="status">
-      <div className="flex-header">
-        {window.innerWidth < 739 ? (
-          <div
+    <div className={style.status}>
+      <div className={style.flex_header}>
+        <h4 className={style.flex_header.h4}>Sinh viên đăng ký thực tập</h4>
+        <Col span={8} className="d-flex">
+          <Select
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
-              alignItems: 'center',
+              width: "100%",
             }}
+            onChange={(val) => setPage({ ...page, smester_id: val })}
+            placeholder="Kỳ hiện tại"
           >
-            <h4 style={{ fontSize: ".9rem", margin: "0 -15px" }}>Sinh viên đăng ký thực tập</h4>
-            <Col span={4} style={{ padding: "0 3px" }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span style={{ width: "45%",display: "flex",flexWrap: "wrap", margin: "0 -10px" }}>Học Kỳ : </span>
-                <Select
-                  className="filter-status"
-                  style={{ width: "100%", margin: "0 20px" }}
-                  onChange={(val) => setPage({ ...page, smester_id: val })}
-                  defaultValue={defaultSemester?._id}
-                  placeholder={defaultSemester?.name}
-                >
-                  {listSemesters?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-              </div>
-            </Col>
-            <Button
-              variant="warning"
-              style={{ marginRight: 5, height: 33 }}
-              onClick={(e) => exportToCSV(list)}
-            >
-              Export
-            </Button>
-          </div>
-        ) : (
+            {listSemesters &&
+              listSemesters.length > 0 &&
+              listSemesters?.map((item, index) => (
+                <Option value={item?._id} key={index}>
+                  {item?.name}
+                </Option>
+              ))}
+          </Select>
+        </Col>
+        {!isMobile && (
           <>
-            <h4>Sinh viên đăng ký thực tập</h4>
-            <Col span={4} style={{ padding: "0 3px" }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span style={{ width: "45%", display: "flex", flexWrap: "wrap" }}>Học Kỳ : </span>
-                <Select
-                  className="filter-status"
-                  style={{ width: '100%' }}
-                  onChange={(val) => setPage({ ...page, smester_id: val })}
-                  placeholder={defaultSemester.name}
-                  defaultValue={defaultSemester._id}
-
-                >
-                  {listSemesters?.map((item, index) => (
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-              </div>
-            </Col>
             <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
+              style={isMobile ? { display: "none" } : { display: "flex" }}
+              className={style.btn_export}
             >
-              <span style={{ width: '45%' }}>Ngành: </span>
-              <Select
-                className="filter-status"
-                style={{ width: '100%' }}
-                onChange={(val) => setMajor(val)}
-                placeholder="Chọn ngành"
-              >
-                { listMajors && listMajors?.map((item, index) => (
-                  <Option value={item._id} key={index}>
-                    {item.name}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-            <div style={{ display: 'flex' }} className="bnt-export" >
-
               <Button
                 variant="warning"
-                style={{ marginRight: 5, height: 36 }}
-                onClick={(e) => exportToCSV(list)}
+                style={{
+                  marginRight: 20,
+                }}
+                className={style.button}
+                onClick={(e) => exportToCSV(getListAllStudent)}
               >
                 Export
               </Button>
-              <UpFile parentMethods={parentMethods} keys="status"  />
+              <Button
+                type="primary"
+                variant="warning"
+                className={style.button}
+                onClick={openVisible}
+              >
+                Thêm Sinh Viên
+              </Button>
             </div>
           </>
         )}
       </div>
-      <div className="filter" style={{ marginTop: '20px' }}>
-        {window.innerWidth < 739 && (
-          <UpFile parentMethods={parentMethods}  keys="status" style={{ fontSize: '.9rem' }} />
-        )}
-        <br />
-        <Row>
-          <Col span={7} style={{ padding: "0 10px" }}>
-            <div
+      <div>
+        {isMobile ? (
+          <>
+            <Row
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                marginTop: 20,
               }}
             >
-              <span className="select-status" style={{ width: '30%' }}>Ngành : </span>
-              <Select
-                style={{ width: '100%' }}
-                onChange={(val) => handleStandardTableChange('majors', val)}
-                placeholder="Lọc theo ngành"
-              >
-                { listMajors && listMajors.map((item, index) => (
-                  <>
-                    <Option value={item._id} key={index}>
-                      {item.name}
-                    </Option>
-                  </>
-                ))}
-              </Select>
-            </div>
-          </Col>
-          <br />
-          <br />
-          <Col span={6} style={{ padding: '0 10px' }}>
-            <div
+
+              <Col span={12}>
+                <div className={style.div}>
+                  <Select
+                    className="select-branch"
+                    style={{ width: "95%", position: "relative" }}
+                    onChange={(val) => handleStandardTableChange("majors", val)}
+                    placeholder="Lọc theo ngành"
+                    defaultValue=""
+                  >
+                    <Option value="">Tất cả</Option><Option value="">Tất cả</Option>
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item?._id} key={index}>
+                            {item?.name}
+                          </Option>
+                        </>
+                      ))}
+                  </Select>
+                </div>
+              </Col>
+              <Col span={12}>
+                <div className={style.div}>
+                  <Select
+                    className="filter-status"
+                    style={{ width: "100%" }}
+                    onChange={(val) =>
+                      handleStandardTableChange("statusCheck", val)
+                    }
+                    defaultValue={11}
+                    placeholder="Lọc theo trạng thái"
+                  >
+                    {filterStatuss.map((item, index) => (
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Col>
+            </Row>
+
+            <Row
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                marginTop: 20,
               }}
             >
-              <span style={{ width: '45%' }}>Trạng thái :</span>
-              <Select
               
-                className="filter-status"
-                style={{ width: '100%' }}
-                onChange={(val) => handleStandardTableChange('statusCheck', val)}
-                placeholder="Lọc theo trạng thái"
-              >
-                {filterStatuss.map((item, index) => (
-                  <Option value={item.id} key={index}>
-                    {item.title}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-          </Col>
-          <br />
-          <br />
+              <Col span={12}>
+                <div className={style.div}>
+                  <Input
+                    style={{ width: "95%" }}
+                    placeholder="Tìm kiếm theo mã sinh viên"
+                    onChange={(val) =>
+                      handleStandardTableChange("mssv", val.target.value.trim())
+                    }
+                  />
+                </div>
+                
+              </Col>
+              <Col span={12}>
+                <Button
+                  style={{
+                    width: "100%",
+                  }}
+                  type="primary"
+                  onClick={handleSearch}
+                >
+                  Tìm kiếm
+                </Button>
+              </Col>
 
-          <br />
-          <br />
-          <Col span={7} style={{ padding: '0 10px' }}>
-            <div
+              {chooseIdStudent.length > 0 && (
+                <Col span={12}>
+                  <Button
+                    style={{
+                      width: "95%",
+                      marginTop: '10px'
+                    }}
+                    type="primary"
+                    onClick={() => comfirm()}
+                  >
+                    Xác nhận
+                  </Button>
+                </Col>
+              )}
+            </Row>
+            <Row
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                marginTop: 20,
               }}
             >
-              <span className="select-status" style={{ width: '40%' }}>Tìm Kiếm: </span>
-              <Input
-                style={{ width: '100%' }}
-                placeholder="Tìm kiếm theo mã sinh viên"
-                onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
-              />
-            </div>
-          </Col>
-          <br />
-          <br />
-          <Col xs={24} sm={4} md={24} lg={24} xl={4} style={{ padding: '0 10px' }}>
-            <Button
+              <Col span={12}>
+                <Button
+                  type="primary"
+                  variant="warning"
+                  className={style.button}
+                  style={{
+                    width: "95%",
+                  }}
+                  onClick={openVisible}
+                >
+                  Thêm Sinh Viên
+                </Button>
+              </Col>
+              <Col span={12}>
+                <Button
+                  type="primary"
+                  variant="warning"
+                  className={style.button}
+                  style={{
+                    width: "100%",
+                  }}
+                  onClick={(e) => exportToCSV(getListAllStudent)}
+                >
+                  Export
+                </Button>
+              </Col>
+            </Row>
+            <Row
               style={{
-                color: '#fff',
-                background: '#ee4d2d',
+                marginTop: 20,
               }}
-              onClick={handleSearch}
             >
-              Tìm kiếm
-            </Button>
+              
+            </Row>
+          </>
+        ) : (
+          <Row>
+            <Col
+              xs={{ span: 24 }}
+              md={{ span: 8 }}
+              style={{ paddingBottom: "15px" }}
+            >
+              <div className={style.div}>
+                <span className="select-status" style={{ width: "50%" }}>
+                  Ngành :{" "}
+                </span>
+                <Select
+                  className="select-branch"
+                  style={{ width: "100%", position: "relative", right: "5%" }}
+                  onChange={(val) => handleStandardTableChange("majors", val)}
+                  placeholder="Lọc theo ngành"
+                  defaultValue=""
+                >
+                  <Option value="">Tất cả</Option>
+                  {listMajors &&
+                    listMajors.map((item, index) => (
+                      <>
+                        <Option value={item?._id} key={index}>
+                          {item?.name}
+                        </Option>
+                      </>
+                    ))}
+                </Select>
+              </div>
+            </Col>
 
-            {chooseIdStudent.length > 0 && (
+            <Col
+              xs={{ span: 24 }}
+              md={{ span: 8 }}
+              style={{ marginBottom: "15px" }}
+            >
+              <div className={style.div}>
+                <span
+                  style={{ width: "50%", paddingRight: "10px" }}
+                  className={style.span3}
+                >
+                  Trạng thái:
+                </span>
+                <Select
+                  className="filter-status"
+                  style={{ width: "100%", position: "relative", right: "5%" }}
+                  onChange={(val) =>
+                    handleStandardTableChange("statusCheck", val)
+                  }
+                  defaultValue={11}
+                  placeholder="Lọc theo trạng thái"
+                >
+                  {filterStatuss.map((item, index) => (
+                    <Option value={item?.id} key={index}>
+                      {item?.title}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+            </Col>
+
+            <Col xs={{ span: 24 }} md={{ span: 8 }}>
+              <div className={style.div}>
+                <span style={{ paddingRight: "15px" }} className={style.span3}>
+                  Tìm Kiếm:{" "}
+                </span>
+                <Input
+                  style={{ width: "65%", position: "relative", right: "6%" }}
+                  placeholder="Tìm kiếm theo mã sinh viên"
+                  onChange={(val) =>
+                    handleStandardTableChange("mssv", val.target.value.trim())
+                  }
+                />
+              </div>
+            </Col>
+
+            <Col
+              xs={24}
+              sm={4}
+              md={24}
+              lg={24}
+              xl={4}
+              style={{ padding: "0 10px" }}
+            >
               <Button
                 style={{
-                  marginTop: '10px',
-                  color: '#fff',
-                  background: '#ee4d2d',
+                  color: "#fff",
+                  background: "#ee4d2d",
+                  display: "flex",
                 }}
-                onClick={() => comfirm()}
+                onClick={handleSearch}
               >
-                Xác nhận
+                Tìm kiếm
               </Button>
-            )}
-          </Col>
-        </Row>
+
+              {chooseIdStudent.length > 0 && (
+                <Button
+                  style={{
+                    marginTop: "10px",
+                    color: "#fff",
+                    background: "#ee4d2d",
+                  }}
+                  onClick={() => comfirm()}
+                >
+                  Xác nhận
+                </Button>
+              )}
+            </Col>
+          </Row>
+        )}
       </div>
 
       {window.innerWidth > 1024 ? (
         <Table
           rowSelection={{
-            type: 'checkbox',
+            type: "checkbox",
             ...rowSelection,
           }}
           pagination={{
@@ -513,12 +684,12 @@ const parentMethods = {
           loading={loading}
           columns={columns}
           dataSource={list}
-          scroll={{ x: 'calc(700px + 50%)' }}
+          scroll={{ x: "calc(700px + 50%)" }}
         />
       ) : (
         <Table
           rowSelection={{
-            type: 'checkbox',
+            type: "checkbox",
             ...rowSelection,
           }}
           pagination={{
@@ -536,47 +707,22 @@ const parentMethods = {
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div style={{ marginTop: '10px' }}>
-                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ''
-                ) : (
-                  <>
-                    <p className="list-detail">Email: {record.email}</p>
-                    <br />
-                  </>
-                )}
-                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-                <br />
-                <p className="list-detail">Ngành: {record.majors}</p>
-                <br />
-                <p className="list-detail">
-                  Phân loại:
-                  {record.support === 1 && 'Hỗ trợ'}
-                  {record.support === 0 && 'Tự tìm'}
-                  {record.support !== 1 && record.support !== 0 && ''}
-                </p>
-                <br />
-                <p className="list-detail">
-                  CV:{' '}
-                  {record.CV ? (
-                    <EyeOutlined
-                      style={{ fontSize: '.9rem' }}
-                      onClick={() => window.open(record.CV)}
-                    />
-                  ) : (
-                    ''
-                  )}
-                </p>
-                <br />
-                <p className="list-detail">Người review: {record.reviewer}</p>
-                <br />
-              </div>
-            ),
-          }}
         >
-          <Column title="Mssv" dataIndex="mssv" key="_id" />
+          <Column
+            title="Mssv"
+            dataIndex="mssv"
+            key="_id"
+            render={(val, key) => {
+              return (
+                <p
+                  style={{ margin: 0, cursor: "pointer", color: "blue" }}
+                  onClick={() => onShowDetail(val, key)}
+                >
+                  {val}
+                </p>
+              );
+            }}
+          />
           <Column title="Họ và Tên" dataIndex="name" key="_id" />
           {window.innerWidth > 739 && window.innerWidth < 1023 && (
             <Column title="Email" dataIndex="email" key="_id" />
@@ -588,67 +734,67 @@ const parentMethods = {
             render={(status) => {
               if (status === 0) {
                 return (
-                  <span className="status-fail" style={{ color: 'orange' }}>
+                  <span className="status-fail" style={{ color: "orange" }}>
                     Chờ kiểm tra
                   </span>
                 );
               } else if (status === 1) {
                 return (
-                  <span className="status-up" style={{ color: 'grey' }}>
+                  <span className="status-up" style={{ color: "grey" }}>
                     Sửa lại CV
                   </span>
                 );
               } else if (status === 2) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Nhận CV
                   </span>
                 );
               } else if (status === 3) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Trượt
                   </span>
                 );
               } else if (status === 4) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Đã nộp biên bản <br />
                   </span>
                 );
               } else if (status === 5) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Sửa biên bản <br />
                   </span>
                 );
               } else if (status === 6) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Đang thực tập <br />
                   </span>
                 );
               } else if (status === 7) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Đã nộp báo cáo <br />
                   </span>
                 );
               } else if (status === 8) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Sửa báo cáo <br />
                   </span>
                 );
               } else if (status === 9) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Hoàn thành <br />
                   </span>
                 );
               } else {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Chưa đăng ký
                   </span>
                 );
@@ -658,15 +804,79 @@ const parentMethods = {
         </Table>
       )}
 
-      {modal && <StudentDetail
-        infoUser={infoUser}
-        studentId={studentdetail._id}
-        onShowModal={modal}
-        closeModal={() => setModal(false)}
-        listBusiness={listBusiness}
-        listManager={listManager}
-      />}
-      
+      {modal && (
+        <StudentDetail
+          infoUser={infoUser}
+          studentId={studentdetail._id}
+          onShowModal={modal}
+          closeModal={onCloseModal}
+          listBusiness={listBusiness}
+          listManager={listManager}
+        />
+      )}
+
+      <div>
+        <Drawer
+          title="Thêm Sinh"
+          placement="left"
+          onClose={closeVisible}
+          visible={visible}
+        >
+          <Row>
+            <Col span={6}>
+              <p className={style.pDrawer}>Học Kỳ : </p>
+            </Col>
+            <Col span={18}>
+              <Select
+                style={{
+                  width: "100%",
+                }}
+                onChange={(val) => setPage({ ...page, smester_id: val })}
+                placeholder="Chọn kỳ"
+                defaultValue={page.smester_id}
+              >
+                {listSemesters &&
+                  listSemesters.length > 0 &&
+                  listSemesters?.map((item, index) => (
+                    <Option value={item?._id} key={index}>
+                      {item?.name}
+                    </Option>
+                  ))}
+              </Select>
+            </Col>
+          </Row>
+
+          <Row
+            style={{
+              marginTop: 20,
+            }}
+          >
+            <Col span={6}>
+              <p className={style.pDrawer}>Ngành:</p>
+            </Col>
+            <Col span={18}>
+              <Select
+                style={{
+                  width: "100%",
+                }}
+                onChange={(val) => setMajorImport(val)}
+                placeholder="Chọn ngành"
+                defaultValue={majorImport}
+              >
+                {listMajors &&
+                  listMajors?.map((item, index) => (
+                    <Option value={item?._id} key={index}>
+                      {item?.name}
+                    </Option>
+                  ))}
+              </Select>
+            </Col>
+          </Row>
+          <div className={style.upFile}>
+            <UpFile parentMethods={parentMethods} keys="status" />
+          </div>
+        </Drawer>
+      </div>
     </div>
   );
 };
@@ -674,17 +884,21 @@ const parentMethods = {
 Status.propTypes = {
   listStudent: object,
   infoUser: object,
-  listManager: object,
+  listManager: array,
   listBusiness: object,
   listMajors: array,
 };
 
-export default connect(({ students,semester, manager, business, major }) => ({
-  listStudent: students.listStudent,
-  listSemesters: semester.listSemesters,
-  defaultSemester: semester.defaultSemester,
-  loading: students.loading,
-  listManager: manager.listManager,
-  listBusiness: business.listBusiness,
-  listMajors: major.listMajor,
-}))(Status);
+export default connect(
+  ({ students, semester, manager, business, major, global }) => ({
+    listStudent: students.listStudent,
+    listAllStudent: students.listAllStudent,
+    listSemesters: semester.listSemesters,
+    defaultSemester: semester.defaultSemester,
+    loading: students.loading,
+    listManager: manager.listManager,
+    listBusiness: business.listBusiness,
+    listMajors: major.listMajor,
+    ...global,
+  })
+)(Status);

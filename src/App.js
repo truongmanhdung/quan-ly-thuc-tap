@@ -1,9 +1,7 @@
 // import './common/styles/App.css'
-import 'antd/dist/antd.css'
-import './common/styles/status.css'
-import './common/styles/upfile.css'
+import 'antd/dist/antd.css';
 import Router from './Routes/routes';
-
+import './App.css'
 
 function App() {
   return (

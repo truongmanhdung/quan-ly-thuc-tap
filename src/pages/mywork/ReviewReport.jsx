@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import "../../common/styles/status.css";
+import styles from "./mywork.module.css";
 import { Select, Input, Table, Button, message, Row, Col } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import {
   listStudentReport,
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatusReport } from "../../ultis/selectOption";
+import {  filterStatusReport } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
@@ -16,11 +16,13 @@ import { EyeOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import { timestamps } from "../../ultis/timestamps";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
+import SemestersAPI from "../../API/SemestersAPI";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
 const { Column } = Table;
 
 const { Option } = Select;
 
-const ReviewReport = () => {
+const ReviewReport = ({ isMobile, listMajors }) => {
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const {
@@ -42,15 +44,36 @@ const ReviewReport = () => {
   const [studentdetail, setStudentDetail] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const onShowModal = () => {
-    setIsModalVisible(!isModalVisible);
+    setIsModalVisible(true);
   };
-  const [filter, setFiler] = useState({});
+
   useEffect(() => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(listStudentReport(data));
+    dispatch(getListMajor());
+  }, [dispatch]);
+
+  const onCloseModal = () => {
+    setIsModalVisible(false);
+    getDataReviewReport();
+  };
+
+  const [filter, setFiler] = useState({});
+  const getDataReviewReport = () => {
+    SemestersAPI.getDefaultSemester()
+      .then((res) => {
+        if (res.status === 200) {
+          const data = {
+            ...page,
+            ...filter,
+            smester_id: res.data._id,
+          };
+          setChooseIdStudent([]);
+          dispatch(listStudentReport(data));
+        }
+      })
+      .catch(() => {});
+  };
+  useEffect(() => {
+    getDataReviewReport();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const onShowDetail = (mssv, key) => {
@@ -66,13 +89,9 @@ const ReviewReport = () => {
       render: (val, key) => {
         return (
           <p
-            style={{ margin: 0, cursor: "pointer" }}
+            style={{ margin: 0, cursor: "pointer", color: "blue" }}
             onClick={() => onShowDetail(val, key)}
           >
-            <EyeOutlined
-              className="icon-cv"
-              style={{ marginRight: "5px", color: "blue" }}
-            />
             {val}
           </p>
         );
@@ -244,11 +263,7 @@ const ReviewReport = () => {
     setFiler(newValue);
   };
   const handleSearch = () => {
-    const data = {
-      ...page,
-      ...filter,
-    };
-    dispatch(listStudentReport(data));
+    getDataReviewReport();
   };
 
   const fileType =
@@ -257,14 +272,16 @@ const ReviewReport = () => {
 
   const exportToCSV = (list) => {
     const newData = [];
-    list.filter((item) => {
+   list && list.map((item) => {
       let itemStatus = item["statusCheck"];
       const newObject = {};
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
       newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Công ty"] = item["business"].name;
+      newObject["Tên công ty"] = item["business"]?.name;
+      newObject["Địa chỉ công ty"] = item["business"]?.address;
+      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
       newObject["Điểm thái độ"] = item["attitudePoint"];
       newObject["Điểm kết quả"] = item["resultScore"];
       newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
@@ -379,166 +396,313 @@ const ReviewReport = () => {
     }, 300);
   };
   return (
-    <div className="status">
-      {window.innerWidth < 1023 ? (
-        <h4 style={{ fontSize: "1rem" }}>Review báo cáo 1</h4>
-      ) : (
-        <h4>Review báo cáo</h4>
-      )}
-      <Button variant="warning" onClick={(e) => exportToCSV(list)}>
-        Export
-      </Button>
+    <div className={styles.status}>
+      <div className={styles.header_flex}>
+        <h1>Review báo cáo</h1>
+      </div>
 
-      <div className="filter" style={{ marginTop: "20px" }}>
-        <Row>
-          <Col
-            xs={24}
-            sm={4}
-            md={12}
-            lg={8}
-            xl={8}
-            style={{ padding: "0 10px" }}
-          >
-            <div className="search">
-              <span style={{ width: "40%" }}>Ngành: </span>
+      {isMobile ? (
+        <>
+          <div className={styles.status}>
+            <Row>
+              <Col span={12}>
+                <div className="search">
+                  <Select
+                    style={{ width: "95%" }}
+                    onChange={(val) => handleStandardTableChange("majors", val)}
+                    placeholder="Lọc theo ngành"
+                    defaultValue=""
+                  >
+                    <Option value="">Tất cả</Option>
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
+                  </Select>
+                </div>
+              </Col>
+              <Col span={12}>
+                <div className="search">
+                  <Select
+                    className="filter-status"
+                    style={{ width: "100%" }}
+                    onChange={(val) =>
+                      handleStandardTableChange("statusCheck", val)
+                    }
+                    defaultValue={11}
+                    placeholder="Lọc theo trạng thái"
+                  >
+                    {filterStatusReport.map((item, index) => (
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Col>
+            </Row>
+
+            <Row
+              style={{
+                marginTop: 20,
+              }}
+            >
+              <Col span={12}>
+                <Button
+                  variant="warning"
+                  type="primary"
+                  style={{
+                    width: "95%",
+                  }}
+                  onClick={(e) => exportToCSV(list)}
+                >
+                  Export
+                </Button>
+              </Col>
+              <Col span={12}>
+                <Button
+                  style={{
+                    width: "100%",
+                  }}
+                  type="primary"
+                  onClick={handleSearch}
+                >
+                  Tìm kiếm
+                </Button>
+              </Col>
+            </Row>
+          </div>
+          {chooseIdStudent.length > 0 && (
+            <div
+              style={{
+                marginTop: 20,
+              }}
+              className="comfirm"
+            >
               <Select
+                className="comfirm-click"
                 style={{ width: "100%" }}
-                onChange={(val) => handleStandardTableChange("majors", val)}
-                placeholder="Lọc theo ngành"
+                onChange={actionOnchange}
+                placeholder="Chọn"
               >
-                {filterBranch.map((item, index) => (
-                  <>
+                <Option value="assgin" key="1">
+                  Kéo việc
+                </Option>
+                <Option value="edit" key="2">
+                  Cập nhật trạng thái
+                </Option>
+              </Select>
+
+              {Object.keys(status).length >= 1 && (
+                <Select
+                  className="upload-status"
+                  style={
+                    window.innerWidth > 1024
+                      ? { width: "100%", margin: "10px" }
+                      : { width: "100%", margin: "10px 0" }
+                  }
+                  onChange={(e) => selectStatus(e)}
+                  placeholder="Chọn trạng thái"
+                >
+                  {statusConfigReport.map((item, index) => (
                     <Option value={item.value} key={index}>
                       {item.title}
                     </Option>
-                  </>
-                ))}
-              </Select>
-            </div>
-          </Col>
-          <br />
-          <br />
-          <Col
-            xs={24}
-            sm={4}
-            md={12}
-            lg={8}
-            xl={8}
-            style={{ padding: "0 10px" }}
-          >
-            <div className="search">
-              <span style={{ width: "40%" }}>Trạng thái:</span>
-              <Select
-                className="filter-status"
-                style={{ width: "100%" }}
-                onChange={(val) =>
-                  handleStandardTableChange("statusCheck", val)
-                }
-                placeholder="Lọc theo trạng thái"
-              >
-                {filterStatusReport.map((item, index) => (
-                  <Option value={item.id} key={index}>
-                    {item.title}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-          </Col>
-          <br />
-          <br />
-          <Col
-            xs={24}
-            sm={4}
-            md={12}
-            lg={8}
-            xl={8}
-            style={{ padding: "0 10px" }}
-          >
-            <div className="search">
-              <span style={{ width: "40%" }}>Tìm Kiếm: </span>
-              <Input
-                style={{ width: "100%" }}
-                placeholder="Tìm kiếm theo mã sinh viên"
-                onChange={(val) =>
-                  handleStandardTableChange("mssv", val.target.value)
-                }
-              />
-            </div>
-          </Col>
-          <br />
-          <br />
-          <Col
-            xs={20}
-            sm={4}
-            md={24}
-            lg={24}
-            xl={80}
-            style={{ padding: "0 10px" }}
-          >
-            <div>
-              <Button
-                style={{
-                  marginTop: "10px",
-                  color: "#fff",
-                  background: "#ee4d2d",
-                }}
-                onClick={handleSearch}
-              >
-                Tìm kiếm
-              </Button>
-              {chooseIdStudent.length > 0 && (
-                <div className="comfirm">
-                  <span style={{ width: "40%" }}>Lựa chọn </span>
-                  <Select
-                    className="comfirm-click"
-                    style={{ width: "100%" }}
-                    onChange={actionOnchange}
-                    placeholder="Chọn"
-                  >
-                    <Option value="assgin" key="1">
-                      Kéo việc
-                    </Option>
-                    <Option value="edit" key="2">
-                      Cập nhật trạng thái
-                    </Option>
-                  </Select>
+                  ))}
+                </Select>
+              )}
+              {note === 3 || note === 5 || note === 8 ? (
+                <TextArea
+                  // value={value}
+                  onChange={handleNote}
+                  placeholder="Ghi chú..."
+                  autoSize={{ minRows: 3, maxRows: 5 }}
+                />
+              ) : null}
 
-                  {Object.keys(status).length >= 1 && (
-                    <Select
-                      className="upload-status"
-                      style={
-                        window.innerWidth > 1024
-                          ? { width: "100%", margin: "10px" }
-                          : { width: "100%", margin: "10px 0" }
-                      }
-                      onChange={(e) => selectStatus(e)}
-                      placeholder="Chọn trạng thái"
-                    >
-                      {statusConfigReport.map((item, index) => (
-                        <Option value={item.value} key={index}>
-                          {item.title}
-                        </Option>
-                      ))}
-                    </Select>
-                  )}
-                  {note === 3 || note === 5 || note === 8 ? (
-                    <TextArea
-                      // value={value}
-                      onChange={handleNote}
-                      placeholder="Ghi chú..."
-                      autoSize={{ minRows: 3, maxRows: 5 }}
-                    />
-                  ) : null}
-
-                  {Object.keys(status).length > 0 && (
-                    <Button onClick={() => comfirm()}>Xác nhận</Button>
-                  )}
-                </div>
+              {Object.keys(status).length > 0 && (
+                <Button onClick={() => comfirm()}>Xác nhận</Button>
               )}
             </div>
-          </Col>
-        </Row>
-      </div>
+          )}
+        </>
+      ) : (
+        <>
+          <div className="filter" style={{ marginTop: "20px" }}>
+            <Row>
+              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+                <div
+                  style={{
+                    display: "flex",
+                  }}
+                  className="search"
+                >
+                  <span style={{ width: "65%" }}>Ngành: </span>
+                  <Select
+                    style={{
+                      width: "100%",
+                      position: "relative",
+                      right: "50px",
+                    }}
+                    defaultValue=""
+                    onChange={(val) => handleStandardTableChange("majors", val)}
+                    placeholder="Lọc theo ngành"
+                  >
+                    <Option value="">Tất cả</Option>
+                    {listMajors &&
+                      listMajors.map((item, index) => (
+                        <>
+                          <Option value={item._id} key={index}>
+                            {item.name}
+                          </Option>
+                        </>
+                      ))}
+                  </Select>
+                </div>
+              </Col>
+              <br />
+              <br />
+              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+                <div
+                  style={{
+                    display: "flex",
+                  }}
+                  className="search"
+                >
+                  <span style={{ width: "65%" }}>Trạng thái:</span>
+                  <Select
+                    className="filter-status"
+                    style={{
+                      width: "100%",
+                      position: "relative",
+                      right: "49px",
+                    }}
+                    defaultValue={11}
+                    onChange={(val) =>
+                      handleStandardTableChange("statusCheck", val)
+                    }
+                    placeholder="Lọc theo trạng thái"
+                  >
+                    {filterStatusReport.map((item, index) => (
+                      <Option value={item?.id} key={index}>
+                        {item?.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+              </Col>
+              <br />
+              <br />
+              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+                <div
+                  style={{
+                    display: "flex",
+                  }}
+                  className="search"
+                >
+                  <span style={{ width: "65%" }}>Tìm Kiếm: </span>
+                  <Input
+                    style={{
+                      width: "100%",
+                      position: "relative",
+                      right: "43px",
+                    }}
+                    placeholder="Tìm kiếm theo mã sinh viên"
+                    onChange={(val) =>
+                      handleStandardTableChange("mssv", val.target.value)
+                    }
+                  />
+                </div>
+              </Col>
+              <br />
+              <br />
+              <Col
+                xs={20}
+                sm={4}
+                md={24}
+                lg={24}
+                xl={80}
+                style={{ padding: "0 10px" }}
+              >
+                <div>
+                  <Button
+                    style={{
+                      marginRight: 20,
+                    }}
+                    variant="warning"
+                    onClick={(e) => exportToCSV(list)}
+                  >
+                    Export
+                  </Button>
+                  <Button
+                    style={{
+                      marginTop: "10px",
+                      color: "#fff",
+                      background: "#ee4d2d",
+                    }}
+                    onClick={handleSearch}
+                  >
+                    Tìm kiếm
+                  </Button>
+                  {chooseIdStudent.length > 0 && (
+                    <div className="comfirm">
+                      <span style={{ width: "40%" }}>Lựa chọn </span>
+                      <Select
+                        className="comfirm-click"
+                        style={{ width: "100%" }}
+                        onChange={actionOnchange}
+                        placeholder="Chọn"
+                      >
+                        <Option value="assgin" key="1">
+                          Kéo việc
+                        </Option>
+                        <Option value="edit" key="2">
+                          Cập nhật trạng thái
+                        </Option>
+                      </Select>
+
+                      {Object.keys(status).length >= 1 && (
+                        <Select
+                          className="upload-status"
+                          style={
+                            window.innerWidth > 1024
+                              ? { width: "100%", margin: "10px" }
+                              : { width: "100%", margin: "10px 0" }
+                          }
+                          onChange={(e) => selectStatus(e)}
+                          placeholder="Chọn trạng thái"
+                        >
+                          {statusConfigReport.map((item, index) => (
+                            <Option value={item.value} key={index}>
+                              {item.title}
+                            </Option>
+                          ))}
+                        </Select>
+                      )}
+                      {note === 3 || note === 5 || note === 8 ? (
+                        <TextArea
+                          // value={value}
+                          onChange={handleNote}
+                          placeholder="Ghi chú..."
+                          autoSize={{ minRows: 3, maxRows: 5 }}
+                        />
+                      ) : null}
+
+                      {Object.keys(status).length > 0 && (
+                        <Button onClick={() => comfirm()}>Xác nhận</Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </>
+      )}
 
       {window.innerWidth > 1024 ? (
         <Table
@@ -561,15 +725,16 @@ const ReviewReport = () => {
           rowKey="_id"
           loading={loading}
           columns={columns}
-          dataSource={list.map(
-            ({ internshipTime, endInternShipTime, ...list }) => {
+          dataSource={
+            list &&
+            list?.map(({ internshipTime, endInternShipTime, ...list }) => {
               return {
                 internshipTime: timestamps(internshipTime),
                 endInternShipTime: timestamps(endInternShipTime),
                 ...list,
               };
-            }
-          )}
+            })
+          }
           scroll={{ x: "calc(700px + 50%)" }}
         />
       ) : (
@@ -593,45 +758,45 @@ const ReviewReport = () => {
           rowKey="_id"
           loading={loading}
           dataSource={list}
-          expandable={{
-            expandedRowRender: (record) => (
-              <div style={{ marginTop: "10px" }}>
-                {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ""
-                ) : (
-                  <>
-                    <p className="list-detail">Email: {record.email}</p>
-                    <br />
-                  </>
-                )}
-                <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
-                <br />
-                <p className="list-detail">Ngành: {record.majors}</p>
-                <br />
-                <p className="list-detail">
-                  Phân loại:
-                  {record.support === 1 && "Hỗ trợ"}
-                  {record.support === 0 && "Tự tìm"}
-                  {record.support !== 1 && record.support !== 0 && ""}
-                </p>
-                <br />
-                <p className="list-detail">
-                  CV:{" "}
-                  {record.CV ? (
-                    <EyeOutlined
-                      style={{ fontSize: ".9rem" }}
-                      onClick={() => window.open(record.CV)}
-                    />
-                  ) : (
-                    ""
-                  )}
-                </p>
-                <br />
-                <p className="list-detail">Người review: {record.reviewer}</p>
-                <br />
-              </div>
-            ),
-          }}
+          // expandable={{
+          //   expandedRowRender: (record) => (
+          //     <div style={{ marginTop: "10px" }}>
+          //       {window.innerWidth < 1023 && window.innerWidth > 739 ? (
+          //         ""
+          //       ) : (
+          //         <>
+          //           <p className="list-detail">Email: {record.email}</p>
+          //           <br />
+          //         </>
+          //       )}
+          //       <p className="list-detail">Điện thoại: {record.phoneNumber}</p>
+          //       <br />
+          //       <p className="list-detail">Ngành: {record.majors}</p>
+          //       <br />
+          //       <p className="list-detail">
+          //         Phân loại:
+          //         {record.support === 1 && "Hỗ trợ"}
+          //         {record.support === 0 && "Tự tìm"}
+          //         {record.support !== 1 && record.support !== 0 && ""}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">
+          //         CV:{" "}
+          //         {record.CV ? (
+          //           <EyeOutlined
+          //             style={{ fontSize: ".9rem" }}
+          //             onClick={() => window.open(record.CV)}
+          //           />
+          //         ) : (
+          //           ""
+          //         )}
+          //       </p>
+          //       <br />
+          //       <p className="list-detail">Người review: {record.reviewer}</p>
+          //       <br />
+          //     </div>
+          //   ),
+          // }}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
           <Column title="Họ và Tên" dataIndex="name" key="_id" />
@@ -715,10 +880,17 @@ const ReviewReport = () => {
         </Table>
       )}
       {isModalVisible && (
-        <StudentDetail studentId={studentdetail} onShowModal={onShowModal} />
+        <StudentDetail
+          closeModal={onCloseModal}
+          studentId={studentdetail}
+          onShowModal={onShowModal}
+        />
       )}
     </div>
   );
 };
 
-export default ReviewReport;
+export default connect(({ global, major }) => ({
+  isMobile: global.isMobile,
+  listMajors: major.listMajor,
+}))(ReviewReport);

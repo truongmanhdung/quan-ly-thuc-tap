@@ -1,18 +1,26 @@
-import { Button, Form, Input, message, Radio, Select, Spin } from 'antd';
-import { array, object } from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import RegisterInternAPI from '../../API/RegisterInternAPI';
-import CountDownCustorm from '../../components/CountDownCustorm';
-import { getBusiness } from '../../features/businessSlice/businessSlice';
-import { getNarow } from '../../features/narrow';
-import { getListSpecialization } from '../../features/specializationSlice/specializationSlice';
-import { getStudentId } from '../../features/StudentSlice/StudentSlice';
-import { getTimeForm } from '../../features/timeDateSlice/timeDateSlice';
-import { getLocal } from '../../ultis/storage';
-import Proactive from './Proactive';
-import Support from './Support';
-import styles from './SupportStudent.module.css';
+import { UploadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Radio,
+  Select,
+  Spin,
+  Upload,
+} from "antd";
+import { object } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import RegisterInternAPI from "../../API/RegisterInternAPI";
+import CountDownCustorm from "../../components/CountDownCustorm";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
+import { getNarow } from "../../features/narrow";
+import { getStudentId } from "../../features/StudentSlice/StudentSlice";
+import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import { getLocal } from "../../ultis/storage";
+import styles from "./SupportStudent.module.css";
 
 const { Option } = Select;
 const formItemLayout = {
@@ -45,31 +53,37 @@ const tailFormItemLayout = {
     },
   },
 };
-const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNarrow } }) => {
+const SupportStudent = ({
+  studentById,
+  listBusiness: { list },
+  narrow: { listNarrow },
+}) => {
   const infoUser = getLocal();
   const dispatch = useDispatch();
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
+  const [status, setStatus] = useState(1);
   const { time } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
-  // const [listBusiness, setListBusiness] = useState([]);
 
   useEffect(() => {
-    dispatch(getListSpecialization());
-    dispatch(getTimeForm(value));
+    dispatch(getTimeForm({
+      typeNumber: value,
+      semester_id: infoUser.student.smester_id
+    }));
     dispatch(getStudentId(infoUser.student.mssv));
     dispatch(
       getBusiness({
         campus_id: infoUser.student.campus_id,
         smester_id: infoUser.student.smester_id,
         majors: infoUser.student.majors,
-      }),
+      })
     );
+    dispatch(getListMajor());
     dispatch(getNarow());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
+  }, [dispatch, value, status]);
   function guardarArchivo(files, data) {
     const file = files; //the file
 
@@ -77,55 +91,55 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
     reader.readAsDataURL(file); //start conversion...
     reader.onload = function (e) {
       //.. once finished..
-      var rawLog = reader.result.split(',')[1]; //extract only thee file data part
+      var rawLog = reader.result.split(",")[1]; //extract only thee file data part
       var dataSend = {
         dataReq: { data: rawLog, name: file.name, type: file.type },
-        fname: 'uploadFilesToGoogleDrive',
+        fname: "uploadFilesToGoogleDrive",
       }; //preapre info to send to API
       fetch(
         `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
     `, //your AppsScript URL
-        { method: 'POST', body: JSON.stringify(dataSend) },
+        { method: "POST", body: JSON.stringify(dataSend) }
       ) //send to Api
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
+              setSpin(true);
               message.success(res.data.message);
-              setValue([]);
+              setStatus(2);
               setSpin(false);
-              form.resetFields();
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
-                setSpin(false);
               } else {
                 message.error(`${dataErr.message}`);
-                setSpin(false);
               }
             });
-          setSpin(false);
         })
         .catch((e) => {
-          message.success('Có lỗi xảy ra! Vui lòng đăng ký lại');
+          message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");
           form.resetFields();
           setSpin(false);
         }); // Or Error in console
     };
   }
 
-  const normFile = (e) => {
-    const valueFile = e.file.originFileObj;
+  const props = {
+    beforeUpload: (file) => {
+      const isPDF = file.type === "application/pdf";
+      if (!isPDF) {
+        message.error(`${file.name} không phải là file PDF`);
+      }
 
-    const isPDF = valueFile.type === 'application/pdf';
-
-    if (!isPDF) {
-      message.error('Vui lòng nhập file đúng định dạng PDF');
-    }
-    setFile(e.file.originFileObj);
+      return isPDF || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      setFile(info.file.originFileObj);
+    },
   };
 
   const onFinish = async (values) => {
@@ -140,13 +154,16 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
         user_code: infoUser?.student?.mssv,
         email: infoUser?.student?.email,
         typeNumber: supportForm,
+        semester_id: infoUser.student.smester_id,
         ///dispatch Redux
       };
       if (value === 0) {
+        setSpin(true);
         const resData = await RegisterInternAPI.upload(data);
         message.success(resData.data.message);
-        form.resetFields();
-      } else {
+        setStatus(2);
+        setSpin(false);
+      } else if (value === 1) {
         await guardarArchivo(file, data);
       }
     } catch (error) {
@@ -160,8 +177,14 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
     setValue(e.target.value);
   };
 
-  const check = time.endTime > new Date().getTime();
-  const isCheck = studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+  const check = time && time.endTime > new Date().getTime();
+  const isCheck =
+    studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+
+  const dataNarrow = listNarrow.filter(
+    (item) => item.id_majors._id === studentById?.majors?._id
+  );
+
   return (
     <>
       <Spin spinning={spin}>
@@ -172,129 +195,266 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
           name="register"
           onFinish={onFinish}
           initialValues={{
-            residence: ['zhejiang', 'hangzhou', 'xihu'],
-            prefix: '86',
+            residence: ["zhejiang", "hangzhou", "xihu"],
+            prefix: "86",
           }}
+          fields={[
+            {
+              name: ["support"],
+              value: value,
+            },
+          ]}
           scrollToFirstError
         >
-          {check ? (
-            <>{isCheck ? <CountDownCustorm time={time} /> : ''}</>
-          ) : (
-            <p style={{ marginBottom: '16px' }}>
-              Thời gian đăng ký form chưa được mở, sinh viên vui lòng chờ thông báo từ phòng QHDN
-            </p>
-          )}
           {isCheck ? (
             <>
-              <Form.Item name="support" label="Kiểu đăng ký">
-                <Radio.Group onChange={onChange} defaultValue={value}>
-                  <Radio value={1}>Nhà trường hỗ trợ</Radio>
-                  <Radio value={0}>Tự tìm nơi thực tập</Radio>
-                </Radio.Group>
-              </Form.Item>
               {check ? (
-                <>
-                  <Form.Item
-                    // name="user_code"
-                    label="Mã sinh viên"
-                  >
-                    <p className={styles.text_form_label}>{studentById.mssv.toUpperCase()}</p>
-                  </Form.Item>
+                <>{isCheck ? <CountDownCustorm time={time} /> : ""}</>
+              ) : value === 1 ? (
+                <p style={{ marginBottom: "16px" }}>
+                  Thời gian đăng ký form hỗ trợ chưa mở, sinh viên vui lòng chờ
+                  thông báo từ phòng QHDN
+                </p>
+              ) : (
+                <p style={{ marginBottom: "16px" }}>
+                  Thời gian đăng ký form tự tìm nơi thực tập chưa mở, sinh viên
+                  vui lòng chờ thông báo từ phòng QHDN
+                </p>
+              )}
+              <>
+                <Form.Item name="support" label="Kiểu đăng ký">
+                  <Radio.Group onChange={onChange}>
+                    <Radio value={1}>Nhà trường hỗ trợ</Radio>
+                    <Radio value={0}>Tự tìm nơi thực tập</Radio>
+                  </Radio.Group>
+                </Form.Item>
 
-                  <Form.Item label="Họ và Tên">
-                    <p className={styles.text_form_label}>{studentById.name}</p>
-                  </Form.Item>
-                  <Form.Item
-                    name="phone"
-                    label="Số điện thoại"
-                    rules={[
-                      {
-                        required: true,
-                        pattern: new RegExp('(84|0[3|5|7|8|9])+([0-9]{8})'),
-                        message: 'Vui lòng nhập đúng số điện thoại',
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Số điện thoại" />
-                  </Form.Item>
-
-                  <Form.Item
-                    name="address"
-                    label="Địa chỉ"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng nhập địa chỉ',
-                      },
-                    ]}
-                  >
-                    <Input placeholder="Địa chỉ" />
-                  </Form.Item>
-
-                  <Form.Item
-                    name="narrow"
-                    label="Chuyên ngành"
-                    rules={[{ required: true, message: 'Vui lòng chọn chuyên ngành' }]}
-                  >
-                    <Select
-                      placeholder="Chọn chuyên ngành"
-                      style={{
-                        width: '50%',
-                        marginLeft: '20px',
-                      }}
+                {check ? (
+                  <>
+                    <Form.Item
+                      // name="user_code"
+                      label="Mã sinh viên"
                     >
-                      {listNarrow
-                        .filter((i) => i.id_majors._id === studentById.majors._id)
-                        .map((i, k) => (
-                          <Option key={k} value={i._id}>
-                            {i.name}
-                          </Option>
-                        ))}
-                    </Select>
-                  </Form.Item>
+                      <p className={styles.text_form_label}>
+                        {studentById.mssv.toUpperCase()}
+                      </p>
+                    </Form.Item>
 
-                  {value === 1 && (
-                    <Form.Item name="business" label="Đơn vị thực tập" rules={[{ required: true }]}>
+                    <Form.Item label="Họ và Tên">
+                      <p className={styles.text_form_label}>
+                        {studentById.name}
+                      </p>
+                    </Form.Item>
+                    <Form.Item
+                      name="phone"
+                      label="Số điện thoại"
+                      rules={[
+                        {
+                          required: true,
+                          pattern: new RegExp("(84|0[3|5|7|8|9])+([0-9]{8})"),
+                          message: "Vui lòng nhập đúng số điện thoại",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Số điện thoại" />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="address"
+                      label="Địa chỉ"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập địa chỉ",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Địa chỉ" />
+                    </Form.Item>
+
+                    <Form.Item
+                      name="narrow"
+                      label="Chuyên ngành"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng chọn chuyên ngành",
+                        },
+                      ]}
+                    >
                       <Select
+                        placeholder="Chọn chuyên ngành"
                         style={{
-                          width: '50%',
-                          marginLeft: '20px',
+                          width: "50%",
+                          marginLeft: "20px",
                         }}
-                        placeholder="Chọn doanh nghiệp"
                       >
-                        {list?.map((item) => (
-                          <Option key={item._id} value={item._id}>
-                            {item.name + '-' + item.internshipPosition}
-                          </Option>
-                        ))}
+                        {dataNarrow
+                          // .filter((i) => i.id_majors === studentById.majors._id)
+                          .map((i, k) => (
+                            <Option key={k} value={i._id}>
+                              {i.name}
+                            </Option>
+                          ))}
                       </Select>
                     </Form.Item>
-                  )}
-                  <Form.Item
-                    name="dream"
-                    label="Vị trí thực tập"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng nhập địa chỉ',
-                      },
-                    ]}
-                  >
-                    <Input placeholder="VD: Web Back-end, Dựng phim, Thiết kế nội thất" />
-                  </Form.Item>
-                  {value === 1 ? <Support normFile={normFile} /> : <Proactive />}
-                  <Form.Item {...tailFormItemLayout}>
-                    <Button type="primary" htmlType="submit">
-                      {studentById?.statusCheck === 1 ? 'Sửa thông tin' : 'Đăng ký'}
-                    </Button>
-                  </Form.Item>
-                </>
-              ) : (
-                ''
-              )}
+
+                    {value === 1 && (
+                      <Form.Item
+                        name="business"
+                        label="Đơn vị thực tập"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Vui lòng chọn doanh nghiệp",
+                          },
+                        ]}
+                      >
+                        <Select
+                          style={{
+                            width: "50%",
+                            marginLeft: "20px",
+                          }}
+                          placeholder="Chọn doanh nghiệp"
+                        >
+                          {list?.map((item) => (
+                            <Option key={item._id} value={item._id}>
+                              {item.name + "-" + item.internshipPosition}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    )}
+                    <Form.Item
+                      name="dream"
+                      label="Vị trí thực tập"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập địa chỉ",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="VD: Web Back-end, Dựng phim, Thiết kế nội thất" />
+                    </Form.Item>
+                    {value === 1 ? (
+                      <Form.Item
+                        valuePropName="upload"
+                        name="upload"
+                        label="Upload CV (PDF)"
+                      >
+                        <Upload {...props} maxCount={1}>
+                          <Button
+                            style={{
+                              marginLeft: "20px",
+                            }}
+                            icon={<UploadOutlined />}
+                          >
+                            Click to upload
+                          </Button>
+                        </Upload>
+                      </Form.Item>
+                    ) : (
+                      <>
+                        <Form.Item
+                          name="unit"
+                          className={styles.form.input}
+                          label="Đơn vị thực tập"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập đơn vị thực tập",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
+                        </Form.Item>
+                        <Form.Item
+                          name="unitAddress"
+                          label="Địa chỉ thực tập"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập địa chỉ thực tập",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Địa chỉ đơn vị thực tập" />
+                        </Form.Item>
+                        <Form.Item
+                          name="taxCode"
+                          label="Mã số thuế"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập Mã số thuế",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Mã số thuế" />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="position"
+                          label="Chức vụ người tiếp nhận"
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                "Vui lòng nhập chức vụ người tiếp nhận sinh viên",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Chức vụ người tiếp nhận" />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="numberEnterprise"
+                          label="Số điện thoại doanh nghiệp"
+                          rules={[
+                            {
+                              required: true,
+                              message:
+                                "Vui lòng nhập Số điện thoại doanh nghiệp",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Số điện thoại doanh nghiệp(VD:Giám đốc, Leader, Hr)" />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="emailEnterprise"
+                          label="Email người tiếp nhận"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Vui lòng nhập Email người tiếp nhận",
+                            },
+                          ]}
+                        >
+                          <Input placeholder="Email người tiếp nhận" />
+                        </Form.Item>
+                      </>
+                    )}
+                    <Form.Item {...tailFormItemLayout}>
+                      <Button
+                        className={styles.button2}
+                        type="primary"
+                        htmlType="submit"
+                      >
+                        {studentById?.statusCheck === 1
+                          ? "Sửa thông tin"
+                          : "Đăng ký"}
+                      </Button>
+                    </Form.Item>
+                  </>
+                ) : (
+                  ""
+                )}
+              </>
             </>
           ) : (
-            'Đăng ký thông tin thành công'
+            "Đăng ký thông tin thành công"
           )}
         </Form>
       </Spin>
@@ -305,13 +465,20 @@ SupportStudent.propTypes = {
   studentById: object,
   infoUser: object,
   business: object,
-  narrow: array,
+  narrow: object,
 };
 export default connect(
-  ({ auth: { infoUser }, students: { studentById }, business: { listBusiness }, narrow }) => ({
+  ({
+    auth: { infoUser },
+    students: { studentById },
+    business: { listBusiness },
+    narrow,
+    global,
+  }) => ({
     studentById,
     infoUser,
     listBusiness,
     narrow,
-  }),
+    isMobile: global.isMobile,
+  })
 )(SupportStudent);

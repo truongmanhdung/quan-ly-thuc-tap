@@ -50,8 +50,8 @@ const tailFormItemLayout = {
     },
   },
 };
-const Formrp = ({  studentById }) => {
-  const infoUser = getLocal()
+const Formrp = ({ studentById }) => {
+  const infoUser = getLocal();
   const { time } = useSelector((state) => state.time.formTime);
   const [spin, setSpin] = useState(false);
   const [startDate, setStartDate] = useState();
@@ -65,9 +65,11 @@ const Formrp = ({  studentById }) => {
     setStartDate(date._d);
   };
   useEffect(() => {
-    dispatch(getTimeForm(2));
+    dispatch(getTimeForm({
+      typeNumber: 2,
+      semester_id: infoUser.student.smester_id
+    }));
     dispatch(getStudentId(infoUser.student.mssv));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -115,21 +117,21 @@ const Formrp = ({  studentById }) => {
     };
   }
 
-  const normFile = (e) => {
-    const valueFile = e.file.originFileObj.type;
-    const isFile = valueFile;
+  const props = {
+    beforeUpload: (file) => {
+      const isFile =
+        file.type === "application/pdf" ||
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg";
+      if (!isFile) {
+        message.error(`${file.name} không phải là file PDF hoặc ảnh`);
+      }
 
-    if (
-      isFile === "image/jpeg" ||
-      isFile === "image/jpg" ||
-      isFile === "image/png" ||
-      isFile === "application/pdf"
-    ) {
-      setFile(e.file.originFileObj);
-    } else {
-      form.resetFields();
-      message.error("Vui lòng nhập file đúng định dạng PNG-JPEG-JPG");
-    }
+      return isFile || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      setFile(info.file.originFileObj);
+    },
   };
 
   const onFinish = async (values) => {
@@ -141,6 +143,7 @@ const Formrp = ({  studentById }) => {
         email: email,
         typeNumber: time.typeNumber,
         internshipTime: startDate,
+        semester_id: infoUser.student.smester_id,
       };
       await guardarArchivo(file, newData);
     } catch (error) {
@@ -148,7 +151,7 @@ const Formrp = ({  studentById }) => {
       message.error(dataErr.message);
     }
   };
-  const check = time.endTime > new Date().getTime();
+  const check = time && time.endTime > new Date().getTime();
   const isCheck =
     (studentById && studentById.statusCheck === 2) ||
     studentById.statusCheck === 5;
@@ -189,19 +192,6 @@ const Formrp = ({  studentById }) => {
                     <Input placeholder="Tên doanh nghiệp" />
                   </Form.Item>
                 )}
-                {/* <Form.Item
-              name="taxCode"
-              label="Mã số thuế"
-              rules={[
-                {
-                  required: true,
-                  pattern: new RegExp("^[0-9]+$"),
-                  message: "Vui lòng nhập mã số thuế của doanh nghiệp",
-                },
-              ]}
-            >
-              <Input placeholder="Nhập mã số thuế doanh nghiệp" />
-            </Form.Item> */}
 
                 <Form.Item
                   // name="user_code"
@@ -230,10 +220,9 @@ const Formrp = ({  studentById }) => {
                 <Form.Item
                   name="upload"
                   label="Upload biên bản (Image or PDF)"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
+                  valuePropName="upload"
                 >
-                  <Upload name="logo" action="/upload.do" listType="picture">
+                  <Upload {...props} maxCount={1}>
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>

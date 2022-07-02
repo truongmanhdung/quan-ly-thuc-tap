@@ -58,7 +58,10 @@ const ReportForm = ({ infoUser, studentById }) => {
   const [endDate, setEndDate] = useState();
   const [form] = Form.useForm();
   useEffect(() => {
-    dispatch(getTimeForm(3));
+    dispatch(getTimeForm({
+      typeNumber: 3,
+      semester_id: infoUser.student.smester_id
+    }));
     dispatch(getStudentId(infoUser.student.mssv));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
@@ -112,20 +115,21 @@ const ReportForm = ({ infoUser, studentById }) => {
         }); // Or Error in console
     };
   }
-  const normFile = (e) => {
-    const valueFile = e.file.originFileObj.type;
-    const isFile = valueFile;
+  const props = {
+    beforeUpload: (file) => {
+      const isFile =
+        file.type === "application/pdf" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      if (!isFile) {
+        message.error(`${file.name} không phải là file PDF hoặc Docx`);
+      }
 
-    if (
-      isFile === "application/pdf" ||
-      isFile ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ) {
-      setFile(e.file.originFileObj);
-    } else {
-      form.resetFields();
-      message.error("Vui lòng nhập file đúng định dạng PDF hoặc .docx");
-    }
+      return isFile || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      setFile(info.file.originFileObj);
+    },
   };
 
   const onFinish = async (values) => {
@@ -139,6 +143,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         business: studentById.business,
         attitudePoint: values.attitudePoint,
         resultScore: values.resultScore,
+        semester_id: infoUser.student.smester_id,
       };
       await guardarArchivo(file, newData);
     } catch (error) {
@@ -148,7 +153,7 @@ const ReportForm = ({ infoUser, studentById }) => {
     }
   };
 
-  const check = time.endTime > new Date().getTime();
+  const check = time && time.endTime > new Date().getTime();
   const isCheck =
     studentById.statusCheck === 6 ||
     studentById.statusCheck === 8 ||
@@ -266,10 +271,9 @@ const ReportForm = ({ infoUser, studentById }) => {
                 <Form.Item
                   name="upload"
                   label="Upload báo cáo (Docx hoặc PDF)"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
+                  valuePropName="upload"
                 >
-                  <Upload name="logo" action="/upload.do" listType="picture">
+                  <Upload {...props} maxCount={1}>
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
