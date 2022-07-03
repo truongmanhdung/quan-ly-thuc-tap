@@ -3,6 +3,7 @@ import { Button, Table, message, Space, Form, Drawer, DatePicker, Input } from '
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
+import { toastr } from 'react-redux-toastr';
 import { getSemesters, insertSemester, updateSemester } from '../../features/semesters/semestersSlice';
 const { RangePicker } = DatePicker;
 
@@ -67,18 +68,29 @@ const FormSemester = ({
     };
     try {
       if (text === "update") {
-    
-        dispatch(updateSemester(data))
-        message.success("Thành công") 
+        dispatch(updateSemester(data)).then((res) => {
+          if(res.error){
+            message.error("Sửa kì thất bại");
+          }else{
+            message.success("Thành công") 
+            setHideForm(false)
+          }
+        })
       } else {
-        dispatch(insertSemester(data))
-        message.success("Thành công")
+        dispatch(insertSemester(data)).then((res) => {
+          if(res.error){
+            message.error("Tạo kì thất bại");
+          }else{
+            message.success("Thành công") 
+            setHideForm(false)
+          }
+        })
       }
     } catch (error) {
       const dataErr = error.response.data.message;
       message.error(dataErr);
     }
-    setHideForm(false);
+   
   };
 
   // sửa kỳ
@@ -114,6 +126,20 @@ const FormSemester = ({
     
   }
 
+  const getMaxTimeRequest = () => {
+    if(listSemesters && listSemesters.length > 0){
+      const dataTest = listSemesters;
+      let max = new Date().getTime()
+      dataTest.forEach((item) => {
+        const endTime = new Date(item.end_time).getTime();
+        if(endTime > max){
+          max = endTime;
+        }
+      })
+      return max;
+    }
+  }
+
   return (
     <>
       <div className="status">
@@ -131,14 +157,6 @@ const FormSemester = ({
           </div>
         </div>
         <div className="filter" style={{ marginTop: '20px' }}>
-          {/* <FSemester
-              onFinish={onFinish}
-              dataEdit={dataEdit}
-              editStatusButton={editStatusButton}
-              text={text}
-              forms={form}
-            /> */}
-
           <Drawer
             destroyOnClose
             title={'Tạo Kỳ học'}
@@ -181,7 +199,7 @@ const FormSemester = ({
                       return (
                         current &&
                         new Date(current).getTime() <
-                          new Date(listSemesters[listSemesters.length - 1]?.end_time).getTime()
+                          ( getMaxTimeRequest() + 8640000 )
                       );
                     }}
                   />

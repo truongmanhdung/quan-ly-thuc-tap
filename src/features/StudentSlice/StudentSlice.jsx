@@ -37,7 +37,9 @@ export const getStudentId = createAsyncThunk("student/getById", async (id) => {
 const studentSlice = createSlice({
   name: "student",
   initialState: {
-    listStudent: {},
+    listStudent: {
+      list: []
+    },
     listAllStudent: {},
     loading: false,
     listSmester: [],
@@ -63,7 +65,14 @@ const studentSlice = createSlice({
     });
     builder.addCase(getStudent.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.listStudent = payload;
+      if(payload.list){
+        state.listStudent = payload;
+      }else{
+        state.listStudent = {
+          list: [],
+          total: 0
+        }
+      }
     });
     builder.addCase(getStudent.pending, (state, action) => {
       state.loading = true;

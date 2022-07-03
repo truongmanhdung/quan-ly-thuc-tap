@@ -65,10 +65,12 @@ const Formrp = ({ studentById }) => {
     setStartDate(date._d);
   };
   useEffect(() => {
-    dispatch(getTimeForm({
-      typeNumber: 2,
-      semester_id: infoUser.student.smester_id
-    }));
+    dispatch(
+      getTimeForm({
+        typeNumber: 2,
+        semester_id: infoUser.student.smester_id,
+      })
+    );
     dispatch(getStudentId(infoUser.student.mssv));
   }, [file]);
   function guardarArchivo(files, data) {
@@ -134,30 +136,43 @@ const Formrp = ({ studentById }) => {
     },
   };
 
-  const onFinish = async (values) => {
-    setSpin(true);
-    try {
-      const newData = {
-        ...values,
-        mssv: mssv,
-        email: email,
-        typeNumber: time.typeNumber,
-        internshipTime: startDate,
-        semester_id: infoUser.student.smester_id,
-      };
-      await guardarArchivo(file, newData);
-    } catch (error) {
-      const dataErr = await error.response.data;
-      message.error(dataErr.message);
+  
+  let timeCheck = time;
+  if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
+    const checkTimeStudent = studentById.listTimeForm.find(
+      (item) => item.typeNumber === 2
+    );
+    if (checkTimeStudent) {
+      timeCheck = checkTimeStudent;
     }
-  };
-  const check = time && time.endTime > new Date().getTime();
+  }
+  const check =
+    timeCheck &&
+    timeCheck.endTime > new Date().getTime() &&
+    timeCheck.startTime < new Date().getTime();
   const isCheck =
     (studentById && studentById.statusCheck === 2) ||
     studentById.statusCheck === 5;
   const nameCompany =
     studentById.support === 0 ? studentById.nameCompany : studentById.business;
-
+    const onFinish = async (values) => {
+      setSpin(true);
+      try {
+        const newData = {
+          ...values,
+          mssv: mssv,
+          email: email,
+          typeNumber: time.typeNumber,
+          internshipTime: startDate,
+          semester_id: infoUser.student.smester_id,
+          checkTime: check,
+        };
+        await guardarArchivo(file, newData);
+      } catch (error) {
+        const dataErr = await error.response.data;
+        message.error(dataErr.message);
+      }
+    };
   return (
     <>
       {check ? (
@@ -240,7 +255,7 @@ const Formrp = ({ studentById }) => {
           "Bạn đã nộp biên bản thành công."
         )
       ) : (
-        <p>Bạn phải nộp cv rồi mới đến biên bản</p>
+        <p>Chưa đến thời gian nộp biên bản</p>
       )}
     </>
   );
