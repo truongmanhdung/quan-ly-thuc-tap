@@ -144,6 +144,35 @@ const SupportStudent = ({
     },
   };
 
+  
+
+  const onChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  let timeCheck = time;
+  if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
+    const checkTimeStudent = studentById.listTimeForm.find(
+      (item) => item.typeNumber === value
+    );
+    if (checkTimeStudent) {
+      timeCheck = checkTimeStudent;
+    }
+  }
+
+  
+
+  const check =
+    timeCheck &&
+    timeCheck.endTime > new Date().getTime() &&
+    timeCheck.startTime < new Date().getTime();
+  const isCheck =
+    studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+
+  const dataNarrow = listNarrow.filter(
+    (item) => item.id_majors._id === studentById?.majors?._id
+  );
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -157,6 +186,7 @@ const SupportStudent = ({
         email: infoUser?.student?.email,
         typeNumber: supportForm,
         semester_id: infoUser.student.smester_id,
+        checkTime: check,
         ///dispatch Redux
       };
       if (value === 0) {
@@ -174,31 +204,6 @@ const SupportStudent = ({
       setSpin(false);
     }
   };
-
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
-
-  let timeCheck = time;
-  if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
-    const checkTimeStudent = studentById.listTimeForm.find(
-      (item) => item.typeNumber === value
-    );
-    if (checkTimeStudent) {
-      timeCheck = checkTimeStudent;
-    }
-  }
-
-  const check =
-    timeCheck &&
-    timeCheck.endTime > new Date().getTime() &&
-    timeCheck.startTime < new Date().getTime();
-  const isCheck =
-    studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
-
-  const dataNarrow = listNarrow.filter(
-    (item) => item.id_majors._id === studentById?.majors?._id
-  );
 
   return (
     <>
