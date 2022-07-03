@@ -58,10 +58,12 @@ const ReportForm = ({ infoUser, studentById }) => {
   const [endDate, setEndDate] = useState();
   const [form] = Form.useForm();
   useEffect(() => {
-    dispatch(getTimeForm({
-      typeNumber: 3,
-      semester_id: infoUser.student.smester_id
-    }));
+    dispatch(
+      getTimeForm({
+        typeNumber: 3,
+        semester_id: infoUser.student.smester_id,
+      })
+    );
     dispatch(getStudentId(infoUser.student.mssv));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
@@ -132,6 +134,25 @@ const ReportForm = ({ infoUser, studentById }) => {
     },
   };
 
+  let timeCheck = time;
+  if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
+    const checkTimeStudent = studentById.listTimeForm.find(
+      (item) => item.typeNumber === 3
+    );
+    if (checkTimeStudent) {
+      timeCheck = checkTimeStudent;
+    }
+  }
+
+  const check =
+    timeCheck &&
+    timeCheck.endTime > new Date().getTime() &&
+    timeCheck.startTime < new Date().getTime();
+  const isCheck =
+    studentById.statusCheck === 6 ||
+    studentById.statusCheck === 8 ||
+    studentById.status === 5;
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -144,6 +165,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         attitudePoint: values.attitudePoint,
         resultScore: values.resultScore,
         semester_id: infoUser.student.smester_id,
+        checkTime: check,
       };
       await guardarArchivo(file, newData);
     } catch (error) {
@@ -152,12 +174,6 @@ const ReportForm = ({ infoUser, studentById }) => {
       message.error(dataErr.message);
     }
   };
-
-  const check = time && time.endTime > new Date().getTime();
-  const isCheck =
-    studentById.statusCheck === 6 ||
-    studentById.statusCheck === 8 ||
-    studentById.status === 52;
   const dateFormat = "YYYY-MM-DD";
   function disabledDate(current) {
     // Can not select days before today and today
