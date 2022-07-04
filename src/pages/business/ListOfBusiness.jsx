@@ -221,7 +221,7 @@ const ListOfBusiness = ({
 
       <div>
         <Drawer
-          title="Thêm Sinh"
+          title="Thêm Doanh Nghiệp"
           placement="left"
           onClose={closeVisible}
           visible={visible}
@@ -255,10 +255,9 @@ const ListOfBusiness = ({
             </Col>
           </Row>
 
-          <Row>
+          <Row style={{alignItems:'center'}}>
             <Col span={6}>
-              {" "}
-              <p>Ngành:</p>{" "}
+              <p>Ngành:</p>
             </Col>
             <Col span={18}>
               <Select

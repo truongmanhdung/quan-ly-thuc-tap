@@ -817,7 +817,7 @@ const Status = ({
 
       <div>
         <Drawer
-          title="Thêm Sinh"
+          title="Thêm Sinh Viên"
           placement="left"
           onClose={closeVisible}
           visible={visible}
