@@ -3,7 +3,6 @@ import { Button, Table, message, Space, Form, Drawer, DatePicker, Input } from '
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { toastr } from 'react-redux-toastr';
 import { getSemesters, insertSemester, updateSemester } from '../../features/semesters/semestersSlice';
 const { RangePicker } = DatePicker;
 
