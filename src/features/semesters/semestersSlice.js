@@ -46,6 +46,7 @@ const semesterSlice = createSlice({
     });
     builder.addCase(getSemesters.rejected, (state) => {
       state.mesg =  "Thất bại";
+      state.loading = false;
     });
     builder.addCase(insertSemester.pending, (state) => {
       state.loading = true;
@@ -57,6 +58,7 @@ const semesterSlice = createSlice({
     });
     builder.addCase(insertSemester.rejected, (state) => {
       state.mesg = "Thất bại";
+      state.loading = false;
     });
 
 
@@ -73,6 +75,7 @@ const semesterSlice = createSlice({
     });
     builder.addCase(updateSemester.rejected, (state) => {
       state.mesg = "Thất bại";
+      state.loading = false;
     });
   },
 });
