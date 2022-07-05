@@ -255,7 +255,7 @@ const ListOfBusiness = ({
             </Col>
           </Row>
 
-          <Row style={{alignItems:'center'}}>
+          <Row style={{alignItems:'center',marginTop:20}}>
             <Col span={6}>
               <p>Ngành:</p>
             </Col>
@@ -265,7 +265,6 @@ const ListOfBusiness = ({
                 onChange={(val) => setMajorImport(val)}
                 style={{
                   width: "100%",
-                  marginTop: 20,
                 }}
                 placeholder="Chọn ngành"
               >
@@ -279,11 +278,7 @@ const ListOfBusiness = ({
             </Col>
           </Row>
           <div
-            style={{
-              width: "50%",
-              margin: "auto",
-              marginTop: 20,
-            }}
+            className={styles.boxTitle}
           >
             <UpFile
               keys="business"
