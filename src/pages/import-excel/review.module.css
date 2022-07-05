@@ -15,3 +15,14 @@
 .status{
     width: 100%;
 }
+.upFile{
+    width:78%;
+    margin-top:20px;
+    margin-left:25%;
+}
+.upFile button{
+    width:100%;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
