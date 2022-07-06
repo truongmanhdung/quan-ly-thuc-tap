@@ -30,6 +30,14 @@ const authSlice = createSlice({
     token: undefined,
   },
 
+  reducers: {
+    loginSuccess: (state, action) => {
+      console.log("action", action);
+      state.token = action.payload.accessToken;
+      state.infoUser = action.payload;
+    },
+  },
+
   extraReducers: (builder) => {
     builder.addCase(loginGoogle.pending, (state) => {
       state.loading = true;
@@ -56,5 +64,7 @@ const authSlice = createSlice({
     });
   },
 });
+
+export const { loginSuccess } = authSlice.actions;
 
 export default authSlice.reducer;

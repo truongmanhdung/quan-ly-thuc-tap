@@ -29,8 +29,8 @@ export const getSmester = createAsyncThunk(
   }
 );
 
-export const getStudentId = createAsyncThunk("student/getById", async (id) => {
-  const { data } = await StudentAPI.get(id);
+export const getStudentId = createAsyncThunk("student/getById", async (inforUser) => {
+  const { data } = await StudentAPI.get(inforUser);
   return data;
 });
 
