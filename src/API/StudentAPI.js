@@ -8,9 +8,14 @@ const StudentAPI = {
       .then((res) => res)
       .catch((err) => err);
   },
-  get(id) {
-    const url = `/student/${id}`;
-    return axiosClient.get(url);
+  get(infoUser) {
+    const url = `/student/${infoUser.student.mssv}`;
+    return axiosClient.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${infoUser.accessToken}`,
+      }
+    });
   },
   getStudentById(id) {
     const url = `/student/manager/${id}`;

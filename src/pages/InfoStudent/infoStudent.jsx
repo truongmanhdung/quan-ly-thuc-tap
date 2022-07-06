@@ -1,11 +1,13 @@
 import { Col, Row, Table } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { bool, object } from "prop-types";
+import { stringify } from "qs";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { axiosClient } from "../../API/Link";
+import { getBusiness, getBusinessStudent } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
-import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import { getTimeForm, setTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { optionStatus } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const columns = [
@@ -48,13 +50,41 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
     majors: infoUser.student.majors,
   });
   const [dateNow] = useState(Date.now());
-  const [value] = useState(4);
   const { time } = useSelector((state) => state.time.formTime);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getTimeForm(value));
-    dispatch(getStudentId(infoUser.student.mssv));
-    dispatch(getBusiness(page));
+    const string = `typeNumber=${4}&semester_id=${infoUser.student.smester_id}`;
+    const url = `/settime/find-one?${string}`;
+    axiosClient
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${infoUser.accessToken}`,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(setTimeForm(res.data.time));
+        }
+      });
+  }, []);
+
+  useEffect(() => {
+    dispatch(getStudentId(infoUser));
+  }, []);
+  useEffect(() => {
+    const url = `/business?${stringify(page)}`
+    axiosClient.get(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${infoUser.accessToken}`, 
+      }
+    }).then((res) => {
+      if(res.status === 200){
+        dispatch(getBusinessStudent(res.data))
+        // console.log(res);
+      }
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const isRegister = studentById?.support;

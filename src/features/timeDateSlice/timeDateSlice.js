@@ -21,7 +21,7 @@ export const getTimeForm = createAsyncThunk(
     return await data.time;
   }
 );
-const userSlice = createSlice({
+const timeDateSlice = createSlice({
   name: "time",
   initialState: {
     formTime: {
@@ -30,7 +30,12 @@ const userSlice = createSlice({
     },
     loading: false,
   },
-  reducers: {},
+  reducers: {
+    setTimeForm: (state, action) =>{
+      state.formTime.time = action.payload;
+      state.loading = false;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(getListTime.fulfilled, (state, action) => {
       state.formTime.times = action.payload;
@@ -52,4 +57,6 @@ const userSlice = createSlice({
     });
   },
 });
-export default userSlice.reducer;
+
+export const {setTimeForm} = timeDateSlice.actions
+export default timeDateSlice.reducer;
