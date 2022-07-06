@@ -21,6 +21,12 @@ const businessSlice = createSlice({
     loading: false,
     error: "",
   },
+  reducers: {
+    getBusinessStudent: (state, action) => {
+      // console.log(action.payload);
+      state.listBusiness = action.payload
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(getBusiness.fulfilled, (state, action) => {
       state.loading = false;
@@ -46,4 +52,6 @@ const businessSlice = createSlice({
     });
   },
 });
+
+export const { getBusinessStudent } = businessSlice.actions
 export default businessSlice.reducer;

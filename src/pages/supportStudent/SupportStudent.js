@@ -165,9 +165,12 @@ const SupportStudent = ({
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
 
-  const dataNarrow = listNarrow.filter(
-    (item) => item.id_majors._id === studentById?.majors?._id
-  );
+  const dataNarrow =
+    studentById && studentById?.majors && studentById?.majors?._id && listNarrow.length > 0
+      ? listNarrow.filter(
+          (item) => item?.id_majors?._id === studentById?.majors?._id
+        )
+      : [];
 
   const onFinish = async (values) => {
     setSpin(true);
