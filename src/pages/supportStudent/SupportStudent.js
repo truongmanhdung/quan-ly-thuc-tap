@@ -181,6 +181,14 @@ const SupportStudent = ({
   const onFinish = async (values) => {
     setSpin(true);
     try {
+      if (
+        (value === 1 && values.upload === undefined) ||
+        values.upload === null
+      ) {
+        message.error("Vui lòng tải CV định dạng PDF của bạn lên FORM đăng ký");
+        setSpin(false);
+        return;
+      }
       const data = {
         ...values,
         support: value,
@@ -275,6 +283,8 @@ const SupportStudent = ({
                       rules={[
                         {
                           required: true,
+                          min: 10,
+                          max: 13,
                           pattern: new RegExp("(84|0[3|5|7|8|9])+([0-9]{8})"),
                           message: "Vui lòng nhập đúng số điện thoại",
                         },

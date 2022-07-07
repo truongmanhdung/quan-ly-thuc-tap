@@ -250,7 +250,7 @@ const Formrp = ({ studentById }) => {
             </Spin>
           </>
         ) : !studentById.form ? (
-          "Bạn phải đăng ký form trước trước"
+          "Bạn phải nộp thành công CV trước"
         ) : (
           "Bạn đã nộp biên bản thành công."
         )
