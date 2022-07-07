@@ -71,8 +71,8 @@ const Formrp = ({ studentById }) => {
         semester_id: infoUser.student.smester_id,
       })
     );
-    dispatch(getStudentId(infoUser.student.mssv));
-  }, [file]);
+    dispatch(getStudentId(infoUser));
+  }, []);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec

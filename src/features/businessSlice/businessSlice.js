@@ -23,7 +23,6 @@ const businessSlice = createSlice({
   },
   reducers: {
     getBusinessStudent: (state, action) => {
-      // console.log(action.payload);
       state.listBusiness = action.payload
     }
   },

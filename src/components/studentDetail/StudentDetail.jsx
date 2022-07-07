@@ -101,7 +101,7 @@ const StudentDetail = (props) => {
     } else if (status === 2) {
       return (
         <span className="status-fail" style={{ color: "red" }}>
-          Nhận CV
+          {student.support === 0 ? " Chờ nộp biên bản" : " Nhận CV"}
         </span>
       );
     } else if (status === 3) {
@@ -321,17 +321,18 @@ const StudentDetail = (props) => {
       student.CV &&
       !student.form &&
       !student.report &&
-      student.statusCheck !== 3
+      student.statusCheck !== 3 &&
+      student.support === 1
     ) {
       setListOption(statusConfigCV);
     } else if (
-      student.CV &&
+      (student.CV || (!student.CV && student.support === 0)) &&
       student.form &&
       !student.report &&
-      student.statusCheck !== 3
+      student.statusCheck !== 3 && student.statusCheck !== 6
     ) {
       setListOption(statusConfigForm);
-    } else if (student.CV && student.form && student.report) {
+    } else if (student.CV && student.form && student.report && student.statusCheck !== 6) {
       setListOption(statusConfigReport);
     } else {
       setListOption([]);
@@ -625,11 +626,10 @@ const StudentDetail = (props) => {
                 </Col>
                 <Col xs={{ span: 24 }} md={{ span: 12 }} className="d-flex">
                   <h6>Phân loại: </h6>
-                  {student.support ? (
+                  {student.support !== null ? (
                     <span className="ms-2">
-                      {student.support === 1
-                        ? "Nhờ nhà trường hỗ trợ"
-                        : "Tự tìm"}
+                      {student.support === 1 && "Nhờ nhà trường hỗ trợ"}
+                      {student.support === 0 && "Tự tìm nơi thực tập"}
                     </span>
                   ) : (
                     <span className="ms-2">Chưa nhập form</span>
@@ -828,7 +828,9 @@ const StudentDetail = (props) => {
                       placeholder="Nhập text note"
                     />
                   )}
-                  {listOption && listOption.length > 0 ? (
+                  {listOption &&
+                  listOption.length > 0 &&
+                  student.statusCheck !== 5 && student.statusCheck !== 8 && student.statusCheck !== 1 ? (
                     submitStatus ? (
                       <Button type="primary" onClick={onUpdateStatus}>
                         Thực hiện

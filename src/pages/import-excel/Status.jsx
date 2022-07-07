@@ -4,10 +4,12 @@ import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
 import { omit } from "lodash";
 import { array, object } from "prop-types";
-import React, { useEffect, useState } from "react";
+import { stringify } from "qs";
+import { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
+import { axiosClient } from "../../API/Link";
 import SemestersAPI from "../../API/SemestersAPI";
 import style from "../../common/styles/status.module.css";
 import UpFile from "../../components/ExcelDocument/UpFile";
@@ -18,6 +20,7 @@ import { updateReviewerListStudent } from "../../features/reviewerStudent/review
 import { getSemesters } from "../../features/semesters/semestersSlice";
 import {
   getAllStudent,
+  getListStudentReducer,
   getStudent,
 } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
@@ -35,6 +38,7 @@ const Status = ({
   isMobile,
 }) => {
   const infoUser = getLocal();
+
   const [studentdetail, setStudentDetail] = useState("");
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -66,23 +70,50 @@ const Status = ({
 
   const getListStudent = async () => {
     if (page?.smester_id && page?.smester_id.length > 0) {
-      dispatch(
-        getStudent({
-          ...page,
-          ...filter,
+      const url = `/student?${stringify({
+        ...page,
+        ...filter,
+      })}`;
+      axiosClient
+        .get(url, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${infoUser.accessToken}`,
+          },
         })
-      );
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(getListStudentReducer(res.data));
+          }
+        })
+        .catch((err) => {
+          navigate("/login");
+        });
     } else {
+     
       SemestersAPI.getDefaultSemester()
         .then((res) => {
           if (res.status === 200) {
-            dispatch(
-              getStudent({
-                ...page,
-                ...filter,
-                smester_id: res.data._id,
+            const url = `/student?${stringify({
+              ...page,
+              ...filter,
+              smester_id: res.data._id,
+            })}`;
+            axiosClient
+              .get(url, {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${infoUser.accessToken}`,
+                },
               })
-            );
+              .then((res) => {
+                if (res.status === 200) {
+                  dispatch(getListStudentReducer(res.data));
+                }
+              })
+              .catch((err) => {
+                navigate("/login");
+              });
           }
         })
         .catch(() => {});
@@ -112,10 +143,12 @@ const Status = ({
   };
   const getListAllStudent = listAllStudent?.list;
   useEffect(() => {
-    getListStudent();
     getStudentExportExcel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, dispatch]);
+  }, []);
+  useEffect(() => {
+    getListStudent();
+  }, [page]);
   useEffect(() => {
     dispatch(getSemesters());
     dispatch(getListMajor());
@@ -422,7 +455,6 @@ const Status = ({
                 marginTop: 20,
               }}
             >
-
               <Col span={12}>
                 <div className={style.div}>
                   <Select
@@ -432,7 +464,8 @@ const Status = ({
                     placeholder="Lọc theo ngành"
                     defaultValue=""
                   >
-                    <Option value="">Tất cả</Option><Option value="">Tất cả</Option>
+                    <Option value="">Tất cả</Option>
+                    <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
@@ -470,7 +503,6 @@ const Status = ({
                 marginTop: 20,
               }}
             >
-              
               <Col span={12}>
                 <div className={style.div}>
                   <Input
@@ -481,7 +513,6 @@ const Status = ({
                     }
                   />
                 </div>
-                
               </Col>
               <Col span={12}>
                 <Button
@@ -500,7 +531,7 @@ const Status = ({
                   <Button
                     style={{
                       width: "95%",
-                      marginTop: '10px'
+                      marginTop: "10px",
                     }}
                     type="primary"
                     onClick={() => comfirm()}
@@ -546,9 +577,7 @@ const Status = ({
               style={{
                 marginTop: 20,
               }}
-            >
-              
-            </Row>
+            ></Row>
           </>
         ) : (
           <Row>

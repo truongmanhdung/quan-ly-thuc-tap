@@ -1,9 +1,10 @@
-import { Col, Row, Table } from "antd";
+import { Col, message, Row, Table } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { bool, object } from "prop-types";
 import { stringify } from "qs";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { axiosClient } from "../../API/Link";
 import { getBusiness, getBusinessStudent } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
@@ -42,6 +43,7 @@ const columns = [
 ];
 function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
   const infoUser = getLocal();
+  const navigate = useNavigate()
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
@@ -66,6 +68,11 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
         if (res.status === 200) {
           dispatch(setTimeForm(res.data.time));
         }
+      }).catch((err) => {
+        if(err.response.status === 401){
+          message.error(err.response.data.msg)
+          navigate('/login')
+        }
       });
   }, []);
 
@@ -82,9 +89,15 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
     }).then((res) => {
       if(res.status === 200){
         dispatch(getBusinessStudent(res.data))
-        // console.log(res);
       }
-    })
+    }).catch((err) => {
+      if(err.response.status === 401){
+        message.error(err.response.data.msg)
+        navigate('/login')
+      }else{
+        message.error(err.response.data.msg)
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const isRegister = studentById?.support;

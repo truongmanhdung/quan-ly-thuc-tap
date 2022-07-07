@@ -64,9 +64,9 @@ const ReportForm = ({ infoUser, studentById }) => {
         semester_id: infoUser.student.smester_id,
       })
     );
-    dispatch(getStudentId(infoUser.student.mssv));
+    dispatch(getStudentId(infoUser));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file]);
+  }, []);
   const lForm = studentById.CV;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {

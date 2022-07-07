@@ -117,6 +117,9 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       title: "Chuyên ngành",
       dataIndex: "majors",
       width: 100,
+      render: (val, record) => {
+        return record.majors?.name;
+      },
     },
     {
       title: "Tên công ty",
