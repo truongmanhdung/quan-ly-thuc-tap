@@ -536,7 +536,7 @@ const Reviewform = ({
                           className="upload-status"
                           style={
                             window.innerWidth > 1024
-                              ? { width: "100%", margin: "10px" }
+                              ? { width: "100%", margin: "10px", marginLeft: "0" }
                               : { width: "100%", margin: "10px 0" }
                           }
                           onChange={(e) => selectStatus(e)}
