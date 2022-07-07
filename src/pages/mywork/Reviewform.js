@@ -23,7 +23,7 @@ const Reviewform = ({
   listStudentAssReviewer: { total, list },
   loading,
   isMobile,
-  listMajors
+  listMajors,
 }) => {
   const dispatch = useDispatch();
   const [status, setStatus] = useState({});
@@ -48,27 +48,26 @@ const Reviewform = ({
 
   const onCloseModal = () => {
     setIsModalVisible(false);
-    getDataReviewForm()
-  }
-
+    getDataReviewForm();
+  };
 
   const getDataReviewForm = () => {
     SemestersAPI.getDefaultSemester()
-    .then((res) => {
-      if (res.status === 200) {
-        const data = {
-          ...page,
-          ...filter,
-          smester_id: res.data._id,
-        };
-        setChooseIdStudent([]);
-        dispatch(listStudentForm(data));
-      }
-    })
-    .catch(() => {});
-  }
+      .then((res) => {
+        if (res.status === 200) {
+          const data = {
+            ...page,
+            ...filter,
+            smester_id: res.data._id,
+          };
+          setChooseIdStudent([]);
+          dispatch(listStudentForm(data));
+        }
+      })
+      .catch(() => {});
+  };
   useEffect(() => {
-    getDataReviewForm()
+    getDataReviewForm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
@@ -80,7 +79,6 @@ const Reviewform = ({
   useEffect(() => {
     dispatch(getListMajor());
   }, [dispatch]);
-
 
   const columns = [
     {
@@ -257,7 +255,7 @@ const Reviewform = ({
     setFiler(newValue);
   };
   const handleSearch = () => {
-    getDataReviewForm()
+    getDataReviewForm();
   };
   const actionOnchange = (value) => {
     switch (value) {
@@ -288,23 +286,19 @@ const Reviewform = ({
   };
   const selectStatus = (value) => {
     setNote(value);
-    if (value === 1) {
-      let id = [];
-      chooseIdStudent
-        .filter((item) => item.support === 1)
-        .map((item) => id.push(item._id));
+    let id = [];
+    chooseIdStudent
+      .filter((item) => item.form !== null)
+      .map((item) => id.push(item._id));
+    if (id.length === chooseIdStudent.length) {
       setStatus({
         listIdStudent: id,
         email: infoUser?.manager?.email,
         status: value,
       });
     } else {
-      setStatus({
-        listIdStudent: listIdStudent,
-        listEmailStudent: listEmailStudent,
-        email: infoUser?.manager?.email,
-        status: value,
-      });
+      message.error("Chưa nộp biên bản");
+      setChooseIdStudent([]);
     }
   };
   const comfirm = () => {
@@ -344,13 +338,13 @@ const Reviewform = ({
                 >
                   <Option value="">Tất cả</Option>
                   {listMajors &&
-                      listMajors.map((item, index) => (
-                        <>
-                          <Option value={item._id} key={index}>
-                            {item.name}
-                          </Option>
-                        </>
-                      ))}
+                    listMajors.map((item, index) => (
+                      <>
+                        <Option value={item._id} key={index}>
+                          {item.name}
+                        </Option>
+                      </>
+                    ))}
                 </Select>
               </div>
             </Col>
@@ -496,13 +490,7 @@ const Reviewform = ({
               </Col>
               <br />
               <br />
-              <Col
-                xs={24}
-                sm={4}
-                md={24}
-                lg={24}
-                xl={16}
-              >
+              <Col xs={24} sm={4} md={24} lg={24} xl={16}>
                 <div>
                   <Button
                     style={{
@@ -718,7 +706,7 @@ export default connect(
     auth: { infoUser },
     reviewer: { listStudentAssReviewer, loading },
     global,
-    major
+    major,
   }) => ({
     listStudentAssReviewer,
     infoUser,

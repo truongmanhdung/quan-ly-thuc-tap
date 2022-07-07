@@ -31,7 +31,7 @@ const timeDateSlice = createSlice({
     loading: false,
   },
   reducers: {
-    setTimeForm: (state, action) =>{
+    setTimeForm: (state, action) => {
       state.formTime.time = action.payload;
       state.loading = false;
     }

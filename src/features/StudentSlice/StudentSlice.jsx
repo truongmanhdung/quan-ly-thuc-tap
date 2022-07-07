@@ -48,9 +48,16 @@ const studentSlice = createSlice({
     error: "",
   },
   reducers: {
-    addStudent(state, action) {
-      state.listStudent.push(action.payload);
-    },
+    getListStudentReducer: (state, action) => {
+      if(action.payload.list){
+        state.listStudent = action.payload; 
+      }else{
+        state.listStudent = {
+          list: [],
+          total: 0
+        }
+      }
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getAllStudent.fulfilled, (state, { payload }) => {
@@ -117,5 +124,5 @@ const studentSlice = createSlice({
     });
   },
 });
-export const { uploadStudent } = studentSlice.actions;
+export const { getListStudentReducer } = studentSlice.actions;
 export default studentSlice.reducer;

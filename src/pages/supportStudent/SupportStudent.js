@@ -68,13 +68,16 @@ const SupportStudent = ({
   const [form] = Form.useForm();
 
   useEffect(() => {
+    dispatch(getStudentId(infoUser));
+  }, []);
+
+  useEffect(() => {
     dispatch(
       getTimeForm({
         typeNumber: value,
         semester_id: infoUser.student.smester_id,
       })
     );
-    dispatch(getStudentId(infoUser.student.mssv));
     dispatch(
       getBusiness({
         campus_id: infoUser.student.campus_id,
@@ -166,7 +169,10 @@ const SupportStudent = ({
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
 
   const dataNarrow =
-    studentById && studentById?.majors && studentById?.majors?._id && listNarrow.length > 0
+    studentById &&
+    studentById?.majors &&
+    studentById?.majors?._id &&
+    listNarrow.length > 0
       ? listNarrow.filter(
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
@@ -175,7 +181,6 @@ const SupportStudent = ({
   const onFinish = async (values) => {
     setSpin(true);
     try {
-      const supportForm = values.support === 0 ? 0 : 1;
       const data = {
         ...values,
         support: value,
@@ -183,7 +188,7 @@ const SupportStudent = ({
         name: studentById?.name,
         user_code: infoUser?.student?.mssv,
         email: infoUser?.student?.email,
-        typeNumber: supportForm,
+        typeNumber: value,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
         ///dispatch Redux
