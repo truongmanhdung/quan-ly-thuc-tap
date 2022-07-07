@@ -311,7 +311,7 @@ const ReportForm = ({ infoUser, studentById }) => {
             </Spin>
           </>
         ) : !studentById.form ? (
-          "Bạn phải nộp biểu mẫu trước"
+          "Bạn phải nộp thành công biên bản trước"
         ) : (
           "Bạn đã nộp báo cáo thành công"
         )
