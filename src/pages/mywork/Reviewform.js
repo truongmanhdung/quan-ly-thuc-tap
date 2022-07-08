@@ -322,7 +322,7 @@ const Reviewform = ({
   return (
     <div className={styles.status}>
       <div className={styles.header_flex}>
-        <h1>Review biên Bản</h1>
+        <h1>Review biên bản</h1>
       </div>
 
       {isMobile ? (
@@ -401,22 +401,19 @@ const Reviewform = ({
       ) : (
         <>
           <div className="filter" style={{ marginTop: "20px" }}>
-            <Row>
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+            <Row  gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "70%", marginRight: "35px" }}>
-                    Ngành:{" "}
-                  </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Ngành:</span>
                   <Select
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "70px",
                     }}
                     defaultValue=""
                     onChange={(val) => handleStandardTableChange("majors", val)}
@@ -434,22 +431,19 @@ const Reviewform = ({
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "65%" }}>Trạng thái:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Trạng thái:</span>
                   <Select
                     className="filter-status"
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "44px",
                     }}
                     defaultValue={11}
                     onChange={(val) =>
@@ -465,21 +459,18 @@ const Reviewform = ({
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "65%" }}>Tìm Kiếm: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Tìm Kiếm: </span>
                   <Input
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "40px",
                     }}
                     placeholder="Tìm kiếm theo mã sinh viên"
                     onChange={(val) =>
@@ -488,23 +479,14 @@ const Reviewform = ({
                   />
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={24} lg={24} xl={16}>
-                <div>
-                  <Button
-                    style={{
-                      marginTop: "10px",
-                      color: "#fff",
-                      background: "#ee4d2d",
-                    }}
-                    onClick={handleSearch}
-                  >
-                    Tìm kiếm
-                  </Button>
-                  {chooseIdStudent.length > 0 && (
-                    <div className="comfirm">
-                      <span style={{ width: "40%" }}>Lựa chọn </span>
+              {chooseIdStudent.length > 0 && (
+                 <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+                    <div  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>
+                      <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Lựa chọn </span>
                       <Select
                         className="comfirm-click"
                         style={{ width: "100%" }}
@@ -524,7 +506,11 @@ const Reviewform = ({
                           className="upload-status"
                           style={
                             window.innerWidth > 1024
-                              ? { width: "100%", margin: "10px", marginLeft: "0" }
+                              ? {
+                                  width: "100%",
+                                  margin: "10px",
+                                  marginLeft: "0",
+                                }
                               : { width: "100%", margin: "10px 0" }
                           }
                           onChange={(e) => selectStatus(e)}
@@ -549,7 +535,24 @@ const Reviewform = ({
                         <Button onClick={() => comfirm()}>Xác nhận</Button>
                       )}
                     </div>
+                    </Col>
                   )}
+              <Col span={24}>
+                <div
+                  style={{
+                    display: "flex",
+                  }}
+                >
+                  <Button
+                    style={{
+                      color: "#fff",
+                      background: "#ee4d2d",
+                      minWidth: "150px",
+                    }}
+                    onClick={handleSearch}
+                  >
+                    Tìm kiếm
+                  </Button>
                 </div>
               </Col>
             </Row>

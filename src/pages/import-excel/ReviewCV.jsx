@@ -481,30 +481,22 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
         </>
       ) : (
         <>
-          <Button
-            variant="warning"
-            style={{ marginRight: 10, height: 36 }}
-            onClick={(e) => exportToCSV(dataExportExcel)}
-          >
-            Export
-          </Button>
           <div className="filter" style={{ marginTop: "20px" }}>
-            <Row>
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "70%", marginRight: "25px" }}>
-                    Ngành:{" "}
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Ngành:
                   </span>
                   <Select
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "70px",
                     }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
@@ -522,23 +514,21 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
-                  
                 >
-                  <span style={{ width: "65%" }}>Trạng thái:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Trạng thái:
+                  </span>
                   <Select
                     className="filter-status"
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "46px",
                     }}
                     onChange={(val) =>
                       handleStandardTableChange("statusCheck", val)
@@ -554,21 +544,20 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "70%" }}>Tìm Kiếm: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Tìm Kiếm:
+                  </span>
                   <Input
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "50px",
                     }}
                     placeholder="Tìm kiếm theo mã sinh viên"
                     onChange={(val) =>
@@ -577,76 +566,92 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   />
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col
-                xs={24}
-                sm={4}
-                md={24}
-                lg={24}
-                xl={12}
-              >
-                <div>
+              {chooseIdStudent.length > 0 && (
+                <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+                  <div  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}>
+                    <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                      Lựa chọn
+                    </span>
+                    <Select
+                      className="comfirm-click"
+                      style={{ width: "100%", marginTop: "10px" }}
+                      onChange={actionOnchange}
+                      placeholder="Chọn"
+                    >
+                      <Option value="assgin" key="1">
+                        Kéo việc
+                      </Option>
+                      <Option value="edit" key="2">
+                        Cập nhật trạng thái
+                      </Option>
+                    </Select>
+
+                    {Object.keys(status).length >= 1 && (
+                      <Select
+                        className="upload-status"
+                        style={{ width: "100%", margin: "10px 0" }}
+                        onChange={(e) => selectStatus(e)}
+                        placeholder="Chọn trạng thái"
+                      >
+                        {statusConfigCV.map((item, index) => (
+                          <Option value={item.value} key={index}>
+                            {item.title}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                    {note === 1 && (
+                      <TextArea
+                        // value={value}
+                        onChange={handleNote}
+                        placeholder="Ghi chú..."
+                        style={{ marginRight: 10 }}
+                        autoSize={{ minRows: 3, maxRows: 5 }}
+                      />
+                    )}
+                    {Object.keys(status).length > 0 && (
+                      <Button
+                        style={{ marginRight: 10 }}
+                        onClick={() => comfirm()}
+                      >
+                        Xác nhận
+                      </Button>
+                    )}
+                  </div>
+                </Col>
+              )}
+              <Col span={24}>
+                <div
+                  style={{
+                    display: "flex",
+                  }}
+                >
                   <Button
+                    variant="warning"
                     style={{
-                      marginTop: "10px",
+                      marginRight: 10,
                       color: "#fff",
                       background: "#ee4d2d",
+                      minWidth: "90px",
+                    }}
+                    onClick={(e) => exportToCSV(dataExportExcel)}
+                  >
+                    Export
+                  </Button>
+                  <Button
+                    style={{
+                      color: "#fff",
+                      background: "#ee4d2d",
+                      minWidth: "90px",
                     }}
                     onClick={handleSearch}
                   >
                     Tìm kiếm
                   </Button>
-                  {chooseIdStudent.length > 0 && (
-                    <div className="comfirm">
-                      <span>Lựa chọn </span>
-                      <Select
-                        className="comfirm-click"
-                        style={{ width: "100%", marginTop: "10px" }}
-                        onChange={actionOnchange}
-                        placeholder="Chọn"
-                      >
-                        <Option value="assgin" key="1">
-                          Kéo việc
-                        </Option>
-                        <Option value="edit" key="2">
-                          Cập nhật trạng thái
-                        </Option>
-                      </Select>
-
-                      {Object.keys(status).length >= 1 && (
-                        <Select
-                          className="upload-status"
-                          style={{ width: "100%", margin: "10px 0" }}
-                          onChange={(e) => selectStatus(e)}
-                          placeholder="Chọn trạng thái"
-                        >
-                          {statusConfigCV.map((item, index) => (
-                            <Option value={item.value} key={index}>
-                              {item.title}
-                            </Option>
-                          ))}
-                        </Select>
-                      )}
-                      {note === 1 && (
-                        <TextArea
-                          // value={value}
-                          onChange={handleNote}
-                          placeholder="Ghi chú..."
-                          style={{ marginRight: 10 }}
-                          autoSize={{ minRows: 3, maxRows: 5 }}
-                        />
-                      )}
-                      {Object.keys(status).length > 0 && (
-                        <Button
-                          style={{ marginRight: 10 }}
-                          onClick={() => comfirm()}
-                        >
-                          Xác nhận
-                        </Button>
-                      )}
-                    </div>
-                  )}
                 </div>
               </Col>
             </Row>

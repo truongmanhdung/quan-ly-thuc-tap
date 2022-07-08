@@ -90,7 +90,6 @@ const Status = ({
           navigate("/login");
         });
     } else {
-     
       SemestersAPI.getDefaultSemester()
         .then((res) => {
           if (res.status === 200) {
@@ -429,6 +428,9 @@ const Status = ({
                 variant="warning"
                 style={{
                   marginRight: 20,
+                  color: "#fff",
+                  background: "#ee4d2d",
+                  minWidth: "90px",
                 }}
                 className={style.button}
                 onClick={(e) => exportToCSV(getListAllStudent)}
@@ -580,19 +582,21 @@ const Status = ({
             ></Row>
           </>
         ) : (
-          <Row>
-            <Col
-              xs={{ span: 24 }}
-              md={{ span: 8 }}
-              style={{ paddingBottom: "15px" }}
-            >
-              <div className={style.div}>
-                <span className="select-status" style={{ width: "50%" }}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
                   Ngành :{" "}
                 </span>
                 <Select
                   className="select-branch"
-                  style={{ width: "100%", position: "relative", right: "5%" }}
+                  style={{ width: "100%" }}
                   onChange={(val) => handleStandardTableChange("majors", val)}
                   placeholder="Lọc theo ngành"
                   defaultValue=""
@@ -610,21 +614,20 @@ const Status = ({
               </div>
             </Col>
 
-            <Col
-              xs={{ span: 24 }}
-              md={{ span: 8 }}
-              style={{ marginBottom: "15px" }}
-            >
-              <div className={style.div}>
-                <span
-                  style={{ width: "50%", paddingRight: "10px" }}
-                  className={style.span3}
-                >
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
                   Trạng thái:
                 </span>
                 <Select
                   className="filter-status"
-                  style={{ width: "100%", position: "relative", right: "5%" }}
+                  style={{ width: "100%"}}
                   onChange={(val) =>
                     handleStandardTableChange("statusCheck", val)
                   }
@@ -640,13 +643,19 @@ const Status = ({
               </div>
             </Col>
 
-            <Col xs={{ span: 24 }} md={{ span: 8 }}>
-              <div className={style.div}>
-                <span style={{ paddingRight: "15px" }} className={style.span3}>
-                  Tìm Kiếm:{" "}
+            <Col xs={24} sm={12} md={12} lg={8} xl={8}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                  Tìm Kiếm:
                 </span>
                 <Input
-                  style={{ width: "65%", position: "relative", right: "6%" }}
+                  style={{ width: "100%",}}
                   placeholder="Tìm kiếm theo mã sinh viên"
                   onChange={(val) =>
                     handleStandardTableChange("mssv", val.target.value.trim())
@@ -655,19 +664,11 @@ const Status = ({
               </div>
             </Col>
 
-            <Col
-              xs={24}
-              sm={4}
-              md={24}
-              lg={24}
-              xl={4}
-              style={{ padding: "0 10px" }}
-            >
+            <Col span={24}>
               <Button
                 style={{
                   color: "#fff",
                   background: "#ee4d2d",
-                  display: "flex",
                 }}
                 onClick={handleSearch}
               >
@@ -677,9 +678,9 @@ const Status = ({
               {chooseIdStudent.length > 0 && (
                 <Button
                   style={{
-                    marginTop: "10px",
                     color: "#fff",
                     background: "#ee4d2d",
+                    marginLeft:'20px'
                   }}
                   onClick={() => comfirm()}
                 >
