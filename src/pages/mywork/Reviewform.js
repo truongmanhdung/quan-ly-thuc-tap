@@ -235,9 +235,11 @@ const Reviewform = ({
       },
     },
   ];
+
   // xóa tìm kiếm
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
+      console.log(selectedRows);
       setListIdStudent(selectedRowKeys);
       setListEmailStudent(selectedRows);
       setChooseIdStudent(selectedRows);
@@ -293,6 +295,7 @@ const Reviewform = ({
     if (id.length === chooseIdStudent.length) {
       setStatus({
         listIdStudent: id,
+        listEmailStudent: listEmailStudent,
         email: infoUser?.manager?.email,
         status: value,
       });
@@ -401,7 +404,7 @@ const Reviewform = ({
       ) : (
         <>
           <div className="filter" style={{ marginTop: "20px" }}>
-            <Row  gutter={[16, 16]}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
@@ -410,7 +413,9 @@ const Reviewform = ({
                     alignItems: "center",
                   }}
                 >
-                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Ngành:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Ngành:
+                  </span>
                   <Select
                     style={{
                       width: "100%",
@@ -439,7 +444,9 @@ const Reviewform = ({
                     alignItems: "center",
                   }}
                 >
-                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Trạng thái:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Trạng thái:
+                  </span>
                   <Select
                     className="filter-status"
                     style={{
@@ -467,7 +474,9 @@ const Reviewform = ({
                     alignItems: "center",
                   }}
                 >
-                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Tìm Kiếm: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Tìm Kiếm:{" "}
+                  </span>
                   <Input
                     style={{
                       width: "100%",
@@ -480,63 +489,67 @@ const Reviewform = ({
                 </div>
               </Col>
               {chooseIdStudent.length > 0 && (
-                 <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-                    <div  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}>
-                      <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>Lựa chọn </span>
-                      <Select
-                        className="comfirm-click"
-                        style={{ width: "100%" }}
-                        onChange={actionOnchange}
-                        placeholder="Chọn"
-                      >
-                        <Option value="assgin" key="1">
-                          Kéo việc
-                        </Option>
-                        <Option value="edit" key="2">
-                          Cập nhật trạng thái
-                        </Option>
-                      </Select>
+                <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                      Lựa chọn{" "}
+                    </span>
+                    <Select
+                      className="comfirm-click"
+                      style={{ width: "100%" }}
+                      onChange={actionOnchange}
+                      placeholder="Chọn"
+                    >
+                      <Option value="assgin" key="1">
+                        Kéo việc
+                      </Option>
+                      <Option value="edit" key="2">
+                        Cập nhật trạng thái
+                      </Option>
+                    </Select>
 
-                      {Object.keys(status).length >= 1 && (
-                        <Select
-                          className="upload-status"
-                          style={
-                            window.innerWidth > 1024
-                              ? {
-                                  width: "100%",
-                                  margin: "10px",
-                                  marginLeft: "0",
-                                }
-                              : { width: "100%", margin: "10px 0" }
-                          }
-                          onChange={(e) => selectStatus(e)}
-                          placeholder="Chọn trạng thái"
-                        >
-                          {statusConfigForm.map((item, index) => (
-                            <Option value={item.value} key={index}>
-                              {item.title}
-                            </Option>
-                          ))}
-                        </Select>
-                      )}
-                      {note === 1 || note === 5 ? (
-                        <TextArea
-                          // value={value}
-                          onChange={handleNote}
-                          placeholder="Ghi chú..."
-                          autoSize={{ minRows: 3, maxRows: 5 }}
-                        />
-                      ) : null}
-                      {Object.keys(status).length > 0 && (
-                        <Button onClick={() => comfirm()}>Xác nhận</Button>
-                      )}
-                    </div>
-                    </Col>
-                  )}
+                    {Object.keys(status).length >= 1 && (
+                      <Select
+                        className="upload-status"
+                        style={
+                          window.innerWidth > 1024
+                            ? {
+                                width: "100%",
+                                margin: "10px",
+                                marginLeft: "0",
+                              }
+                            : { width: "100%", margin: "10px 0" }
+                        }
+                        onChange={(e) => selectStatus(e)}
+                        placeholder="Chọn trạng thái"
+                      >
+                        {statusConfigForm.map((item, index) => (
+                          <Option value={item.value} key={index}>
+                            {item.title}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                    {note === 1 || note === 5 ? (
+                      <TextArea
+                        // value={value}
+                        onChange={handleNote}
+                        placeholder="Ghi chú..."
+                        autoSize={{ minRows: 3, maxRows: 5 }}
+                      />
+                    ) : null}
+                    {Object.keys(status).length > 0 && (
+                      <Button onClick={() => comfirm()}>Xác nhận</Button>
+                    )}
+                  </div>
+                </Col>
+              )}
               <Col span={24}>
                 <div
                   style={{

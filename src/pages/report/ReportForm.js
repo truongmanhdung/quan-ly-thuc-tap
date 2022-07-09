@@ -70,6 +70,7 @@ const ReportForm = ({ infoUser, studentById }) => {
   const lForm = studentById.CV;
   const dispatch = useDispatch();
   const datePicker = (date, dateString) => {
+    console.log(date);
     setEndDate(date._d);
   };
   function guardarArchivo(files, data) {
@@ -155,7 +156,15 @@ const ReportForm = ({ infoUser, studentById }) => {
 
   const onFinish = async (values) => {
     setSpin(true);
+    console.log(values.upload);
     try {
+      if (values.upload === undefined || values.upload === null) {
+        message.error(
+          "Vui lòng tải Báo cáo định dạng PDF hoặc Docx của bạn lên FORM đăng ký"
+        );
+        setSpin(false);
+        return;
+      }
       const newData = {
         EndInternShipTime: endDate,
         mssv: studentById.mssv,
@@ -190,9 +199,6 @@ const ReportForm = ({ infoUser, studentById }) => {
             {check && <CountDownCustorm time={time} />}
             <Spin spinning={spin}>
               <Form
-                {...formItemLayout}
-                form={form}
-                className={styles.form}
                 name="register"
                 onFinish={onFinish}
                 initialValues={{
@@ -235,7 +241,13 @@ const ReportForm = ({ infoUser, studentById }) => {
                 <Form.Item
                   name="EndInternshipTime"
                   label="Thời gian kết thúc thực tập"
-                  // rules={[{}]}
+                  rules={[
+                    {
+                      type: object,
+                      required: true,
+                      message: "Vui lòng nhập thời gian kết thúc thực tập",
+                    },
+                  ]}
                 >
                   <Space direction="vertical">
                     <DatePicker
@@ -245,6 +257,7 @@ const ReportForm = ({ infoUser, studentById }) => {
                     />
                   </Space>
                 </Form.Item>
+
                 <Form.Item
                   name="attitudePoint"
                   label="Điểm thái độ"

@@ -1,11 +1,11 @@
 import { UploadOutlined } from "@ant-design/icons";
 import {
-  Form,
   Input,
   Button,
-  Upload,
   message,
   Spin,
+  Form,
+  Upload,
   Space,
   DatePicker,
 } from "antd";
@@ -64,15 +64,17 @@ const Formrp = ({ studentById }) => {
   const datePicker = (date, dateString) => {
     setStartDate(date._d);
   };
+
   useEffect(() => {
     dispatch(
       getTimeForm({
         typeNumber: 2,
-        semester_id: infoUser.student.smester_id,
+        semester_id: infoUser.student?.smester_id,
       })
     );
     dispatch(getStudentId(infoUser));
-  }, []);
+  }, [dispatch, infoUser, spin]);
+
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
@@ -136,7 +138,6 @@ const Formrp = ({ studentById }) => {
     },
   };
 
-  
   let timeCheck = time;
   if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
     const checkTimeStudent = studentById.listTimeForm.find(
@@ -151,28 +152,36 @@ const Formrp = ({ studentById }) => {
     timeCheck.endTime > new Date().getTime() &&
     timeCheck.startTime < new Date().getTime();
   const isCheck =
-    (studentById && studentById.statusCheck === 2) ||
-    studentById.statusCheck === 5;
+    (studentById && studentById?.statusCheck === 2) ||
+    studentById?.statusCheck === 5;
   const nameCompany =
     studentById.support === 0 ? studentById.nameCompany : studentById.business;
-    const onFinish = async (values) => {
-      setSpin(true);
-      try {
-        const newData = {
-          ...values,
-          mssv: mssv,
-          email: email,
-          typeNumber: time.typeNumber,
-          internshipTime: startDate,
-          semester_id: infoUser.student.smester_id,
-          checkTime: check,
-        };
-        await guardarArchivo(file, newData);
-      } catch (error) {
-        const dataErr = await error.response.data;
-        message.error(dataErr.message);
+  const onFinish = async (values) => {
+    setSpin(true);
+    try {
+      if (values.upload === undefined || values.upload === null) {
+        message.error(
+          "Vui lòng tải file Biên bản định dạng PDF của bạn lên FORM biên bản"
+        );
+        setSpin(false);
+        return;
       }
-    };
+
+      const newData = {
+        ...values,
+        mssv: mssv,
+        email: email,
+        typeNumber: time.typeNumber,
+        internshipTime: startDate,
+        semester_id: infoUser.student.smester_id,
+        checkTime: check,
+      };
+      await guardarArchivo(file, newData);
+    } catch (error) {
+      const dataErr = await error.response.data;
+      message.error(dataErr.message);
+    }
+  };
   return (
     <>
       {check ? (
@@ -223,6 +232,13 @@ const Formrp = ({ studentById }) => {
                 <Form.Item
                   name="internshipTime"
                   label="Thời gian bắt đầu thực tập"
+                  rules={[
+                    {
+                      type: object,
+                      required: true,
+                      message: "Vui lòng nhập thời gian bắt đầu thực tập",
+                    },
+                  ]}
                   // rules={[{}]}
                 >
                   <Space direction="vertical">
