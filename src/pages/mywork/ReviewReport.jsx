@@ -537,16 +537,18 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       ) : (
         <>
           <div className="filter" style={{ marginTop: "20px" }}>
-            <Row  gutter={[16, 16]}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
-                    justifyContent:'center',
-                    alignItems:'center'
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <span style={{whiteSpace:'nowrap',marginRight:'10px'}}>Ngành: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Ngành:{" "}
+                  </span>
                   <Select
                     style={{
                       width: "100%",
@@ -571,11 +573,13 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent:'center',
-                    alignItems:'center'
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <span style={{whiteSpace:'nowrap',marginRight:'10px'}}>Trạng thái:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Trạng thái:
+                  </span>
                   <Select
                     className="filter-status"
                     style={{
@@ -599,11 +603,13 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                 <div
                   style={{
                     display: "flex",
-                    justifyContent:'center',
-                    alignItems:'center'
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <span style={{whiteSpace:'nowrap',marginRight:'10px'}}>Tìm Kiếm: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Tìm Kiếm:{" "}
+                  </span>
                   <Input
                     style={{
                       width: "100%",
@@ -615,66 +621,14 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   />
                 </div>
               </Col>
-              {chooseIdStudent.length > 0 && (
-                <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-                    <div  style={{
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+                <div
+                  style={{
                     display: "flex",
-                    justifyContent:'center',
-                    alignItems:'center'
-                  }}>
-                      <span style={{whiteSpace:'nowrap',marginRight:'10px'}}>Lựa chọn </span>
-                      <Select
-                        className="comfirm-click"
-                        style={{ width: "100%" }}
-                        onChange={actionOnchange}
-                        placeholder="Chọn"
-                      >
-                        <Option value="assgin" key="1">
-                          Kéo việc
-                        </Option>
-                        <Option value="edit" key="2">
-                          Cập nhật trạng thái
-                        </Option>
-                      </Select>
-
-                      {Object.keys(status).length >= 1 && (
-                        <Select
-                          className="upload-status"
-                          style={
-                            window.innerWidth > 1024
-                              ? { width: "100%", margin: "10px" }
-                              : { width: "100%", margin: "10px 0" }
-                          }
-                          onChange={(e) => selectStatus(e)}
-                          placeholder="Chọn trạng thái"
-                        >
-                          {statusConfigReport.map((item, index) => (
-                            <Option value={item.value} key={index}>
-                              {item.title}
-                            </Option>
-                          ))}
-                        </Select>
-                      )}
-                      {note === 3 || note === 5 || note === 8 ? (
-                        <TextArea
-                          // value={value}
-                          onChange={handleNote}
-                          placeholder="Ghi chú..."
-                          autoSize={{ minRows: 3, maxRows: 5 }}
-                        />
-                      ) : null}
-
-                      {Object.keys(status).length > 0 && (
-                        <Button onClick={() => comfirm()}>Xác nhận</Button>
-                      )}
-                    </div>
-                    </Col>
-                  )}
-              <Col span={24}>
-                <div  style={{
-                    display: "flex",
-                    alignItems:'center'
-                  }}>
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Button
                     style={{
                       marginRight: 20,
@@ -699,6 +653,76 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   </Button>
                 </div>
               </Col>
+                {chooseIdStudent.length > 0 && (
+                  <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                      <Row gutter={[10, 10]}>
+                        <Col xs={24} sm={24} md={24} lg={4} xl={4}>
+                          <span style={{ whiteSpace: "nowrap",width: "100%"}}>
+                            Lựa chọn:
+                          </span>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+                          <Select
+                            className="comfirm-click"
+                            style={{ width: "100%" }}
+                            onChange={actionOnchange}
+                            placeholder="Chọn"
+                          >
+                            <Option value="assgin" key="1">
+                              Kéo việc
+                            </Option>
+                            <Option value="edit" key="2">
+                              Cập nhật trạng thái
+                            </Option>
+                          </Select>
+                        </Col>
+                        {Object.keys(status).length >= 1 && (
+                          <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+                            <Select
+                              className="upload-status"
+                              style={
+                                window.innerWidth > 1024
+                                  ? { width: "100%" }
+                                  : { width: "100%" }
+                              }
+                              onChange={(e) => selectStatus(e)}
+                              placeholder="Chọn trạng thái"
+                            >
+                              {statusConfigReport.map((item, index) => (
+                                <Option value={item.value} key={index}>
+                                  {item.title}
+                                </Option>
+                              ))}
+                            </Select>
+                          </Col>
+                        )}
+                        {note === 3 || note === 5 || note === 8 ? (
+                          <Col span={24}>
+                            <TextArea
+                              // value={value}
+                              onChange={handleNote}
+                              placeholder="Ghi chú..."
+                              autoSize={{ minRows: 3, maxRows: 5 }}
+                            />
+                          </Col>
+                        ) : null}
+                        {Object.keys(status).length > 0 && (
+                          <Col xs={24} sm={12} md={12} lg={4} xl={4}>
+                            <Button
+                              style={{
+                                color: "#fff",
+                                background: "#ee4d2d",
+                                minWidth: "90px",
+                              }}
+                              onClick={() => comfirm()}
+                            >
+                              Xác nhận
+                            </Button>
+                          </Col>
+                        )}
+                      </Row>
+                  </Col>
+                )}
             </Row>
           </div>
         </>
