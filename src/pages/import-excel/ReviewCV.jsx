@@ -566,68 +566,12 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   />
                 </div>
               </Col>
-              {chooseIdStudent.length > 0 && (
-                <Col xs={24} sm={12} md={12} lg={6} xl={6}>
-                  <div  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}>
-                    <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
-                      Lựa chọn
-                    </span>
-                    <Select
-                      className="comfirm-click"
-                      style={{ width: "100%", marginTop: "10px" }}
-                      onChange={actionOnchange}
-                      placeholder="Chọn"
-                    >
-                      <Option value="assgin" key="1">
-                        Kéo việc
-                      </Option>
-                      <Option value="edit" key="2">
-                        Cập nhật trạng thái
-                      </Option>
-                    </Select>
-
-                    {Object.keys(status).length >= 1 && (
-                      <Select
-                        className="upload-status"
-                        style={{ width: "100%", margin: "10px 0" }}
-                        onChange={(e) => selectStatus(e)}
-                        placeholder="Chọn trạng thái"
-                      >
-                        {statusConfigCV.map((item, index) => (
-                          <Option value={item.value} key={index}>
-                            {item.title}
-                          </Option>
-                        ))}
-                      </Select>
-                    )}
-                    {note === 1 && (
-                      <TextArea
-                        // value={value}
-                        onChange={handleNote}
-                        placeholder="Ghi chú..."
-                        style={{ marginRight: 10 }}
-                        autoSize={{ minRows: 3, maxRows: 5 }}
-                      />
-                    )}
-                    {Object.keys(status).length > 0 && (
-                      <Button
-                        style={{ marginRight: 10 }}
-                        onClick={() => comfirm()}
-                      >
-                        Xác nhận
-                      </Button>
-                    )}
-                  </div>
-                </Col>
-              )}
-              <Col span={24}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
                   <Button
@@ -654,6 +598,71 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   </Button>
                 </div>
               </Col>
+              {chooseIdStudent.length > 0 && (
+                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                    <Row gutter={[10, 10]}>
+                      <Col xs={24} sm={24} md={24} lg={4} xl={4}>
+                        <span style={{ whiteSpace: "nowrap" }}>Lựa chọn:</span>
+                      </Col>
+                      <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+                        <Select
+                          className="comfirm-click"
+                          style={{ width: "100%" }}
+                          onChange={actionOnchange}
+                          placeholder="Chọn"
+                        >
+                          <Option value="assgin" key="1">
+                            Kéo việc
+                          </Option>
+                          <Option value="edit" key="2">
+                            Cập nhật trạng thái
+                          </Option>
+                        </Select>
+                      </Col>
+                      {Object.keys(status).length >= 1 && (
+                        <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+                          <Select
+                            className="upload-status"
+                            style={{ width: "100%" }}
+                            onChange={(e) => selectStatus(e)}
+                            placeholder="Chọn trạng thái"
+                          >
+                            {statusConfigCV.map((item, index) => (
+                              <Option value={item.value} key={index}>
+                                {item.title}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Col>
+                      )}
+                      {note === 1 && (
+                        <Col span={24}>
+                          <TextArea
+                            // value={value}
+                            onChange={handleNote}
+                            placeholder="Ghi chú..."
+                            style={{ marginRight: 10 }}
+                            autoSize={{ minRows: 3, maxRows: 5 }}
+                            />
+                        </Col>
+                      )}
+                            {Object.keys(status).length > 0 && (
+                              <Col xs={24} sm={12} md={12} lg={4} xl={4}>
+                                <Button
+                                  style={{
+                                    color: "#fff",
+                                    background: "#ee4d2d",
+                                    minWidth: "90px",
+                                  }}
+                                  onClick={() => comfirm()}
+                                >
+                                  Xác nhận
+                                </Button>
+                              </Col>
+                            )}
+                    </Row>
+                </Col>
+              )}
             </Row>
           </div>
         </>
