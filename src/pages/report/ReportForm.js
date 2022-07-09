@@ -57,6 +57,12 @@ const ReportForm = ({ infoUser, studentById }) => {
   const [file, setFile] = useState();
   const [endDate, setEndDate] = useState();
   const [form] = Form.useForm();
+
+  const lForm = studentById.CV;
+  const dispatch = useDispatch();
+  const datePicker = (date, dateString) => {
+    setEndDate(date._d);
+  };
   useEffect(() => {
     dispatch(
       getTimeForm({
@@ -66,13 +72,7 @@ const ReportForm = ({ infoUser, studentById }) => {
     );
     dispatch(getStudentId(infoUser));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const lForm = studentById.CV;
-  const dispatch = useDispatch();
-  const datePicker = (date, dateString) => {
-    console.log(date);
-    setEndDate(date._d);
-  };
+  }, [dispatch, infoUser.student.smester_id, spin]);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
@@ -156,15 +156,7 @@ const ReportForm = ({ infoUser, studentById }) => {
 
   const onFinish = async (values) => {
     setSpin(true);
-    console.log(values.upload);
     try {
-      if (values.upload === undefined || values.upload === null) {
-        message.error(
-          "Vui lòng tải Báo cáo định dạng PDF hoặc Docx của bạn lên FORM đăng ký"
-        );
-        setSpin(false);
-        return;
-      }
       const newData = {
         EndInternShipTime: endDate,
         mssv: studentById.mssv,
@@ -176,6 +168,15 @@ const ReportForm = ({ infoUser, studentById }) => {
         semester_id: infoUser.student.smester_id,
         checkTime: check,
       };
+
+      if (values.upload === undefined || values.upload === null) {
+        message.error(
+          "Vui lòng tải file Báo cáo định dạng PDF hoặc Docx của bạn lên FORM biên bản"
+        );
+        setSpin(false);
+        return;
+      }
+
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
@@ -191,6 +192,16 @@ const ReportForm = ({ infoUser, studentById }) => {
     );
   }
 
+  const config = {
+    rules: [
+      {
+        type: "object",
+        required: true,
+        message: "Vui lòng nhập ngày kết thúc thực tập!",
+      },
+    ],
+  };
+
   return (
     <>
       {check ? (
@@ -198,13 +209,12 @@ const ReportForm = ({ infoUser, studentById }) => {
           <>
             {check && <CountDownCustorm time={time} />}
             <Spin spinning={spin}>
-              <Form
+              {/* <Form
+                {...formItemLayout}
+                form={form}
+                className={styles.form}
                 name="register"
                 onFinish={onFinish}
-                initialValues={{
-                  residence: ["zhejiang", "hangzhou", "xihu"],
-                  prefix: "86",
-                }}
                 scrollToFirstError
               >
                 <Form.Item label="Họ và Tên">
@@ -241,13 +251,7 @@ const ReportForm = ({ infoUser, studentById }) => {
                 <Form.Item
                   name="EndInternshipTime"
                   label="Thời gian kết thúc thực tập"
-                  rules={[
-                    {
-                      type: object,
-                      required: true,
-                      message: "Vui lòng nhập thời gian kết thúc thực tập",
-                    },
-                  ]}
+                  // rules={[{}]}
                 >
                   <Space direction="vertical">
                     <DatePicker
@@ -257,7 +261,6 @@ const ReportForm = ({ infoUser, studentById }) => {
                     />
                   </Space>
                 </Form.Item>
-
                 <Form.Item
                   name="attitudePoint"
                   label="Điểm thái độ"
@@ -307,6 +310,127 @@ const ReportForm = ({ infoUser, studentById }) => {
                   </Upload>
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                  <Button
+                    style={{
+                      margin: "0 5px 0",
+                    }}
+                    type="link"
+                    onClick={() => window.open(lForm)}
+                  >
+                    Xem CV
+                  </Button>
+                </Form.Item>
+              </Form> */}
+              <Form
+                {...formItemLayout}
+                className={styles.form}
+                name="register"
+                onFinish={onFinish}
+              >
+                <Form.Item label="Họ và Tên">
+                  <p className={styles.text_form_label}>{studentById.name}</p>
+                </Form.Item>
+                <Form.Item label="Mã sinh viên">
+                  <p className={styles.text_form_label}>
+                    {studentById.mssv.toUpperCase()}
+                  </p>
+                </Form.Item>
+                <Form.Item name="nameCompany" label="Tên doanh nghiệp">
+                  <p className={styles.text_form_label}>
+                    {infoUser.student.support === 1
+                      ? studentById?.business?.name?.toUpperCase()
+                      : infoUser?.student?.nameCompany?.toUpperCase()}
+                  </p>
+                </Form.Item>
+                <Form.Item
+                  name="resultScore"
+                  label="Điểm kết quả"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập điểm kết quả thực tập",
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{
+                      width: "50%",
+                    }}
+                    min={0}
+                    max={10}
+                    placeholder="Nhập điểm kết quả thực tập"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="attitudePoint"
+                  label="Điểm thái độ"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập điểm thái độ",
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{
+                      width: "50%",
+                    }}
+                    min={0}
+                    max={10}
+                    placeholder="Nhập điểm thái độ thực tập"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="Thời gian bắt đầu thực tập"
+                  // rules={[{}]}
+                >
+                  <Space direction="vertical">
+                    <DatePicker
+                      defaultValue={moment(
+                        studentById.internshipTime,
+                        dateFormat
+                      )}
+                      disabled
+                      placeholder="Bắt đầu thực tập"
+                    />
+                  </Space>
+                </Form.Item>
+                <Form.Item
+                  name="internshipTime"
+                  label="Thời gian kết thúc thực tập"
+                  {...config}
+                >
+                  <DatePicker
+                    onChange={datePicker}
+                    disabledDate={disabledDate}
+                    placeholder="Kết thúc"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="upload"
+                  label="Upload báo cáo (Docx hoặc PDF)"
+                  valuePropName="upload"
+                >
+                  <Upload {...props} maxCount={1}>
+                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                  </Upload>
+                </Form.Item>
+                <Form.Item
+                  wrapperCol={{
+                    xs: {
+                      span: 24,
+                      offset: 0,
+                    },
+                    sm: {
+                      span: 16,
+                      offset: 8,
+                    },
+                  }}
+                  {...tailFormItemLayout}
+                >
                   <Button type="primary" htmlType="submit">
                     Submit
                   </Button>

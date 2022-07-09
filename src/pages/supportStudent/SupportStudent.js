@@ -73,7 +73,7 @@ const SupportStudent = ({
     dispatch(
       getTimeForm({
         typeNumber: value,
-        semester_id: infoUser.student?.smester_id,
+        semester_id: infoUser.student.smester_id,
       })
     );
     dispatch(
@@ -86,6 +86,7 @@ const SupportStudent = ({
     dispatch(getListMajor());
     dispatch(getNarow());
     console.log("check: spin", spin);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     infoUser.student?.smester_id,
@@ -115,7 +116,7 @@ const SupportStudent = ({
       ) //send to Api
         .then((res) => res.json())
         .then((a) => {
-          const newData = { ...data, CV: a.url };
+          let newData = { ...data, CV: a.url };
           RegisterInternAPI.upload(newData)
             .then((res) => {
               setSpin(true);
@@ -211,11 +212,11 @@ const SupportStudent = ({
         typeNumber: value,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
-        ///dispatch Redux
       };
+
       if (value === 0) {
         setSpin(true);
-        const resData = await RegisterInternAPI.upload(data);
+        const resData = await RegisterInternAPI.upload({ ...data, CV: null });
         message.success(resData.data.message);
         setStatus(2);
         setSpin(false);
@@ -354,6 +355,7 @@ const SupportStudent = ({
                         rules={[
                           {
                             required: true,
+
                             message: "Vui lòng chọn doanh nghiệp",
                           },
                         ]}
@@ -462,6 +464,9 @@ const SupportStudent = ({
                           rules={[
                             {
                               required: true,
+                              pattern: new RegExp(
+                                "^(0|84)(2(0[3-9]|1[0-6|8|9]|2[0-2|5-9]|3[2-9]|4[0-9]|5[1|2|4-9]|6[0-3|9]|7[0-7]|8[0-9]|9[0-4|6|7|9])|3[2-9]|5[5|6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])([0-9]{7})$"
+                              ),
                               message:
                                 "Vui lòng nhập Số điện thoại doanh nghiệp",
                             },

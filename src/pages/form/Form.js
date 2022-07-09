@@ -1,14 +1,5 @@
 import { UploadOutlined } from "@ant-design/icons";
-import {
-  Input,
-  Button,
-  message,
-  Spin,
-  Form,
-  Upload,
-  Space,
-  DatePicker,
-} from "antd";
+import { Input, Button, message, Spin, Form, Upload, DatePicker } from "antd";
 import { object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -159,14 +150,6 @@ const Formrp = ({ studentById }) => {
   const onFinish = async (values) => {
     setSpin(true);
     try {
-      if (values.upload === undefined || values.upload === null) {
-        message.error(
-          "Vui lòng tải file Biên bản định dạng PDF của bạn lên FORM biên bản"
-        );
-        setSpin(false);
-        return;
-      }
-
       const newData = {
         ...values,
         mssv: mssv,
@@ -176,11 +159,39 @@ const Formrp = ({ studentById }) => {
         semester_id: infoUser.student.smester_id,
         checkTime: check,
       };
+
+      console.log("newdata ", newData);
+
+      if (values.upload === undefined || values.upload === null) {
+        message.error(
+          "Vui lòng tải file Biên bản định dạng PDF của bạn lên FORM biên bản"
+        );
+        setSpin(false);
+        return;
+      }
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
       message.error(dataErr.message);
     }
+  };
+  const config = {
+    rules: [
+      {
+        type: "object",
+        required: true,
+        message: "Vui lòng nhập ngày bắt đầu thực tập!",
+      },
+    ],
+  };
+
+  const configNameCompany = {
+    rules: [
+      {
+        required: true,
+        message: "Vui lòng nhập tên doanh nghiệp",
+      },
+    ],
   };
   return (
     <>
@@ -192,61 +203,33 @@ const Formrp = ({ studentById }) => {
             <Spin spinning={spin}>
               <Form
                 {...formItemLayout}
-                form={form}
                 className={styles.form}
                 name="register"
                 onFinish={onFinish}
-                initialValues={{
-                  residence: ["zhejiang", "hangzhou", "xihu"],
-                  prefix: "86",
-                }}
-                scrollToFirstError
               >
                 {nameCompany ? null : (
                   <Form.Item
                     name="nameCompany"
                     label="Tên doanh nghiệp"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Vui lòng nhập tên doanh nghiệp",
-                      },
-                    ]}
+                    {...(nameCompany ? null : configNameCompany)}
                   >
                     <Input placeholder="Tên doanh nghiệp" />
                   </Form.Item>
                 )}
-
-                <Form.Item
-                  // name="user_code"
-                  label="Mã sinh viên"
-                >
+                <Form.Item label="Mã sinh viên">
                   <p className={styles.text_form_label}>
                     {studentById.mssv.toUpperCase()}
                   </p>
                 </Form.Item>
-
                 <Form.Item label="Họ và Tên">
                   <p className={styles.text_form_label}>{studentById.name}</p>
                 </Form.Item>
                 <Form.Item
                   name="internshipTime"
                   label="Thời gian bắt đầu thực tập"
-                  rules={[
-                    {
-                      type: object,
-                      required: true,
-                      message: "Vui lòng nhập thời gian bắt đầu thực tập",
-                    },
-                  ]}
-                  // rules={[{}]}
+                  {...config}
                 >
-                  <Space direction="vertical">
-                    <DatePicker
-                      onChange={datePicker}
-                      placeholder="Bắt đầu thực tập"
-                    />
-                  </Space>
+                  <DatePicker onChange={datePicker} placeholder="Bắt đầu" />
                 </Form.Item>
                 <Form.Item
                   name="upload"
@@ -257,7 +240,18 @@ const Formrp = ({ studentById }) => {
                     <Button icon={<UploadOutlined />}>Click to upload</Button>
                   </Upload>
                 </Form.Item>
-                <Form.Item {...tailFormItemLayout}>
+                <Form.Item
+                  wrapperCol={{
+                    xs: {
+                      span: 24,
+                      offset: 0,
+                    },
+                    sm: {
+                      span: 16,
+                      offset: 8,
+                    },
+                  }}
+                >
                   <Button type="primary" htmlType="submit">
                     Submit
                   </Button>
