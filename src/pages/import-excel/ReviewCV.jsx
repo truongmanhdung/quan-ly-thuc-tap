@@ -274,13 +274,12 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
 
   const comfirm = () => {
     try {
-      console.log("listEmailStudent", listEmailStudent);
-      // dispatch(
-      //   updateStatusListStudent({
-      //     ...status,
-      //     textNote,
-      //   })
-      // );
+      dispatch(
+        updateStatusListStudent({
+          ...status,
+          textNote,
+        })
+      );
 
       setChooseIdStudent([]);
       message.success("Thành công");
