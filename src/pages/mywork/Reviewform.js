@@ -239,7 +239,6 @@ const Reviewform = ({
   // xóa tìm kiếm
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(selectedRows);
       setListIdStudent(selectedRowKeys);
       setListEmailStudent(selectedRows);
       setChooseIdStudent(selectedRows);

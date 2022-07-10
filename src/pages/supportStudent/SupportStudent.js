@@ -58,7 +58,6 @@ const SupportStudent = ({
   listBusiness: { list },
   narrow: { listNarrow },
 }) => {
-  console.log(studentById);
   const infoUser = getLocal();
   const dispatch = useDispatch();
   const [file, setFile] = useState();
@@ -85,7 +84,6 @@ const SupportStudent = ({
     );
     dispatch(getListMajor());
     dispatch(getNarow());
-    console.log("check: spin", spin);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
@@ -123,8 +121,6 @@ const SupportStudent = ({
               message.success(res.data.message).then(() => {
                 setValue(2);
                 setSpin(false);
-                console.log("lod spin: ", spin);
-                console.log("lod spin: ", value);
               });
             })
             .catch(async (err) => {
@@ -137,7 +133,6 @@ const SupportStudent = ({
             });
           setStatus(2);
           setSpin(false);
-          console.log("lod spin: ", spin);
         })
         .catch((e) => {
           message.success("Có lỗi xảy ra! Vui lòng đăng ký lại");

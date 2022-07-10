@@ -201,7 +201,6 @@ const ReportForm = ({ infoUser, studentById }) => {
       },
     ],
   };
-  console.log("studentById: ", studentById);
   return (
     <>
       {check ? (

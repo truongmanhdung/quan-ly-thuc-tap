@@ -160,8 +160,6 @@ const Formrp = ({ studentById }) => {
         checkTime: check,
       };
 
-      console.log("newdata ", newData);
-
       if (values.upload === undefined || values.upload === null) {
         message.error(
           "Vui lòng tải file Biên bản định dạng PDF của bạn lên FORM biên bản"
