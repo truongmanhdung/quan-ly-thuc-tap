@@ -507,6 +507,11 @@ const SupportStudent = ({
               </>
             </>
           ) : (
+            // studentById.statusCheck === 3 ? (
+            //   "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+            // ) : studentById.statusCheck === 9 ? (
+            //   "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
+            // ) :
             "Đăng ký thông tin thành công"
           )}
         </Form>

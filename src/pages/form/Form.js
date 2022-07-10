@@ -262,6 +262,11 @@ const Formrp = ({ studentById }) => {
         ) : !studentById.form ? (
           "Bạn phải nộp thành công CV trước"
         ) : (
+          // studentById.statusCheck === 3 ? (
+          //   "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+          // ) : studentById.statusCheck === 9 ? (
+          //   "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
+          // ) :
           "Bạn đã nộp biên bản thành công."
         )
       ) : (

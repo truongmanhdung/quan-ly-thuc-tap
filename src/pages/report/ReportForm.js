@@ -201,7 +201,7 @@ const ReportForm = ({ infoUser, studentById }) => {
       },
     ],
   };
-
+  console.log("studentById: ", studentById);
   return (
     <>
       {check ? (
@@ -209,121 +209,6 @@ const ReportForm = ({ infoUser, studentById }) => {
           <>
             {check && <CountDownCustorm time={time} />}
             <Spin spinning={spin}>
-              {/* <Form
-                {...formItemLayout}
-                form={form}
-                className={styles.form}
-                name="register"
-                onFinish={onFinish}
-                scrollToFirstError
-              >
-                <Form.Item label="Họ và Tên">
-                  <p className={styles.text_form_label}>{studentById.name}</p>
-                </Form.Item>
-                <Form.Item label="Mã sinh viên">
-                  <p className={styles.text_form_label}>
-                    {studentById.mssv.toUpperCase()}
-                  </p>
-                </Form.Item>
-                <Form.Item name="nameCompany" label="Tên doanh nghiệp">
-                  <p className={styles.text_form_label}>
-                    {infoUser.student.support === 1
-                      ? studentById?.business?.name?.toUpperCase()
-                      : infoUser?.student?.nameCompany?.toUpperCase()}
-                  </p>
-                </Form.Item>
-
-                <Form.Item
-                  label="Thời gian bắt đầu thực tập"
-                  // rules={[{}]}
-                >
-                  <Space direction="vertical">
-                    <DatePicker
-                      defaultValue={moment(
-                        studentById.internshipTime,
-                        dateFormat
-                      )}
-                      disabled
-                      placeholder="Bắt đầu thực tập"
-                    />
-                  </Space>
-                </Form.Item>
-                <Form.Item
-                  name="EndInternshipTime"
-                  label="Thời gian kết thúc thực tập"
-                  // rules={[{}]}
-                >
-                  <Space direction="vertical">
-                    <DatePicker
-                      disabledDate={disabledDate}
-                      onChange={datePicker}
-                      placeholder="Kết thúc thực tập"
-                    />
-                  </Space>
-                </Form.Item>
-                <Form.Item
-                  name="attitudePoint"
-                  label="Điểm thái độ"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng nhập điểm thái độ",
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    style={{
-                      width: "50%",
-                    }}
-                    min={0}
-                    max={10}
-                    placeholder="Nhập điểm thái độ thực tập"
-                  />
-                </Form.Item>
-
-                <Form.Item
-                  name="resultScore"
-                  label="Điểm kết quả"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng nhập điểm kết quả thực tập",
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    style={{
-                      width: "50%",
-                    }}
-                    min={0}
-                    max={10}
-                    placeholder="Nhập điểm kết quả thực tập"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="upload"
-                  label="Upload báo cáo (Docx hoặc PDF)"
-                  valuePropName="upload"
-                >
-                  <Upload {...props} maxCount={1}>
-                    <Button icon={<UploadOutlined />}>Click to upload</Button>
-                  </Upload>
-                </Form.Item>
-                <Form.Item {...tailFormItemLayout}>
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                  <Button
-                    style={{
-                      margin: "0 5px 0",
-                    }}
-                    type="link"
-                    onClick={() => window.open(lForm)}
-                  >
-                    Xem CV
-                  </Button>
-                </Form.Item>
-              </Form> */}
               <Form
                 {...formItemLayout}
                 className={styles.form}
@@ -447,8 +332,12 @@ const ReportForm = ({ infoUser, studentById }) => {
               </Form>
             </Spin>
           </>
-        ) : !studentById.form ? (
+        ) : studentById.statusCheck === 3 ? (
+          "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+        ) : studentById.statusCheck === 4 ? (
           "Bạn phải nộp thành công biên bản trước"
+        ) : studentById.statusCheck === 9 ? (
+          "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
         ) : (
           "Bạn đã nộp báo cáo thành công"
         )
