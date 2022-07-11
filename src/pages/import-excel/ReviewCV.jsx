@@ -280,6 +280,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
           textNote,
         })
       );
+
       setChooseIdStudent([]);
       message.success("Thành công");
     } catch (error) {
@@ -485,30 +486,22 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
         </>
       ) : (
         <>
-          <Button
-            variant="warning"
-            style={{ marginRight: 10, height: 36 }}
-            onClick={(e) => exportToCSV(dataExportExcel)}
-          >
-            Export
-          </Button>
           <div className="filter" style={{ marginTop: "20px" }}>
-            <Row>
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "70%", marginRight: "25px" }}>
-                    Ngành:{" "}
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Ngành:
                   </span>
                   <Select
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "70px",
                     }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
@@ -526,23 +519,21 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
-                  
                 >
-                  <span style={{ width: "65%" }}>Trạng thái:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Trạng thái:
+                  </span>
                   <Select
                     className="filter-status"
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "46px",
                     }}
                     onChange={(val) =>
                       handleStandardTableChange("statusCheck", val)
@@ -558,21 +549,20 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "70%" }}>Tìm Kiếm: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Tìm Kiếm:
+                  </span>
                   <Input
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "50px",
                     }}
                     placeholder="Tìm kiếm theo mã sinh viên"
                     onChange={(val) =>
@@ -581,32 +571,48 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                   />
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col
-                xs={24}
-                sm={4}
-                md={24}
-                lg={24}
-                xl={12}
-              >
-                <div>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <Button
+                    variant="warning"
                     style={{
-                      marginTop: "10px",
+                      marginRight: 10,
                       color: "#fff",
                       background: "#ee4d2d",
+                      minWidth: "90px",
+                    }}
+                    onClick={(e) => exportToCSV(dataExportExcel)}
+                  >
+                    Export
+                  </Button>
+                  <Button
+                    style={{
+                      color: "#fff",
+                      background: "#ee4d2d",
+                      minWidth: "90px",
                     }}
                     onClick={handleSearch}
                   >
                     Tìm kiếm
                   </Button>
-                  {chooseIdStudent.length > 0 && (
-                    <div className="comfirm">
-                      <span>Lựa chọn </span>
+                </div>
+              </Col>
+              {chooseIdStudent.length > 0 && (
+                <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                  <Row gutter={[10, 10]}>
+                    <Col xs={24} sm={24} md={24} lg={4} xl={4}>
+                      <span style={{ whiteSpace: "nowrap" }}>Lựa chọn:</span>
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={10} xl={10}>
                       <Select
                         className="comfirm-click"
-                        style={{ width: "100%", marginTop: "10px" }}
+                        style={{ width: "100%" }}
                         onChange={actionOnchange}
                         placeholder="Chọn"
                       >
@@ -617,11 +623,12 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                           Cập nhật trạng thái
                         </Option>
                       </Select>
-
-                      {Object.keys(status).length >= 1 && (
+                    </Col>
+                    {Object.keys(status).length >= 1 && (
+                      <Col xs={24} sm={12} md={12} lg={10} xl={10}>
                         <Select
                           className="upload-status"
-                          style={{ width: "100%", margin: "10px 0" }}
+                          style={{ width: "100%" }}
                           onChange={(e) => selectStatus(e)}
                           placeholder="Chọn trạng thái"
                         >
@@ -631,8 +638,10 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                             </Option>
                           ))}
                         </Select>
-                      )}
-                      {note === 1 &&(
+                      </Col>
+                    )}
+                    {note === 1 && (
+                      <Col span={24}>
                         <TextArea
                           // value={value}
                           onChange={handleNote}
@@ -640,19 +649,25 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                           style={{ marginRight: 10 }}
                           autoSize={{ minRows: 3, maxRows: 5 }}
                         />
-                      )}
-                      {Object.keys(status).length > 0 && (
+                      </Col>
+                    )}
+                    {Object.keys(status).length > 0 && (
+                      <Col xs={24} sm={12} md={12} lg={4} xl={4}>
                         <Button
-                          style={{ marginRight: 10 }}
+                          style={{
+                            color: "#fff",
+                            background: "#ee4d2d",
+                            minWidth: "90px",
+                          }}
                           onClick={() => comfirm()}
                         >
                           Xác nhận
                         </Button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </Col>
+                      </Col>
+                    )}
+                  </Row>
+                </Col>
+              )}
             </Row>
           </div>
         </>

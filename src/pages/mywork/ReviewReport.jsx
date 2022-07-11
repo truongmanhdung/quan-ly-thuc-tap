@@ -7,7 +7,7 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import {  filterStatusReport } from "../../ultis/selectOption";
+import { filterStatusReport } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
@@ -275,43 +275,44 @@ const ReviewReport = ({ isMobile, listMajors }) => {
 
   const exportToCSV = (list) => {
     const newData = [];
-   list && list.map((item) => {
-      let itemStatus = item["statusCheck"];
-      const newObject = {};
-      newObject["MSSV"] = item["mssv"];
-      newObject["Họ tên"] = item["name"];
-      newObject["Email"] = item["email"];
-      newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Tên công ty"] = item["business"]?.name;
-      newObject["Địa chỉ công ty"] = item["business"]?.address;
-      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
-      newObject["Điểm thái độ"] = item["attitudePoint"];
-      newObject["Điểm kết quả"] = item["resultScore"];
-      newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
-      newObject["Ngày kết thúc"] = item["endInternShipTime"];
-      newObject["Trạng thái"] =
-        itemStatus === 1
-          ? "Chờ kiểm tra"
-          : itemStatus === 2
-          ? " Nhận CV"
-          : itemStatus === 3
-          ? " Trượt"
-          : itemStatus === 4
-          ? " Đã nộp biên bản"
-          : itemStatus === 5
-          ? "Sửa biên bản"
-          : itemStatus === 6
-          ? "Đang thực tập "
-          : itemStatus === 7
-          ? " Đã nộp báo cáo "
-          : itemStatus === 8
-          ? " Sửa báo cáo"
-          : itemStatus === 9
-          ? "Hoàn thành"
-          : "Chưa đăng ký";
-      newObject["Báo cáo"] = item["report"];
-      return newData.push(newObject);
-    });
+    list &&
+      list.map((item) => {
+        let itemStatus = item["statusCheck"];
+        const newObject = {};
+        newObject["MSSV"] = item["mssv"];
+        newObject["Họ tên"] = item["name"];
+        newObject["Email"] = item["email"];
+        newObject["Số điện thoại"] = item["phoneNumber"];
+        newObject["Tên công ty"] = item["business"]?.name;
+        newObject["Địa chỉ công ty"] = item["business"]?.address;
+        newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
+        newObject["Điểm thái độ"] = item["attitudePoint"];
+        newObject["Điểm kết quả"] = item["resultScore"];
+        newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
+        newObject["Ngày kết thúc"] = item["endInternShipTime"];
+        newObject["Trạng thái"] =
+          itemStatus === 1
+            ? "Chờ kiểm tra"
+            : itemStatus === 2
+            ? " Nhận CV"
+            : itemStatus === 3
+            ? " Trượt"
+            : itemStatus === 4
+            ? " Đã nộp biên bản"
+            : itemStatus === 5
+            ? "Sửa biên bản"
+            : itemStatus === 6
+            ? "Đang thực tập "
+            : itemStatus === 7
+            ? " Đã nộp báo cáo "
+            : itemStatus === 8
+            ? " Sửa báo cáo"
+            : itemStatus === 9
+            ? "Hoàn thành"
+            : "Chưa đăng ký";
+        newObject["Báo cáo"] = item["report"];
+        return newData.push(newObject);
+      });
 
     const ws = XLSX.utils.json_to_sheet(newData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
@@ -411,7 +412,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
               <Col span={12}>
                 <div className="search">
                   <Select
-                    style={{ width: "95%" }}
+                    style={{ width: "100%" }}
                     onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                     defaultValue=""
@@ -459,7 +460,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   variant="warning"
                   type="primary"
                   style={{
-                    width: "95%",
+                    width: "100%",
                   }}
                   onClick={(e) => exportToCSV(list)}
                 >
@@ -536,20 +537,21 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       ) : (
         <>
           <div className="filter" style={{ marginTop: "20px" }}>
-            <Row>
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "65%" }}>Ngành: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Ngành:{" "}
+                  </span>
                   <Select
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "50px",
                     }}
                     defaultValue=""
                     onChange={(val) => handleStandardTableChange("majors", val)}
@@ -567,22 +569,21 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "65%" }}>Trạng thái:</span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Trạng thái:
+                  </span>
                   <Select
                     className="filter-status"
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "49px",
                     }}
                     defaultValue={11}
                     onChange={(val) =>
@@ -598,21 +599,20 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   </Select>
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col xs={24} sm={4} md={12} lg={8} xl={8}>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
                 <div
                   style={{
                     display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  className="search"
                 >
-                  <span style={{ width: "65%" }}>Tìm Kiếm: </span>
+                  <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                    Tìm Kiếm:{" "}
+                  </span>
                   <Input
                     style={{
                       width: "100%",
-                      position: "relative",
-                      right: "43px",
                     }}
                     placeholder="Tìm kiếm theo mã sinh viên"
                     onChange={(val) =>
@@ -621,20 +621,20 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   />
                 </div>
               </Col>
-              <br />
-              <br />
-              <Col
-                xs={20}
-                sm={4}
-                md={24}
-                lg={24}
-                xl={80}
-                style={{ padding: "0 10px" }}
-              >
-                <div>
+              <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <Button
                     style={{
                       marginRight: 20,
+                      color: "#fff",
+                      background: "#ee4d2d",
+                      minWidth: "90px",
                     }}
                     variant="warning"
                     onClick={(e) => exportToCSV(list)}
@@ -643,65 +643,86 @@ const ReviewReport = ({ isMobile, listMajors }) => {
                   </Button>
                   <Button
                     style={{
-                      marginTop: "10px",
                       color: "#fff",
                       background: "#ee4d2d",
+                      minWidth: "90px",
                     }}
                     onClick={handleSearch}
                   >
                     Tìm kiếm
                   </Button>
-                  {chooseIdStudent.length > 0 && (
-                    <div className="comfirm">
-                      <span style={{ width: "40%" }}>Lựa chọn </span>
-                      <Select
-                        className="comfirm-click"
-                        style={{ width: "100%" }}
-                        onChange={actionOnchange}
-                        placeholder="Chọn"
-                      >
-                        <Option value="assgin" key="1">
-                          Kéo việc
-                        </Option>
-                        <Option value="edit" key="2">
-                          Cập nhật trạng thái
-                        </Option>
-                      </Select>
-
-                      {Object.keys(status).length >= 1 && (
-                        <Select
-                          className="upload-status"
-                          style={
-                            window.innerWidth > 1024
-                              ? { width: "100%", margin: "10px", marginLeft: "0" }
-                              : { width: "100%", margin: "10px 0" }
-                          }
-                          onChange={(e) => selectStatus(e)}
-                          placeholder="Chọn trạng thái"
-                        >
-                          {statusConfigReport.map((item, index) => (
-                            <Option value={item.value} key={index}>
-                              {item.title}
-                            </Option>
-                          ))}
-                        </Select>
-                      )}
-                      {note === 3 || note === 5 || note === 8 ? (
-                        <TextArea
-                          // value={value}
-                          onChange={handleNote}
-                          placeholder="Ghi chú..."
-                          autoSize={{ minRows: 3, maxRows: 5 }}
-                        />
-                      ) : null}
-
-                      {Object.keys(status).length > 0 && (
-                        <Button onClick={() => comfirm()}>Xác nhận</Button>
-                      )}
-                    </div>
-                  )}
                 </div>
               </Col>
+                {chooseIdStudent.length > 0 && (
+                  <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                      <Row gutter={[10, 10]}>
+                        <Col xs={24} sm={24} md={24} lg={4} xl={4}>
+                          <span style={{ whiteSpace: "nowrap",width: "100%"}}>
+                            Lựa chọn:
+                          </span>
+                        </Col>
+                        <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+                          <Select
+                            className="comfirm-click"
+                            style={{ width: "100%" }}
+                            onChange={actionOnchange}
+                            placeholder="Chọn"
+                          >
+                            <Option value="assgin" key="1">
+                              Kéo việc
+                            </Option>
+                            <Option value="edit" key="2">
+                              Cập nhật trạng thái
+                            </Option>
+                          </Select>
+                        </Col>
+                        {Object.keys(status).length >= 1 && (
+                          <Col xs={24} sm={12} md={12} lg={10} xl={10}>
+                            <Select
+                              className="upload-status"
+                              style={
+                                window.innerWidth > 1024
+                                  ? { width: "100%" }
+                                  : { width: "100%" }
+                              }
+                              onChange={(e) => selectStatus(e)}
+                              placeholder="Chọn trạng thái"
+                            >
+                              {statusConfigReport.map((item, index) => (
+                                <Option value={item.value} key={index}>
+                                  {item.title}
+                                </Option>
+                              ))}
+                            </Select>
+                          </Col>
+                        )}
+                        {note === 3 || note === 5 || note === 8 ? (
+                          <Col span={24}>
+                            <TextArea
+                              // value={value}
+                              onChange={handleNote}
+                              placeholder="Ghi chú..."
+                              autoSize={{ minRows: 3, maxRows: 5 }}
+                            />
+                          </Col>
+                        ) : null}
+                        {Object.keys(status).length > 0 && (
+                          <Col xs={24} sm={12} md={12} lg={4} xl={4}>
+                            <Button
+                              style={{
+                                color: "#fff",
+                                background: "#ee4d2d",
+                                minWidth: "90px",
+                              }}
+                              onClick={() => comfirm()}
+                            >
+                              Xác nhận
+                            </Button>
+                          </Col>
+                        )}
+                      </Row>
+                  </Col>
+                )}
             </Row>
           </div>
         </>
