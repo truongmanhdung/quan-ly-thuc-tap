@@ -64,7 +64,7 @@ const Formrp = ({ studentById }) => {
       })
     );
     dispatch(getStudentId(infoUser));
-  }, [dispatch, infoUser, spin]);
+  }, [dispatch, infoUser.student?.smester_id]);
 
   function guardarArchivo(files, data) {
     const file = files; //the file
