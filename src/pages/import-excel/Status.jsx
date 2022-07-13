@@ -388,7 +388,6 @@ const Status = ({
     setMajorImport("");
     setPage({
       ...page,
-      smester_id: "",
     });
     setVisible(false);
   };
