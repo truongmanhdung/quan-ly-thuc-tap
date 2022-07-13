@@ -37,6 +37,7 @@ const Status = ({
   listMajors,
   isMobile,
 }) => {
+  
   const infoUser = getLocal();
 
   const [studentdetail, setStudentDetail] = useState("");
@@ -53,8 +54,6 @@ const Status = ({
       infoUser && infoUser.manager && infoUser.manager.campus_id
         ? infoUser.manager.campus_id
         : "",
-    smester_id:
-      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
   const [majorImport, setMajorImport] = useState("");
   const [filter, setFiler] = useState();
@@ -385,7 +384,6 @@ const Status = ({
   };
 
   const closeVisible = () => {
-    setMajorImport("");
     setPage({
       ...page,
     });
