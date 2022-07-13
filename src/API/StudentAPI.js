@@ -9,7 +9,7 @@ const StudentAPI = {
       .catch((err) => err);
   },
   get(infoUser) {
-    const url = `/student/${infoUser.student.mssv}`;
+    const url = `/student/${infoUser.student._id}`;
     return axiosClient.get(url, {
       headers: {
         "Content-Type": "application/json",

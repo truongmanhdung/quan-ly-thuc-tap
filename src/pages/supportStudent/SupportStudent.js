@@ -207,6 +207,7 @@ const SupportStudent = ({
         typeNumber: value,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
+        _id: infoUser.student._id
       };
 
       if (value === 0) {
