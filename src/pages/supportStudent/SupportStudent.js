@@ -251,7 +251,7 @@ const SupportStudent = ({
           {isCheck ? (
             <>
               {check ? (
-                <>{isCheck ? <CountDownCustorm time={time} /> : ""}</>
+                <>{isCheck ? <CountDownCustorm time={timeCheck} /> : ""}</>
               ) : value === 1 ? (
                 <p style={{ marginBottom: "16px" }}>
                   Thời gian đăng ký form hỗ trợ chưa mở, sinh viên vui lòng chờ

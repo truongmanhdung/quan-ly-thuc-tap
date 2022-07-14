@@ -198,7 +198,7 @@ const Formrp = ({ studentById }) => {
         isCheck ? (
           <>
             {" "}
-            {check && <CountDownCustorm time={time} />}
+            {check && <CountDownCustorm time={timeCheck} />}
             <Spin spinning={spin}>
               <Form
                 {...formItemLayout}
