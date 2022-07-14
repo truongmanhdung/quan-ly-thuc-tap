@@ -167,6 +167,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         resultScore: values.resultScore,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
+        _id: infoUser.student._id
       };
 
       if (values.upload === undefined || values.upload === null) {

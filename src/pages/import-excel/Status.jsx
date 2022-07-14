@@ -53,8 +53,6 @@ const Status = ({
       infoUser && infoUser.manager && infoUser.manager.campus_id
         ? infoUser.manager.campus_id
         : "",
-    smester_id:
-      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
   const [majorImport, setMajorImport] = useState("");
   const [filter, setFiler] = useState();
@@ -73,6 +71,10 @@ const Status = ({
       const url = `/student?${stringify({
         ...page,
         ...filter,
+        campus_id:
+          infoUser && infoUser.manager && infoUser.manager.campus_id
+            ? infoUser.manager.campus_id
+            : "",
       })}`;
       axiosClient
         .get(url, {
@@ -97,6 +99,10 @@ const Status = ({
               ...page,
               ...filter,
               smester_id: res.data._id,
+              campus_id:
+                infoUser && infoUser.manager && infoUser.manager.campus_id
+                  ? infoUser.manager.campus_id
+                  : "",
             })}`;
             axiosClient
               .get(url, {
@@ -385,7 +391,6 @@ const Status = ({
   };
 
   const closeVisible = () => {
-    setMajorImport("");
     setPage({
       ...page,
     });
@@ -626,7 +631,7 @@ const Status = ({
                 </span>
                 <Select
                   className="filter-status"
-                  style={{ width: "100%"}}
+                  style={{ width: "100%" }}
                   onChange={(val) =>
                     handleStandardTableChange("statusCheck", val)
                   }
@@ -654,7 +659,7 @@ const Status = ({
                   Tìm Kiếm:
                 </span>
                 <Input
-                  style={{ width: "100%",}}
+                  style={{ width: "100%" }}
                   placeholder="Tìm kiếm theo mã sinh viên"
                   onChange={(val) =>
                     handleStandardTableChange("mssv", val.target.value.trim())
@@ -679,7 +684,7 @@ const Status = ({
                   style={{
                     color: "#fff",
                     background: "#ee4d2d",
-                    marginLeft:'20px'
+                    marginLeft: "20px",
                   }}
                   onClick={() => comfirm()}
                 >

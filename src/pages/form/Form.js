@@ -158,6 +158,7 @@ const Formrp = ({ studentById }) => {
         internshipTime: startDate,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
+        _id: infoUser.student._id
       };
 
       if (values.upload === undefined || values.upload === null) {
