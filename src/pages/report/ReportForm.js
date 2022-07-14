@@ -152,7 +152,7 @@ const ReportForm = ({ infoUser, studentById }) => {
   const isCheck =
     studentById.statusCheck === 6 ||
     studentById.statusCheck === 8 ||
-    studentById.status === 5;
+    studentById.statusCheck === 5;
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -334,8 +334,6 @@ const ReportForm = ({ infoUser, studentById }) => {
           </>
         ) : studentById.statusCheck === 3 ? (
           "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
-        ) : studentById.statusCheck === 4 ? (
-          "Bạn phải nộp thành công biên bản trước"
         ) : studentById.statusCheck === 9 ? (
           "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
         ) : (
