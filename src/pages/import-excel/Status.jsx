@@ -53,6 +53,7 @@ const Status = ({
       infoUser && infoUser.manager && infoUser.manager.campus_id
         ? infoUser.manager.campus_id
         : "",
+    smester_id: defaultSemester?._id ? defaultSemester?._id : "",
   });
   const [majorImport, setMajorImport] = useState("");
   const [filter, setFiler] = useState();
@@ -411,8 +412,10 @@ const Status = ({
               width: "100%",
             }}
             onChange={(val) => setPage({ ...page, smester_id: val })}
-            placeholder="Kỳ hiện tại"
+            placeholder="Chọn kỳ`"
+            defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ""}
           >
+            {!defaultSemester?._id && <Option value={""} disabled>Chọn kỳ</Option>}
             {listSemesters &&
               listSemesters.length > 0 &&
               listSemesters?.map((item, index) => (
@@ -867,8 +870,9 @@ const Status = ({
                 }}
                 onChange={(val) => setPage({ ...page, smester_id: val })}
                 placeholder="Chọn kỳ"
-                defaultValue={page.smester_id}
+                defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ""}
               >
+                {!defaultSemester?._id && <Option value={""} disabled>Chọn kỳ</Option>}
                 {listSemesters &&
                   listSemesters.length > 0 &&
                   listSemesters?.map((item, index) => (

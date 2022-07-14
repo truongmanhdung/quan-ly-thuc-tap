@@ -141,8 +141,9 @@ const ListOfBusiness = ({
               })
             }
             style={{ width: "100%" }}
-            defaultValue={defaultSemester ? defaultSemester._id : ""}
+            defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ""}
           >
+            {!defaultSemester?._id && <Option value={""} disabled>Chọn kỳ</Option>}
             {listSemesters &&
               listSemesters?.map((item, index) => (
                 <Option value={item._id} key={index}>
@@ -240,11 +241,12 @@ const ListOfBusiness = ({
                     smester_id: val,
                   })
                 }
-                defaultValue={defaultSemester ? defaultSemester._id : ""}
+                defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ""}
                 style={{
                   width: "100%",
                 }}
               >
+                {!defaultSemester?._id && <Option value={""} disabled>Chọn kỳ</Option>}
                 {listSemesters &&
                   listSemesters?.map((item, index) => (
                     <Option value={item._id} key={index}>
