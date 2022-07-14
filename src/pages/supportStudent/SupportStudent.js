@@ -9,7 +9,7 @@ import {
   Spin,
   Upload,
 } from "antd";
-import { object } from "prop-types";
+import { array, object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
@@ -185,7 +185,8 @@ const SupportStudent = ({
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
       : [];
-
+  console.log("dataNarrow", listNarrow);
+  console.log("studentById", studentById);
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -432,6 +433,7 @@ const SupportStudent = ({
                           rules={[
                             {
                               required: true,
+                              pattern: new RegExp("^[0-9]*$"),
                               message: "Vui lòng nhập Mã số thuế",
                             },
                           ]}
@@ -476,6 +478,9 @@ const SupportStudent = ({
                           rules={[
                             {
                               required: true,
+                              pattern: new RegExp(
+                                "[a-z0-9]+@[a-z]+.[a-z]{2,3}"
+                              ),
                               message: "Vui lòng nhập Email người tiếp nhận",
                             },
                           ]}
@@ -518,7 +523,7 @@ SupportStudent.propTypes = {
   studentById: object,
   infoUser: object,
   business: object,
-  narrow: object,
+  narrow: array,
 };
 export default connect(
   ({
