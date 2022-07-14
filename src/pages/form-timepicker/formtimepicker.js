@@ -68,8 +68,8 @@ const Formtimepicker = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getListTime(semester._id));
-  }, [semester._id]);
+    dispatch(getListTime(semester?._id));
+  }, [semester?._id]);
 
   const onSaveTime = async (value) => {
     const startTime = date[0]._d.getTime();
@@ -120,8 +120,17 @@ const Formtimepicker = () => {
                 }}
                 onChange={(value) => setDataSemester(value)}
                 placeholder="Kỳ hiện tại"
-                defaultValue={defaultSemester ? defaultSemester._id : ""}
+                defaultValue={
+                  defaultSemester && defaultSemester?._id
+                    ? defaultSemester?._id
+                    : ""
+                }
               >
+                {!defaultSemester?._id && (
+                  <Option value={""} disabled>
+                    Chọn kỳ
+                  </Option>
+                )}
                 {listSemesters &&
                   listSemesters.length > 0 &&
                   listSemesters?.map((item, index) => (
