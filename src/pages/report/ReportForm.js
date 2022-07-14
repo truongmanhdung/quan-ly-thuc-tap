@@ -207,7 +207,7 @@ const ReportForm = ({ infoUser, studentById }) => {
       {check ? (
         isCheck ? (
           <>
-            {check && <CountDownCustorm time={time} />}
+            {check && <CountDownCustorm time={timeCheck} />}
             <Spin spinning={spin}>
               <Form
                 {...formItemLayout}

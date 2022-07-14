@@ -24,6 +24,7 @@ import {
 } from "../../ultis/constConfig";
 import "./studentDetail.css";
 import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { fetchManager } from "../../features/managerSlice/managerSlice";
 const optionCheck = [1, 5, 8, 3];
 const { Option } = Select;
 const { TextArea } = Input;
@@ -66,6 +67,10 @@ const StudentDetail = (props) => {
     }
     setIsLoading(false);
   }, [studentId]);
+
+  useEffect(() => {
+    dispatch(fetchManager());
+  }, [])
 
   useEffect(() => {
     getDataStudent();
