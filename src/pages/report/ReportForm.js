@@ -152,7 +152,7 @@ const ReportForm = ({ infoUser, studentById }) => {
   const isCheck =
     studentById.statusCheck === 6 ||
     studentById.statusCheck === 8 ||
-    studentById.status === 5;
+    studentById.statusCheck === 5;
 
   const onFinish = async (values) => {
     setSpin(true);
@@ -167,6 +167,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         resultScore: values.resultScore,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
+        _id: infoUser.student._id
       };
 
       if (values.upload === undefined || values.upload === null) {
@@ -206,7 +207,7 @@ const ReportForm = ({ infoUser, studentById }) => {
       {check ? (
         isCheck ? (
           <>
-            {check && <CountDownCustorm time={time} />}
+            {check && <CountDownCustorm time={timeCheck} />}
             <Spin spinning={spin}>
               <Form
                 {...formItemLayout}
@@ -333,8 +334,6 @@ const ReportForm = ({ infoUser, studentById }) => {
           </>
         ) : studentById.statusCheck === 3 ? (
           "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
-        ) : studentById.statusCheck === 4 ? (
-          "Bạn phải nộp thành công biên bản trước"
         ) : studentById.statusCheck === 9 ? (
           "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
         ) : (

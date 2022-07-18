@@ -57,6 +57,7 @@ const studentSlice = createSlice({
           total: 0
         }
       }
+      state.loading = false
     }
   },
   extraReducers: (builder) => {
