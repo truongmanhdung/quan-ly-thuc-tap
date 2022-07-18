@@ -89,6 +89,7 @@ const Formrp = ({ studentById }) => {
           const newData = { ...data, form: a.url };
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
+              console.log("res", res)
               message.success(res.data.message);
               setFile("");
               form.resetFields();
@@ -138,13 +139,20 @@ const Formrp = ({ studentById }) => {
       timeCheck = checkTimeStudent;
     }
   }
+  const [isCheck, setIsCheck] = useState(true)
+  useEffect(() => {
+    // eslint-disable-next-line no-unused-expressions
+    (studentById && studentById?.statusCheck === 2) ||
+    studentById?.statusCheck === 5
+  })
+  console.log("isCheck", isCheck)
   const check =
     timeCheck &&
     timeCheck.endTime > new Date().getTime() &&
     timeCheck.startTime < new Date().getTime();
-  const isCheck =
-    (studentById && studentById?.statusCheck === 2) ||
-    studentById?.statusCheck === 5;
+  // const isCheck =
+  //   (studentById && studentById?.statusCheck === 2) ||
+  //   studentById?.statusCheck === 5;
   const nameCompany =
     studentById.support === 0 ? studentById.nameCompany : studentById.business;
   const onFinish = async (values) => {
@@ -168,7 +176,10 @@ const Formrp = ({ studentById }) => {
         setSpin(false);
         return;
       }
-      await guardarArchivo(file, newData);
+      const data = await guardarArchivo(file, newData);
+      console.log("dataavv", data)
+      // setIsCheck(false)
+
     } catch (error) {
       const dataErr = await error.response.data;
       message.error(dataErr.message);
@@ -217,7 +228,7 @@ const Formrp = ({ studentById }) => {
                 )}
                 <Form.Item label="Mã sinh viên">
                   <p className={styles.text_form_label}>
-                    {studentById.mssv.toUpperCase()}
+                    {studentById.mssv}
                   </p>
                 </Form.Item>
                 <Form.Item label="Họ và Tên">
@@ -258,7 +269,7 @@ const Formrp = ({ studentById }) => {
               </Form>
             </Spin>
           </>
-        ) : !studentById.form ? (
+        ) : studentById && !studentById.form ? (
           "Bạn phải nộp thành công CV trước"
         ) : (
           "Bạn đã nộp biên bản thành công."
