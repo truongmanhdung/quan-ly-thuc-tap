@@ -234,7 +234,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   };
 
   const actionOnchange = (value) => {
-    console.log("value", value)
     switch (value) {
       case "assgin":
         try {
@@ -265,7 +264,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   };
   const [note, setNote] = useState();
   const selectStatus = (value) => {
-    console.log("value", value)
     setNote(value);
     setStatus({
       listIdStudent: listIdStudent,
