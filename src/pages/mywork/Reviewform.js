@@ -267,6 +267,7 @@ const Reviewform = ({
               email: infoUser?.manager?.email,
             })
           );
+          setNote(value);
           setStatus([]);
           message.success("Thành công");
         } catch (error) {
