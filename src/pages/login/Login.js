@@ -32,7 +32,10 @@ const Login = () => {
           saveLocal(res.payload);
           return res && redirect(res);
         })
-        .catch((err) => err && message.error("Đăng nhập thất bại"));
+        .catch((err) => {
+          localStorage.removeItem('user')
+          message.error("Đăng nhập thất bại")
+        });
     });
   };
   const redirect = ({ payload: { isAdmin } }) => {
