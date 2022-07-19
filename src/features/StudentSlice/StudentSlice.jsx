@@ -33,6 +33,7 @@ export const resetStudentAction = createAsyncThunk(
   "student/resetStudentAction",
   async (idStudent) => {
     const { data } = await StudentAPI.resetApi(idStudent);
+    console.log(data);
     return data;
   }
 );
@@ -141,8 +142,8 @@ const studentSlice = createSlice({
       state.loading = false;
       state.message = action.payload.message;
     });
-    builder.addCase(resetStudentAction.rejected, (state) => {
-      state.messages = "Get student fail";
+    builder.addCase(resetStudentAction.rejected, (state,action) => {
+      state.messages = action.payload.message;
     });
   },
 });

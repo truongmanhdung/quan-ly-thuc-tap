@@ -1,5 +1,5 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Button, Col, Drawer, Input, Row, Select, Table } from "antd";
+import { Button, Col, Drawer, Input, message, Row, Select, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
 import { omit } from "lodash";
@@ -63,6 +63,7 @@ const Status = ({
     setModal(true);
   };
 
+
   const onCloseModal = () => {
     setModal(false);
     getListStudent();
@@ -70,8 +71,12 @@ const Status = ({
 
   const resetStudent = async(val, key) =>{
     if(window.confirm('Bạn có chắc chắn muốn reset trạng thái sinh viên ?')){
-     await dispatch( resetStudentAction(val?._id))
-     getListStudent()
+      try {
+        await dispatch( resetStudentAction(val?._id))
+        getListStudent()
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
@@ -871,8 +876,6 @@ const Status = ({
           studentId={studentdetail._id}
           onShowModal={modal}
           closeModal={onCloseModal}
-          listBusiness={listBusiness}
-          listManager={listManager}
         />
       )}
 
