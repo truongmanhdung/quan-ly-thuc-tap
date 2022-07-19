@@ -1,5 +1,5 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Button, Col, Drawer, Input, Row, Select, Table } from "antd";
+import { Button, Col, Drawer, Input, message, Row, Select, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
 import { omit } from "lodash";
@@ -22,6 +22,7 @@ import {
   getAllStudent,
   getListStudentReducer,
   getStudent,
+  resetStudentAction,
 } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
@@ -62,10 +63,22 @@ const Status = ({
     setModal(true);
   };
 
+
   const onCloseModal = () => {
     setModal(false);
     getListStudent();
   };
+
+  const resetStudent = async(val, key) =>{
+    if(window.confirm('Bạn có chắc chắn muốn reset trạng thái sinh viên ?')){
+      try {
+        await dispatch( resetStudentAction(val?._id))
+        getListStudent()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   const getListStudent = async () => {
     if (page?.smester_id && page?.smester_id.length > 0) {
@@ -304,6 +317,22 @@ const Status = ({
             </span>
           );
         }
+      },
+    },
+    {
+      title: "Reset trạng thái",
+      render: (val, key) => {
+        return (
+          <Button
+          style={{
+            color: "#fff",
+            background: "#ee4d2d",
+          }}
+          onClick={() => resetStudent(val, key)}
+          >
+             Reset
+          </Button>
+        );
       },
     },
   ];
@@ -847,8 +876,6 @@ const Status = ({
           studentId={studentdetail._id}
           onShowModal={modal}
           closeModal={onCloseModal}
-          listBusiness={listBusiness}
-          listManager={listManager}
         />
       )}
 

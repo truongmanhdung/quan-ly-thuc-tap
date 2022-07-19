@@ -243,6 +243,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
               email: infoUser?.manager?.email,
             })
           );
+          setNote(value);
           setStatus([]);
           message.success("Thành công");
         } catch (error) {
@@ -292,10 +293,14 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   const handleNote = ({ target: { value } }) => {
     if (typePingTimeoutRef.current) {
       clearTimeout(typePingTimeoutRef.current);
+    // }else if (typePingTimeoutRef.current){
+    //   clearTimeout(typePingTimeoutRef.current);
+    // }
     }
     typePingTimeoutRef.current = setTimeout(() => {
       setTextNote(value);
     }, 300);
+
   };
 
   const fileType =
@@ -368,7 +373,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
-                          <Option value={item?._id} key={index}>
+                          <Option value={item?._id} key={item?._id}>
                             {item?.name}
                           </Option>
                         </>
@@ -462,7 +467,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     ))}
                   </Select>
                 )}
-                {note === 1 && (
+                {note === 1 || note === 5 ? (
                   <TextArea
                     // value={value}
                     onChange={handleNote}
@@ -470,7 +475,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     style={{ marginRight: 10 }}
                     autoSize={{ minRows: 3, maxRows: 5 }}
                   />
-                )}
+                ): null}
                 {Object.keys(status).length > 0 && (
                   <Button style={{ marginRight: 10 }} onClick={() => comfirm()}>
                     Xác nhận
