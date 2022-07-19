@@ -87,15 +87,17 @@ const Formrp = ({ studentById }) => {
         .then((res) => res.json())
         .then((a) => {
           const newData = { ...data, form: a.url };
+          console.log("start")
           ReportFormAPI.uploadForm(newData)
             .then((res) => {
-              console.log("res", res)
+              console.log("resThanh", res)
               message.success(res.data.message);
               setFile("");
               form.resetFields();
             })
-            .catch(async (err) => {
-              const dataErr = await err.response.data;
+            .catch((err) => {
+              console.log("errThanh", err)
+              const dataErr = err.response.data;
               if (!dataErr.status) {
                 message.error(`${dataErr.message}`);
                 form.resetFields();
@@ -103,6 +105,7 @@ const Formrp = ({ studentById }) => {
                 message.error(`${dataErr.message}`);
               }
             });
+          console.log("end")
           setSpin(false);
         })
         .catch((e) => {
@@ -179,7 +182,6 @@ const Formrp = ({ studentById }) => {
       const data = await guardarArchivo(file, newData);
       console.log("dataavv", data)
       // setIsCheck(false)
-
     } catch (error) {
       const dataErr = await error.response.data;
       message.error(dataErr.message);

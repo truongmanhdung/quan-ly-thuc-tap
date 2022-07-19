@@ -95,6 +95,7 @@ const ReportForm = ({ infoUser, studentById }) => {
           const newData = { ...data, report: a.url };
           ReportFormAPI.uploadReport(newData)
             .then((res) => {
+              console.log("res", res)
               message.success(res.data.message);
               form.resetFields();
               setSpin(false);
