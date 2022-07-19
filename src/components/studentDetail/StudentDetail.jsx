@@ -864,7 +864,7 @@ const StudentDetail = (props) => {
                       defaultValue="Chọn người review"
                       style={{ width: "50%" }}
                     >
-                      {listManager.length > 0 &&
+                      {listManager && listManager?.length > 0 &&
                         listManager.map((item, index) => (
                           <Option key={index} value={item.email}>
                             {item.name} - {item.email}
