@@ -29,6 +29,15 @@ export const getSmester = createAsyncThunk(
   }
 );
 
+export const resetStudentAction = createAsyncThunk(
+  "student/resetStudentAction",
+  async (idStudent) => {
+    const { data } = await StudentAPI.resetApi(idStudent);
+    console.log(data);
+    return data;
+  }
+);
+
 export const getStudentId = createAsyncThunk("student/getById", async (inforUser) => {
   const { data } = await StudentAPI.get(inforUser);
   return data;
@@ -122,6 +131,19 @@ const studentSlice = createSlice({
     });
     builder.addCase(getStudentId.rejected, (state) => {
       state.messages = "Get student fail";
+    });
+
+    //resetStudent
+
+    builder.addCase(resetStudentAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(resetStudentAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.message = action.payload.message;
+    });
+    builder.addCase(resetStudentAction.rejected, (state,action) => {
+      state.messages = action.payload.message;
     });
   },
 });
