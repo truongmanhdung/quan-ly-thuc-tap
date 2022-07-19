@@ -22,6 +22,7 @@ import {
   getAllStudent,
   getListStudentReducer,
   getStudent,
+  resetStudentAction,
 } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
@@ -66,6 +67,13 @@ const Status = ({
     setModal(false);
     getListStudent();
   };
+
+  const resetStudent = async(val, key) =>{
+    if(window.confirm('Bạn có chắc chắn muốn reset trạng thái sinh viên ?')){
+     await dispatch( resetStudentAction(val?._id))
+     getListStudent()
+    }
+  }
 
   const getListStudent = async () => {
     if (page?.smester_id && page?.smester_id.length > 0) {
@@ -304,6 +312,22 @@ const Status = ({
             </span>
           );
         }
+      },
+    },
+    {
+      title: "Reset trạng thái",
+      render: (val, key) => {
+        return (
+          <Button
+          style={{
+            color: "#fff",
+            background: "#ee4d2d",
+          }}
+          onClick={() => resetStudent(val, key)}
+          >
+             Reset
+          </Button>
+        );
       },
     },
   ];
