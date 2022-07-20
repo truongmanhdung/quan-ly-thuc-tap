@@ -185,8 +185,6 @@ const SupportStudent = ({
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
       : [];
-  console.log("dataNarrow", listNarrow);
-  console.log("studentById", studentById);
   const onFinish = async (values) => {
     setSpin(true);
     try {

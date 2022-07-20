@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react";
-import GoogleLogin from "react-google-login";
-import styles from "./Login.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { loginGoogle } from "../../features/authSlice/authSlice";
-import { Select, Empty, message } from "antd";
-import { useNavigate } from "react-router";
-import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
-import SemestersAPI from "../../API/SemestersAPI";
-import { saveLocal } from "../../ultis/storage";
-import { getSemesters } from "../../features/semesters/semestersSlice";
+import React, { useEffect, useState } from 'react';
+import GoogleLogin from 'react-google-login';
+import styles from './Login.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginGoogle } from '../../features/authSlice/authSlice';
+import { Select, Empty, message } from 'antd';
+import { useNavigate } from 'react-router';
+import { getListCumpus } from '../../features/cumpusSlice/cumpusSlice';
+import SemestersAPI from '../../API/SemestersAPI';
+import { getSemesters } from '../../features/semesters/semestersSlice';
 const { Option } = Select;
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [cumpus, setCumpus] = useState("");
+  const [cumpus, setCumpus] = useState('');
   const navigate = useNavigate();
   const { listCumpus } = useSelector((state) => state.cumpus);
   const handleFailure = (result) => {
-    message.error("error")
+    message.error('error');
   };
 
   const handleLogin = (googleData) => {
@@ -27,21 +26,19 @@ const Login = () => {
         cumpusId: cumpus,
         smester_id: data.data?._id,
       };
-      dispatch(loginGoogle(dataForm))
-        .then((res) => {
-          saveLocal(res.payload);
-          return res && redirect(res);
-        })
-        .catch((err) => {
-          localStorage.removeItem('user')
-          message.error("Đăng nhập thất bại")
-        });
+      dispatch(loginGoogle({ val: dataForm, callback: cbMessage }))
     });
   };
-  const redirect = ({ payload: { isAdmin } }) => {
-    message.success("Đăng nhập thành công");
-    return isAdmin ? navigate("/status") : navigate("/info-student");
+  const cbMessage = (payload) => {
+    const {isAdmin} = payload
+    if (payload?.success) {
+      message.success('Đăng nhập thành công');
+      return isAdmin ? navigate('/status') : navigate('/info-student');
+    }else{
+      message.success('Đăng nhập thất bại');
+    }
   };
+
   const handleChange = (value) => {
     setCumpus(value);
   };
@@ -60,11 +57,7 @@ const Login = () => {
       />
 
       <div>
-        <Select
-          className={styles.campus}
-          defaultValue="Lựa chọn cơ sở"
-          onChange={handleChange}
-        >
+        <Select className={styles.campus} defaultValue="Lựa chọn cơ sở" onChange={handleChange}>
           {listCumpus ? (
             listCumpus.map((item, index) => (
               <Option key={index} value={item._id}>
@@ -78,7 +71,7 @@ const Login = () => {
       </div>
       <div className={styles.button_login}>
         <GoogleLogin
-          disabled={cumpus === "" ? true : false}
+          disabled={cumpus === '' ? true : false}
           className={styles.button_login}
           clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
           buttonText="Login With Google"
