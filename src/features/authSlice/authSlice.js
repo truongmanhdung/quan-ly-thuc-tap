@@ -1,15 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import _ from "lodash";
 import AuthApi from "../../API/Auth";
+import { saveLocal } from "../../ultis/storage";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
-  async (dataForm) => {
-    const { data } = await AuthApi.login(dataForm);
-    if (data?.accessToken) {
-      localStorage.setItem("token", data?.accessToken);
-      // setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
+  async ({val, callback}) => {
+    const {data} = await AuthApi.login(val);
+    if (_.get(data, 'success', false)) {
+      saveLocal(data);
     }
-    return data;
+    if (callback) callback(data)
+    return data
+    // console.log(data);
+    // if (data?.accessToken) {
+    //   localStorage.setItem("token", data?.accessToken);
+    //   // setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
+    // }
+    // return data;
   }
 );
 
@@ -32,7 +40,6 @@ const authSlice = createSlice({
 
   reducers: {
     loginSuccess: (state, action) => {
-      console.log("action", action);
       state.token = action.payload.accessToken;
       state.infoUser = action.payload;
     },

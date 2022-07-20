@@ -33,7 +33,6 @@ export const resetStudentAction = createAsyncThunk(
   "student/resetStudentAction",
   async (idStudent) => {
     const { data } = await StudentAPI.resetApi(idStudent);
-    console.log(data);
     return data;
   }
 );
