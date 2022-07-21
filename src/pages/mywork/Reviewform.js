@@ -294,6 +294,7 @@ const Reviewform = ({
     if (id.length === chooseIdStudent.length) {
       setStatus({
         listIdStudent: id,
+        listEmailStudent: listEmailStudent,
         email: infoUser?.manager?.email,
         status: value,
       });
