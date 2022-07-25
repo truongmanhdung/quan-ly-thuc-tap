@@ -139,7 +139,6 @@ const studentSlice = createSlice({
     });
     builder.addCase(resetStudentAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.message = action.payload.message;
     });
     builder.addCase(resetStudentAction.rejected, (state,action) => {
       state.messages = action.payload.message;

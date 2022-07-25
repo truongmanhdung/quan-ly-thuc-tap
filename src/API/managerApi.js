@@ -16,8 +16,8 @@ const managerApi = {
     const url = `/manager/${id}`;
     return axiosClient.delete(url);
   },
-  update(id, data) {
-    const url = `/manager/${id}`;
+  update(data) {
+    const url = `/manager/${data.id}`;
     return axiosClient.patch(url, data);
   },
 };

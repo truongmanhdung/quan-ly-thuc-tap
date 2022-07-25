@@ -45,9 +45,9 @@ const Router = () => {
             <Navigate
               to={
                 getLocal().isAdmin
-                  ? getLocal()?.manager === 1
+                  ? getLocal()?.manager?.role === 1
                     ? '/status'
-                    : 'employee-manager'
+                    : '/employee-manager'
                   : '/info-Student'
               }
             />
