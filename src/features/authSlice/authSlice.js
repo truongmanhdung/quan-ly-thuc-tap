@@ -12,20 +12,15 @@ export const loginGoogle = createAsyncThunk(
     }
     if (callback) callback(data)
     return data
-    // console.log(data);
-    // if (data?.accessToken) {
-    //   localStorage.setItem("token", data?.accessToken);
-    //   // setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
-    // }
-    // return data;
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk("auth/logout", async (callback) => {
   const { data } = await AuthApi.logout();
   if (data) {
-    localStorage.removeItem("user");
+    localStorage.removeItem("user")
   }
+  callback()
   return data;
 });
 
@@ -64,7 +59,6 @@ const authSlice = createSlice({
     });
     builder.addCase(logout.fulfilled, (state, action) => {
       state.loading = false;
-      state.token = action.payload.token;
     });
     builder.addCase(logout.rejected, (state, action) => {
       state.messages = "Logout google fail";

@@ -30,10 +30,10 @@ const Login = () => {
     });
   };
   const cbMessage = (payload) => {
-    const {isAdmin} = payload
+    const {isAdmin, manager} = payload
     if (payload?.success) {
       message.success('Đăng nhập thành công');
-      return isAdmin ? navigate('/status') : navigate('/info-student');
+      return isAdmin ? manager.role ===2 ? navigate("/employee-manager") :  navigate('/status') : navigate('/info-student');
     }else{
       message.success('Đăng nhập thất bại');
     }
