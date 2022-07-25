@@ -1,12 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Button, Table, message, Space, Form } from "antd";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import managerApi from "../../API/managerApi";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
 import {getListCumpus} from "../../features/cumpusSlice/cumpusSlice"
 import FormManager from "./formManager";
-
 const EmployeeManager = () => {
   const dispatch = useDispatch();
   const [hideForm, setHideForm] = useState(false);
@@ -138,7 +137,6 @@ const EmployeeManager = () => {
         <div className="flex-header">
           <h4>Quản lý nhân viên</h4>
           <div style={{ display: "flex" }}>
-            {hideButton ? null : (
               <Button
                 onClick={() => isHideForm()}
                 variant="warning"
@@ -146,21 +144,8 @@ const EmployeeManager = () => {
               >
                 Tạo mới nhân viên
               </Button>
-            )}
           </div>
         </div>
-        {hideForm ? (
-          <div className="filter" style={{ marginTop: "20px" }}>
-            <FormManager
-              onFinish={onFinish}
-              dataEdit={dataEdit}
-              editStatusButton={editStatusButton}
-              text={text}
-              forms={form}
-              listCumpus={listCumpus}
-            />
-          </div>
-        ) : null}
         <Table dataSource={result} columns={columns} />
       </div>
     </>

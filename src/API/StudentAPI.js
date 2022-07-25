@@ -69,5 +69,9 @@ const StudentAPI = {
     const url = "/smester";
     return axiosClient.get(url);
   },
+  resetApi(idStudent){
+    const url = `/student/reset/${idStudent}`;
+    return axiosClient.get(url);
+  }
 };
 export default StudentAPI;

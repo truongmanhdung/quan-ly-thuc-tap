@@ -1,5 +1,5 @@
 import { EyeOutlined } from "@ant-design/icons";
-import { Button, Col, Drawer, Input, Row, Select, Table } from "antd";
+import { Button, Col, Drawer, Input, message, Row, Select, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import * as FileSaver from "file-saver";
 import { omit } from "lodash";
@@ -22,6 +22,7 @@ import {
   getAllStudent,
   getListStudentReducer,
   getStudent,
+  resetStudentAction,
 } from "../../features/StudentSlice/StudentSlice";
 import { filterStatuss } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
@@ -65,6 +66,17 @@ const Status = ({
   const onCloseModal = () => {
     setModal(false);
     getListStudent();
+  };
+
+  const resetStudent = async (val, key) => {
+    if (window.confirm("Bạn có chắc chắn muốn reset trạng thái sinh viên ?")) {
+      try {
+        await dispatch(resetStudentAction(val?._id));
+        getListStudent();
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const getListStudent = async () => {
@@ -231,6 +243,14 @@ const Status = ({
       title: "Người review",
       dataIndex: "reviewer",
       width: 230,
+      render: (val) => {
+        if (val) {
+          const name = val.split("@");
+          return name[0];
+        } else {
+          return val;
+        }
+      },
     },
     {
       title: "Trạng thái",
@@ -304,6 +324,22 @@ const Status = ({
             </span>
           );
         }
+      },
+    },
+    {
+      title: "Reset trạng thái",
+      render: (val, key) => {
+        return (
+          <Button
+            style={{
+              color: "#fff",
+              background: "#ee4d2d",
+            }}
+            onClick={() => resetStudent(val, key)}
+          >
+            Reset
+          </Button>
+        );
       },
     },
   ];
@@ -413,9 +449,17 @@ const Status = ({
             }}
             onChange={(val) => setPage({ ...page, smester_id: val })}
             placeholder="Chọn kỳ`"
-            defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ""}
+            defaultValue={
+              defaultSemester && defaultSemester?._id
+                ? defaultSemester?._id
+                : ""
+            }
           >
-            {!defaultSemester?._id && <Option value={""} disabled>Chọn kỳ</Option>}
+            {!defaultSemester?._id && (
+              <Option value={""} disabled>
+                Chọn kỳ
+              </Option>
+            )}
             {listSemesters &&
               listSemesters.length > 0 &&
               listSemesters?.map((item, index) => (
@@ -847,8 +891,6 @@ const Status = ({
           studentId={studentdetail._id}
           onShowModal={modal}
           closeModal={onCloseModal}
-          listBusiness={listBusiness}
-          listManager={listManager}
         />
       )}
 
@@ -870,9 +912,17 @@ const Status = ({
                 }}
                 onChange={(val) => setPage({ ...page, smester_id: val })}
                 placeholder="Chọn kỳ"
-                defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ""}
+                defaultValue={
+                  defaultSemester && defaultSemester?._id
+                    ? defaultSemester?._id
+                    : ""
+                }
               >
-                {!defaultSemester?._id && <Option value={""} disabled>Chọn kỳ</Option>}
+                {!defaultSemester?._id && (
+                  <Option value={""} disabled>
+                    Chọn kỳ
+                  </Option>
+                )}
                 {listSemesters &&
                   listSemesters.length > 0 &&
                   listSemesters?.map((item, index) => (

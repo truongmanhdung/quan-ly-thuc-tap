@@ -373,7 +373,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
                     {listMajors &&
                       listMajors.map((item, index) => (
                         <>
-                          <Option value={item?._id} key={index}>
+                          <Option value={item?._id} key={item?._id}>
                             {item?.name}
                           </Option>
                         </>

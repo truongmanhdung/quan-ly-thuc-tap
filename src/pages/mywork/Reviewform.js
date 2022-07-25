@@ -294,6 +294,7 @@ const Reviewform = ({
     if (id.length === chooseIdStudent.length) {
       setStatus({
         listIdStudent: id,
+        listEmailStudent: listEmailStudent,
         email: infoUser?.manager?.email,
         status: value,
       });
@@ -504,11 +505,16 @@ const Reviewform = ({
                     Tìm kiếm
                   </Button>
                   {chooseIdStudent.length > 0 && (
-                    <div className="comfirm">
-                      <span style={{ width: "40%" }}>Lựa chọn </span>
+                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                      <Row gutter={[10, 10]}>
+                      <Col xs={24} sm={24} md={24} lg={4} xl={4}>
+                      <span style={{ whiteSpace: "nowrap" }}>Lựa chọn:</span>
+                    </Col>
+                      {/* <span style={{ whiteSpace: "nowrap" }}>Lựa chọn:</span> */}
+                      <Col xs={24} sm={12} md={12} lg={10} xl={10}>
                       <Select
                         className="comfirm-click"
-                        style={{ width: "100%" }}
+                        style={{ width: "100%",  }}
                         onChange={actionOnchange}
                         placeholder="Chọn"
                       >
@@ -519,15 +525,13 @@ const Reviewform = ({
                           Cập nhật trạng thái
                         </Option>
                       </Select>
-
+                      </Col>
                       {Object.keys(status).length >= 1 && (
+                        <Col xs={24} sm={12} md={12} lg={10} xl={10}>
                         <Select
+                          // className="upload-status"
                           className="upload-status"
-                          style={
-                            window.innerWidth > 1024
-                              ? { width: "100%", margin: "10px",marginLeft: "0" }
-                              : { width: "100%", margin: "10px 0", }
-                          }
+                          style={{ width: "100%" }}
                           onChange={(e) => selectStatus(e)}
                           placeholder="Chọn trạng thái"
                         >
@@ -537,6 +541,7 @@ const Reviewform = ({
                             </Option>
                           ))}
                         </Select>
+                        </Col>
                       )}
                       {note === 3 || note === 5 || note === 8 ? (
                         <TextArea
@@ -549,7 +554,8 @@ const Reviewform = ({
                       {Object.keys(status).length > 0 && (
                         <Button onClick={() => comfirm()}>Xác nhận</Button>
                       )}
-                    </div>
+                    </Row>
+                    </Col>
                   )}
                 </div>
               </Col>

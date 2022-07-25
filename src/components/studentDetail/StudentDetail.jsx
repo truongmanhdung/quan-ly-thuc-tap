@@ -32,7 +32,7 @@ const { RangePicker } = DatePicker;
 const dateFormat = "DD/MM/YYYY hh:mm:ss";
 const dateFormatInput = "YYYY/MM/DD";
 const StudentDetail = (props) => {
-  const { studentId, closeModal, listManager, infoUser } = props;
+  const { studentId, closeModal, infoUser } = props;
   const {
     formTime: { times },
   } = useSelector((state) => state.time);
@@ -50,6 +50,7 @@ const StudentDetail = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [timeStudent, setTimeStudent] = useState({});
   const { listBusiness } = useSelector((state) => state.business);
+  const { listManager } = useSelector((state) => state.manager);
   const [date, setDate] = useState(null);
   const [fieldStudent, setFieldStudent] = useState("");
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const StudentDetail = (props) => {
 
   useEffect(() => {
     dispatch(fetchManager());
-  }, [])
+  }, []);
 
   useEffect(() => {
     getDataStudent();
@@ -334,10 +335,16 @@ const StudentDetail = (props) => {
       (student.CV || (!student.CV && student.support === 0)) &&
       student.form &&
       !student.report &&
-      student.statusCheck !== 3 && student.statusCheck !== 6
+      student.statusCheck !== 3 &&
+      student.statusCheck !== 6
     ) {
       setListOption(statusConfigForm);
-    } else if (student.CV && student.form && student.report && student.statusCheck !== 6) {
+    } else if (
+      student.CV &&
+      student.form &&
+      student.report &&
+      student.statusCheck !== 6
+    ) {
       setListOption(statusConfigReport);
     } else {
       setListOption([]);
@@ -835,7 +842,9 @@ const StudentDetail = (props) => {
                   )}
                   {listOption &&
                   listOption.length > 0 &&
-                  student.statusCheck !== 5 && student.statusCheck !== 8 && student.statusCheck !== 1 ? (
+                  student.statusCheck !== 5 &&
+                  student.statusCheck !== 8 &&
+                  student.statusCheck !== 1 ? (
                     submitStatus ? (
                       <Button type="primary" onClick={onUpdateStatus}>
                         Thực hiện
@@ -855,7 +864,7 @@ const StudentDetail = (props) => {
                       defaultValue="Chọn người review"
                       style={{ width: "50%" }}
                     >
-                      {listManager.length > 0 &&
+                      {listManager && listManager?.length > 0 &&
                         listManager.map((item, index) => (
                           <Option key={index} value={item.email}>
                             {item.name} - {item.email}
