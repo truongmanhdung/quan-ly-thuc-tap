@@ -8,7 +8,7 @@ import {
   updateReviewerListStudent,
   updateStatusListStudent,
 } from "../../features/reviewerStudent/reviewerSlice";
-import { filterBranch, filterStatusForm } from "../../ultis/selectOption";
+import {  filterStatusForm } from "../../ultis/selectOption";
 import { omit } from "lodash";
 import { statusConfigForm } from "../../ultis/constConfig";
 import TextArea from "antd/lib/input/TextArea";

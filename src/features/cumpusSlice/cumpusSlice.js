@@ -19,27 +19,31 @@ export const getCumpus = createAsyncThunk(
 
 export const createCumpus = createAsyncThunk(
   "cumpus/createCumpus",
-  async (dataForm) => {
+  async (payload) => {
+    const {dataForm, callback} = payload
     const { data } = await CumpusApi.create(dataForm);
-
-    return data;
+    if (callback) callback(data)
+      return data
   }
 );
 
 export const updateCumpus = createAsyncThunk(
   "cumpus/updateCumpus",
-  async (id, dataForm) => {
-    const { data } = await CumpusApi.update(id, dataForm);
-
+  async (payload) => {
+    const {dataForm, callback} = payload
+    const { data } = await CumpusApi.update( dataForm);
+    if (callback) callback(data)
     return data;
   }
 );
 
 export const removeCumpus = createAsyncThunk(
   "cumpus/removeCumpus",
-  async (id) => {
+  async (payload) => {
+    const{id, callback} =  payload
     const { data } = await CumpusApi.remove(id);
-    return data;
+    if (callback) callback(data)
+      return data
   }
 );
 
@@ -84,9 +88,11 @@ const cumpusSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createCumpus.fulfilled, (state, { payload }) => {
-      state.listCumpus = payload.data.cumpus;
+      if (payload.success === true) {
+
+      state.listCumpus = [payload.cumpus, ...state.listCumpus];
+      }
       state.loading = false;
-      state.message = payload.message;
     });
     builder.addCase(createCumpus.rejected, (state, action) => {
       state.error = "Không thể tạo mới cơ sở";
@@ -100,9 +106,9 @@ const cumpusSlice = createSlice({
       let data = state.listCumpus.filter(
         (item) => item._id !== payload.cumpus._id
       );
-      state.listCumpus = [...data, payload.cumpus];
+      if (payload.success === true) {
+      state.listCumpus = [payload.cumpus ,...data]}
       state.loading = false;
-      state.message = payload.message;
     });
     builder.addCase(updateCumpus.rejected, (state, action) => {
       state.error = "Không thể sửa thông tin quản lý";
