@@ -5,10 +5,21 @@ const BusinessAPI = {
     const url = `/business`;
     return axiosClient.post(url, product);
   },
-  get(range){
-    console.log(range);
-    const url = `/business?${stringify(range)}`
-    return axiosClient.get(url)
+  create(data) {
+    const url = `/business/new`;
+    return axiosClient.post(url, data);
+  },
+  get(range) {
+    const url = `/business?${stringify(range)}`;
+    return axiosClient.get(url);
+  },
+  delete(id) {
+    const url = `/business/${id}`;
+    return axiosClient.delete(url);
+  },
+  patch(params, id) {
+    const url = `/business/${id}`;
+    return axiosClient.delete(url, params);
   },
 };
 export default BusinessAPI;
