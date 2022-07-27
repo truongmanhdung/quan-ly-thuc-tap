@@ -1,4 +1,4 @@
-import { Button, Col, Drawer, Row, Select, Table } from "antd";
+import { Button, Col, Drawer, Row, Select, Table, message } from "antd";
 import { array, bool, object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
@@ -47,6 +47,8 @@ const ListOfBusiness = ({
 
   const mutation = useMutation(["delete"], fetchDeleteBusiness, {
     onSuccess: () => {
+      console.log(mutation)
+      message.success(mutation?.data?.data?.message)
       if (page?.smester_id && page?.smester_id.length > 0) {
         dispatch(
           getBusiness({

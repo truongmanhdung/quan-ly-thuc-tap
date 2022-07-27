@@ -1,11 +1,11 @@
-import { Button, Form, Input, InputNumber, Select, Spin } from "antd";
+import { Button, Form, Input, InputNumber, Select, Spin, message } from "antd";
 import React, { memo, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import CumpusApi from "../../API/Cumpus";
 import majorAPI from "../../API/majorAPi";
 import { useMutation } from "react-query";
 import BusinessAPI from "../../API/Business";
-import { useForm, FormProvider } from "react-hook-form";
+import SemestersAPI from "../../API/SemestersAPI";
 
 const layout = {
   labelCol: {
@@ -29,21 +29,7 @@ const validateMessages = {
 };
 
 const FormBusiness = ({ paramsUpdate }) => {
-  const [defaultValues, setDefaultValues] = useState({
-    address: '',
-    amount: "",
-    campus_id: "",
-    code_request: "",
-    description: "",
-    internshipPosition: "",
-    majors: "",
-    name: "",
-    request: "",
-  });
-
-  const methods = useForm({
-    defaultValues,
-  });
+  const [defaultValues, setDefaultValues] = useState();
 
   const [form] = Form.useForm();
   const { val, type } = paramsUpdate;
@@ -59,6 +45,13 @@ const FormBusiness = ({ paramsUpdate }) => {
     "campus",
     () => {
       return CumpusApi.getList();
+    }
+  );
+
+  const { data: dataSmester, isLoading: isLoadingSmester } = useQuery(
+    "Smester",
+    () => {
+      return SemestersAPI.getSemesters();
     }
   );
 
@@ -85,6 +78,7 @@ const FormBusiness = ({ paramsUpdate }) => {
       majors: data.majors,
       name: data.name,
       request: data.request,
+      smester_id: data.smester_id,
     });
   };
 
@@ -92,23 +86,42 @@ const FormBusiness = ({ paramsUpdate }) => {
     ["businessItem", val],
     () => fetchBusinessItem(val),
     {
-      enabled:type,
+      enabled: type,
       onSuccess: (data) => getSuccessItem(data?.data?.itemBusiness),
       onError: () => console.log("loi"),
     }
   );
 
   const mutationCreate = useMutation("businessCreate", fetchCreateBusiness, {
-    onSuccess: () => console.log("thanh cong"),
+    onSuccess: () => message.success(mutationCreate?.data?.data?.message),
   });
 
   const mutationUpdate = useMutation(["businessUpdate"], fetchUpdateBusiness, {
-    onSuccess: () => console.log("thanh cong"),
+    onSuccess: () => message.success(mutationUpdate?.data?.data?.message),
   });
 
   const onFinish = (values) => {
-    type ?  mutationUpdate.mutate({...values,val}) : mutationCreate.mutate(values);
+    type
+      ? mutationUpdate.mutate({ ...values, val })
+      : mutationCreate.mutate(values);
   };
+
+  useEffect(() => {
+    if (!type) {
+      setDefaultValues({
+        address: "",
+        amount: "",
+        campus_id: "",
+        code_request: "",
+        description: "",
+        internshipPosition: "",
+        majors: "",
+        name: "",
+        request: "",
+        smester_id: "",
+      });
+    }
+  }, [type]);
 
   useEffect(() => {
     form.resetFields();
@@ -124,6 +137,28 @@ const FormBusiness = ({ paramsUpdate }) => {
         validateMessages={validateMessages}
         initialValues={defaultValues}
       >
+        <Form.Item
+          label="Kỳ học"
+          name={["smester_id"]}
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select>
+            {isLoadingSmester ? (
+              <Spin />
+            ) : (
+              dataSmester?.data?.listSemesters.map((semester) => (
+                <Select.Option key={semester._id} value={semester._id}>
+                  {semester.name}
+                </Select.Option>
+              ))
+            )}
+          </Select>
+        </Form.Item>
+
         <Form.Item
           name={["name"]}
           label="Tên doanh nghiệp"
@@ -172,7 +207,7 @@ const FormBusiness = ({ paramsUpdate }) => {
           <Input />
         </Form.Item>
 
-        <Form.Item name={["request"]} label="Yêu cầu từ daonh nghiệp">
+        <Form.Item name={["request"]} label="Yêu cầu từ doanh nghiệp">
           <Input.TextArea />
         </Form.Item>
 
