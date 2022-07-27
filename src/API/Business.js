@@ -13,13 +13,18 @@ const BusinessAPI = {
     const url = `/business?${stringify(range)}`;
     return axiosClient.get(url);
   },
+  getItem(id) {
+    const url = `/business/${id}`;
+    return axiosClient.get(url);
+  },
   delete(id) {
     const url = `/business/${id}`;
     return axiosClient.delete(url);
   },
-  patch(params, id) {
+  update(params) {
+    const {val:id,...data} = params
     const url = `/business/${id}`;
-    return axiosClient.delete(url, params);
+    return axiosClient.patch(url, data);
   },
 };
 export default BusinessAPI;

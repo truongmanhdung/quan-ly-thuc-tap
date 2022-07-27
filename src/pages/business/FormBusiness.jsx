@@ -5,7 +5,7 @@ import CumpusApi from "../../API/Cumpus";
 import majorAPI from "../../API/majorAPi";
 import { useMutation } from "react-query";
 import BusinessAPI from "../../API/Business";
-
+import { useForm, FormProvider } from "react-hook-form";
 
 const layout = {
   labelCol: {
@@ -28,9 +28,25 @@ const validateMessages = {
   },
 };
 
-const FormBusiness = ({paramsUpdate}) => {
-  const [form] = Form.useForm();
+const FormBusiness = ({ paramsUpdate }) => {
+  const [defaultValues, setDefaultValues] = useState({
+    address: '',
+    amount: "",
+    campus_id: "",
+    code_request: "",
+    description: "",
+    internshipPosition: "",
+    majors: "",
+    name: "",
+    request: "",
+  });
 
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const [form] = Form.useForm();
+  const { val, type } = paramsUpdate;
 
   const { data: dataMajors, isLoading: isLoadingMajor } = useQuery(
     "majors",
@@ -46,17 +62,57 @@ const FormBusiness = ({paramsUpdate}) => {
     }
   );
 
-  const fetchCreateBusiness = (params) =>{
-    return BusinessAPI.create(params)
-  }
+  const fetchCreateBusiness = (params) => {
+    return BusinessAPI.create(params);
+  };
 
-  const mutation = useMutation('business',fetchCreateBusiness,{
-    onSuccess:() => console.log('thanh cong')
-  })
+  const fetchUpdateBusiness = (params) => {
+    return BusinessAPI.update(params);
+  };
+
+  const fetchBusinessItem = (params) => {
+    return BusinessAPI.getItem(params);
+  };
+
+  const getSuccessItem = (data) => {
+    setDefaultValues({
+      address: data.address,
+      amount: data.amount,
+      campus_id: data.campus_id,
+      code_request: data.code_request,
+      description: data.description,
+      internshipPosition: data.internshipPosition,
+      majors: data.majors,
+      name: data.name,
+      request: data.request,
+    });
+  };
+
+  const { data, isLoading } = useQuery(
+    ["businessItem", val],
+    () => fetchBusinessItem(val),
+    {
+      enabled:type,
+      onSuccess: (data) => getSuccessItem(data?.data?.itemBusiness),
+      onError: () => console.log("loi"),
+    }
+  );
+
+  const mutationCreate = useMutation("businessCreate", fetchCreateBusiness, {
+    onSuccess: () => console.log("thanh cong"),
+  });
+
+  const mutationUpdate = useMutation(["businessUpdate"], fetchUpdateBusiness, {
+    onSuccess: () => console.log("thanh cong"),
+  });
 
   const onFinish = (values) => {
-    mutation.mutate(values)
+    type ?  mutationUpdate.mutate({...values,val}) : mutationCreate.mutate(values);
   };
+
+  useEffect(() => {
+    form.resetFields();
+  }, [defaultValues]);
 
   return (
     <>
@@ -66,6 +122,7 @@ const FormBusiness = ({paramsUpdate}) => {
         onFinish={onFinish}
         form={form}
         validateMessages={validateMessages}
+        initialValues={defaultValues}
       >
         <Form.Item
           name={["name"]}
@@ -90,7 +147,7 @@ const FormBusiness = ({paramsUpdate}) => {
         >
           <Input />
         </Form.Item>
-        
+
         <Form.Item
           name={["internshipPosition"]}
           label="Vị trí thực tập"

@@ -32,7 +32,7 @@ const ListOfBusiness = ({
       defaultSemester && defaultSemester._id ? defaultSemester._id : "",
   });
   const [majorImport, setMajorImport] = React.useState("");
-  const [paramsUpdate,setParamUpdate] = useState({})
+  const [paramsUpdate, setParamUpdate] = useState({});
 
   useEffect(() => {
     dispatch(getSemesters());
@@ -144,8 +144,8 @@ const ListOfBusiness = ({
       render: (val, key) => {
         return (
           <Button
-           type="primary"
-            onClick={(type) => openVisible(val?._id,type=1)}
+            type="primary"
+            onClick={(type) => openVisible(val?._id, (type = true))}
           >
             Sửa
           </Button>
@@ -184,12 +184,12 @@ const ListOfBusiness = ({
     setVisibleImport(false);
   };
 
-  const openVisible = (val,type) => {
+  const openVisible = (val, type) => {
     setVisible(true);
     setParamUpdate({
       val,
-      type
-    })
+      type,
+    });
   };
   const closeVisible = () => {
     setPage({
@@ -273,7 +273,9 @@ const ListOfBusiness = ({
             Import Doanh nghiệp
           </Button>
           <Button
-            onClick={(val={},type=0) => openVisible(val,type=0)}
+            onClick={(val = {}, type) =>
+              openVisible((val = ""), (type = false))
+            }
             style={{
               color: "#fff",
               background: "#ee4d2d",
@@ -426,13 +428,17 @@ const ListOfBusiness = ({
       </div>
       <div>
         <Drawer
-          title={paramsUpdate && paramsUpdate?.type === 0 ? 'Thêm mới doanh nghiệp' : 'Sửa thông tin doanh nghiệp'}
+          title={
+            paramsUpdate && paramsUpdate?.type
+              ? "Sửa thông tin doanh nghiệp"
+              : "Thêm mới doanh nghiệp"
+          }
           placement="left"
           onClose={closeVisible}
           visible={visible}
-          width='70%'
+          width="70%"
         >
-          <FormBusiness paramsUpdate={paramsUpdate}/>
+          <FormBusiness paramsUpdate={paramsUpdate} />
         </Drawer>
       </div>
     </div>
