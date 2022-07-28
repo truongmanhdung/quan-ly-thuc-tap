@@ -133,6 +133,7 @@ const FormBusiness = ({ paramsUpdate, closeVisible }) => {
     form.resetFields();
   }, [defaultValues]);
 
+
   return (
     <>
       <Form
@@ -143,27 +144,37 @@ const FormBusiness = ({ paramsUpdate, closeVisible }) => {
         validateMessages={validateMessages}
         initialValues={defaultValues}
       >
-        <Form.Item
-          label="Kỳ học"
-          name={["smester_id"]}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select>
-            {isLoadingSmester ? (
-              <Spin />
-            ) : (
-              dataSmester?.data?.listSemesters.map((semester) => (
-                <Select.Option key={semester._id} value={semester._id}>
-                  {semester.name}
-                </Select.Option>
-              ))
-            )}
-          </Select>
-        </Form.Item>
+        {!type && (
+          <Form.Item
+            label="Kỳ học"
+          >
+            <span>{dataSmester?.data?.defaultSemester?.name}</span>
+          </Form.Item>
+        )}
+
+        {type && (
+          <Form.Item
+            label="Kỳ học"
+            name={["smester_id"]}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select disabled={true}>
+              {isLoadingSmester ? (
+                <Spin />
+              ) : (
+                dataSmester?.data?.listSemesters.map((semester) => (
+                  <Select.Option key={semester._id} value={semester._id}>
+                    {semester.name}
+                  </Select.Option>
+                ))
+              )}
+            </Select>
+          </Form.Item>
+        )}
 
         <Form.Item
           name={["name"]}
