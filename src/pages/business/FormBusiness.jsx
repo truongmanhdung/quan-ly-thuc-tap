@@ -28,7 +28,7 @@ const validateMessages = {
   },
 };
 
-const FormBusiness = ({ paramsUpdate }) => {
+const FormBusiness = ({ paramsUpdate, closeVisible }) => {
   const [defaultValues, setDefaultValues] = useState();
 
   const [form] = Form.useForm();
@@ -93,11 +93,17 @@ const FormBusiness = ({ paramsUpdate }) => {
   );
 
   const mutationCreate = useMutation("businessCreate", fetchCreateBusiness, {
-    onSuccess: () => message.success(mutationCreate?.data?.data?.message),
+    onSuccess: async (res) => {
+      await message.success(res.data?.message);
+      closeVisible();
+    },
   });
 
   const mutationUpdate = useMutation(["businessUpdate"], fetchUpdateBusiness, {
-    onSuccess: () => message.success(mutationUpdate?.data?.data?.message),
+    onSuccess: async (res) => {
+      await message.success(res.data?.message);
+      closeVisible();
+    },
   });
 
   const onFinish = (values) => {

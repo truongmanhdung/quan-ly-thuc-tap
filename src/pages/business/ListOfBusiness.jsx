@@ -41,14 +41,13 @@ const ListOfBusiness = ({
 
   const fetchDeleteBusiness = (val) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
-      BusinessAPI.delete(val._id);
+      return BusinessAPI.delete(val._id)
     }
   };
-
+  
   const mutation = useMutation(["delete"], fetchDeleteBusiness, {
-    onSuccess: () => {
-      console.log(mutation)
-      message.success(mutation?.data?.data?.message)
+    onSuccess: (res) => {
+      message.success(res?.data?.message);
       if (page?.smester_id && page?.smester_id.length > 0) {
         dispatch(
           getBusiness({
@@ -64,15 +63,15 @@ const ListOfBusiness = ({
                   ...page,
                   smester_id: res.data._id,
                 })
-              );
-            }
-          })
-          .catch(() => {});
-      }
-    },
-  });
-
-  const handleDelete = (val) => {
+                );
+              }
+            })
+            .catch(() => {});
+          }
+        },
+      });
+      
+      const handleDelete = (val) => {
     mutation.mutate(val);
   };
 
@@ -440,7 +439,7 @@ const ListOfBusiness = ({
           visible={visible}
           width="70%"
         >
-          <FormBusiness paramsUpdate={paramsUpdate} />
+          <FormBusiness paramsUpdate={paramsUpdate} closeVisible={closeVisible}/>
         </Drawer>
       </div>
     </div>
