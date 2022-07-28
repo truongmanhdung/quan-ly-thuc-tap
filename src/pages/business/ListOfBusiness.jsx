@@ -192,6 +192,7 @@ const ListOfBusiness = ({
       type,
     });
   };
+  
   const closeVisible = () => {
     setPage({
       ...page,
