@@ -107,9 +107,21 @@ const FormBusiness = ({ paramsUpdate, closeVisible }) => {
   });
 
   const onFinish = (values) => {
+    const data = {
+      address: values.address.trim(),
+      amount: values.amount,
+      campus_id: values.campus_id.trim(),
+      code_request: values.code_request.trim(),
+      description: values.description.trim(),
+      internshipPosition: values.internshipPosition.trim(),
+      majors: values.majors.trim(),
+      name: values.name.trim(),
+      request: values.request.trim(),
+      smester_id: values.smester_id.trim(),
+    };
     type
-      ? mutationUpdate.mutate({ ...values, val })
-      : mutationCreate.mutate(values);
+      ? mutationUpdate.mutate({ ...data, val })
+      : mutationCreate.mutate(data);
   };
 
   useEffect(() => {
