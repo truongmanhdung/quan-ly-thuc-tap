@@ -43,7 +43,12 @@ body::-webkit-scrollbar {
     font-weight: 600;
 }
 
-
+.backTop{
+    font-size: 30px;
+}
+.backTop svg{
+    color: white;
+}
 
 /* 
 ul {
