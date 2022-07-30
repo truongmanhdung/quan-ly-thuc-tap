@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Layout, Menu } from 'antd';
+import React, { useState } from "react";
+import { Layout, Menu, BackTop } from "antd";
+import { ArrowUpOutlined } from "@ant-design/icons"
 import {
   ProfileOutlined,
   UserOutlined,
@@ -7,16 +8,16 @@ import {
   UnorderedListOutlined,
   BankOutlined,
   CalendarOutlined,
-} from '@ant-design/icons';
-import { NavLink, Outlet } from 'react-router-dom';
-import GlobalHeader from '../components/GlobalHeader.js';
-import { Content } from 'antd/lib/layout/layout';
-import { useDispatch, useSelector } from 'react-redux';
-import './layout.css';
-import SubMenu from 'antd/lib/menu/SubMenu';
-import Media from 'react-media';
-import { connect } from 'react-redux';
-import { updateIsMobile } from '../features/global.js';
+} from "@ant-design/icons";
+import { NavLink, Outlet } from "react-router-dom";
+import GlobalHeader from "../components/GlobalHeader.js";
+import { Content } from "antd/lib/layout/layout";
+import { useDispatch, useSelector } from "react-redux";
+import "./layout.css";
+import SubMenu from "antd/lib/menu/SubMenu";
+import Media from "react-media";
+import { connect } from "react-redux";
+import { updateIsMobile } from "../features/global.js";
 const { Sider } = Layout;
 function LayoutWebsite({ isMobile }) {
   const [state, setState] = useState(false);
@@ -31,7 +32,7 @@ function LayoutWebsite({ isMobile }) {
 
   return (
     <div>
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ minHeight: "100vh" }}>
         {window.innerWidth > 1024 ? (
           <Sider
             collapsible
@@ -44,8 +45,8 @@ function LayoutWebsite({ isMobile }) {
                 <img
                   style={
                     state
-                      ? { width: '35%', height: '35%', marginTop: '40px' }
-                      : { width: '100%', height: '100%' }
+                      ? { width: "35%", height: "35%", marginTop: "40px" }
+                      : { width: "100%", height: "100%" }
                   }
                   src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png"
                   alt=""
@@ -53,63 +54,85 @@ function LayoutWebsite({ isMobile }) {
               </div>
             </div>
 
-            <Menu theme="light" defaultSelectedKeys={['1']} mode="inline">
+            <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
               {infoUser?.isAdmin ? (
                 <>
-
-                {
-                  infoUser?.manager?.role === 1 ? (
-                      <>
-                                <Menu.Item key="4" icon={<ProfileOutlined className="icon-link" />}>
-                    <NavLink to="/status">Danh sách đăng ký</NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="111" icon={<BankOutlined />}>
-                    <NavLink to="company">Danh sách Công Ty</NavLink>
-                  </Menu.Item>
-                  <SubMenu key="sub1" icon={<UnorderedListOutlined />} title="Reviews">
-                    <Menu.Item key="9">
-                      <NavLink to="review-cv"> CV</NavLink>
-                    </Menu.Item>
-                    <Menu.Item key="10">
-                      <NavLink to="review-form">Biên bản</NavLink>
-                    </Menu.Item>
-                    <Menu.Item key="12">
-                      <NavLink to="review-report">Báo cáo</NavLink>
-                    </Menu.Item>
-                  </SubMenu>
-                  <SubMenu key="sub2" icon={<UnorderedListOutlined />} title="Ngành học">
-                    <Menu.Item key="123">
-                      <NavLink to="major">Danh sách ngành học</NavLink>
-                    </Menu.Item>
-                    <Menu.Item key="109">
-                      <NavLink to="narrows">Ngành hẹp</NavLink>
-                    </Menu.Item>
-                  </SubMenu>
-                  <Menu.Item key="125" icon={<CalendarOutlined className="icon-link" />}>
-                    <NavLink to="semesters">Tạo kỳ học</NavLink>
-                  </Menu.Item>
-                  <Menu.Item key="11" icon={<FolderViewOutlined className="icon-link" />}>
-                    <NavLink to="form-register">Thời gian đăng ký</NavLink>
-                  </Menu.Item>
-
-                      </>
+                  {infoUser?.manager?.role === 1 ? (
+                    <>
+                      <Menu.Item
+                        key="4"
+                        icon={<ProfileOutlined className="icon-link" />}
+                      >
+                        <NavLink to="/status">Danh sách đăng ký</NavLink>
+                      </Menu.Item>
+                      <Menu.Item key="111" icon={<BankOutlined />}>
+                        <NavLink to="company">Danh sách Công Ty</NavLink>
+                      </Menu.Item>
+                      <SubMenu
+                        key="sub1"
+                        icon={<UnorderedListOutlined />}
+                        title="Reviews"
+                      >
+                        <Menu.Item key="9">
+                          <NavLink to="review-cv"> CV</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="10">
+                          <NavLink to="review-form">Biên bản</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="12">
+                          <NavLink to="review-report">Báo cáo</NavLink>
+                        </Menu.Item>
+                      </SubMenu>
+                      <SubMenu
+                        key="sub2"
+                        icon={<UnorderedListOutlined />}
+                        title="Ngành học"
+                      >
+                        <Menu.Item key="123">
+                          <NavLink to="major">Danh sách ngành học</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="109">
+                          <NavLink to="narrows">Ngành hẹp</NavLink>
+                        </Menu.Item>
+                      </SubMenu>
+                      <Menu.Item
+                        key="125"
+                        icon={<CalendarOutlined className="icon-link" />}
+                      >
+                        <NavLink to="semesters">Tạo kỳ học</NavLink>
+                      </Menu.Item>
+                      <Menu.Item
+                        key="11"
+                        icon={<FolderViewOutlined className="icon-link" />}
+                      >
+                        <NavLink to="form-register">Thời gian đăng ký</NavLink>
+                      </Menu.Item>
+                    </>
                   ) : (
                     <>
-                      <Menu.Item key="124" icon={<ProfileOutlined className="icon-link" />}>
-                        <NavLink to="/employee-manager">Danh sách nhân viên</NavLink>
+                      <Menu.Item
+                        key="124"
+                        icon={<ProfileOutlined className="icon-link" />}
+                      >
+                        <NavLink to="/employee-manager">
+                          Danh sách nhân viên
+                        </NavLink>
                       </Menu.Item>
-                      <Menu.Item key="125s" icon={<ProfileOutlined className="icon-link" />}>
+                      <Menu.Item
+                        key="125s"
+                        icon={<ProfileOutlined className="icon-link" />}
+                      >
                         <NavLink to="/campus-manager">Danh sách cơ sở</NavLink>
                       </Menu.Item>
-                      </>
-                  )
-                }
-        
-             
+                    </>
+                  )}
                 </>
               ) : (
                 <>
-                  <Menu.Item key="1" icon={<UserOutlined className="icon-link" />}>
+                  <Menu.Item
+                    key="1"
+                    icon={<UserOutlined className="icon-link" />}
+                  >
                     <NavLink to="info-student">Thông tin sinh viên</NavLink>
                   </Menu.Item>
 
@@ -127,18 +150,33 @@ function LayoutWebsite({ isMobile }) {
             </Menu>
           </Sider>
         ) : (
-          ''
+          ""
         )}
 
         <Layout className="site-layout">
           <GlobalHeader onCollapse={onCollapse} state={state} />
-          <Content style={{ margin: '10px 10px', background: 'white' }}>
+          <Content style={{ margin: "10px 10px", background: "white" }}>
             <div style={{ padding: 15, minHeight: 360 }}>
               <Outlet />
             </div>
           </Content>
         </Layout>
       </Layout>
+      <BackTop>
+        <div
+          style={{
+            height: 50,
+            width: 50,
+            lineHeight: "50px",
+            borderRadius: '50%',
+            backgroundColor: "rgb(238, 77, 45)",
+            textAlign: "center",
+            fontSize: 14,
+          }}
+        >
+         <ArrowUpOutlined className="backTop" />
+        </div>
+      </BackTop>
     </div>
   );
 }
