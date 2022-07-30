@@ -18,6 +18,7 @@ import { timestamps } from "../../ultis/timestamps";
 import StudentDetail from "../../components/studentDetail/StudentDetail";
 import SemestersAPI from "../../API/SemestersAPI";
 import { getListMajor } from "../../features/majorSlice/majorSlice";
+import moment from "moment";
 const { Column } = Table;
 
 const { Option } = Select;
@@ -87,6 +88,8 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       width: 100,
       fixed: "left",
       render: (val, key) => {
+        console.log(val);
+        console.log(key);
         return (
           <p
             style={{ margin: 0, cursor: "pointer", color: "blue" }}
@@ -152,6 +155,11 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       dataIndex: "resultScore",
       width: 100,
     },
+    // {
+    //   title: "Thời gian nộp báo cáo",
+    //   dataIndex: "createdAt",
+    //   width: 180,
+    // },
     {
       title: "Báo cáo",
       dataIndex: "report",
@@ -277,19 +285,22 @@ const ReviewReport = ({ isMobile, listMajors }) => {
     const newData = [];
     list &&
       list.map((item) => {
+        console.log('itemDataCsv', item);
         let itemStatus = item["statusCheck"];
         const newObject = {};
         newObject["MSSV"] = item["mssv"];
         newObject["Họ tên"] = item["name"];
         newObject["Email"] = item["email"];
         newObject["Số điện thoại"] = item["phoneNumber"];
+        newObject["Chuyên ngành"] = item["majors"]?.name;
         newObject["Tên công ty"] = item["business"]?.name;
         newObject["Địa chỉ công ty"] = item["business"]?.address;
         newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
         newObject["Điểm thái độ"] = item["attitudePoint"];
         newObject["Điểm kết quả"] = item["resultScore"];
         newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
-        newObject["Ngày kết thúc"] = item["endInternShipTime"];
+        // newObject["Ngày kết thúc"] = timestamps(item["endInternShipTime"]);
+        newObject["Thời gian nộp báo cáo"] = moment(item["createdAt"]).format("D/MM/YYYY h:mm:ss");
         newObject["Trạng thái"] =
           itemStatus === 1
             ? "Chờ kiểm tra"
@@ -313,7 +324,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
         newObject["Báo cáo"] = item["report"];
         return newData.push(newObject);
       });
-
+      console.log('newDataCsv', newData)
     const ws = XLSX.utils.json_to_sheet(newData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
