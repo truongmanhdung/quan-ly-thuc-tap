@@ -28,7 +28,7 @@ const validateMessages = {
   },
 };
 
-const FormBusiness = ({ paramsUpdate, closeVisible }) => {
+const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
   const [defaultValues, setDefaultValues] = useState();
 
   const [form] = Form.useForm();
@@ -81,12 +81,13 @@ const FormBusiness = ({ paramsUpdate, closeVisible }) => {
       smester_id: data.smester_id,
     });
   };
-
+  
   const { data, isLoading } = useQuery(
-    ["businessItem", val],
+    ["businessItem", val, visible],
     () => fetchBusinessItem(val),
     {
       enabled: type,
+      keepPreviousData:visible,
       onSuccess: (data) => getSuccessItem(data?.data?.itemBusiness),
       onError: () => console.log("loi"),
     }
@@ -107,17 +108,18 @@ const FormBusiness = ({ paramsUpdate, closeVisible }) => {
   });
 
   const onFinish = (values) => {
+    console.log(values)
     const data = {
-      address: values.address.trim(),
+      address: values.address?.trim(),
       amount: values.amount,
-      campus_id: values.campus_id.trim(),
-      code_request: values.code_request.trim(),
-      description: values.description.trim(),
-      internshipPosition: values.internshipPosition.trim(),
-      majors: values.majors.trim(),
-      name: values.name.trim(),
-      request: values.request.trim(),
-      smester_id: values.smester_id.trim(),
+      campus_id: values.campus_id?.trim(),
+      code_request: values.code_request?.trim(),
+      description: values.description?.trim(),
+      internshipPosition: values.internshipPosition?.trim(),
+      majors: values.majors?.trim(),
+      name: values.name?.trim(),
+      request: values.request?.trim(),
+      smester_id: values.smester_id?.trim(),
     };
     type
       ? mutationUpdate.mutate({ ...data, val })

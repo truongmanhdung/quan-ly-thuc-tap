@@ -440,7 +440,7 @@ const ListOfBusiness = ({
           visible={visible}
           width="70%"
         >
-          <FormBusiness paramsUpdate={paramsUpdate} closeVisible={closeVisible}/>
+          <FormBusiness paramsUpdate={paramsUpdate} closeVisible={closeVisible} visible={visible}/>
         </Drawer>
       </div>
     </div>
