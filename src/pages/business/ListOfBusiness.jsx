@@ -54,6 +54,7 @@ const ListOfBusiness = ({
         })
         .catch(() => {});
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const columns = [
     {

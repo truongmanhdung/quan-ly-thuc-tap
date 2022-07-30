@@ -6,9 +6,9 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { axiosClient } from "../../API/Link";
-import { getBusiness, getBusinessStudent } from "../../features/businessSlice/businessSlice";
+import {  getBusinessStudent } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
-import { getTimeForm, setTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import {  setTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { optionStatus } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const columns = [
@@ -29,7 +29,7 @@ const columns = [
     dataIndex: "amount",
   },
   {
-    title: "Address",
+    title: "Địa chỉ",
     dataIndex: "address",
   },
   {
@@ -74,10 +74,12 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
           navigate('/login')
         }
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     dispatch(getStudentId(infoUser));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     const url = `/business?${stringify(page)}`

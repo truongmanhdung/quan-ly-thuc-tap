@@ -6,6 +6,7 @@ const BusinessAPI = {
     return axiosClient.post(url, product);
   },
   get(range){
+    console.log(range);
     const url = `/business?${stringify(range)}`
     return axiosClient.get(url)
   },

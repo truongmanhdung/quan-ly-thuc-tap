@@ -87,6 +87,8 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       width: 100,
       fixed: "left",
       render: (val, key) => {
+        console.log(val);
+        console.log(key);
         return (
           <p
             style={{ margin: 0, cursor: "pointer", color: "blue" }}
@@ -152,6 +154,11 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       dataIndex: "resultScore",
       width: 100,
     },
+    // {
+    //   title: "Thời gian nộp báo cáo",
+    //   dataIndex: "createdAt",
+    //   width: 180,
+    // },
     {
       title: "Báo cáo",
       dataIndex: "report",
@@ -277,6 +284,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
     const newData = [];
     list &&
       list.map((item) => {
+        console.log(item);
         let itemStatus = item["statusCheck"];
         const newObject = {};
         newObject["MSSV"] = item["mssv"];
@@ -289,7 +297,8 @@ const ReviewReport = ({ isMobile, listMajors }) => {
         newObject["Điểm thái độ"] = item["attitudePoint"];
         newObject["Điểm kết quả"] = item["resultScore"];
         newObject["Ngày bắt đầu"] = timestamps(item["internshipTime"]);
-        newObject["Ngày kết thúc"] = item["endInternShipTime"];
+        // newObject["Ngày kết thúc"] = timestamps(item["endInternShipTime"]);
+        newObject["Thời gian nộp báo cáo"] = item["createdAt"];
         newObject["Trạng thái"] =
           itemStatus === 1
             ? "Chờ kiểm tra"
