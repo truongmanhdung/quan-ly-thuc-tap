@@ -75,8 +75,8 @@ const Rightcontent = () => {
             <div style={{ cursor: "pointer" }}>
               <Avatar size={35} src={infoUser?.picture} />
               <span style={{ paddingLeft: 10 }}>
-                {infoUser?.name.length > 20
-                  ? infoUser?.name.slice(0, 20) + "..."
+                {infoUser?.name?.length > 20
+                  ? infoUser?.name?.slice(0, 20) + "..."
                   : infoUser?.name}
               </span>
             </div>

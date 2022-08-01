@@ -213,7 +213,7 @@ const Status = ({
       title: "Ngành",
       dataIndex: "majors",
       width: 100,
-      render: (val) => val.name,
+      render: (val) => val?.name,
     },
     {
       title: "Phân loại",
