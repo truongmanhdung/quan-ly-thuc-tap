@@ -97,7 +97,6 @@ const ReportForm = ({ infoUser, studentById }) => {
           const newData = { ...data, report: a.url };
           ReportFormAPI.uploadReport(newData)
             .then((res) => {
-              console.log("res", res)
               message.success(res.data.message);
               form.resetFields();
               setSpin(false);
@@ -155,7 +154,6 @@ const ReportForm = ({ infoUser, studentById }) => {
   const isCheck =
     studentById.statusCheck === 6 ||
     studentById.statusCheck === 8 ;
-  console.log(studentById);
   const onFinish = async (values) => {
     setSpin(true);
     try {

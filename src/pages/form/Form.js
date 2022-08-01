@@ -44,7 +44,6 @@ const formItemLayout = {
 const Formrp = ({ studentById }) => {
   const infoUser = getLocal();
   const { time } = useSelector((state) => state.time.formTime);
-  console.log("time: ", time);
   const [spin, setSpin] = useState(false);
   const [startDate, setStartDate] = useState();
   const [file, setFile] = useState();
