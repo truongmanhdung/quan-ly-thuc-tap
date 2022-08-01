@@ -1,47 +1,39 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import managerApi from "../../API/managerApi";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import managerApi from '../../API/managerApi';
 
-export const fetchManager = createAsyncThunk(
-  "manager/fetchManager",
-  async () => {
-    const { data } = await managerApi.getAll();
-    return data?.manager;
-  }
-);
+export const fetchManager = createAsyncThunk('manager/fetchManager', async () => {
+  const { data } = await managerApi.getAll();
+  return data?.manager;
+});
 
-export const createManager = createAsyncThunk(
-  "manager/createManager",
-  async (dataForm) => {
-    const { data } = await managerApi.create(dataForm);
+export const createManager = createAsyncThunk('manager/createManager', async (payload) => {
+  const { dataForm, callback } = payload;
+  const { data } = await managerApi.create(dataForm);
+  if (callback) callback(data);
+  return data;
+});
 
-    return data;
-  }
-);
+export const updateManager = createAsyncThunk('manager/updateManager', async (payload) => {
+  const { dataForm, callback } = payload;
+  const { data } = await managerApi.update(dataForm);
+  if (callback) callback(data);
+  return data;
+});
 
-export const updateManager = createAsyncThunk(
-  "manager/updateManager",
-  async (id, dataForm) => {
-    const { data } = await managerApi.update(id, dataForm);
-
-    return data;
-  }
-);
-
-export const removeManager = createAsyncThunk(
-  "major,removeManager",
-  async (id) => {
-    const { data } = await managerApi.remove(id);
-    return data;
-  }
-);
+export const removeManager = createAsyncThunk('major,removeManager', async (payload) => {
+  const { id, callback } = payload;
+  const { data } = await managerApi.remove(id);
+  if (callback) callback(data);
+  return data;
+});
 
 const managerSlice = createSlice({
-  name: "manager",
+  name: 'manager',
   initialState: {
     listManager: [],
     loading: false,
-    error: "",
-    message: "",
+    error: '',
+    message: '',
     success: false,
   },
   reducers: {},
@@ -54,7 +46,7 @@ const managerSlice = createSlice({
       state.listManager = action.payload;
     });
     builder.addCase(fetchManager.rejected, (state, action) => {
-      state.error = "Không thể truy vấn";
+      state.error = 'Không thể truy vấn';
     });
 
     //createManager
@@ -62,12 +54,13 @@ const managerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createManager.fulfilled, (state, { payload }) => {
-      state.listManager = payload.data.manager;
+      if (payload.success === true) {
+        state.listManager = [payload.manager, ...state.listManager];
+      }
       state.loading = false;
-      state.message = payload.message;
     });
     builder.addCase(createManager.rejected, (state, action) => {
-      state.error = "Không thể tạo mới người quản lý";
+      state.error = 'Không thể tạo mới người quản lý';
     });
 
     //updateManager
@@ -75,15 +68,14 @@ const managerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateManager.fulfilled, (state, { payload }) => {
-      let data = state.listManager.filter(
-        (item) => item._id !== payload.manager._id
-      );
-      state.listManager = [...data, payload.manager];
+      let data = state.listManager.filter((item) => item._id !== payload._id);
+      if (payload.success === true) {
+        state.listManager = [payload.manager, ...data];
+      }
       state.loading = false;
-      state.message = payload.message;
     });
     builder.addCase(updateManager.rejected, (state, action) => {
-      state.error = "Không thể sửa thông tin quản lý";
+      state.error = 'Không thể sửa thông tin quản lý';
     });
 
     //removeManager
@@ -91,10 +83,7 @@ const managerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(removeManager.fulfilled, (state, { payload }) => {
-      state.listManager = state.listManager.filter(
-        (item) => item._id !== payload.manager._id
-      );
-      state.message = payload.message;
+      state.listManager = state.listManager.filter((item) => item._id !== payload.manager._id);
       state.loading = false;
     });
     builder.addCase(removeManager.rejected, (state) => {

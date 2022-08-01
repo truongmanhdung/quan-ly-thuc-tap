@@ -1,23 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import _ from "lodash";
 import AuthApi from "../../API/Auth";
+import { saveLocal } from "../../ultis/storage";
 
 export const loginGoogle = createAsyncThunk(
   "auth/loginGoogle",
-  async (dataForm) => {
-    const { data } = await AuthApi.login(dataForm);
-    if (data?.accessToken) {
-      localStorage.setItem("token", data?.accessToken);
-      // setCookie(STORAGEKEY.ACCESS_TOKEN, data.accessToken)
+  async ({val, callback}) => {
+    const {data} = await AuthApi.login(val);
+    if (_.get(data, 'success', false)) {
+      saveLocal(data);
     }
-    return data;
+    if (callback) callback(data)
+    return data
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = createAsyncThunk("auth/logout", async (callback) => {
   const { data } = await AuthApi.logout();
   if (data) {
-    localStorage.removeItem("user");
+    localStorage.removeItem("user")
   }
+  callback()
   return data;
 });
 
@@ -32,7 +35,6 @@ const authSlice = createSlice({
 
   reducers: {
     loginSuccess: (state, action) => {
-      console.log("action", action);
       state.token = action.payload.accessToken;
       state.infoUser = action.payload;
     },
@@ -57,7 +59,6 @@ const authSlice = createSlice({
     });
     builder.addCase(logout.fulfilled, (state, action) => {
       state.loading = false;
-      state.token = action.payload.token;
     });
     builder.addCase(logout.rejected, (state, action) => {
       state.messages = "Logout google fail";

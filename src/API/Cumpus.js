@@ -16,8 +16,8 @@ const CumpusApi = {
     const url = `/cumpus/${id}`;
     return axiosClient.delete(url);
   },
-  update(id, data) {
-    const url = `/cumpus/${id}`;
+  update( data) {
+    const url = `/cumpus/${data.id}`;
     return axiosClient.patch(url, data);
   },
 };

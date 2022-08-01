@@ -70,7 +70,6 @@ const StudentAPI = {
     return axiosClient.get(url);
   },
   resetApi(idStudent){
-    console.log(idStudent)
     const url = `/student/reset/${idStudent}`;
     return axiosClient.get(url);
   }

@@ -28,8 +28,7 @@ const Rightcontent = () => {
   const { infoUser } = useSelector((state) => state.auth);
   
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    dispatch(logout(() =>  navigate("/login")));
   };
 
   const [visible, setVisible] = useState(false);

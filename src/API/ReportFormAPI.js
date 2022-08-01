@@ -5,8 +5,9 @@ const ReportFormAPI = {
     return axiosClient.patch(url, data);
   },
   uploadForm(data) {
+    console.log("url", axiosClient.defaults.baseURL)
     const url = `/form`;
-    return axiosClient.patch(url, data);
+    return axiosClient.put(url, data);
   },
 };
 export default ReportFormAPI;
