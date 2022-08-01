@@ -54,11 +54,11 @@ export const filterStatusForm = [
     id: 11,
   },
   {
-    title: "Đã nộp biểu mẫu",
+    title: "Đã nộp biên bản",
     id: 4,
   },
   {
-    title: "Sửa lại biểu mẫu",
+    title: "Sửa lại biên bản",
     id: 5,
   },
 ];

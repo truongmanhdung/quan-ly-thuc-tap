@@ -53,6 +53,8 @@ const tailFormItemLayout = {
 
 const ReportForm = ({ infoUser, studentById }) => {
   const { time } = useSelector((state) => state.time.formTime);
+
+
   const [spin, setSpin] = useState(false);
   const [file, setFile] = useState();
   const [endDate, setEndDate] = useState();
@@ -67,12 +69,12 @@ const ReportForm = ({ infoUser, studentById }) => {
     dispatch(
       getTimeForm({
         typeNumber: 3,
-        semester_id: infoUser.student.smester_id,
+        semester_id: infoUser.student?.smester_id,
       })
     );
     dispatch(getStudentId(infoUser));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, infoUser.student.smester_id, spin]);
+  }, [dispatch, file]);
   function guardarArchivo(files, data) {
     const file = files; //the file
     const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
@@ -138,7 +140,7 @@ const ReportForm = ({ infoUser, studentById }) => {
 
   let timeCheck = time;
   if (studentById.listTimeForm && studentById.listTimeForm.length > 0) {
-    const checkTimeStudent = studentById.listTimeForm.find(
+    const checkTimeStudent = studentById?.listTimeForm.find(
       (item) => item.typeNumber === 3
     );
     if (checkTimeStudent) {
@@ -152,9 +154,8 @@ const ReportForm = ({ infoUser, studentById }) => {
     timeCheck.startTime < new Date().getTime();
   const isCheck =
     studentById.statusCheck === 6 ||
-    studentById.statusCheck === 8 ||
-    studentById.statusCheck === 5;
-
+    studentById.statusCheck === 8 ;
+  console.log(studentById);
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -225,10 +226,9 @@ const ReportForm = ({ infoUser, studentById }) => {
                   </p>
                 </Form.Item>
                 <Form.Item name="nameCompany" label="Tên doanh nghiệp">
-                  <p className={styles.text_form_label}>
-                    {infoUser.student.support === 1
-                      ? studentById?.business?.name?.toUpperCase()
-                      : infoUser?.student?.nameCompany?.toUpperCase()}
+                  <p>
+                    { studentById?.business?.name.toUpperCase()
+                     }
                   </p>
                 </Form.Item>
                 <Form.Item
@@ -337,9 +337,9 @@ const ReportForm = ({ infoUser, studentById }) => {
           "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
         ) : studentById.statusCheck === 9 ? (
           "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
-        ) : (
+        ) :  studentById.statusCheck === 7 ? (
           "Bạn đã nộp báo cáo thành công"
-        )
+        ) : "Chưa đến thời gian nộp báo cáo"
       ) : (
         <p>Chưa đến thời gian nộp báo cáo</p>
       )}
