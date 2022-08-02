@@ -20,7 +20,7 @@ const dataRender = [
   },
   {
     typeNumber: 2,
-    name: "Form nộp biểu mẫu",
+    name: "Form nộp biên bản",
   },
   {
     typeNumber: 3,
