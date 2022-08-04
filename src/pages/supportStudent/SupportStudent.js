@@ -72,6 +72,7 @@ const SupportStudent = ({
       getTimeForm({
         typeNumber: value,
         semester_id: infoUser.student.smester_id,
+        campus_id: infoUser.student?.campus_id,
       })
     );
     dispatch(
@@ -204,6 +205,7 @@ const SupportStudent = ({
         typeNumber: value,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
+        campus_id: infoUser.student?.campus_id,
         _id: infoUser.student._id,
       };
 

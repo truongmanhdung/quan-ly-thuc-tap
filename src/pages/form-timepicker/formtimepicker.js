@@ -3,37 +3,39 @@ import { Button, Col, DatePicker, message, Row, Select, Spin } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getListTime,
-  upTimeDate,
+  upTimeDate
 } from "../../features/timeDateSlice/timeDateSlice";
 import moment from "moment";
 import styles from "./formTimePicker.module.css";
 import { getSemesters } from "../../features/semesters/semestersSlice";
 import SemestersAPI from "../../API/SemestersAPI";
+import { getLocal } from "../../ultis/storage";
 const dataRender = [
   {
     typeNumber: 1,
-    name: "Form đăng ký nhờ nhà trường hỗ trợ",
+    name: "Form đăng ký nhờ nhà trường hỗ trợ"
   },
   {
     typeNumber: 0,
-    name: "Form đăng ký sinh viên tự tìm",
+    name: "Form đăng ký sinh viên tự tìm"
   },
   {
     typeNumber: 2,
-    name: "Form nộp biên bản",
+    name: "Form nộp biên bản"
   },
   {
     typeNumber: 3,
-    name: "Form nộp báo cáo",
+    name: "Form nộp báo cáo"
   },
   {
     typeNumber: 4,
-    name: "Form hiển thị thông tin doanh nghiệp",
-  },
+    name: "Form hiển thị thông tin doanh nghiệp"
+  }
 ];
 const dateFormat = "DD/MM/YYYY";
 const { Option } = Select;
 const Formtimepicker = () => {
+  const infoUser = getLocal();
   const { RangePicker } = DatePicker;
   const { listSemesters, defaultSemester } = useSelector(
     (state) => state.semester
@@ -41,7 +43,7 @@ const Formtimepicker = () => {
 
   const {
     formTime: { times },
-    loading,
+    loading
   } = useSelector((state) => state.time);
   const [date, setDate] = useState(new Date().getTime());
   const dispatch = useDispatch();
@@ -56,7 +58,9 @@ const Formtimepicker = () => {
   };
 
   useEffect(() => {
-    SemestersAPI.getDefaultSemester().then((res) => {
+    SemestersAPI.getDefaultSemester({
+      campus_id: infoUser?.manager?.campus_id
+    }).then((res) => {
       if (res.status === 200) {
         setSemester(res.data);
       }
@@ -64,11 +68,16 @@ const Formtimepicker = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getSemesters());
+    dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getListTime(semester?._id));
+    dispatch(
+      getListTime({
+        campus_id: infoUser?.manager?.campus_id,
+        semester_id: semester?._id
+      })
+    );
   }, [semester?._id]);
 
   const onSaveTime = async (value) => {
@@ -86,11 +95,15 @@ const Formtimepicker = () => {
         startTime: startTime,
         endTime: endTime,
         semester_id: semester._id,
+        campus_id: infoUser?.manager?.campus_id
       };
       try {
         await dispatch(upTimeDate(timeObject));
         message.success("Thành công");
-        dispatch(getListTime(semester._id));
+        dispatch(getListTime({
+          campus_id: infoUser?.manager?.campus_id,
+          semester_id: semester?._id
+        }));
       } catch (error) {
         message.error("Thất bại");
       }
@@ -116,7 +129,7 @@ const Formtimepicker = () => {
             <Col span={8}>
               <Select
                 style={{
-                  width: "80%",
+                  width: "80%"
                 }}
                 onChange={(value) => setDataSemester(value)}
                 placeholder="Kỳ hiện tại"
@@ -161,7 +174,7 @@ const Formtimepicker = () => {
                   </Col>
                   <Row
                     style={{
-                      marginBottom: 10,
+                      marginBottom: 10
                     }}
                   >
                     <Col lg={16} sm={16} xs={16}>

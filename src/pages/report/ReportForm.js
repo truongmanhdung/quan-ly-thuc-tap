@@ -70,6 +70,7 @@ const ReportForm = ({ infoUser, studentById }) => {
       getTimeForm({
         typeNumber: 3,
         semester_id: infoUser.student?.smester_id,
+        campus_id: infoUser.student?.campus_id
       })
     );
     dispatch(getStudentId(infoUser));
@@ -166,6 +167,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         attitudePoint: values.attitudePoint,
         resultScore: values.resultScore,
         semester_id: infoUser.student.smester_id,
+        campus_id: infoUser.student.campus_id,
         checkTime: check,
         _id: infoUser.student._id
       };

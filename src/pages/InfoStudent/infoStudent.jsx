@@ -6,100 +6,106 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { axiosClient } from "../../API/Link";
-import {  getBusinessStudent } from "../../features/businessSlice/businessSlice";
+import { getBusinessStudent } from "../../features/businessSlice/businessSlice";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
-import {  setTimeForm } from "../../features/timeDateSlice/timeDateSlice";
+import { setTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { optionStatus } from "../../ultis/selectOption";
 import { getLocal } from "../../ultis/storage";
 const columns = [
   {
     title: "Mã",
-    dataIndex: "code_request",
+    dataIndex: "code_request"
   },
   {
     title: "Tên doanh nghiệp",
-    dataIndex: "name",
+    dataIndex: "name"
   },
   {
     title: "Vị trí TT",
-    dataIndex: "internshipPosition",
+    dataIndex: "internshipPosition"
   },
   {
     title: "Số lượng",
-    dataIndex: "amount",
+    dataIndex: "amount"
   },
   {
     title: "Địa chỉ",
-    dataIndex: "address",
+    dataIndex: "address"
   },
   {
     title: "Yêu cầu",
-    dataIndex: "request",
+    dataIndex: "request"
   },
   {
     title: "Chi tiết",
-    dataIndex: "description",
-  },
+    dataIndex: "description"
+  }
 ];
 function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
   const infoUser = getLocal();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
     campus_id: infoUser.student.campus_id,
     smester_id: infoUser.student.smester_id,
-    majors: infoUser.student.majors,
+    majors: infoUser.student.majors
   });
   const [dateNow] = useState(Date.now());
   const { time } = useSelector((state) => state.time.formTime);
   const dispatch = useDispatch();
   useEffect(() => {
-    const string = `typeNumber=${4}&semester_id=${infoUser.student.smester_id}`;
+    const string = `typeNumber=${4}&semester_id=${
+      infoUser.student.smester_id
+    }&campus_id=${infoUser.student.campus_id}`;
     const url = `/settime/find-one?${string}`;
     axiosClient
       .get(url, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${infoUser.accessToken}`,
-        },
+          Authorization: `Bearer ${infoUser.accessToken}`
+        }
       })
       .then((res) => {
         if (res.status === 200) {
           dispatch(setTimeForm(res.data.time));
         }
-      }).catch((err) => {
-        if(err.response.status === 401){
-          message.error(err.response.data.msg)
-          navigate('/login')
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          message.error(err.response.data.msg);
+          navigate("/login");
         }
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     dispatch(getStudentId(infoUser));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    const url = `/business?${stringify(page)}`
-    axiosClient.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${infoUser.accessToken}`, 
-      }
-    }).then((res) => {
-      if(res.status === 200){
-        dispatch(getBusinessStudent(res.data))
-      }
-    }).catch((err) => {
-      if(err.response.status === 401){
-        message.error(err.response.data.msg)
-        navigate('/login')
-      }else{
-        message.error(err.response.data.msg)
-      }
-    });
+    const url = `/business?${stringify(page)}`;
+    axiosClient
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${infoUser.accessToken}`
+        }
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(getBusinessStudent(res.data));
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          message.error(err.response.data.msg);
+          navigate("/login");
+        } else {
+          message.error(err.response.data.msg);
+        }
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const isRegister = studentById?.support;
@@ -160,9 +166,9 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
                       ...page,
                       page: pages,
                       limit: pageSize,
-                      campus_id: infoUser.student.cumpus,
+                      campus_id: infoUser.student.cumpus
                     });
-                  },
+                  }
                 }}
               />
             </div>
@@ -189,13 +195,13 @@ InfoStudent.propTypes = {
   studentById: object,
   infoUser: object,
   listBusiness: object,
-  loading: bool,
+  loading: bool
 };
 
 export default connect(
   ({ students: { studentById }, business: { listBusiness, loading } }) => ({
     studentById,
     listBusiness,
-    loading,
+    loading
   })
 )(InfoStudent);

@@ -1,16 +1,16 @@
 import { axiosClient } from "./Link";
+import { stringify } from "qs";
 const TimeApi = {
     setTimeDate(data) {
         const url = `/settime`;
         return axiosClient.post(url, data);
     },
-    getTimeForm(data){
-        const string = `typeNumber=${data.typeNumber}&semester_id=${data.semester_id}`
-        const url = `/settime/find-one?${string}`;
+    getTimeForm(query){
+        const url = `/settime/find-one?${stringify(query)}`;
         return axiosClient.get(url);
     },
-    getListTime(semester_id){
-        const url = `/settime?semester_id=${semester_id}`;
+    getListTime(query){
+        const url = `/settime?${stringify(query)}`;
         return axiosClient.get(url);
     }
 };

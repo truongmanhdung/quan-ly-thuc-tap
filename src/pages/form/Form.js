@@ -14,20 +14,20 @@ import styles from "./Form.module.css";
 const formItemLayout = {
   labelCol: {
     xs: {
-      span: 24,
+      span: 24
     },
     sm: {
-      span: 8,
-    },
+      span: 8
+    }
   },
   wrapperCol: {
     xs: {
-      span: 24,
+      span: 24
     },
     sm: {
-      span: 16,
-    },
-  },
+      span: 16
+    }
+  }
 };
 // const tailFormItemLayout = {
 //   wrapperCol: {
@@ -61,11 +61,11 @@ const Formrp = ({ studentById }) => {
       getTimeForm({
         typeNumber: 2,
         semester_id: infoUser.student?.smester_id,
+        campus_id: infoUser.student?.campus_id
       })
     );
     dispatch(getStudentId(infoUser));
   }, [dispatch, file]);
-
 
   function guardarArchivo(files, data) {
     const file = files; //the file
@@ -79,7 +79,7 @@ const Formrp = ({ studentById }) => {
       var rawLog = reader.result.split(",")[1]; //extract only thee file data part
       var dataSend = {
         dataReq: { data: rawLog, name: file.name, type: file.type },
-        fname: "uploadFilesToGoogleDrive",
+        fname: "uploadFilesToGoogleDrive"
       }; //preapre info to send to API
       fetch(
         urlGGDriveCV, //your AppsScript URL
@@ -127,7 +127,7 @@ const Formrp = ({ studentById }) => {
     },
     onChange: (info) => {
       setFile(info.file.originFileObj);
-    },
+    }
   };
 
   let timeCheck = time;
@@ -164,7 +164,8 @@ const Formrp = ({ studentById }) => {
         internshipTime: startDate,
         semester_id: infoUser.student.smester_id,
         checkTime: check,
-        _id: infoUser.student._id,
+        campus_id: infoUser.student?.campus_id,
+        _id: infoUser.student._id
       };
 
       if (values.upload === undefined || values.upload === null) {
@@ -174,7 +175,7 @@ const Formrp = ({ studentById }) => {
         setSpin(false);
         return;
       }
-       await guardarArchivo(file, newData);
+      await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
       message.error(dataErr.message);
@@ -185,18 +186,18 @@ const Formrp = ({ studentById }) => {
       {
         type: "object",
         required: true,
-        message: "Vui lòng nhập ngày bắt đầu thực tập!",
-      },
-    ],
+        message: "Vui lòng nhập ngày bắt đầu thực tập!"
+      }
+    ]
   };
 
   const configNameCompany = {
     rules: [
       {
         required: true,
-        message: "Vui lòng nhập tên doanh nghiệp",
-      },
-    ],
+        message: "Vui lòng nhập tên doanh nghiệp"
+      }
+    ]
   };
   return (
     <>
@@ -247,12 +248,12 @@ const Formrp = ({ studentById }) => {
                   wrapperCol={{
                     xs: {
                       span: 24,
-                      offset: 0,
+                      offset: 0
                     },
                     sm: {
                       span: 16,
-                      offset: 8,
-                    },
+                      offset: 8
+                    }
                   }}
                 >
                   <Button type="primary" htmlType="submit">
@@ -275,9 +276,9 @@ const Formrp = ({ studentById }) => {
 };
 Formrp.propTypes = {
   infoUser: object,
-  studentById: object,
+  studentById: object
 };
 
 export default connect(({ students: { studentById } }) => ({
-  studentById,
+  studentById
 }))(Formrp);
