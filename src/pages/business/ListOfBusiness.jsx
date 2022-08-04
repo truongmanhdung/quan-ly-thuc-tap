@@ -21,7 +21,7 @@ const ListOfBusiness = ({
   listMajors,
   listBusiness,
   loading,
-  isMobile,
+  isMobile
 }) => {
   const dispatch = useDispatch();
   const [page, setPage] = useState({
@@ -29,49 +29,51 @@ const ListOfBusiness = ({
     limit: 20,
     campus_id: infoUser.manager.campus_id,
     smester_id:
-      defaultSemester && defaultSemester._id ? defaultSemester._id : "",
+      defaultSemester && defaultSemester._id ? defaultSemester._id : ""
   });
   const [majorImport, setMajorImport] = React.useState("");
   const [paramsUpdate, setParamUpdate] = useState({});
 
   useEffect(() => {
-    dispatch(getSemesters());
+    dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
     dispatch(getListMajor());
   }, [dispatch]);
 
   const fetchDeleteBusiness = (val) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
-      return BusinessAPI.delete(val._id)
+      return BusinessAPI.delete(val._id);
     }
   };
-  
+
   const mutation = useMutation(["delete"], fetchDeleteBusiness, {
     onSuccess: (res) => {
       message.success(res?.data?.message);
       if (page?.smester_id && page?.smester_id.length > 0) {
         dispatch(
           getBusiness({
-            ...page,
+            ...page
           })
         );
       } else {
-        SemestersAPI.getDefaultSemester()
+        SemestersAPI.getDefaultSemester({
+          campus_id: infoUser?.manager?.campus_id
+        })
           .then((res) => {
             if (res.status === 200) {
               dispatch(
                 getBusiness({
                   ...page,
-                  smester_id: res.data._id,
+                  smester_id: res.data._id
                 })
-                );
-              }
-            })
-            .catch(() => {});
-          }
-        },
-      });
-      
-      const handleDelete = (val) => {
+              );
+            }
+          })
+          .catch(() => {});
+      }
+    }
+  });
+
+  const handleDelete = (val) => {
     mutation.mutate(val);
   };
 
@@ -79,17 +81,19 @@ const ListOfBusiness = ({
     if (page?.smester_id && page?.smester_id.length > 0) {
       dispatch(
         getBusiness({
-          ...page,
+          ...page
         })
       );
     } else {
-      SemestersAPI.getDefaultSemester()
+      SemestersAPI.getDefaultSemester({
+        campus_id: infoUser?.manager?.campus_id
+      })
         .then((res) => {
           if (res.status === 200) {
             dispatch(
               getBusiness({
                 ...page,
-                smester_id: res.data._id,
+                smester_id: res.data._id
               })
             );
           }
@@ -103,41 +107,41 @@ const ListOfBusiness = ({
       title: "Mã",
       dataIndex: "code_request",
       width: 50,
-      fixed: "left",
+      fixed: "left"
     },
     {
       title: "Tên doanh nghiệp",
       dataIndex: "name",
       width: 150,
-      fixed: "left",
+      fixed: "left"
     },
     {
       title: "Vị trí thực tập",
-      dataIndex: "internshipPosition",
+      dataIndex: "internshipPosition"
     },
     {
       title: "Số lượng",
-      dataIndex: "amount",
+      dataIndex: "amount"
     },
 
     {
       title: "Địa chỉ thực tập",
-      dataIndex: "address",
+      dataIndex: "address"
     },
     {
       title: "Ngành",
       dataIndex: "majors",
-      render: (val) => val?.name,
+      render: (val) => val?.name
     },
     {
       title: "Yêu cầu",
       dataIndex: "request",
-      width: 400,
+      width: 400
     },
     {
       title: "Chi tiết",
       dataIndex: "description",
-      width: 400,
+      width: 400
     },
     {
       title: "Sửa",
@@ -151,7 +155,7 @@ const ListOfBusiness = ({
             Sửa
           </Button>
         );
-      },
+      }
     },
     {
       title: "Xóa",
@@ -161,15 +165,15 @@ const ListOfBusiness = ({
           <Button
             style={{
               color: "#fff",
-              background: "#ee4d2d",
+              background: "#ee4d2d"
             }}
             onClick={() => handleDelete(val)}
           >
             Xóa
           </Button>
         );
-      },
-    },
+      }
+    }
   ];
 
   const [visibleImport, setVisibleImport] = useState(false);
@@ -180,7 +184,7 @@ const ListOfBusiness = ({
   };
   const closeVisibleImport = () => {
     setPage({
-      ...page,
+      ...page
     });
     setVisibleImport(false);
   };
@@ -189,13 +193,13 @@ const ListOfBusiness = ({
     setVisible(true);
     setParamUpdate({
       val,
-      type,
+      type
     });
   };
-  
+
   const closeVisible = () => {
     setPage({
-      ...page,
+      ...page
     });
     setVisible(false);
   };
@@ -212,7 +216,7 @@ const ListOfBusiness = ({
         <Col xs={24} sm={24} md={24} lg={8} span={8}>
           <h2
             style={{
-              color: "black",
+              color: "black"
             }}
             className="mb-2"
           >
@@ -236,7 +240,7 @@ const ListOfBusiness = ({
             onChange={(val) =>
               setPage({
                 ...page,
-                smester_id: val,
+                smester_id: val
               })
             }
             style={{ width: "100%" }}
@@ -268,7 +272,7 @@ const ListOfBusiness = ({
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-evenly",
+            justifyContent: "space-evenly"
           }}
         >
           <Button onClick={openVisibleImport} type="primary">
@@ -280,7 +284,7 @@ const ListOfBusiness = ({
             }
             style={{
               color: "#fff",
-              background: "#ee4d2d",
+              background: "#ee4d2d"
             }}
           >
             Thêm Doanh nghiệp
@@ -296,9 +300,9 @@ const ListOfBusiness = ({
               setPage({
                 ...page,
                 page: pages,
-                limit: pageSize,
+                limit: pageSize
               });
-            },
+            }
           }}
           scroll={{ x: "calc(900px + 50%)" }}
           rowKey="_id"
@@ -315,9 +319,9 @@ const ListOfBusiness = ({
               setPage({
                 ...page,
                 page: pages,
-                limit: pageSize,
+                limit: pageSize
               });
-            },
+            }
           }}
           rowKey="_id"
           loading={loading}
@@ -338,7 +342,7 @@ const ListOfBusiness = ({
                 <p className="list-detail">Ngành: {record.majors}</p>
                 <br />
               </div>
-            ),
+            )
           }}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
@@ -367,7 +371,7 @@ const ListOfBusiness = ({
                 onChange={(val) =>
                   setPage({
                     ...page,
-                    smester_id: val,
+                    smester_id: val
                   })
                 }
                 defaultValue={
@@ -376,7 +380,7 @@ const ListOfBusiness = ({
                     : ""
                 }
                 style={{
-                  width: "100%",
+                  width: "100%"
                 }}
               >
                 {!defaultSemester?._id && (
@@ -403,7 +407,7 @@ const ListOfBusiness = ({
                 className="filter-status"
                 onChange={(val) => setMajorImport(val)}
                 style={{
-                  width: "100%",
+                  width: "100%"
                 }}
                 placeholder="Chọn ngành"
               >
@@ -422,7 +426,7 @@ const ListOfBusiness = ({
               parentMethods={{
                 ...page,
                 majorImport,
-                closeVisible,
+                closeVisible
               }}
             />
           </div>
@@ -440,7 +444,11 @@ const ListOfBusiness = ({
           visible={visible}
           width="70%"
         >
-          <FormBusiness paramsUpdate={paramsUpdate} closeVisible={closeVisible} visible={visible}/>
+          <FormBusiness
+            paramsUpdate={paramsUpdate}
+            closeVisible={closeVisible}
+            visible={visible}
+          />
         </Drawer>
       </div>
     </div>
@@ -451,7 +459,7 @@ ListOfBusiness.propTypes = {
   infoUser: object,
   listSmester: array,
   loading: bool,
-  listMajors: array,
+  listMajors: array
 };
 
 export default connect(
@@ -462,6 +470,6 @@ export default connect(
     listMajors: major.listMajor,
     listBusiness: business.listBusiness,
     loading: business.loading,
-    isMobile: global.isMobile,
+    isMobile: global.isMobile
   })
 )(ListOfBusiness);

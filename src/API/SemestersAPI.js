@@ -1,12 +1,13 @@
 import { axiosClient } from "./Link";
+import { stringify } from "qs";
 const SemestersAPI = {
-  getSemesters() {
-    const url = `/smester`;
+  getSemesters(query) {
+    const url = `/smester?${stringify(query)}`;
     return axiosClient.get(url);
   },
 
-  getDefaultSemester(){
-    const url = `/smester/default`;
+  getDefaultSemester(query){
+    const url = `/smester/default?${stringify(query)}`;
     return axiosClient.get(url);
   },
 

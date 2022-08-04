@@ -3,8 +3,8 @@ import SemestersAPI from "../../API/SemestersAPI";
 
 export const getSemesters = createAsyncThunk(
   "semesters/getSemesters",
-  async () => {
-    const { data } = await SemestersAPI.getSemesters();
+  async (action) => {
+    const { data } = await SemestersAPI.getSemesters(action);
     return data;
   }
 );
