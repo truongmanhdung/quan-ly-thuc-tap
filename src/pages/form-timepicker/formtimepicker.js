@@ -75,10 +75,10 @@ const Formtimepicker = () => {
       }
     });
   }, []);
-
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
-  }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -87,6 +87,7 @@ const Formtimepicker = () => {
         semester_id: semester?._id,
       })
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semester?._id]);
 
   const onSaveTime = async (value) => {

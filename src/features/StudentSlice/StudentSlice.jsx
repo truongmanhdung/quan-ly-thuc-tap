@@ -31,8 +31,10 @@ export const getSmester = createAsyncThunk(
 
 export const resetStudentAction = createAsyncThunk(
   "student/resetStudentAction",
-  async (idStudent) => {
-    const { data } = await StudentAPI.resetApi(idStudent);
+  async ({id, callback}) => {
+
+    const { data } = await StudentAPI.resetApi(id);
+    if(callback) callback()
     return data;
   }
 );

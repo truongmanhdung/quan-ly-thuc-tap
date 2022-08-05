@@ -108,7 +108,6 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
   });
 
   const onFinish = (values) => {
-    console.log(values)
     const data = {
       address: values.address?.trim(),
       amount: values.amount,
@@ -145,6 +144,7 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
 
   useEffect(() => {
     form.resetFields();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultValues]);
 
 

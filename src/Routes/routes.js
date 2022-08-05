@@ -97,17 +97,17 @@ const Router = () => {
         <Route
           path="narrows"
           element={
-            <Privateadmin>
+            <PrivateSupperAdmin>
               <Narrows />
-            </Privateadmin>
+            </PrivateSupperAdmin>
           }
         />
         <Route
           path="major"
           element={
-            <Privateadmin>
+            <PrivateSupperAdmin>
               <Major />
-            </Privateadmin>
+            </PrivateSupperAdmin>
           }
         />
         <Route
