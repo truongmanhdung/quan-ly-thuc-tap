@@ -3,10 +3,8 @@ import { Button, Table, message, Space, Form, Input, Drawer } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMajor, getListMajor, updateMajor } from '../../features/majorSlice/majorSlice';
-import { getLocal } from '../../ultis/storage';
 const Major = () => {
   const dispatch = useDispatch();
-  const infoUser = getLocal();
   const [hideForm, setHideForm] = useState(false);
   const [change, setChange] = useState(false);
   const [text, setText] = useState('Thêm ngành');
@@ -46,7 +44,6 @@ const Major = () => {
   const onFinish = async (values) => {
     const data = {
       ...values,
-      campus_id: infoUser.manager.campus_id,
       _id: change._id,
     };
     if (text.toLowerCase() === 'update') {
@@ -74,7 +71,7 @@ const Major = () => {
       message.error(mess);
     }
     form.resetFields();
-    setText('Thêm ngành')
+    setText('Thêm ngành');
   };
   // sửa ngành
   const getDataEdit = (key, value) => {

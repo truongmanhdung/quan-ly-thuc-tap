@@ -88,8 +88,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       width: 100,
       fixed: "left",
       render: (val, key) => {
-        console.log(val);
-        console.log(key);
+    
         return (
           <p
             style={{ margin: 0, cursor: "pointer", color: "blue" }}
@@ -285,7 +284,6 @@ const ReviewReport = ({ isMobile, listMajors }) => {
     const newData = [];
     list &&
       list.map((item) => {
-        console.log('itemDataCsv', item);
         let itemStatus = item["statusCheck"];
         const newObject = {};
         newObject["MSSV"] = item["mssv"];
@@ -324,7 +322,6 @@ const ReviewReport = ({ isMobile, listMajors }) => {
         newObject["Báo cáo"] = item["report"];
         return newData.push(newObject);
       });
-      console.log('newDataCsv', newData)
     const ws = XLSX.utils.json_to_sheet(newData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
