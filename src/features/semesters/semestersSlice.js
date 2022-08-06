@@ -25,6 +25,15 @@ export const updateSemester = createAsyncThunk(
   }
 )
 
+export const defaultTime = createAsyncThunk(
+  "semesters/defaultTime",
+  async action => {
+    const {callback, filter} = action
+  const {data} = await SemestersAPI.getDefaultSemester(filter)
+  if (callback) callback(data)
+    return data.result
+  }
+)
 
 const semesterSlice = createSlice({
   name: "semesters",
@@ -77,6 +86,14 @@ const semesterSlice = createSlice({
       state.mesg = "Thất bại";
       state.loading = false;
     });
+
+    builder.addCase(defaultTime.pending, (state) =>{
+      state.loading = true
+    })
+    builder.addCase(defaultTime.fulfilled, (state, {payload}) =>{
+      state.defaultSemester = payload
+      state.loading = false
+    })
   },
 });
 

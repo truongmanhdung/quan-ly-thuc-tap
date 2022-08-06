@@ -74,6 +74,7 @@ const Formtimepicker = () => {
         setSemester(res.data);
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
