@@ -71,14 +71,12 @@ const Formtimepicker = () => {
       campus_id: infoUser?.manager?.campus_id,
     }).then((res) => {
       if (res.status === 200) {
-        setSemester(res.data);
+        setSemester(res.data.result);
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
