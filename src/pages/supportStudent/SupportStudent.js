@@ -144,7 +144,10 @@ const SupportStudent = ({
 
   const props = {
     beforeUpload: (file) => {
-      const isPDF = file.type === "application/pdf";
+      const isPDF =
+        file.type === "application/pdf" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       if (!isPDF) {
         message.error(`${file.name} không phải là file PDF`);
       }
@@ -405,7 +408,7 @@ const SupportStudent = ({
                       <Form.Item
                         valuePropName="upload"
                         name="upload"
-                        label="Upload CV (PDF)"
+                        label="Upload CV (PDF) hoặc Docx"
                       >
                         <Upload {...props} maxCount={1}>
                           <Button
@@ -525,12 +528,11 @@ const SupportStudent = ({
                 )}
               </>
             </>
+          ) : studentById.statusCheck === 3 ? (
+            "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+          ) : studentById.statusCheck === 9 ? (
+            "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
           ) : (
-            // studentById.statusCheck === 3 ? (
-            //   "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
-            // ) : studentById.statusCheck === 9 ? (
-            //   "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
-            // ) :
             "Đăng ký thông tin thành công"
           )}
         </Form>

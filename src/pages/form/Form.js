@@ -118,7 +118,9 @@ const Formrp = ({ studentById }) => {
       const isFile =
         file.type === "application/pdf" ||
         file.type === "image/jpeg" ||
-        file.type === "image/jpg";
+        file.type === "image/jpg" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       if (!isFile) {
         message.error(`${file.name} không phải là file PDF hoặc ảnh`);
       }
@@ -139,11 +141,7 @@ const Formrp = ({ studentById }) => {
       timeCheck = checkTimeStudent;
     }
   }
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-unused-expressions
-  //   (studentById && studentById?.statusCheck === 2) ||
-  //     studentById?.statusCheck === 5;
-  // });
+
   const check =
     timeCheck &&
     timeCheck.endTime > new Date().getTime() &&
@@ -237,7 +235,7 @@ const Formrp = ({ studentById }) => {
                 </Form.Item>
                 <Form.Item
                   name="upload"
-                  label="Upload biên bản (Image or PDF)"
+                  label="Upload biên bản (Image, PDF hoặc Docx)"
                   valuePropName="upload"
                 >
                   <Upload {...props} maxCount={1}>
@@ -263,16 +261,14 @@ const Formrp = ({ studentById }) => {
               </Form>
             </Spin>
           </>
-        ) : studentById && !studentById.CV ? (
-          "Bạn phải nộp CV trước khi nộp báo cáo"
-        ) : studentById.statusCheck === 4 ||
-          studentById.statusCheck === 6 ||
-          studentById.statusCheck === 7 ||
-          studentById.statusCheck === 8 ||
-          studentById.statusCheck === 9 ? (
+        ) : studentById.statusCheck === 3 ? (
+          "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+        ) : studentById.statusCheck === 9 ? (
+          "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
+        ) : studentById.statusCheck === 4 ? (
           "Bạn đã nộp biên bản thành công."
         ) : (
-          "Bạn phải nộp thành công CV trước"
+          "Bạn đã nộp biên bản thành công."
         )
       ) : (
         <p>Chưa đến thời gian nộp biên bản</p>
