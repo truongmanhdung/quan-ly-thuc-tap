@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { getLocal } from '../ultis/storage';
+import axios from "axios";
+import { getLocal } from "../ultis/storage";
 const token = getLocal();
 export const axiosClient = axios.create({
   // Localhost
@@ -11,15 +11,20 @@ export const axiosClient = axios.create({
 });
 axiosClient.interceptors.request.use((req) => {
   if (token) {
-    req.headers['Authorization'] = 'Bearer ' + token.accessToken;
+    req.headers["Authorization"] = "Bearer " + token.accessToken;
+  } else {
+    const refreshToken = getLocal();
+    req.headers["Authorization"] = "Bearer " + refreshToken.accessToken;
   }
-  req.headers['Content-Type'] = 'application/json';
+  req.headers["Content-Type"] = "application/json";
+
   return req;
 });
 axiosClient.interceptors.response.use(
   (res) => {
     return res;
   },
-  (error) =>{
-    return error.response},
+  (error) => {
+    return error.response;
+  }
 );

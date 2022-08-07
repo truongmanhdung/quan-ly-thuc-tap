@@ -64,6 +64,8 @@ const SupportStudent = ({
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
+  const [optBusines, setOptBusines] = useState("");
+
   const { time } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
   useEffect(() => {
@@ -174,6 +176,7 @@ const SupportStudent = ({
     timeCheck.startTime < new Date().getTime();
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+
   const dataNarrow =
     studentById &&
     studentById?.majors &&
@@ -183,6 +186,14 @@ const SupportStudent = ({
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
       : [];
+
+  const getIdbusiness = (id) => {
+    if (!id) {
+      setOptBusines("");
+    }
+    setOptBusines(id);
+  };
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -360,6 +371,7 @@ const SupportStudent = ({
                             marginLeft: "20px",
                           }}
                           placeholder="Chọn doanh nghiệp"
+                          onChange={getIdbusiness}
                         >
                           {list?.map((item) => (
                             <Option key={item._id} value={item._id}>
@@ -368,6 +380,13 @@ const SupportStudent = ({
                           ))}
                         </Select>
                       </Form.Item>
+                    )}
+                    {optBusines !== "" ? (
+                      <Form.Item label="Mã đơn vị thực tập">
+                        <p className={styles.text_form_label}>{optBusines}</p>
+                      </Form.Item>
+                    ) : (
+                      ""
                     )}
                     <Form.Item
                       name="dream"
@@ -414,6 +433,7 @@ const SupportStudent = ({
                         >
                           <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
                         </Form.Item>
+
                         <Form.Item
                           name="unitAddress"
                           label="Địa chỉ thực tập"
