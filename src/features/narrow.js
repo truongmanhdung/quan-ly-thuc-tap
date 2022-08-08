@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createNarrow, getNarrow, updateNarrows } from '../API/narrow';
+import { createNarrow, getNarrowAPI, updateNarrows } from '../API/narrow';
 export const createNarrows = createAsyncThunk('narrows/createNarrows', async (req) => {
   const { data } = await createNarrow(req.data);
   req.callback(data.status, data.msg);
   return data;
 });
 export const getNarow = createAsyncThunk('narrows/getNarow', async (req, func) => {
-  const { data } = await getNarrow();
+  const { data } = await getNarrowAPI();
+  console.log(data);
   return data;
 });
 export const updateNarow = createAsyncThunk('narrows/updateNarrows', async (req) => {

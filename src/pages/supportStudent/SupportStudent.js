@@ -64,6 +64,8 @@ const SupportStudent = ({
   const [file, setFile] = useState();
   const [value, setValue] = useState(1);
   const [spin, setSpin] = useState(false);
+  const [optBusines, setOptBusines] = useState("");
+
   const { time } = useSelector((state) => state.time.formTime);
   const [form] = Form.useForm();
   useEffect(() => {
@@ -142,7 +144,10 @@ const SupportStudent = ({
 
   const props = {
     beforeUpload: (file) => {
-      const isPDF = file.type === "application/pdf";
+      const isPDF =
+        file.type === "application/pdf" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       if (!isPDF) {
         message.error(`${file.name} không phải là file PDF`);
       }
@@ -168,12 +173,17 @@ const SupportStudent = ({
     }
   }
 
+  console.log(time)
+
   const check =
     timeCheck &&
     timeCheck.endTime > new Date().getTime() &&
     timeCheck.startTime < new Date().getTime();
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+
+
+
   const dataNarrow =
     studentById &&
     studentById?.majors &&
@@ -183,6 +193,15 @@ const SupportStudent = ({
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
       : [];
+      console.log("dataNarrow: ", dataNarrow)
+      console.log("listNarrow: ", listNarrow)
+  const getIdbusiness = (id) => {
+    if (!id) {
+      setOptBusines("");
+    }
+    setOptBusines(id);
+  };
+
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -360,6 +379,7 @@ const SupportStudent = ({
                             marginLeft: "20px",
                           }}
                           placeholder="Chọn doanh nghiệp"
+                          onChange={getIdbusiness}
                         >
                           {list?.map((item) => (
                             <Option key={item._id} value={item._id}>
@@ -368,6 +388,13 @@ const SupportStudent = ({
                           ))}
                         </Select>
                       </Form.Item>
+                    )}
+                    {optBusines !== "" ? (
+                      <Form.Item label="Mã đơn vị thực tập">
+                        <p className={styles.text_form_label}>{optBusines}</p>
+                      </Form.Item>
+                    ) : (
+                      ""
                     )}
                     <Form.Item
                       name="dream"
@@ -386,7 +413,7 @@ const SupportStudent = ({
                       <Form.Item
                         valuePropName="upload"
                         name="upload"
-                        label="Upload CV (PDF)"
+                        label="Upload CV (PDF) hoặc Docx"
                       >
                         <Upload {...props} maxCount={1}>
                           <Button
@@ -414,6 +441,7 @@ const SupportStudent = ({
                         >
                           <Input placeholder="Đơn vị thực tập/Tên doanh nghiệp" />
                         </Form.Item>
+
                         <Form.Item
                           name="unitAddress"
                           label="Địa chỉ thực tập"
@@ -505,12 +533,11 @@ const SupportStudent = ({
                 )}
               </>
             </>
+          ) : studentById.statusCheck === 3 ? (
+            "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+          ) : studentById.statusCheck === 9 ? (
+            "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
           ) : (
-            // studentById.statusCheck === 3 ? (
-            //   "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
-            // ) : studentById.statusCheck === 9 ? (
-            //   "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
-            // ) :
             "Đăng ký thông tin thành công"
           )}
         </Form>

@@ -54,7 +54,6 @@ const tailFormItemLayout = {
 const ReportForm = ({ infoUser, studentById }) => {
   const { time } = useSelector((state) => state.time.formTime);
 
-
   const [spin, setSpin] = useState(false);
   const [file, setFile] = useState();
   const [endDate, setEndDate] = useState();
@@ -70,7 +69,7 @@ const ReportForm = ({ infoUser, studentById }) => {
       getTimeForm({
         typeNumber: 3,
         semester_id: infoUser.student?.smester_id,
-        campus_id: infoUser.student?.campus_id
+        campus_id: infoUser.student?.campus_id,
       })
     );
     dispatch(getStudentId(infoUser));
@@ -153,8 +152,7 @@ const ReportForm = ({ infoUser, studentById }) => {
     timeCheck.endTime > new Date().getTime() &&
     timeCheck.startTime < new Date().getTime();
   const isCheck =
-    studentById.statusCheck === 6 ||
-    studentById.statusCheck === 8 ;
+    studentById.statusCheck === 6 || studentById.statusCheck === 8;
   const onFinish = async (values) => {
     setSpin(true);
     try {
@@ -169,7 +167,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         semester_id: infoUser.student.smester_id,
         campus_id: infoUser.student.campus_id,
         checkTime: check,
-        _id: infoUser.student._id
+        _id: infoUser.student._id,
       };
 
       if (values.upload === undefined || values.upload === null) {
@@ -226,14 +224,12 @@ const ReportForm = ({ infoUser, studentById }) => {
                   </p>
                 </Form.Item>
                 <Form.Item name="nameCompany" label="Tên doanh nghiệp">
-                  <p>
-                    { studentById?.business?.name.toUpperCase()
-                     }
-                  </p>
+                  <p>{studentById?.business?.name.toUpperCase()}</p>
                 </Form.Item>
                 <Form.Item
                   name="resultScore"
                   label="Điểm kết quả"
+                  help="Vui lòng nhập điểm phẩy bằng dấu chấm VD: 9.5."
                   rules={[
                     {
                       required: true,
@@ -253,6 +249,7 @@ const ReportForm = ({ infoUser, studentById }) => {
                 <Form.Item
                   name="attitudePoint"
                   label="Điểm thái độ"
+                  help="Vui lòng nhập điểm phẩy bằng dấu chấm VD: 9.5."
                   rules={[
                     {
                       required: true,
@@ -337,9 +334,11 @@ const ReportForm = ({ infoUser, studentById }) => {
           "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
         ) : studentById.statusCheck === 9 ? (
           "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
-        ) :  studentById.statusCheck === 7 ? (
+        ) : studentById.statusCheck === 7 ? (
           "Bạn đã nộp báo cáo thành công"
-        ) : "Chưa đến thời gian nộp báo cáo"
+        ) : (
+          "Chưa đến thời gian nộp báo cáo"
+        )
       ) : (
         <p>Chưa đến thời gian nộp báo cáo</p>
       )}

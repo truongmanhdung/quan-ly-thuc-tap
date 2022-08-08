@@ -14,20 +14,20 @@ import styles from "./Form.module.css";
 const formItemLayout = {
   labelCol: {
     xs: {
-      span: 24
+      span: 24,
     },
     sm: {
-      span: 8
-    }
+      span: 8,
+    },
   },
   wrapperCol: {
     xs: {
-      span: 24
+      span: 24,
     },
     sm: {
-      span: 16
-    }
-  }
+      span: 16,
+    },
+  },
 };
 // const tailFormItemLayout = {
 //   wrapperCol: {
@@ -61,7 +61,7 @@ const Formrp = ({ studentById }) => {
       getTimeForm({
         typeNumber: 2,
         semester_id: infoUser.student?.smester_id,
-        campus_id: infoUser.student?.campus_id
+        campus_id: infoUser.student?.campus_id,
       })
     );
     dispatch(getStudentId(infoUser));
@@ -79,7 +79,7 @@ const Formrp = ({ studentById }) => {
       var rawLog = reader.result.split(",")[1]; //extract only thee file data part
       var dataSend = {
         dataReq: { data: rawLog, name: file.name, type: file.type },
-        fname: "uploadFilesToGoogleDrive"
+        fname: "uploadFilesToGoogleDrive",
       }; //preapre info to send to API
       fetch(
         urlGGDriveCV, //your AppsScript URL
@@ -118,7 +118,9 @@ const Formrp = ({ studentById }) => {
       const isFile =
         file.type === "application/pdf" ||
         file.type === "image/jpeg" ||
-        file.type === "image/jpg";
+        file.type === "image/jpg" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
       if (!isFile) {
         message.error(`${file.name} không phải là file PDF hoặc ảnh`);
       }
@@ -127,7 +129,7 @@ const Formrp = ({ studentById }) => {
     },
     onChange: (info) => {
       setFile(info.file.originFileObj);
-    }
+    },
   };
 
   let timeCheck = time;
@@ -139,11 +141,7 @@ const Formrp = ({ studentById }) => {
       timeCheck = checkTimeStudent;
     }
   }
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-unused-expressions
-  //   (studentById && studentById?.statusCheck === 2) ||
-  //     studentById?.statusCheck === 5;
-  // });
+
   const check =
     timeCheck &&
     timeCheck.endTime > new Date().getTime() &&
@@ -165,7 +163,7 @@ const Formrp = ({ studentById }) => {
         semester_id: infoUser.student.smester_id,
         checkTime: check,
         campus_id: infoUser.student?.campus_id,
-        _id: infoUser.student._id
+        _id: infoUser.student._id,
       };
 
       if (values.upload === undefined || values.upload === null) {
@@ -186,18 +184,18 @@ const Formrp = ({ studentById }) => {
       {
         type: "object",
         required: true,
-        message: "Vui lòng nhập ngày bắt đầu thực tập!"
-      }
-    ]
+        message: "Vui lòng nhập ngày bắt đầu thực tập!",
+      },
+    ],
   };
 
   const configNameCompany = {
     rules: [
       {
         required: true,
-        message: "Vui lòng nhập tên doanh nghiệp"
-      }
-    ]
+        message: "Vui lòng nhập tên doanh nghiệp",
+      },
+    ],
   };
   return (
     <>
@@ -237,7 +235,7 @@ const Formrp = ({ studentById }) => {
                 </Form.Item>
                 <Form.Item
                   name="upload"
-                  label="Upload biên bản (Image or PDF)"
+                  label="Upload biên bản (Image, PDF hoặc Docx)"
                   valuePropName="upload"
                 >
                   <Upload {...props} maxCount={1}>
@@ -248,12 +246,12 @@ const Formrp = ({ studentById }) => {
                   wrapperCol={{
                     xs: {
                       span: 24,
-                      offset: 0
+                      offset: 0,
                     },
                     sm: {
                       span: 16,
-                      offset: 8
-                    }
+                      offset: 8,
+                    },
                   }}
                 >
                   <Button type="primary" htmlType="submit">
@@ -263,8 +261,12 @@ const Formrp = ({ studentById }) => {
               </Form>
             </Spin>
           </>
-        ) : studentById && !studentById.CV ? (
-          "Bạn phải nộp thành công CV trước"
+        ) : studentById.statusCheck === 3 ? (
+          "Sinh viên đã trượt kỳ thực tập. Chúc em sẽ cố gắng hơn vào kỳ thực tập sau"
+        ) : studentById.statusCheck === 9 ? (
+          "Chúc mừng sinh viên đã hoàn thành kỳ thực tập"
+        ) : studentById.statusCheck === 4 ? (
+          "Bạn đã nộp biên bản thành công."
         ) : (
           "Bạn đã nộp biên bản thành công."
         )
@@ -276,9 +278,9 @@ const Formrp = ({ studentById }) => {
 };
 Formrp.propTypes = {
   infoUser: object,
-  studentById: object
+  studentById: object,
 };
 
 export default connect(({ students: { studentById } }) => ({
-  studentById
+  studentById,
 }))(Formrp);
