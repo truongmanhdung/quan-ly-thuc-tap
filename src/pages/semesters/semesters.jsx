@@ -134,19 +134,19 @@ const FormSemester = ({ isMobile }) => {
     setHideForm(false);
   };
 
-  const getMaxTimeRequest = () => {
-    if (listSemesters && listSemesters.length > 0) {
-      const dataTest = listSemesters;
-      let max = new Date().getTime();
-      dataTest.forEach((item) => {
-        const endTime = new Date(item.end_time).getTime();
-        if (endTime > max) {
-          max = endTime;
-        }
-      });
-      return max;
-    }
-  };
+  // const getMaxTimeRequest = () => {
+  //   if (listSemesters && listSemesters.length > 0) {
+  //     const dataTest = listSemesters;
+  //     let max = new Date().getTime();
+  //     dataTest.forEach((item) => {
+  //       const endTime = new Date(item.end_time).getTime();
+  //       if (endTime > max) {
+  //         max = endTime;
+  //       }
+  //     });
+  //     return max;
+  //   }
+  // };
 
   return (
     <>
@@ -202,8 +202,7 @@ const FormSemester = ({ isMobile }) => {
                     disabledDate={(current) => {
                       return (
                         current &&
-                        new Date(current).getTime() <
-                          getMaxTimeRequest() + 8640000
+                        new Date(current).getTime() < new Date()
                       );
                     }}
                   />

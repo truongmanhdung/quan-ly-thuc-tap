@@ -173,7 +173,6 @@ const SupportStudent = ({
     }
   }
 
-  console.log(time)
 
   const check =
     timeCheck &&
@@ -193,8 +192,6 @@ const SupportStudent = ({
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
       : [];
-      console.log("dataNarrow: ", dataNarrow)
-      console.log("listNarrow: ", listNarrow)
   const getIdbusiness = (id) => {
     if (!id) {
       setOptBusines("");
