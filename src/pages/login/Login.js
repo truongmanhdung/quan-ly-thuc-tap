@@ -27,7 +27,7 @@ const Login = () => {
             const dataForm = {
               token: googleData.tokenId,
               cumpusId: cumpus,
-              smester_id: data.result._id,
+              smester_id: data?.result?._id,
             };
             dispatch(loginGoogle({ val: dataForm, callback: cbMessage }));
           }

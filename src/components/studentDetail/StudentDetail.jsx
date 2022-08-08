@@ -64,7 +64,12 @@ const StudentDetail = (props) => {
       setStudent(data);
       setNoteDetail(data.note);
       dispatch(getBusiness({ majors: data.majors._id }));
-      dispatch(getListTime(data.smester_id._id));
+      dispatch(
+        getListTime({
+          semester_id: data.smester_id._id,
+          campus_id: data.campus_id._id,
+        })
+      );
     }
     setIsLoading(false);
   }, [studentId]);
@@ -864,7 +869,8 @@ const StudentDetail = (props) => {
                       defaultValue="Chọn người review"
                       style={{ width: "50%" }}
                     >
-                      {listManager && listManager?.length > 0 &&
+                      {listManager &&
+                        listManager?.length > 0 &&
                         listManager.map((item, index) => (
                           <Option key={index} value={item.email}>
                             {item.name} - {item.email}
