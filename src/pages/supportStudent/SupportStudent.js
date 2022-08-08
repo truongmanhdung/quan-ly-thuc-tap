@@ -173,12 +173,16 @@ const SupportStudent = ({
     }
   }
 
+  console.log(time)
+
   const check =
     timeCheck &&
     timeCheck.endTime > new Date().getTime() &&
     timeCheck.startTime < new Date().getTime();
   const isCheck =
     studentById?.statusCheck === 10 || studentById?.statusCheck === 1;
+
+
 
   const dataNarrow =
     studentById &&
@@ -189,7 +193,8 @@ const SupportStudent = ({
           (item) => item?.id_majors?._id === studentById?.majors?._id
         )
       : [];
-
+      console.log("dataNarrow: ", dataNarrow)
+      console.log("listNarrow: ", listNarrow)
   const getIdbusiness = (id) => {
     if (!id) {
       setOptBusines("");

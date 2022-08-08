@@ -1,6 +1,6 @@
 import { axiosClient } from "./Link"
 
-export const getNarrow = () =>{
+export const getNarrowAPI = () =>{
     const url = '/narrows'
     return axiosClient.get(url)
 }
