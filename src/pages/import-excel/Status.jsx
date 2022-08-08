@@ -4,23 +4,20 @@ import Column from 'antd/lib/table/Column';
 import * as FileSaver from 'file-saver';
 import _, { omit } from 'lodash';
 import { array, object } from 'prop-types';
-import { stringify } from 'qs';
 import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import { axiosClient } from '../../API/Link';
-import SemestersAPI from '../../API/SemestersAPI';
 import style from '../../common/styles/status.module.css';
 import UpFile from '../../components/ExcelDocument/UpFile';
 import StudentDetail from '../../components/studentDetail/StudentDetail';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
 import { fetchManager } from '../../features/managerSlice/managerSlice';
 import { updateReviewerListStudent } from '../../features/reviewerStudent/reviewerSlice';
-import { getSemesters } from '../../features/semesters/semestersSlice';
+import { defaultTime, getSemesters } from '../../features/semesters/semestersSlice';
 import {
   getAllStudent,
-  getListStudentReducer,
+  getDataExport,
   resetStudentAction,
 } from '../../features/StudentSlice/StudentSlice';
 import { filterStatuss } from '../../ultis/selectOption';
@@ -28,8 +25,8 @@ import { getLocal } from '../../ultis/storage';
 const { Option } = Select;
 const { confirm } = Modal;
 const Status = ({
-  listStudent: { list, total },
-  listAllStudent,
+  // listStudent: { list, total },
+  listAllStudent: { list, total },
   loading,
   listSemesters,
   defaultSemester,
@@ -37,7 +34,6 @@ const Status = ({
   isMobile,
 }) => {
   const infoUser = getLocal();
-
   const [studentdetail, setStudentDetail] = useState('');
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -54,6 +50,34 @@ const Status = ({
   });
   const [majorImport, setMajorImport] = useState('');
   const [filter, setFiler] = useState();
+
+  useEffect(() => {
+    dispatch(
+      defaultTime({
+        filter: { campus_id: infoUser.manager.campus_id },
+        callback: (res) => {
+          if (res.status === 'ok') {
+            const data = {
+              ...page,
+              ...filter,
+              smester_id: res.result._id,
+              campus_id: infoUser.manager.campus_id,
+            };
+            setChooseIdStudent([]);
+            dispatch(getAllStudent(data));
+          }
+        },
+      }),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
+
+  useEffect(() => {
+    dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
+    dispatch(getListMajor());
+    dispatch(fetchManager());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const onShowDetail = (mssv, key) => {
     setStudentDetail(key);
     setModal(true);
@@ -61,7 +85,6 @@ const Status = ({
 
   const onCloseModal = () => {
     setModal(false);
-    getListStudent();
   };
 
   const resetStudent = async (val, record) => {
@@ -75,7 +98,24 @@ const Status = ({
           dispatch(
             resetStudentAction({
               id: id,
-              callback: getListStudent(),
+              callback: dispatch(
+                defaultTime({
+                  filter: { campus_id: infoUser.manager.campus_id },
+                  callback: (res) => {
+                    if (res.status === 'ok') {
+                      const data = {
+                        ...page,
+                        ...filter,
+                        smester_id: res.result._id,
+                        campus_id: infoUser.manager.campus_id
+                          
+                      };
+                      setChooseIdStudent([]);
+                      dispatch(getAllStudent(data));
+                    }
+                  },
+                }),
+              ),
             }),
           );
           message.success('Thành công');
@@ -87,105 +127,6 @@ const Status = ({
     });
   };
 
-  const getListStudent = async () => {
-    if (page?.smester_id && page?.smester_id.length > 0) {
-      const url = `/student?${stringify({
-        ...page,
-        ...filter,
-        campus_id:
-          infoUser && infoUser.manager && infoUser.manager.campus_id
-            ? infoUser.manager.campus_id
-            : '',
-      })}`;
-      axiosClient
-        .get(url, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${infoUser.accessToken}`,
-          },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(getListStudentReducer(res.data));
-          }
-        })
-        .catch((err) => {
-          navigate('/login');
-        });
-    } else {
-      SemestersAPI.getDefaultSemester({
-        campus_id: infoUser?.manager?.campus_id,
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            const url = `/student?${stringify({
-              ...page,
-              ...filter,
-              smester_id: res.data._id,
-              campus_id:
-                infoUser && infoUser.manager && infoUser.manager.campus_id
-                  ? infoUser.manager.campus_id
-                  : '',
-            })}`;
-            axiosClient
-              .get(url, {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${infoUser.accessToken}`,
-                },
-              })
-              .then((res) => {
-                if (res.status === 200) {
-                  dispatch(getListStudentReducer(res.data));
-                }
-              })
-              .catch((err) => {
-                navigate('/login');
-              });
-          }
-        })
-        .catch(() => {});
-    }
-  };
-
-  const getStudentExportExcel = async () => {
-    if (page?.smester_id && page?.smester_id.length > 0) {
-      dispatch(
-        getAllStudent({
-          ...filter,
-        }),
-      );
-    } else {
-      SemestersAPI.getDefaultSemester({
-        campus_id: infoUser?.manager?.campus_id,
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(
-              getAllStudent({
-                smester_id: res.data._id,
-              }),
-            );
-          }
-        })
-        .catch(() => {});
-    }
-  };
-  const getListAllStudent = listAllStudent?.list;
-  useEffect(() => {
-    getStudentExportExcel();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    getListStudent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
-  useEffect(() => {
-    dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
-    dispatch(getListMajor());
-    dispatch(fetchManager());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const columns = [
     {
       title: 'MSSV',
@@ -370,7 +311,23 @@ const Status = ({
     setFiler(newValue);
   };
   const handleSearch = () => {
-    getListStudent();
+    dispatch(
+      defaultTime({
+        filter: { campus_id: infoUser.manager.campus_id },
+        callback: (res) => {
+          if (res.status === 'ok') {
+            const data = {
+              ...page,
+              ...filter,
+              smester_id: res.result._id,
+              campus_id: infoUser.manager.campus_id,
+            };
+            setChooseIdStudent([]);
+            dispatch(getAllStudent(data));
+          }
+        },
+      }),
+    );
   };
 
   const comfirms = () => {
@@ -384,11 +341,19 @@ const Status = ({
     navigate('/review-cv');
   };
 
-  const fileType =
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-  const fileExtension = '.xlsx';
+  const handleExport = () => {
+    dispatch(
+      getDataExport({
+        filter: { ...filter },
+        callback: (res) => exportToCSV(res),
+      }),
+    );
+  };
 
   const exportToCSV = (list) => {
+    const fileType =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
     const newData = [];
     list &&
       list.map((item) => {
@@ -490,7 +455,8 @@ const Status = ({
                   minWidth: '90px',
                 }}
                 className={style.button}
-                onClick={(e) => exportToCSV(getListAllStudent)}
+                // onClick={(e) => exportToCSV(getListAllStudent)}
+                onClick={handleExport}
               >
                 Export
               </Button>
@@ -622,7 +588,7 @@ const Status = ({
                   style={{
                     width: '100%',
                   }}
-                  onClick={(e) => exportToCSV(getListAllStudent)}
+                  onClick={handleExport}
                 >
                   Export
                 </Button>
@@ -751,6 +717,24 @@ const Status = ({
                 campus_id: infoUser.manager.cumpus,
                 ...filter,
               });
+              // dispatch(
+              //   defaultTime({
+              //     filter: { campus_id: infoUser.manager.campus_id },
+              //     callback: (res) => {
+              //       if (res.status === 'ok') {
+              //         const data = {
+              //           page: page,
+              //           limit: pageSize,
+              //           smester_id: res.result._id,
+              //           campus_id: infoUser.manager.campus_id,
+              //           ...filter,
+              //         };
+              //         setChooseIdStudent([]);
+              //         dispatch(getAllStudent(data));
+              //       }
+              //     },
+              //   }),
+              // );
             },
           }}
           rowKey="_id"
@@ -775,6 +759,24 @@ const Status = ({
                 campus_id: infoUser.manager.cumpus,
                 ...filter,
               });
+              dispatch(
+                defaultTime({
+                  filter: { campus_id: infoUser.manager.campus_id },
+                  callback: (res) => {
+                    if (res.status === 'ok') {
+                      const data = {
+                        page: page,
+                        limit: pageSize,
+                        smester_id: res.result._id,
+                        campus_id: infoUser.manager.campus_id,
+                        ...filter,
+                      };
+                      setChooseIdStudent([]);
+                      dispatch(getAllStudent(data));
+                    }
+                  },
+                }),
+              );
             },
           }}
           rowKey="_id"

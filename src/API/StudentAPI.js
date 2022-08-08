@@ -3,10 +3,7 @@ import { stringify } from "qs";
 const StudentAPI = {
   getAll(page) {
     const url = `/student?${stringify(page)}`;
-    return axiosClient
-      .get(url)
-      .then((res) => res)
-      .catch((err) => err);
+    return axiosClient.get(url)
   },
   get(infoUser) {
     const url = `/student/${infoUser.student._id}`;
