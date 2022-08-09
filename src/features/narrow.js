@@ -27,9 +27,9 @@ const narrows = createSlice({
       state.loadings = true;
     });
     builder.addCase(createNarrows.fulfilled, (state, { payload }) => {
-      if (payload.status === 'ok') {
-        state.listNarrow = [payload.data, ...state.listNarrow];
-      }
+      // if (payload.status === 'ok') {
+      //   state.listNarrow = [payload.data, ...state.listNarrow];
+      // }
       state.loadings = false;
     });
     builder.addCase(createNarrows.rejected, (state) => {
@@ -53,10 +53,10 @@ const narrows = createSlice({
       state.loading = true;
     });
     builder.addCase(updateNarow.fulfilled, (state, { payload }) => {
-      if (payload.status === 'ok') {
-        let data = state.listNarrow.filter((item) => item._id !== payload.data._id);
-        state.listNarrow = [payload.data, ...data];
-      }
+      // if (payload.status === 'ok') {
+      //   let data = state.listNarrow.filter((item) => item._id !== payload.data._id);
+      //   state.listNarrow = [payload.data, ...data];
+      // }
 
       state.loading = false;
     });

@@ -62,9 +62,9 @@ const majorSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createMajor.fulfilled, (state, { payload }) => {
-      if (payload.status === "ok") {
-        state.listMajor = [payload.data, ...state.listMajor];
-      }
+      // if (payload.status === "ok") {
+      //   state.listMajor = [payload.data, ...state.listMajor];
+      // }
       state.loading = false;
     });
     builder.addCase(createMajor.rejected, (state) => {
@@ -77,8 +77,8 @@ const majorSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateMajor.fulfilled, (state, { payload }) => {
-      let data = state.listMajor.filter((item) => item._id !== payload._id);
-      state.listMajor = [payload, ...data];
+      // let data = state.listMajor.filter((item) => item._id !== payload._id);
+      // state.listMajor = [payload, ...data];
       state.loading = false;
     });
     builder.addCase(updateMajor.rejected, (state, payload) => {

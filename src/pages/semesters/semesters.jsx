@@ -30,7 +30,8 @@ const FormSemester = ({ isMobile }) => {
   const { listSemesters, loading } = useSelector((state) => state.semester);
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
-  }, [dispatch, hideForm]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const columns = [
     {
@@ -83,6 +84,7 @@ const FormSemester = ({ isMobile }) => {
     try {
       if (text === "update") {
         dispatch(updateSemester(data)).then((res) => {
+          dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
           if (res.error) {
             message.error("Sửa kì thất bại");
           } else {
@@ -92,6 +94,7 @@ const FormSemester = ({ isMobile }) => {
         });
       } else {
         dispatch(insertSemester(data)).then((res) => {
+          dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
           if (res.error) {
             message.error("Tạo kì thất bại");
           } else {
