@@ -118,6 +118,7 @@ const Narrows = ({ isMobile }) => {
   };
 
   const cbHandleAdd = (status, mess) => {
+    dispatch(getNarow());
     setHideForm(false);
     if (status === 'ok') {
       message.success(mess);

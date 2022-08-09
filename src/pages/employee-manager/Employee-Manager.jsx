@@ -107,6 +107,7 @@ const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
   };
 
   const cbMessage = (val) => {
+    dispatch(fetchManager());
     if (val.success) {
       message.success(val.message);
       return;

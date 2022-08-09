@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { reduce } from 'lodash';
 import managerApi from '../../API/managerApi';
+import { getLocal } from '../../ultis/storage';
 
 export const fetchManager = createAsyncThunk('manager/fetchManager', async () => {
   const { data } = await managerApi.getAll();
@@ -41,9 +43,20 @@ const managerSlice = createSlice({
     builder.addCase(fetchManager.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(fetchManager.fulfilled, (state, action) => {
+    builder.addCase(fetchManager.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.listManager = action.payload;
+      const user = getLocal();
+
+      state.listManager = reduce(
+        payload,
+        (res, item) => {
+          if (item._id !== user.manager._id) {
+            res.push(item);
+          }
+          return res;
+        },
+        [],
+      );
     });
     builder.addCase(fetchManager.rejected, (state, action) => {
       state.error = 'Không thể truy vấn';
@@ -54,9 +67,9 @@ const managerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createManager.fulfilled, (state, { payload }) => {
-      if (payload.success === true) {
-        state.listManager = [payload.manager, ...state.listManager];
-      }
+      // if (payload.success === true) {
+      //   state.listManager = [payload.manager, ...state.listManager];
+      // }
       state.loading = false;
     });
     builder.addCase(createManager.rejected, (state, action) => {
@@ -68,10 +81,10 @@ const managerSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateManager.fulfilled, (state, { payload }) => {
-      let data = state.listManager.filter((item) => item._id !== payload._id);
-      if (payload.success === true) {
-        state.listManager = [payload.manager, ...data];
-      }
+      // let data = state.listManager.filter((item) => item._id !== payload._id);
+      // if (payload.success === true) {
+      //   state.listManager = [payload.manager, ...data];
+      // }
       state.loading = false;
     });
     builder.addCase(updateManager.rejected, (state, action) => {
