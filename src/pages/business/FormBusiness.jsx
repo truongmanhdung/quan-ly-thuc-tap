@@ -196,6 +196,8 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
           rules={[
             {
               required: true,
+              pattern: new RegExp(".*\\S+.*"),
+              message: "Vui lòng nhập tên doanh nghiệp"
             },
           ]}
         >
@@ -208,6 +210,8 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
           rules={[
             {
               required: true,
+              pattern: new RegExp(".*\\S+.*"),
+              message: "Vui lòng nhập mã doanh nghiệp"
             },
           ]}
         >
@@ -220,6 +224,8 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
           rules={[
             {
               required: true,
+              pattern: new RegExp(".*\\S+.*"),
+              message: "Vui lòng nhập vị trí tuyển thực tập"
             },
           ]}
         >
@@ -232,6 +238,8 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
           rules={[
             {
               required: true,
+              pattern: new RegExp(".*\\S+.*"),
+              message: "Vui lòng nhập địa chỉ thực tập"
             },
           ]}
         >
@@ -254,6 +262,7 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
           rules={[
             {
               required: true,
+              message: "Vui lòng chọn chuyên ngành học"
             },
           ]}
         >
@@ -276,6 +285,7 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
           rules={[
             {
               required: true,
+              message: "Vui lòng chọn Cở sở FPT Poly"
             },
           ]}
         >
@@ -300,9 +310,8 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
               type: "number",
               min: 0,
               max: 99,
-            },
-            {
               required: true,
+              message: "Số lượng tuyển dụng nhỏ phải >= 0 or <= 99"
             },
           ]}
         >
