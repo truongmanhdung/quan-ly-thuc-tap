@@ -17,6 +17,7 @@ const { Column } = Table;
 const ListOfBusiness = ({
   infoUser,
   listSemesters,
+  semester,
   defaultSemester,
   listMajors,
   listBusiness,
@@ -24,17 +25,22 @@ const ListOfBusiness = ({
   isMobile,
 }) => {
   const dispatch = useDispatch();
+  const [majorImport, setMajorImport] = React.useState('');
+  const [paramsUpdate, setParamUpdate] = useState({});
+  const [visibleImport, setVisibleImport] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: defaultSemester && defaultSemester._id ? defaultSemester._id : '',
+    smester_id: semester ? semester.defaultSemester?._id : '',
   });
-  const [majorImport, setMajorImport] = React.useState('');
-  const [paramsUpdate, setParamUpdate] = useState({});
+
 
   useEffect(() => {
-    dispatch(getSemesters({ campus_id: infoUser?.manager?.campus_id }));
+    dispatch(getSemesters({ campus_id: infoUser.manager?.campus_id }));
     dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -166,8 +172,7 @@ const ListOfBusiness = ({
     },
   ];
 
-  const [visibleImport, setVisibleImport] = useState(false);
-  const [visible, setVisible] = useState(false);
+ 
 
   const openVisibleImport = () => {
     setVisibleImport(true);
@@ -433,6 +438,7 @@ ListOfBusiness.propTypes = {
 export default connect(({ auth: { infoUser }, semester, major, business, global }) => ({
   infoUser,
   listSemesters: semester.listSemesters,
+  semester,
   defaultSemester: semester.defaultSemester,
   listMajors: major.listMajor,
   listBusiness: business.listBusiness,

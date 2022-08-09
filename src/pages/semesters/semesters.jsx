@@ -157,6 +157,7 @@ const FormSemester = ({ isMobile }) => {
             <Button
               onClick={() => getDataEdit("add", null)}
               variant="warning"
+              type="primary"
               style={{ marginRight: 10, height: 36 }}
             >
               Tạo kỳ học
@@ -179,8 +180,8 @@ const FormSemester = ({ isMobile }) => {
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng nhập tên kỳ học!",
-                  },
+                    message: "Vui lòng nhập tên kỳ học!"
+                  }
                 ]}
               >
                 <Input />

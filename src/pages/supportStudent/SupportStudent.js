@@ -379,7 +379,7 @@ const SupportStudent = ({
                           onChange={getIdbusiness}
                         >
                           {list?.map((item) => (
-                            <Option key={item._id} value={item._id}>
+                            <Option key={item._id} value={item.code_request}>
                               {item.name + "-" + item.internshipPosition}
                             </Option>
                           ))}
