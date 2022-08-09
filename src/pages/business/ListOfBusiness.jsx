@@ -38,7 +38,6 @@ const ListOfBusiness = ({
     smester_id: semester ? semester.defaultSemester?._id : '',
   });
 
-  console.log("page: ", page);
 
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser.manager?.campus_id }));

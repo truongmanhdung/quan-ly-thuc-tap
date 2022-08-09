@@ -8,7 +8,6 @@ import { insertStudent } from "../../features/StudentSlice/StudentSlice";
 import styles from "../../common/styles/upfile.css";
 const UpFile = ({ keys, parentMethods }) => {
   const { majorImport, smester_id, campus_id, closeVisible } = parentMethods;
-  console.log("parentMethods: ", parentMethods);
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
@@ -17,7 +16,6 @@ const UpFile = ({ keys, parentMethods }) => {
   } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.students);
   const importData = (e) => {
-    console.log("list excel: ", e);
     if (smester_id.length === 0) {
       refInput.current.value = "";
       message.warning("Vui lòng chọn kỳ");
