@@ -7,7 +7,7 @@ import {
   Form,
   Drawer,
   DatePicker,
-  Input,
+  Input
 } from "antd";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   getSemesters,
   insertSemester,
-  updateSemester,
+  updateSemester
 } from "../../features/semesters/semestersSlice";
 import { getLocal } from "../../ultis/storage";
 const { RangePicker } = DatePicker;
@@ -35,25 +35,25 @@ const FormSemester = ({ isMobile }) => {
   const columns = [
     {
       dataIndex: "id",
-      width: 20,
+      width: 20
     },
     {
       title: "Tên kỳ",
       dataIndex: "name",
       width: 100,
-      render: (val) => val.charAt(0).toUpperCase() + val.slice(1),
+      render: (val) => val.charAt(0).toUpperCase() + val.slice(1)
     },
     {
       title: "Thời gian bắt đầu",
       dataIndex: "start_time",
       width: 100,
-      render: (val) => moment(val).format("DD/MM/YYYY"),
+      render: (val) => moment(val).format("DD/MM/YYYY")
     },
     {
       title: "Thời gian kết thúc",
       dataIndex: "end_time",
       width: 100,
-      render: (val) => moment(val).format("DD/MM/YYYY"),
+      render: (val) => moment(val).format("DD/MM/YYYY")
     },
     {
       title: "Action",
@@ -68,8 +68,8 @@ const FormSemester = ({ isMobile }) => {
             Sửa
           </a>
         </Space>
-      ),
-    },
+      )
+    }
   ].filter((item) => item.dataIndex !== "id");
 
   const onFinish = async (values) => {
@@ -78,7 +78,7 @@ const FormSemester = ({ isMobile }) => {
       name: values.name,
       start_time: values.time[0]._d,
       end_time: values.time[1]._d,
-      campus_id: infoUser?.manager?.campus_id,
+      campus_id: infoUser?.manager?.campus_id
     };
     try {
       if (text === "update") {
@@ -117,7 +117,7 @@ const FormSemester = ({ isMobile }) => {
         form.setFieldsValue({
           id: value.id,
           name: value.name,
-          time: [moment(value.start_time), moment(value.end_time)],
+          time: [moment(value.start_time), moment(value.end_time)]
         });
         break;
       case "add":
@@ -134,19 +134,19 @@ const FormSemester = ({ isMobile }) => {
     setHideForm(false);
   };
 
-  const getMaxTimeRequest = () => {
-    if (listSemesters && listSemesters.length > 0) {
-      const dataTest = listSemesters;
-      let max = new Date().getTime();
-      dataTest.forEach((item) => {
-        const endTime = new Date(item.end_time).getTime();
-        if (endTime > max) {
-          max = endTime;
-        }
-      });
-      return max;
-    }
-  };
+  // const getMaxTimeRequest = () => {
+  //   if (listSemesters && listSemesters.length > 0) {
+  //     const dataTest = listSemesters;
+  //     let max = new Date().getTime();
+  //     dataTest.forEach((item) => {
+  //       const endTime = new Date(item.end_time).getTime();
+  //       if (endTime > max) {
+  //         max = endTime;
+  //       }
+  //     });
+  //     return max;
+  //   }
+  // };
 
   return (
     <>
@@ -180,6 +180,7 @@ const FormSemester = ({ isMobile }) => {
                 rules={[
                   {
                     required: true,
+                    pattern: new RegExp(".*\\S+.*"),
                     message: "Vui lòng nhập tên kỳ học!"
                   }
                 ]}
@@ -192,27 +193,18 @@ const FormSemester = ({ isMobile }) => {
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng nhập thời gian của kỳ học!",
-                  },
+                    message: "Vui lòng nhập thời gian của kỳ học!"
+                  }
                 ]}
               >
                 {text.toLowerCase() === "update" ? (
-                  <RangePicker
-                    disabledDate={(current) => {
-                      return (
-                        current &&
-                        new Date(current).getTime() <
-                          new Date(Date.now() - 864000)
-                      );
-                    }}
-                  />
+                  <RangePicker />
                 ) : (
                   <RangePicker
                     disabledDate={(current) => {
                       return (
                         current &&
-                        new Date(current).getTime() <
-                        getMaxTimeRequest()
+                        new Date(current).getTime() < new Date()
                       );
                     }}
                   />
@@ -232,5 +224,5 @@ const FormSemester = ({ isMobile }) => {
   );
 };
 export default connect(({ global }) => ({
-  isMobile: global.isMobile,
+  isMobile: global.isMobile
 }))(FormSemester);
