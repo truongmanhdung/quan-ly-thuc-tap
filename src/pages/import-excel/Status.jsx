@@ -303,6 +303,7 @@ const Status = ({
     },
   };
   const handleStandardTableChange = (key, value) => {
+    console.log([key, value]);
     const newValue =
       value.length > 0 || (value < 11 && value !== "")
         ? {

@@ -37,6 +37,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   const [listEmailStudent, setListEmailStudent] = useState([]);
   const [status, setStatus] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [textNote, setTextNote] = useState("");
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
@@ -287,10 +288,10 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
     } catch (error) {
       message.error("Thất bại");
     }
+    // console.log({status, textNote});
   };
   const typePingTimeoutRef = useRef(null);
-  const [textNote, setTextNote] = useState("");
-  const handleNote = ({ target: { value } }) => {
+  const handleNote = ({target}) => {
     if (typePingTimeoutRef.current) {
       clearTimeout(typePingTimeoutRef.current);
     // }else if (typePingTimeoutRef.current){
@@ -298,7 +299,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
     // }
     }
     typePingTimeoutRef.current = setTimeout(() => {
-      setTextNote(value);
+      setTextNote(target.value);
     }, 300);
 
   };
