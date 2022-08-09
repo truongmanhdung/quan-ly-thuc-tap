@@ -270,7 +270,7 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
             {isLoadingMajor ? (
               <Spin />
             ) : (
-              dataMajors?.data?.majors.map((major) => (
+              dataMajors?.data?.majors?.map((major) => (
                 <Select.Option key={major._id} value={major._id}>
                   {major.name}
                 </Select.Option>
@@ -293,7 +293,7 @@ const FormBusiness = ({ paramsUpdate, closeVisible , visible}) => {
             {isLoadingCampus ? (
               <Spin />
             ) : (
-              dataCampus?.data?.listCumpus.map((campus) => (
+              dataCampus?.data?.listCumpus?.map((campus) => (
                 <Select.Option key={campus._id} value={campus._id}>
                   {campus.name}
                 </Select.Option>
