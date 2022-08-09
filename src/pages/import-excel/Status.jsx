@@ -303,33 +303,21 @@ const Status = ({
     },
   };
   const handleStandardTableChange = (key, value) => {
-    const newValue =
-      value.length > 0 || (value < 11 && value !== "")
-        ? {
-            ...filter,
-            [key]: value,
-          }
-        : omit(filter, [key]);
+    const newValue = {
+      ...filter,
+      [key]: value,
+    };
+
+    if (value === "" || value === 11) {
+      delete newValue[key];
+    }
+
     setFiler(newValue);
   };
   const handleSearch = () => {
-    dispatch(
-      defaultTime({
-        filter: { campus_id: infoUser.manager.campus_id },
-        callback: (res) => {
-          if (res.status === "ok") {
-            const data = {
-              ...page,
-              ...filter,
-              smester_id: res.result._id,
-              campus_id: infoUser.manager.campus_id,
-            };
-            setChooseIdStudent([]);
-            dispatch(getAllStudent(data));
-          }
-        },
-      })
-    );
+    setChooseIdStudent([]);
+    console.log(filter);
+    dispatch(getAllStudent({ ...page, ...filter }));
   };
 
   const comfirms = () => {
@@ -421,7 +409,7 @@ const Status = ({
     closeVisible,
   };
 
-  if(page.smester_id === ""){
+  if (page.smester_id === "") {
     parentMethods = {
       majorImport,
       ...page,
@@ -439,7 +427,7 @@ const Status = ({
             style={{
               width: "100%",
             }}
-            onChange={(val) => setPage({ ...page, smester_id: val })}
+            onChange={(val) => setPage({ ...filter, ...page, smester_id: val })}
             placeholder="Chọn kỳ`"
             defaultValue={
               defaultSemester && defaultSemester?._id
@@ -510,7 +498,6 @@ const Status = ({
                     placeholder="Lọc theo ngành"
                     defaultValue=""
                   >
-                    <Option value="">Tất cả</Option>
                     <Option value="">Tất cả</Option>
                     {listMajors &&
                       listMajors.map((item, index) => (
@@ -922,7 +909,9 @@ const Status = ({
                 style={{
                   width: "100%",
                 }}
-                onChange={(val) => setPage({ ...page, smester_id: val })}
+                onChange={(val) =>
+                  setPage({ ...filter, ...page, smester_id: val })
+                }
                 placeholder="Chọn kỳ"
                 defaultValue={
                   defaultSemester && defaultSemester?._id
