@@ -415,11 +415,21 @@ const Status = ({
     });
     setVisible(false);
   };
-  const parentMethods = {
+  let parentMethods = {
     majorImport,
     ...page,
     closeVisible,
   };
+
+  if(page.smester_id === ""){
+    parentMethods = {
+      majorImport,
+      ...page,
+      smester_id: defaultSemester?._id,
+      closeVisible,
+    };
+  }
+
   return (
     <div className={style.status}>
       <div className={style.flex_header}>
