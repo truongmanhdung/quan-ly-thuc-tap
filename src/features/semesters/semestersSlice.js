@@ -62,7 +62,7 @@ const semesterSlice = createSlice({
     });
     builder.addCase(insertSemester.fulfilled, (state, {payload}) => {
       state.loading = false;
-      state.listSemesters = [payload,...state.listSemesters];
+      // state.listSemesters = [payload,...state.listSemesters];
       state.mesg="Thành công"
     });
     builder.addCase(insertSemester.rejected, (state) => {
@@ -75,10 +75,10 @@ const semesterSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateSemester.fulfilled, (state, {payload}) => {
-      let data = state.listSemesters.filter(
-        (item) => item._id !== payload._id
-      );
-      state.listSemesters = [payload,...data, ];
+      // let data = state.listSemesters.filter(
+      //   (item) => item._id !== payload._id
+      // );
+      // state.listSemesters = [payload,...data, ];
       state.mesg ="Thành công";
       state.loading = false;
     });

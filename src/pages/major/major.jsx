@@ -64,6 +64,7 @@ const Major = () => {
   };
 
   const cbHandleAdd = (status, mess) => {
+    dispatch(getListMajor());
     setHideForm(false);
     if (status === 'ok') {
       message.success(mess);
