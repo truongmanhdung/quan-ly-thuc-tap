@@ -144,20 +144,20 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
       dataIndex: "numberOfTime",
       width: 120,
     },
-    {
-      title: "Phân loại",
-      dataIndex: "support",
-      width: 90,
-      render: (val) => {
-        if (val === 1) {
-          return "Hỗ trợ";
-        } else if (val === 0) {
-          return "Tự tìm";
-        } else {
-          return "";
-        }
-      },
-    },
+    // {
+    //   title: "Phân loại",
+    //   dataIndex: "support",
+    //   width: 90,
+    //   render: (val) => {
+    //     if (val === 1) {
+    //       return "Hỗ trợ";
+    //     } else if (val === 0) {
+    //       return "Tự tìm";
+    //     } else {
+    //       return "";
+    //     }
+    //   },
+    // },
     {
       title: "CV",
       dataIndex: "CV",
@@ -309,6 +309,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   const fileExtension = ".xlsx";
 
   const exportToCSV = (list) => {
+    console.log("list: ", list);
     const newData = [];
 
     list.filter((item) => {
@@ -319,6 +320,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
       newObject["Ngành"] = item["majors"]?.name;
+      newObject["Số lần hỗ trợ"] = item["numberOfTime"];
       newObject["Mã ngành"] = item["majors"]?.majorCode;
       newObject["CV"] = item["CV"];
       newObject["Người review"] = item["reviewer"];
@@ -326,7 +328,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
       newObject["Tên công ty"] = item["business"]?.name;
       newObject["Địa chỉ công ty"] = item["business"]?.address;
       newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
-      newObject["Hình thức"] = item["support"];
+      // newObject["Hình thức"] = item["support"];
       newObject["Ghi chú"] = item["note"];
       return newData.push(newObject);
     });

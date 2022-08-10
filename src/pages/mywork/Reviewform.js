@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { EyeOutlined } from '@ant-design/icons';
+import * as XLSX from "xlsx";
+import * as FileSaver from "file-saver";
 import styles from './mywork.module.css';
 import { Select, Input, Table, Button, message, Row, Col } from 'antd';
 import { useDispatch, connect } from 'react-redux';
@@ -18,6 +20,7 @@ import StudentDetail from '../../components/studentDetail/StudentDetail';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
 import { defaultTime } from '../../features/semesters/semestersSlice';
 import { timestamps } from '../../ultis/timestamps';
+import moment from 'moment';
 const { Column } = Table;
 const { Option } = Select;
 const Reviewform = ({
@@ -44,6 +47,10 @@ const Reviewform = ({
   const [studentdetail, setStudentDetail] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [filter, setFiler] = useState({});
+
+  const fileType =
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
 
   const onShowModal = () => {
     setIsModalVisible(true);
@@ -115,6 +122,14 @@ const Reviewform = ({
       width: 160,
     },
     {
+      title: "Ngành",
+      dataIndex: "majors",
+      width: 100,
+      render: (val) => {
+        return val.name;
+      },
+    },
+    {
       title: 'Tên công ty',
       width: 180,
       render: (val, record) => {
@@ -126,8 +141,36 @@ const Reviewform = ({
       },
     },
     {
-      title: 'Mã số thuế',
-      dataIndex: 'taxCode',
+      title: 'Mã công ty',
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business?.code_request;
+        } else {
+          return record.taxCode;
+        }
+      },
+      width: 100,
+    },
+    {
+      title: 'Vị trí thực tập',
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business?.internshipPosition;
+        } else {
+          return record.dream;
+        }
+      },
+      width: 100,
+    },
+    {
+      title: 'Địa chỉ công ty',
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business?.address;
+        } else {
+          return record.addressCompany;
+        }
+      },
       width: 100,
     },
     {
@@ -341,12 +384,13 @@ const Reviewform = ({
       smester_id: defaultSemester._id,
       campus_id: infoUser.manager.campus_id,
     };
+    
     dispatch(
       exportFormData({
         val: data,
         callback: (res) => {
-          if (res.status === 'ok') {
-            exportExcel(res.result);
+          if (res?.list && res?.list.length > 0) {
+            exportExcel(res.list);
           } else {
             message.error('Có lỗi sảy ra vui lòng reload lại trang và thử lại');
           }
@@ -356,52 +400,52 @@ const Reviewform = ({
   };
 
   const exportExcel = (list) => {
-    // const newData = [];
-    // list &&
-    //   list.map((item) => {
-    //     let itemStatus = item['statusCheck'];
-    //     const newObject = {};
-    //     newObject['MSSV'] = item['mssv'];
-    //     newObject['Họ tên'] = item['name'];
-    //     newObject['Email'] = item['email'];
-    //     newObject['Số điện thoại'] = item['phoneNumber'];
-    //     newObject['Chuyên ngành'] = item['majors']?.name;
-    //     newObject['Tên công ty'] = item['business']?.name;
-    //     newObject['Địa chỉ công ty'] = item['business']?.address;
-    //     newObject['Vị trí thực tập'] = item['business']?.internshipPosition;
-    //     newObject['Điểm thái độ'] = item['attitudePoint'];
-    //     newObject['Điểm kết quả'] = item['resultScore'];
-    //     newObject['Ngày bắt đầu'] = timestamps(item['internshipTime']);
-    //     // newObject["Ngày kết thúc"] = timestamps(item["endInternShipTime"]);
-    //     newObject['Thời gian nộp báo cáo'] = moment(item['createdAt']).format('D/MM/YYYY h:mm:ss');
-    //     newObject['Trạng thái'] =
-    //       itemStatus === 1
-    //         ? 'Chờ kiểm tra'
-    //         : itemStatus === 2
-    //         ? ' Nhận CV'
-    //         : itemStatus === 3
-    //         ? ' Trượt'
-    //         : itemStatus === 4
-    //         ? ' Đã nộp biên bản'
-    //         : itemStatus === 5
-    //         ? 'Sửa biên bản'
-    //         : itemStatus === 6
-    //         ? 'Đang thực tập '
-    //         : itemStatus === 7
-    //         ? ' Đã nộp báo cáo '
-    //         : itemStatus === 8
-    //         ? ' Sửa báo cáo'
-    //         : itemStatus === 9
-    //         ? 'Hoàn thành'
-    //         : 'Chưa đăng ký';
-    //     newObject['Báo cáo'] = item['report'];
-    //     return newData.push(newObject);
-    //   });
-    // const ws = XLSX.utils.json_to_sheet(newData);
-    // const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-    // const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    // const data = new Blob([excelBuffer], { type: fileType });
-    // FileSaver.saveAs(data, fileExtension);
+    console.log("list: ", list);
+    const newData = [];
+    list &&
+      list.map((item) => {
+        let itemStatus = item['statusCheck'];
+        const newObject = {};
+        newObject['MSSV'] = item['mssv'];
+        newObject['Họ tên'] = item['name'];
+        newObject['Email'] = item['email'];
+        newObject['Số điện thoại'] = item['phoneNumber'];
+        newObject['Chuyên ngành'] = item['majors']?.name;
+        newObject['Tên công ty'] = item?.nameCompany ? item['nameCompany'] :  item['business']?.name;
+        newObject['Mã công ty'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;
+        newObject['Vị trí thực tập'] = item?.dream ? item['dream'] : item['business']?.internshipPosition;
+        newObject['Địa chỉ công ty'] = item?.addressCompany ? item['addressCompany'] : item['business']?.address;
+        newObject['Biên bản'] = item['form'];
+        newObject["Người review"] = item["reviewer"];
+        newObject['Ngày bắt đầu'] = timestamps(item['internshipTime']);
+        newObject['Thời gian nộp báo cáo'] = moment(item['createdAt']).format('D/MM/YYYY h:mm:ss');
+        newObject['Trạng thái'] =
+          itemStatus === 1
+            ? 'Chờ kiểm tra'
+            : itemStatus === 2
+            ? ' Nhận CV'
+            : itemStatus === 3
+            ? ' Trượt'
+            : itemStatus === 4
+            ? ' Đã nộp biên bản'
+            : itemStatus === 5
+            ? 'Sửa biên bản'
+            : itemStatus === 6
+            ? 'Đang thực tập '
+            : itemStatus === 7
+            ? ' Đã nộp báo cáo '
+            : itemStatus === 8
+            ? ' Sửa báo cáo'
+            : itemStatus === 9
+            ? 'Hoàn thành'
+            : 'Chưa đăng ký';
+        return newData.push(newObject);
+      });
+    const ws = XLSX.utils.json_to_sheet(newData);
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileExtension);
   };
   return (
     <div className={styles.status}>
