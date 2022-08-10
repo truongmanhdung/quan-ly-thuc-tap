@@ -46,6 +46,16 @@ export const listStudentReport = createAsyncThunk(
     return data;
   }
 );
+
+export const exportFormData = createAsyncThunk(
+  "student/exportFormData",
+  async ({val, callback}) => {
+    const { data } = await StudentAPI.listStudentForm(val);
+    if (callback) callback(data)
+
+    return data.result;
+  }
+);
 const reviewerSlice = createSlice({
   name: "reviewer",
   initialState: {
@@ -61,6 +71,8 @@ const reviewerSlice = createSlice({
       list: [],
       total: 0,
     },
+    export: [],
+    loading: false
   },
   reducers: {
     uploadStudent(state, action) {
@@ -189,6 +201,19 @@ const reviewerSlice = createSlice({
     builder.addCase(listStudentReport.rejected, (state, action) => {
       state.error = "get reviewer student fail";
     });
+
+    //export
+
+    builder.addCase(exportFormData.pending, (state, {payload})=>{
+      state.loading = true
+    })
+
+    builder.addCase(exportFormData.fulfilled, (state, {payload})=>{
+      state.loading = false
+    })
+    builder.addCase(exportFormData.rejected, (state, {payload})=>{
+      state.loading = false
+    })
   },
 });
 export const { uploadStudent } = reviewerSlice.actions;

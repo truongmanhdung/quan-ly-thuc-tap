@@ -4,6 +4,7 @@ import styles from './mywork.module.css';
 import { Select, Input, Table, Button, message, Row, Col } from 'antd';
 import { useDispatch, connect } from 'react-redux';
 import {
+  exportFormData,
   listStudentForm,
   updateReviewerListStudent,
   updateStatusListStudent,
@@ -16,6 +17,7 @@ import { bool, object } from 'prop-types';
 import StudentDetail from '../../components/studentDetail/StudentDetail';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
 import { defaultTime } from '../../features/semesters/semestersSlice';
+import { timestamps } from '../../ultis/timestamps';
 const { Column } = Table;
 const { Option } = Select;
 const Reviewform = ({
@@ -24,6 +26,7 @@ const Reviewform = ({
   loading,
   isMobile,
   listMajors,
+  defaultSemester,
 }) => {
   const dispatch = useDispatch();
   const [status, setStatus] = useState({});
@@ -332,10 +335,83 @@ const Reviewform = ({
       setTextNote(value);
     }, 300);
   };
+
+  const handleExport = () => {
+    const data = {
+      smester_id: defaultSemester._id,
+      campus_id: infoUser.manager.campus_id,
+    };
+    dispatch(
+      exportFormData({
+        val: data,
+        callback: (res) => {
+          if (res.status === 'ok') {
+            exportExcel(res.result);
+          } else {
+            message.error('Có lỗi sảy ra vui lòng reload lại trang và thử lại');
+          }
+        },
+      }),
+    );
+  };
+
+  const exportExcel = (list) => {
+    // const newData = [];
+    // list &&
+    //   list.map((item) => {
+    //     let itemStatus = item['statusCheck'];
+    //     const newObject = {};
+    //     newObject['MSSV'] = item['mssv'];
+    //     newObject['Họ tên'] = item['name'];
+    //     newObject['Email'] = item['email'];
+    //     newObject['Số điện thoại'] = item['phoneNumber'];
+    //     newObject['Chuyên ngành'] = item['majors']?.name;
+    //     newObject['Tên công ty'] = item['business']?.name;
+    //     newObject['Địa chỉ công ty'] = item['business']?.address;
+    //     newObject['Vị trí thực tập'] = item['business']?.internshipPosition;
+    //     newObject['Điểm thái độ'] = item['attitudePoint'];
+    //     newObject['Điểm kết quả'] = item['resultScore'];
+    //     newObject['Ngày bắt đầu'] = timestamps(item['internshipTime']);
+    //     // newObject["Ngày kết thúc"] = timestamps(item["endInternShipTime"]);
+    //     newObject['Thời gian nộp báo cáo'] = moment(item['createdAt']).format('D/MM/YYYY h:mm:ss');
+    //     newObject['Trạng thái'] =
+    //       itemStatus === 1
+    //         ? 'Chờ kiểm tra'
+    //         : itemStatus === 2
+    //         ? ' Nhận CV'
+    //         : itemStatus === 3
+    //         ? ' Trượt'
+    //         : itemStatus === 4
+    //         ? ' Đã nộp biên bản'
+    //         : itemStatus === 5
+    //         ? 'Sửa biên bản'
+    //         : itemStatus === 6
+    //         ? 'Đang thực tập '
+    //         : itemStatus === 7
+    //         ? ' Đã nộp báo cáo '
+    //         : itemStatus === 8
+    //         ? ' Sửa báo cáo'
+    //         : itemStatus === 9
+    //         ? 'Hoàn thành'
+    //         : 'Chưa đăng ký';
+    //     newObject['Báo cáo'] = item['report'];
+    //     return newData.push(newObject);
+    //   });
+    // const ws = XLSX.utils.json_to_sheet(newData);
+    // const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    // const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    // const data = new Blob([excelBuffer], { type: fileType });
+    // FileSaver.saveAs(data, fileExtension);
+  };
   return (
     <div className={styles.status}>
       <div className={styles.header_flex}>
-        <h1>Review biên Bản</h1>
+        <h1>Review biên bản</h1>
+        {!isMobile && (
+          <Button onClick={handleExport} type="primary">
+            Export
+          </Button>
+        )}
       </div>
 
       {isMobile ? (
@@ -418,7 +494,7 @@ const Reviewform = ({
                   }}
                   className="search"
                 >
-                  <span style={{ width: '70%', marginRight: '35px' }}>Ngành: </span>
+                  <span style={{ width: '35%', marginRight: '35px' }}>Ngành: </span>
                   <Select
                     style={{
                       width: '100%',
@@ -479,7 +555,7 @@ const Reviewform = ({
                   }}
                   className="search"
                 >
-                  <span style={{ width: '65%' }}>Tìm Kiếm: </span>
+                  <span style={{ width: '45%' }}>Tìm Kiếm: </span>
                   <Input
                     style={{
                       width: '100%',
@@ -506,7 +582,16 @@ const Reviewform = ({
                     Tìm kiếm
                   </Button>
                   {chooseIdStudent.length > 0 && (
-                    <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+                    <Col
+                      style={{
+                        marginTop: 20,
+                      }}
+                      xs={24}
+                      sm={24}
+                      md={24}
+                      lg={12}
+                      xl={12}
+                    >
                       <Row gutter={[10, 10]}>
                         <Col xs={24} sm={24} md={24} lg={4} xl={4}>
                           <span style={{ whiteSpace: 'nowrap' }}>Lựa chọn:</span>
@@ -595,6 +680,7 @@ const Reviewform = ({
             type: 'checkbox',
             ...rowSelection,
           }}
+          loading={loading}
           pagination={{
             pageSize: page.limit,
             total: total,
@@ -608,7 +694,6 @@ const Reviewform = ({
             },
           }}
           rowKey="_id"
-          loading={loading}
           dataSource={list}
         >
           <Column title="Mssv" dataIndex="mssv" key="_id" />
@@ -710,11 +795,18 @@ Reviewform.propTypes = {
 };
 
 export default connect(
-  ({ auth: { infoUser }, reviewer: { listStudentAssReviewer, loading }, global, major }) => ({
+  ({
+    auth: { infoUser },
+    reviewer: { listStudentAssReviewer, loading },
+    global,
+    major,
+    semester,
+  }) => ({
     listStudentAssReviewer,
     infoUser,
     loading,
     isMobile: global.isMobile,
     listMajors: major.listMajor,
+    defaultSemester: semester.defaultSemester,
   }),
 )(Reviewform);
