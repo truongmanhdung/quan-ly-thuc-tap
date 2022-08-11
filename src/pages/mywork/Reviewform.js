@@ -141,7 +141,7 @@ const Reviewform = ({
       },
     },
     {
-      title: 'Mã công ty',
+      title: 'Mã tuyển dụng',
       render: (val, record) => {
         if (record.support === 1) {
           return record.business?.code_request;
@@ -412,11 +412,12 @@ const Reviewform = ({
         newObject['Số điện thoại'] = item['phoneNumber'];
         newObject['Chuyên ngành'] = item['majors']?.name;
         newObject['Tên công ty'] = item?.nameCompany ? item['nameCompany'] :  item['business']?.name;
-        newObject['Mã công ty'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;
+        newObject['Mã tuyển dụng'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;
         newObject['Vị trí thực tập'] = item?.dream ? item['dream'] : item['business']?.internshipPosition;
         newObject['Địa chỉ công ty'] = item?.addressCompany ? item['addressCompany'] : item['business']?.address;
         newObject['Biên bản'] = item['form'];
         newObject["Người review"] = item["reviewer"];
+        newObject["Ghi chú"] = item["note"];
         newObject['Ngày bắt đầu'] = timestamps(item['internshipTime']);
         newObject['Thời gian nộp báo cáo'] = moment(item['createdAt']).format('D/MM/YYYY h:mm:ss');
         newObject['Trạng thái'] =

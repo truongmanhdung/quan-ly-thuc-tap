@@ -11,6 +11,33 @@ const UpFile = ({ keys, parentMethods }) => {
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
+  const messageErrorExcel = (rows) => {
+    let textErrors = [];
+    if (rows[0]['MSSV'] === undefined) {
+      textErrors.push("MSSV");
+    }
+    if (rows[0]["Họ tên"] === undefined) {
+      textErrors.push(" Họ tên");
+    }
+     if (rows[0]["Khóa nhập học"] === undefined) {
+      textErrors.push(" Khóa nhập học");
+    }
+   if (rows[0]["Trạng thái"] === undefined) {
+      textErrors.push(" Trạng thái");
+    }
+    if (rows[0]["Email"] === undefined) {
+      textErrors.push(" Email");
+    }
+     if (rows[0]["bổ sung"] === undefined) {
+      textErrors.push(" bổ sung");
+    }
+    if (textErrors.length > 0) {
+      setDataNew([]);
+      setNameFile("");
+      return message.error(`File excel dữ liệu sinh viên đang thiếu các trường sau: ${textErrors}`, 10);
+    }
+  }
+
   const {
     infoUser: { manager },
   } = useSelector((state) => state.auth);
@@ -21,6 +48,12 @@ const UpFile = ({ keys, parentMethods }) => {
       message.warning("Vui lòng chọn kỳ");
     } else if (majorImport.length > 0) {
       const file = e.target.files[0];
+
+      if (file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        message.error("Vui lòng chọn đúng định dạng file xlsx");
+        return;
+      }
+
       setNameFile(file.name);
       const reader = new FileReader();
       const rABS = !!reader.readAsBinaryString;
@@ -39,6 +72,7 @@ const UpFile = ({ keys, parentMethods }) => {
         }
         const rows = [];
 
+        
         fileData.forEach((item) => {
           let rowData = {};
           item.forEach((element, index) => {
@@ -46,6 +80,9 @@ const UpFile = ({ keys, parentMethods }) => {
           });
           rows.push(rowData);
         });
+
+        messageErrorExcel(rows);
+        
         let datas = [];
         rows
           .filter((item, index) => Object.keys(item).length > 0 && item.STT !== "STT")
@@ -55,6 +92,7 @@ const UpFile = ({ keys, parentMethods }) => {
             if (manager) {
               switch (keys) {
                 case "status":
+                 
                   if (item["MSSV"] !== undefined) {
                     newObject["mssv"] = item["MSSV"];
                     newObject["name"] = item["Họ tên"];
@@ -67,6 +105,7 @@ const UpFile = ({ keys, parentMethods }) => {
                     newObject["smester_id"] = smester_id;
                     return datas.push(newObject);
                   }
+                  console.log(1);
                   break;
                 case "business":
                   if (item["Tên Doanh nghiệp"] !== undefined) {

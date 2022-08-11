@@ -118,7 +118,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
       width: 100,
     },
     {
-      title: 'Chuyên ngành',
+      title: 'Ngành',
       dataIndex: 'majors',
       width: 100,
       render: (val, record) => {
@@ -310,32 +310,33 @@ const ReviewReport = ({ isMobile, listMajors }) => {
         newObject['Email'] = item['email'];
         newObject['Số điện thoại'] = item['phoneNumber'];
         newObject['Chuyên ngành'] = item['majors']?.name;
-        newObject['Tên công ty'] = item['business']?.name;
-        newObject['Địa chỉ công ty'] = item['business']?.address;
-        newObject['Vị trí thực tập'] = item['business']?.internshipPosition;
+        newObject['Tên công ty'] = item?.nameCompany ? item['nameCompany'] :  item['business']?.name;
+        newObject['Mã tuyển dụng'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;
+         newObject['Địa chỉ công ty'] = item?.addressCompany ? item['addressCompany'] : item['business']?.address;
+        newObject['Vị trí thực tập'] = item?.dream ? item['dream'] : item['business']?.internshipPosition;
         newObject['Điểm thái độ'] = item['attitudePoint'];
         newObject['Điểm kết quả'] = item['resultScore'];
-        newObject['Ngày bắt đầu'] = timestamps(item['internshipTime']);
-        // newObject["Ngày kết thúc"] = timestamps(item["endInternShipTime"]);
+        newObject['Thời gian bắt đầu'] = timestamps(item['internshipTime']);
+        newObject["Thời gian kết thúc"] = timestamps(item["endInternShipTime"]);
         newObject['Thời gian nộp báo cáo'] = moment(item['createdAt']).format('D/MM/YYYY h:mm:ss');
         newObject['Trạng thái'] =
-          itemStatus === 1
+          itemStatus.statusCheck === 1
             ? 'Chờ kiểm tra'
-            : itemStatus === 2
+            : itemStatus.statusCheck === 2
             ? ' Nhận CV'
-            : itemStatus === 3
+            : itemStatus.statusCheck === 3
             ? ' Trượt'
-            : itemStatus === 4
+            : itemStatus.statusCheck === 4
             ? ' Đã nộp biên bản'
-            : itemStatus === 5
+            : itemStatus.statusCheck === 5
             ? 'Sửa biên bản'
-            : itemStatus === 6
+            : itemStatus.statusCheck === 6
             ? 'Đang thực tập '
-            : itemStatus === 7
+            : itemStatus.statusCheck === 7
             ? ' Đã nộp báo cáo '
-            : itemStatus === 8
+            : itemStatus.statusCheck === 8
             ? ' Sửa báo cáo'
-            : itemStatus === 9
+            : itemStatus.statusCheck === 9
             ? 'Hoàn thành'
             : 'Chưa đăng ký';
         newObject['Báo cáo'] = item['report'];
