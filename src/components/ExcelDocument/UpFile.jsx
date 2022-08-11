@@ -11,32 +11,6 @@ const UpFile = ({ keys, parentMethods }) => {
   const [dataNew, setDataNew] = useState([]);
   const [nameFile, setNameFile] = useState("");
   const dispatch = useDispatch();
-  const messageErrorExcel = (rows) => {
-    let textErrors = [];
-    if (rows[0]['MSSV'] === undefined) {
-      textErrors.push("MSSV");
-    }
-    if (rows[0]["Họ tên"] === undefined) {
-      textErrors.push(" Họ tên");
-    }
-     if (rows[0]["Khóa nhập học"] === undefined) {
-      textErrors.push(" Khóa nhập học");
-    }
-   if (rows[0]["Trạng thái"] === undefined) {
-      textErrors.push(" Trạng thái");
-    }
-    if (rows[0]["Email"] === undefined) {
-      textErrors.push(" Email");
-    }
-     if (rows[0]["bổ sung"] === undefined) {
-      textErrors.push(" bổ sung");
-    }
-    if (textErrors.length > 0) {
-      setDataNew([]);
-      setNameFile("");
-      return message.error(`File excel dữ liệu sinh viên đang thiếu các trường sau: ${textErrors}`, 10);
-    }
-  }
 
   const {
     infoUser: { manager },
@@ -81,7 +55,6 @@ const UpFile = ({ keys, parentMethods }) => {
           rows.push(rowData);
         });
 
-        messageErrorExcel(rows);
         
         let datas = [];
         rows
