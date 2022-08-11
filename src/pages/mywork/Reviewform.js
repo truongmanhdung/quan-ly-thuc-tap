@@ -389,8 +389,8 @@ const Reviewform = ({
       exportFormData({
         val: data,
         callback: (res) => {
-          if (res?.list && res?.list.length > 0) {
-            exportExcel(res.list);
+          if (res?.result && res?.result.length > 0) {
+            exportExcel(res.result);
           } else {
             message.error('Có lỗi sảy ra vui lòng reload lại trang và thử lại');
           }
