@@ -124,7 +124,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
     {
       title: "Email",
       dataIndex: "email",
-      width: 300,
+      width: 200,
     },
     {
       title: "Điện thoại",
@@ -140,24 +140,46 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
       },
     },
     {
+      title: 'Tên công ty',
+      width: 130,
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business?.name;
+        } else {
+          return record.nameCompany;
+        }
+      },
+    },
+    {
+      title: 'Mã tuyển dụng',
+      render: (val, record) => {
+        if (record.support === 1) {
+          return record.business?.code_request;
+        } else {
+          return record.taxCode;
+        }
+      },
+      width: 100,
+    },
+    {
       title: "Số lần hỗ trợ",
       dataIndex: "numberOfTime",
       width: 120,
     },
-    {
-      title: "Phân loại",
-      dataIndex: "support",
-      width: 90,
-      render: (val) => {
-        if (val === 1) {
-          return "Hỗ trợ";
-        } else if (val === 0) {
-          return "Tự tìm";
-        } else {
-          return "";
-        }
-      },
-    },
+    // {
+    //   title: "Phân loại",
+    //   dataIndex: "support",
+    //   width: 90,
+    //   render: (val) => {
+    //     if (val === 1) {
+    //       return "Hỗ trợ";
+    //     } else if (val === 0) {
+    //       return "Tự tìm";
+    //     } else {
+    //       return "";
+    //     }
+    //   },
+    // },
     {
       title: "CV",
       dataIndex: "CV",
@@ -318,15 +340,18 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
+      newObject["Số điện thoại"] = item["phoneNumber"];
       newObject["Ngành"] = item["majors"]?.name;
+     
       newObject["Mã ngành"] = item["majors"]?.majorCode;
+      newObject["Tên công ty"] = item["business"]?.name;
+      newObject['Mã tuyển dụng'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;
+      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
+      newObject["Địa chỉ công ty"] = item["business"]?.address;
+      newObject["Số lần hỗ trợ"] = item["numberOfTime"];
       newObject["CV"] = item["CV"];
       newObject["Người review"] = item["reviewer"];
-      newObject["Số điện thoại"] = item["phoneNumber"];
-      newObject["Tên công ty"] = item["business"]?.name;
-      newObject["Địa chỉ công ty"] = item["business"]?.address;
-      newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
-      newObject["Hình thức"] = item["support"];
+      // newObject["Hình thức"] = item["support"];
       newObject["Ghi chú"] = item["note"];
       return newData.push(newObject);
     });

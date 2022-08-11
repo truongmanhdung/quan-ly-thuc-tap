@@ -224,7 +224,7 @@ const ReportForm = ({ infoUser, studentById }) => {
                   </p>
                 </Form.Item>
                 <Form.Item name="nameCompany" label="Tên doanh nghiệp">
-                  <p>{studentById?.business?.name.toUpperCase()}</p>
+                  <p className={styles.text_form_label}>{studentById?.business ? studentById?.business?.name.toUpperCase() : studentById?.nameCompany.toUpperCase()}</p>
                 </Form.Item>
                 <Form.Item
                   name="resultScore"
