@@ -331,7 +331,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
   const fileExtension = ".xlsx";
 
   const exportToCSV = (list) => {
-    console.log("list: ", list);
     const newData = [];
 
     list.filter((item) => {

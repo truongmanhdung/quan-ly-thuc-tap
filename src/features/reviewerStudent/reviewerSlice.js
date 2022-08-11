@@ -51,7 +51,6 @@ export const exportFormData = createAsyncThunk(
   "student/exportFormData",
   async ({val, callback}) => {
     const { data } = await StudentAPI.listStudentForm(val);
-    console.log("data: ", data);
     if (callback) callback(data)
 
     return data.result;

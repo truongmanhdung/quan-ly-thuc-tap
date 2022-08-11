@@ -105,7 +105,6 @@ const UpFile = ({ keys, parentMethods }) => {
                     newObject["smester_id"] = smester_id;
                     return datas.push(newObject);
                   }
-                  console.log(1);
                   break;
                 case "business":
                   if (item["Tên Doanh nghiệp"] !== undefined) {

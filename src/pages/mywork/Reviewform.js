@@ -400,7 +400,6 @@ const Reviewform = ({
   };
 
   const exportExcel = (list) => {
-    console.log("list: ", list);
     const newData = [];
     list &&
       list.map((item) => {
