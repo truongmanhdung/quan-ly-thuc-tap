@@ -375,7 +375,7 @@ const SupportStudent = ({ studentById, listBusiness: { list }, narrow: { listNar
                         name="upload"
                         label="Upload CV (PDF) hoặc Docx"
                       >
-                        <Upload {...props} maxCount={1}>
+                        <Upload  {...props} maxCount={1}>
                           <Button
                             style={{
                               marginLeft: '20px',

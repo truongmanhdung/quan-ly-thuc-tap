@@ -19,8 +19,9 @@ export const getListStudentAssReviewerExportExcel = createAsyncThunk(
 
 export const updateReviewerListStudent = createAsyncThunk(
   "student/updateReviewerListStudent",
-  async (dataForm) => {
-    const { data } = await StudentAPI.updateReviewerSudent(dataForm);
+  async ({val, callback}) => {
+    const { data } = await StudentAPI.updateReviewerSudent(val);
+    if (callback) callback()
     return data;
   }
 );
@@ -52,7 +53,6 @@ export const exportFormData = createAsyncThunk(
   async ({val, callback}) => {
     const { data } = await StudentAPI.listStudentForm(val);
     if (callback) callback(data)
-
     return data.result;
   }
 );
