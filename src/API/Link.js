@@ -2,9 +2,9 @@ import axios from 'axios';
 import { getLocal } from '../ultis/storage';
 const axiosClient = axios.create({
   // Localhost
-  // baseURL: "http://localhost:8000/api",
+  baseURL: "http://localhost:8000/api",
   // DEV
-  baseURL: 'http://hbgreen.com.vn/api',
+  // baseURL: 'http://hbgreen.com.vn/api',
   // Main
   // baseURL: "http://139.180.196.74:8000/api",
 });

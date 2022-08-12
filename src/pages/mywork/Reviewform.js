@@ -388,8 +388,8 @@ const Reviewform = ({
     dispatch(
       exportFormData({
         val: data,
-        callback: (res) => {
-          if (res?.result && res?.result.length > 0) {
+        callback: res => {
+          if (res.status === 'ok') {
             exportExcel(res.result);
           } else {
             message.error('Có lỗi sảy ra vui lòng reload lại trang và thử lại');
