@@ -119,6 +119,7 @@ const Reviewform = ({
     {
       title: 'Điện thoại',
       dataIndex: 'phoneNumber',
+      render: (text) => `0${text}`,
       width: 160,
     },
     {
@@ -408,7 +409,7 @@ const Reviewform = ({
         newObject['MSSV'] = item['mssv'];
         newObject['Họ tên'] = item['name'];
         newObject['Email'] = item['email'];
-        newObject['Số điện thoại'] = item['phoneNumber'];
+        newObject['Số điện thoại'] = '0' + item['phoneNumber'];
         newObject['Chuyên ngành'] = item['majors']?.name;
         newObject['Tên công ty'] = item?.nameCompany ? item['nameCompany'] :  item['business']?.name;
         newObject['Mã tuyển dụng'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;
