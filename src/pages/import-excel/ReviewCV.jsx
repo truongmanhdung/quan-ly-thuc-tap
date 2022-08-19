@@ -97,7 +97,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
     onShowModal();
   };
 
-  const phoneNumber = 'phoneNumber'
 
   const columns = [
     {
@@ -131,7 +130,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
     {
       title: "Điện thoại",
       dataIndex: 'phoneNumber',
-      render: (text) => `0${text}`,
+      render: (text) => text === null ? null : `0${text}`,
       width: 160,
     },
     {
@@ -343,9 +342,8 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
       newObject["MSSV"] = item["mssv"];
       newObject["Họ tên"] = item["name"];
       newObject["Email"] = item["email"];
-      newObject["Số điện thoại"] = '0' + item["phoneNumber"];
+      newObject["Số điện thoại"] = item['phoneNumber'] === null ? null : '0' + item["phoneNumber"];
       newObject["Ngành"] = item["majors"]?.name;
-     
       newObject["Mã ngành"] = item["majors"]?.majorCode;
       newObject["Tên công ty"] = item["business"]?.name;
       newObject['Mã tuyển dụng'] = item?.taxCode ? item['taxCode'] :  item['business']?.code_request;

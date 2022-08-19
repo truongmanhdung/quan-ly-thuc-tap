@@ -46,7 +46,6 @@ const UpFile = ({ keys, parentMethods }) => {
         }
         const rows = [];
 
-        
         fileData.forEach((item) => {
           let rowData = {};
           item.forEach((element, index) => {
@@ -55,7 +54,6 @@ const UpFile = ({ keys, parentMethods }) => {
           rows.push(rowData);
         });
 
-        
         let datas = [];
         rows
           .filter((item, index) => Object.keys(item).length > 0 && item.STT !== "STT")
@@ -65,7 +63,6 @@ const UpFile = ({ keys, parentMethods }) => {
             if (manager) {
               switch (keys) {
                 case "status":
-                 
                   if (item["MSSV"] !== undefined) {
                     newObject["mssv"] = item["MSSV"];
                     newObject["name"] = item["Họ tên"];

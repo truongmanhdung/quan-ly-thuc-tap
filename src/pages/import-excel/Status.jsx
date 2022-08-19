@@ -162,6 +162,7 @@ const Status = ({
     {
       title: 'Điện thoại',
       dataIndex: 'phoneNumber',
+      render: (text) => text === null ? null : `0${text}`,
       width: 160,
     },
     {
@@ -369,7 +370,7 @@ const Status = ({
         newObject['Biên bản'] = item['form'];
         newObject['Báo cáo'] = item['report'];
         newObject['Người review'] = item['reviewer'];
-        newObject['Số điện thoại'] = item['phoneNumber'];
+        newObject['Số điện thoại'] = item['phoneNumber'] === null ? null : '0' + item['phoneNumber'];
         newObject['Tên công ty'] = item['business']?.name;
         newObject['Địa chỉ công ty'] = item['business']?.address;
         newObject['Vị trí thực tập'] = item['business']?.internshipPosition;
