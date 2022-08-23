@@ -19,8 +19,8 @@ export const getListStudentAssReviewerExportExcel = createAsyncThunk(
 
 export const updateReviewerListStudent = createAsyncThunk(
   "student/updateReviewerListStudent",
-  async ({val, callback}) => {
-    const { data } = await StudentAPI.updateReviewerSudent(val);
+  async ({listIdStudent, email, callback}) => {
+    const { data } = await StudentAPI.updateReviewerSudent({listIdStudent, email});
     if (callback) callback()
     return data;
   }
