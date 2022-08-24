@@ -1,5 +1,5 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, Col, Drawer, Input, message, Row, Select, Table, Modal } from 'antd';
+import { Button, Col, Drawer, Input, message, Row, Select, Table, Modal, Descriptions } from 'antd';
 import Column from 'antd/lib/table/Column';
 import * as FileSaver from 'file-saver';
 import _ from 'lodash';
@@ -9,6 +9,8 @@ import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import style from '../../common/styles/status.module.css';
+import text from '../../common/styles/downFile.module.css';
+import DownloadFile from '../../components/ExcelDocument/DownloadFile';
 import UpFile from '../../components/ExcelDocument/UpFile';
 import StudentDetail from '../../components/studentDetail/StudentDetail';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
@@ -939,6 +941,14 @@ const Status = ({
           </Row>
           <div className={style.upFile}>
             <UpFile parentMethods={parentMethods} keys="status" />
+            <br />
+            <div>
+              <b className={text.red}>Lưu ý</b>
+              <p className={text.red}>* Giữ nguyên định dạng file mẫu xlsx không thay đổi</p>
+              <p  className={text.red}>* Chỉ cập thêm công tin đúng theo các cột trong file excel mẫu</p>
+             
+            </div>
+            <DownloadFile keys='status' name='sinh viên'/>
           </div>
         </Drawer>
       </div>
