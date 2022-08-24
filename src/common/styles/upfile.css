@@ -1,25 +1,29 @@
-
-.up-file>h3{
+.up-file>h3 {
     border-bottom: 1px solid rgb(214, 214, 214);
     padding: 10px 0;
 }
-.spanUploadName{
+
+.spanUploadName {
     margin: 0 10px;
 }
-#up-file{
+
+#up-file {
     display: none;
 }
-.header{
+
+.header {
     display: flex;
     justify-content: space-between;
-    
+
 }
-.header>label{
+
+.header>label {
     cursor: pointer;
     display: flex;
     align-items: center;
 }
-.buttonUpfile{
+
+.buttonUpfile {
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     padding: 5px 10px;
     cursor: pointer;
@@ -28,27 +32,33 @@
     align-items: center;
     background-color: red;
 }
-.header>label>.icon{
+
+.header>label>.icon {
     margin-right: 5px;
 }
-.button_save>button:nth-child(1),.button_save>button:nth-child(2){
+
+.button_save>button:nth-child(1),
+.button_save>button:nth-child(2) {
     border: 1px solid rgb(214, 214, 214);
     background-color: #fff;
     padding: 5px 10px;
 }
-.button_save>button:nth-child(1){
+
+.button_save>button:nth-child(1) {
     margin-right: 10px;
 }
-table{
+
+table {
     width: 100%;
     text-align: center;
     border-collapse: collapse;
     border: 1px solid #eeeeee;
     margin-top: 20px;
 }
-table  th,
-table  th,
-table  th {
+
+table th,
+table th,
+table th {
     padding: 10px 20px;
     font-weight: 500;
     text-align: center;
@@ -56,18 +66,20 @@ table  th {
     border: 1px solid #eeeeee;
 }
 
-table  tbody td,
-table  tbody td,
+table tbody td,
+table tbody td,
 table tbody td {
     padding: 1rem 0.5rem;
     border: 1px solid #eeeeee;
 }
+
 @media (max-width:538px) {
-    .header{
+    .header {
         display: block;
-        
+
     }
-    .button{
+
+    .button {
         margin-top: 10px;
     }
 }

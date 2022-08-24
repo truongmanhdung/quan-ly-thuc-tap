@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import SemestersAPI from '../../API/SemestersAPI';
 import UpFile from '../../components/ExcelDocument/UpFile';
+import text from '../../common/styles/downFile.module.css';
 import { getBusiness } from '../../features/businessSlice/businessSlice';
 import { getListMajor } from '../../features/majorSlice/majorSlice';
 import { defaultTime, getSemesters } from '../../features/semesters/semestersSlice';
@@ -11,6 +12,7 @@ import styles from './bussiness.module.css';
 import BusinessAPI from '../../API/Business';
 import { useMutation } from 'react-query';
 import FormBusiness from './FormBusiness';
+import DownloadFile from '../../components/ExcelDocument/DownloadFile';
 
 const { Option } = Select;
 const { Column } = Table;
@@ -406,6 +408,14 @@ const ListOfBusiness = ({
                 closeVisible,
               }}
             />
+            <br />
+            <div>
+              <b className={text.red}>Lưu ý</b>
+              <p className={text.red}>* Giữ nguyên định dạng file mẫu xlsx không thay đổi</p>
+              <p  className={text.red}>* Chỉ cập thêm công tin đúng theo các cột trong file excel mẫu</p>
+             
+            </div>
+            <DownloadFile keys='business' name='doanh nghiệp'/>
           </div>
         </Drawer>
       </div>
