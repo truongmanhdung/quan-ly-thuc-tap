@@ -6,7 +6,6 @@ import * as XLSX from "xlsx";
 const DownloadFile = ({keys, name}) => {
   
   const downloadFile = async (e) => {
-    console.log(keys);
     const dataSV = [
       [],
       [],
