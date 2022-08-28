@@ -210,7 +210,7 @@ const Status = ({
     {
       title: 'Trạng thái',
       dataIndex: 'statusCheck',
-      render: (status) => {
+      render: (status, student) => {
         if (status === 0) {
           return (
             <span className="status-fail" style={{ color: 'orange' }}>
@@ -226,7 +226,7 @@ const Status = ({
         } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Nhận CV
+              {student.support === 0 ? " Chờ nộp biên bản" : " Nhận CV"}
             </span>
           );
         } else if (status === 3) {
@@ -238,14 +238,13 @@ const Status = ({
         } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Đã nộp biên bản <br />
+              {student?.form ? 'Đã nộp biên bản': 'Chờ nộp biên bản'}  <br />
             </span>
           );
         } else if (status === 5) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Sửa biên bản
-              <br />
+              Sửa biên bản <br />
             </span>
           );
         } else if (status === 6) {
@@ -257,7 +256,8 @@ const Status = ({
         } else if (status === 7) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Đã nộp báo cáo <br />
+              {student?.report ? 'Đã nộp báo cáo': 'Chờ nộp báo cáo'}
+               <br />
             </span>
           );
         } else if (status === 8) {

@@ -124,7 +124,8 @@ const StudentDetail = (props) => {
     } else if (status === 4) {
       return (
         <span className="status-fail" style={{ color: "red" }}>
-          Đã nộp biên bản <br />
+          {student?.form ? "Đã nộp biên bản" : "Chờ nộp biên bản"}
+          <br />
         </span>
       );
     } else if (status === 5) {
@@ -143,7 +144,8 @@ const StudentDetail = (props) => {
     } else if (status === 7) {
       return (
         <span className="status-fail" style={{ color: "red" }}>
-          Đã nộp báo cáo <br />
+          {student?.report ? " Đã nộp báo cáo" : "Chờ nộp báo cáo"}
+          <br />
         </span>
       );
     } else if (status === 8) {
@@ -354,7 +356,13 @@ const StudentDetail = (props) => {
     } else {
       setListOption([]);
     }
-  }, [student.CV, student.form, student.report, student.statusCheck]);
+  }, [
+    student.CV,
+    student.form,
+    student.report,
+    student.statusCheck,
+    student.support,
+  ]);
 
   const checkFormTime = (time) => {
     if (student.listTimeForm && student.listTimeForm.length > 0) {
