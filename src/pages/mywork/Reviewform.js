@@ -208,7 +208,7 @@ const Reviewform = ({
       title: 'Trạng thái',
       dataIndex: 'statusCheck',
       width: 150,
-      render: (status) => {
+      render: (status, student) => {
         if (status === 0) {
           return (
             <span className="status-fail" style={{ color: 'orange' }}>
@@ -236,7 +236,7 @@ const Reviewform = ({
         } else if (status === 4) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Đã nộp biên bản <br />
+              {student.form ? 'Đã nộp biên bản': 'Chờ nộp biên bản'}  <br />
             </span>
           );
         } else if (status === 5) {
@@ -254,7 +254,8 @@ const Reviewform = ({
         } else if (status === 7) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Đã nộp báo cáo <br />
+              {student.report ? 'Đã nộp báo cáo': 'Chờ nộp báo cáo'}
+               <br />
             </span>
           );
         } else if (status === 8) {
