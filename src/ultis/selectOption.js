@@ -277,7 +277,7 @@ export const optionStatus = [
     value: 9,
   },
   {
-    title: "Chờ nộp CV",
+    title: "Chưa đăng ký",
     value: 10,
   },
   {

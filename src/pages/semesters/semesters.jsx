@@ -207,7 +207,7 @@ const FormSemester = ({ isMobile }) => {
                     disabledDate={(current) => {
                       return (
                         current &&
-                        new Date(current).getTime() < new Date()
+                        new Date(current).getTime() < new Date(new Date().getTime() - 86400)
                       );
                     }}
                   />
