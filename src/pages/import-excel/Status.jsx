@@ -223,7 +223,7 @@ const Status = ({
         } else if (status === 2) {
           return (
             <span className="status-fail" style={{ color: 'red' }}>
-              Chờ nộp biên bản
+              {student.support === 0 ? " Chờ nộp biên bản" : " Nhận CV"}
             </span>
           );
         } else if (status === 3) {
