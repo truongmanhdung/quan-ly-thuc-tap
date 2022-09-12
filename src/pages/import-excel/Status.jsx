@@ -55,7 +55,7 @@ const Status = ({
 
   useEffect(() => {
     setChooseIdStudent([]);
-    dispatch(getAllStudent(page));
+    // dispatch(getAllStudent(page));
     dispatch(
       defaultTime({
         filter: { campus_id: infoUser.manager.campus_id },
@@ -89,6 +89,7 @@ const Status = ({
 
   const onCloseModal = () => {
     setModal(false);
+    
   };
 
   const resetStudent = async (val, record) => {

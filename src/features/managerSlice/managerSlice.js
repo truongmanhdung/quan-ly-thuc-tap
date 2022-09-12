@@ -45,18 +45,19 @@ const managerSlice = createSlice({
     });
     builder.addCase(fetchManager.fulfilled, (state, { payload }) => {
       state.loading = false;
-      const user = getLocal();
+      // const user = getLocal();
 
-      state.listManager = reduce(
-        payload,
-        (res, item) => {
-          if (item._id !== user.manager._id) {
-            res.push(item);
-          }
-          return res;
-        },
-        [],
-      );
+      // state.listManager = reduce(
+      //   payload,
+      //   (res, item) => {
+      //     if (item._id !== user.manager._id) {
+      //       res.push(item);
+      //     }
+      //     return res;
+      //   },
+      //   [],
+      // );
+      state.listManager = payload
     });
     builder.addCase(fetchManager.rejected, (state, action) => {
       state.error = 'Không thể truy vấn';

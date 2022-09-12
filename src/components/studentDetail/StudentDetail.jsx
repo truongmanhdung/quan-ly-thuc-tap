@@ -76,7 +76,7 @@ const StudentDetail = (props) => {
 
   useEffect(() => {
     dispatch(fetchManager());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     getDataStudent();

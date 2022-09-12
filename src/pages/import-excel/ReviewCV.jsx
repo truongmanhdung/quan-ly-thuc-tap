@@ -65,6 +65,7 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
             ...page,
             ...filter,
             smester_id: res.data._id,
+            reviewer: infoUser?.manager?.email
           };
           setChooseIdStudent([]);
           dispatch(getListStudentAssReviewer(data));
