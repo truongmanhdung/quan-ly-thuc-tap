@@ -55,25 +55,7 @@ const Status = ({
 
   useEffect(() => {
     setChooseIdStudent([]);
-    // dispatch(getAllStudent(page));
-    dispatch(
-      defaultTime({
-        filter: { campus_id: infoUser.manager.campus_id },
-        callback: (res) => {
-          if (res.status === 'ok') {
-            const data = {
-              ...page,
-              ...filter,
-              smester_id: res.result._id,
-              campus_id: infoUser.manager.campus_id,
-            };
-            setChooseIdStudent([]);
-            dispatch(getAllStudent(data));
-          }
-        },
-      }),
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch(getAllStudent(page));
   }, [page]);
 
   useEffect(() => {

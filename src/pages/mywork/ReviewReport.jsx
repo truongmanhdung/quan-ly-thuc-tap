@@ -51,15 +51,15 @@ const ReviewReport = ({ isMobile, listMajors }) => {
 
   useEffect(() => {
     dispatch(getListMajor());
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCloseModal = () => {
     setIsModalVisible(false);
+    getDataReview();
   };
 
-  useEffect(() => {
+  const getDataReview = () => {
     dispatch(
       defaultTime({
         filter: {
@@ -71,6 +71,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
               ...page,
               ...filter,
               smester_id: res.result._id,
+              reviewer: infoUser?.manager?.email
             };
             setChooseIdStudent([]);
             dispatch(listStudentReport(data));
@@ -78,6 +79,10 @@ const ReviewReport = ({ isMobile, listMajors }) => {
         },
       }),
     );
+  }
+
+  useEffect(() => {
+    getDataReview()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const onShowDetail = (mssv, key) => {
@@ -917,6 +922,7 @@ const ReviewReport = ({ isMobile, listMajors }) => {
           closeModal={onCloseModal}
           studentId={studentdetail}
           onShowModal={onShowModal}
+          infoUser={infoUser}
         />
       )}
     </div>

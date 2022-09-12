@@ -58,8 +58,10 @@ const Reviewform = ({
 
   const onCloseModal = () => {
     setIsModalVisible(false);
+    getDataReview();
   };
-  useEffect(() => {
+
+  const getDataReview = () => {
     dispatch(
       defaultTime({
         filter: { campus_id: infoUser.manager.campus_id },
@@ -69,6 +71,7 @@ const Reviewform = ({
               ...page,
               ...filter,
               smester_id: res.result._id,
+              reviewer: infoUser?.manager?.email
             };
             setChooseIdStudent([]);
             dispatch(listStudentForm(data));
@@ -76,6 +79,10 @@ const Reviewform = ({
         },
       }),
     );
+  }
+
+  useEffect(() => {
+    getDataReview()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
