@@ -54,6 +54,7 @@ const StudentDetail = (props) => {
   const [date, setDate] = useState(null);
   const [fieldStudent, setFieldStudent] = useState("");
   const dispatch = useDispatch();
+  
   const onSetDatePicker = (date) => {
     setDate(date);
   };
@@ -76,7 +77,7 @@ const StudentDetail = (props) => {
 
   useEffect(() => {
     dispatch(fetchManager());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     getDataStudent();
@@ -375,6 +376,15 @@ const StudentDetail = (props) => {
     }
     return time;
   };
+
+  const checkReviewer = () => {
+    if(student && student?.reviewer && student.statusCheck !== 9 && student.statusCheck !== 3){
+      return student?.reviewer === infoUser?.manager?.email
+    }else{
+      return false
+    }
+  }
+
   return (
     <Modal
       className="showModal"
@@ -533,7 +543,7 @@ const StudentDetail = (props) => {
                           : "Không có"}
                       </span>
                     </div>
-                    {student.internshipTime && (
+                    {student.internshipTime && checkReviewer() && (
                       <EditOutlined
                         onClick={() => onEditField("internshipTime")}
                       />
@@ -599,7 +609,7 @@ const StudentDetail = (props) => {
                           : "Không có"}
                       </span>
                     </div>
-                    {student.endInternShipTime && (
+                    {student.endInternShipTime && checkReviewer() && (
                       <EditOutlined
                         onClick={() => onEditField("endInternShipTime")}
                       />
@@ -670,7 +680,7 @@ const StudentDetail = (props) => {
                           : "Không có"}
                       </span>
                     </div>
-                    {student.attitudePoint && (
+                    {student.attitudePoint && checkReviewer() && (
                       <EditOutlined
                         onClick={() => onEditField("attitudePoint")}
                       />
@@ -723,7 +733,7 @@ const StudentDetail = (props) => {
                         {student.resultScore ? student.resultScore : "Không có"}
                       </span>
                     </div>
-                    {student.resultScore && (
+                    {student.resultScore && checkReviewer() && (
                       <EditOutlined
                         onClick={() => onEditField("resultScore")}
                       />
@@ -835,7 +845,7 @@ const StudentDetail = (props) => {
                       style={{ width: "50%" }}
                     >
                       {listOption &&
-                        listOption.length > 0 &&
+                        listOption.length > 0 && checkReviewer() &&
                         listOption.map((item, index) => (
                           <Option value={item.value} key={index}>
                             {item.title}
@@ -857,7 +867,8 @@ const StudentDetail = (props) => {
                   listOption.length > 0 &&
                   student.statusCheck !== 5 &&
                   student.statusCheck !== 8 &&
-                  student.statusCheck !== 1 ? (
+                  student.statusCheck !== 9 &&
+                  student.statusCheck !== 1 && checkReviewer() ? (
                     submitStatus ? (
                       <Button type="primary" onClick={onUpdateStatus}>
                         Thực hiện
@@ -891,7 +902,7 @@ const StudentDetail = (props) => {
                     "Chưa có"
                   )}
 
-                  {listOption && listOption.length > 0 ? (
+                  {listOption && student.statusCheck !== 9 && student.statusCheck !== 3 && listOption.length > 0 ? (
                     <EditOutlined onClick={onShowEditReviewer} />
                   ) : (
                     <span></span>
@@ -899,7 +910,7 @@ const StudentDetail = (props) => {
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <h6 className="mb-0 me-2 text-header-abc">Công ty: </h6>
-                  {isEditBusiness && student.support === 1 && student.CV ? (
+                  {isEditBusiness && student.support === 1 && checkReviewer() && student.CV ? (
                     <Select
                       onChange={onSelectBusiness}
                       // defaultValue="Chọn công ty"
@@ -938,7 +949,7 @@ const StudentDetail = (props) => {
                   {listBusiness &&
                   listBusiness.list &&
                   student.CV &&
-                  listBusiness.list.length > 0 &&
+                  listBusiness.list.length > 0 && checkReviewer() &&
                   student.support === 1 ? (
                     <EditOutlined onClick={onShowEditBusiness} />
                   ) : (
@@ -1020,7 +1031,7 @@ const StudentDetail = (props) => {
                                   {renderTime(studentFormTime.startTime)}
                                   <span className="mx-1">đến</span>
                                   {renderTime(studentFormTime.endTime)}
-                                  <span className="ms-2">
+                                  {checkReviewer() && <span className="ms-2">
                                     <EditOutlined
                                       color="blue"
                                       onClick={() =>
@@ -1029,7 +1040,7 @@ const StudentDetail = (props) => {
                                         )
                                       }
                                     />
-                                  </span>
+                                  </span>} 
                                 </span>
                               )}
                             </li>
