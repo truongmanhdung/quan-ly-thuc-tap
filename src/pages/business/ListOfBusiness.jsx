@@ -38,15 +38,14 @@ const ListOfBusiness = ({
     limit: 20,
     campus_id: infoUser.manager.campus_id,
     smester_id: semester ? semester.defaultSemester?._id : '',
+    status: 1
   });
-
 
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser.manager?.campus_id }));
     dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   const fetchDeleteBusiness = (val) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa?')) {
       return BusinessAPI.delete(val._id);

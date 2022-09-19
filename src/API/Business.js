@@ -26,5 +26,9 @@ const BusinessAPI = {
     const url = `/business/${id}`;
     return axiosClient.patch(url, data);
   },
+  updateMany(params) {
+    const url = `/business`;
+    return axiosClient.patch(url, params);
+  }
 };
 export default BusinessAPI;
