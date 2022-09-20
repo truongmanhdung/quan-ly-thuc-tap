@@ -94,7 +94,6 @@ const ListOfBusiness = ({
           if (res.status === "ok") {
             const data = {
               ...page,
-              smester_id: res.result._id,
               campus_id: infoUser.manager.campus_id,
             };
             dispatch(getBusiness(data));

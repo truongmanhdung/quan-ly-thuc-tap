@@ -16,8 +16,6 @@ import {
   getSemesters,
 } from "../../features/semesters/semestersSlice";
 import styles from "./bussiness.module.css";
-import BusinessAPI from "../../API/Business";
-import { useMutation } from "react-query";
 import FormBusiness from "./FormBusiness";
 import DownloadFile from "../../components/ExcelDocument/DownloadFile";
 
@@ -45,20 +43,13 @@ const WaitBusiness = ({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: "",
     status: 0,
   });
-  console.log(page);
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser.manager?.campus_id }));
     dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, idSemester, selectedRowKeys, page]);
-  const fetchDeleteBusiness = (val) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
-      return BusinessAPI.delete(val._id);
-    }
-  };
+  }, [page]);
 
   useEffect(() => {
     dispatch(
@@ -68,7 +59,6 @@ const WaitBusiness = ({
           if (res.status === "ok") {
             const data = {
               ...page,
-              smester_id: res.result._id,
               campus_id: infoUser.manager.campus_id,
             };
             dispatch(getBusiness(data));
@@ -77,7 +67,7 @@ const WaitBusiness = ({
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, page, idSemester, selectedRowKeys]);
+  }, [page, selectedRowKeys]);
   const columns = [
     {
       title: "Mã",
@@ -216,11 +206,7 @@ const WaitBusiness = ({
             className="filter-status"
             placeholder="Chọn kỳ"
             onChange={(val) => {
-              setPage({
-                ...page,
-                smester_id: val,
-              });
-              setIdSemester({ smester_id: val });
+              setIdSemester({ ...page, smester_id: val });
             }}
             style={{ width: "100%" }}
             defaultValue={
