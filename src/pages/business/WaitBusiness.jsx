@@ -6,7 +6,10 @@ import { connect, useDispatch } from "react-redux";
 import SemestersAPI from "../../API/SemestersAPI";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import text from "../../common/styles/downFile.module.css";
-import { getBusiness, updateWaitBusiness } from "../../features/businessSlice/businessSlice";
+import {
+  getBusiness,
+  updateWaitBusiness,
+} from "../../features/businessSlice/businessSlice";
 import { getListMajor } from "../../features/majorSlice/majorSlice";
 import {
   defaultTime,
@@ -42,48 +45,20 @@ const WaitBusiness = ({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: semester ? semester.defaultSemester?._id : "",
-    status: 1,
+    smester_id: "",
+    status: 0,
   });
-
+  console.log(page);
   useEffect(() => {
     dispatch(getSemesters({ campus_id: infoUser.manager?.campus_id }));
     dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch, idSemester, selectedRowKeys, page]);
   const fetchDeleteBusiness = (val) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       return BusinessAPI.delete(val._id);
     }
   };
-
-  const mutation = useMutation(["delete"], fetchDeleteBusiness, {
-    onSuccess: (res) => {
-      message.success(res?.data?.message);
-      if (page?.smester_id && page?.smester_id.length > 0) {
-        dispatch(
-          getBusiness({
-            ...page,
-          })
-        );
-      } else {
-        SemestersAPI.getDefaultSemester({
-          campus_id: infoUser?.manager?.campus_id,
-        })
-          .then((res) => {
-            if (res.status === 200) {
-              dispatch(
-                getBusiness({
-                  ...page,
-                  smester_id: res.data._id,
-                })
-              );
-            }
-          })
-          .catch(() => {});
-      }
-    },
-  });
 
   useEffect(() => {
     dispatch(
@@ -102,7 +77,7 @@ const WaitBusiness = ({
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [dispatch, page, idSemester, selectedRowKeys]);
   const columns = [
     {
       title: "Mã",
@@ -118,7 +93,7 @@ const WaitBusiness = ({
     },
     {
       title: "Vị trí thực tập",
-      dataIndex: "email",
+      dataIndex: "internshipPosition",
       width: 200,
     },
     {
@@ -151,10 +126,9 @@ const WaitBusiness = ({
       title: "Trạng thái",
       dataIndex: "status",
       width: 100,
-      render: (val) => (val === 1 ? "Chờ xác nhận" : ""),
+      render: (val) => (val === 0 ? "Chờ xác nhận" : ""),
     },
   ];
-
 
   const closeVisibleImport = () => {
     setPage({
@@ -162,8 +136,6 @@ const WaitBusiness = ({
     });
     setVisibleImport(false);
   };
-
-  
 
   const closeVisible = () => {
     setPage({
@@ -173,22 +145,30 @@ const WaitBusiness = ({
   };
 
   const start = () => {
-    setLoading(true); // ajax request after empty completing
-    console.log("semester: ", idSemester);
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
-    dispatch(
-      updateWaitBusiness({
-        listIdBusiness: selectedRowKeys,
-        smester_id: idSemester
-      }),
-    )
+    if (Object.keys(idSemester).length === 0) {
+      message.error("Vui lòng chọn kỳ học");
+    } else {
+      setLoading(true); // ajax request after empty completing
+      dispatch(
+        updateWaitBusiness({
+          listIdBusiness: selectedRowKeys,
+          smester_id: idSemester,
+        })
+      );
+      setTimeout(() => {
+        setSelectedRowKeys([]);
+        setLoading(false);
+      }, 1000);
+      message.success("Thành công");
+    }
+  };
+
+  const end = () => {
     setTimeout(() => {
       setSelectedRowKeys([]);
       setLoading(false);
-    }, 1000);
-    message.success('Thành công')
+    });
   };
-
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", selectedRowKeys);
 
@@ -239,11 +219,9 @@ const WaitBusiness = ({
               setPage({
                 ...page,
                 smester_id: val,
-              })
-              setIdSemester({ smester_id: val});
-            }
-              
-            }
+              });
+              setIdSemester({ smester_id: val });
+            }}
             style={{ width: "100%" }}
             defaultValue={
               defaultSemester && defaultSemester?._id
@@ -264,18 +242,10 @@ const WaitBusiness = ({
               ))}
           </Select>
         </Col>
-        <Col
-         xs={24}
-         sm={24}
-         md={24}
-         lg={8}
-         span={8}
-        >
-        <>
+        <Col xs={24} sm={24} md={24} lg={8} span={8}>
+          <>
             {hasSelected ? (
-              <div
-              style={{ display: "flex", alignItems: "center" }}
-              >
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <Button
                   type="primary"
                   style={{
@@ -289,11 +259,11 @@ const WaitBusiness = ({
                 </Button>
                 <Button
                   type="danger"
-                  onClick={start}
+                  onClick={end}
                   disabled={!hasSelected}
                   loading={loading}
                 >
-                  Xóa
+                  Huỷ
                 </Button>
                 <span
                   style={{
@@ -313,7 +283,6 @@ const WaitBusiness = ({
       </Row>
       {!isMobile ? (
         <>
-        
           <Table
             pagination={{
               pageSize: page.limit,

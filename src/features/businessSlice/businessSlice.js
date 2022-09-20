@@ -10,16 +10,19 @@ export const insertBusiness = createAsyncThunk(
 export const getBusiness = createAsyncThunk(
   "business/getBusiness",
   async (action) => {
-    const {data} = await BusinessAPI.get(action)
-    return data
+    const { data } = await BusinessAPI.get(action);
+    return data;
   }
-)
+);
 
 export const updateWaitBusiness = createAsyncThunk(
   "business/updateWaitBusiness",
-  async ({ listIdBusiness, smester_id, callback}) => {
-    const { data } = await BusinessAPI.updateMany({ listIdBusiness, smester_id });
-    if (callback) callback()
+  async ({ listIdBusiness, smester_id, callback }) => {
+    const { data } = await BusinessAPI.updateMany({
+      listIdBusiness,
+      smester_id,
+    });
+    if (callback) callback();
     return data;
   }
 );
@@ -33,8 +36,8 @@ const businessSlice = createSlice({
   },
   reducers: {
     getBusinessStudent: (state, action) => {
-      state.listBusiness = action.payload
-    }
+      state.listBusiness = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getBusiness.fulfilled, (state, action) => {
@@ -47,7 +50,6 @@ const businessSlice = createSlice({
     builder.addCase(getBusiness.rejected, (state, action) => {
       state.error = "Thất bại";
     });
-
 
     builder.addCase(insertBusiness.fulfilled, (state, action) => {
       state.loading = false;
@@ -72,5 +74,5 @@ const businessSlice = createSlice({
   },
 });
 
-export const { getBusinessStudent } = businessSlice.actions
+export const { getBusinessStudent } = businessSlice.actions;
 export default businessSlice.reducer;

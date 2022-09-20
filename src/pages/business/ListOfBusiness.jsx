@@ -1,18 +1,21 @@
-import { Button, Col, Drawer, Row, Select, Table, message } from 'antd';
-import { array, bool, object } from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import SemestersAPI from '../../API/SemestersAPI';
-import UpFile from '../../components/ExcelDocument/UpFile';
-import text from '../../common/styles/downFile.module.css';
-import { getBusiness } from '../../features/businessSlice/businessSlice';
-import { getListMajor } from '../../features/majorSlice/majorSlice';
-import { defaultTime, getSemesters } from '../../features/semesters/semestersSlice';
-import styles from './bussiness.module.css';
-import BusinessAPI from '../../API/Business';
-import { useMutation } from 'react-query';
-import FormBusiness from './FormBusiness';
-import DownloadFile from '../../components/ExcelDocument/DownloadFile';
+import { Button, Col, Drawer, Row, Select, Table, message } from "antd";
+import { array, bool, object } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import SemestersAPI from "../../API/SemestersAPI";
+import UpFile from "../../components/ExcelDocument/UpFile";
+import text from "../../common/styles/downFile.module.css";
+import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
+import {
+  defaultTime,
+  getSemesters,
+} from "../../features/semesters/semestersSlice";
+import styles from "./bussiness.module.css";
+import BusinessAPI from "../../API/Business";
+import { useMutation } from "react-query";
+import FormBusiness from "./FormBusiness";
+import DownloadFile from "../../components/ExcelDocument/DownloadFile";
 
 const { Option } = Select;
 const { Column } = Table;
@@ -27,18 +30,17 @@ const ListOfBusiness = ({
   isMobile,
 }) => {
   const dispatch = useDispatch();
-  const [majorImport, setMajorImport] = React.useState('');
+  const [majorImport, setMajorImport] = React.useState("");
   const [paramsUpdate, setParamUpdate] = useState({});
   const [visibleImport, setVisibleImport] = useState(false);
   const [visible, setVisible] = useState(false);
-
 
   const [page, setPage] = useState({
     page: 1,
     limit: 20,
     campus_id: infoUser.manager.campus_id,
-    smester_id: semester ? semester.defaultSemester?._id : '',
-    status: 1
+    smester_id: semester ? semester.defaultSemester?._id : "",
+    status: 1,
   });
 
   useEffect(() => {
@@ -47,19 +49,19 @@ const ListOfBusiness = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const fetchDeleteBusiness = (val) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa?')) {
+    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       return BusinessAPI.delete(val._id);
     }
   };
 
-  const mutation = useMutation(['delete'], fetchDeleteBusiness, {
+  const mutation = useMutation(["delete"], fetchDeleteBusiness, {
     onSuccess: (res) => {
       message.success(res?.data?.message);
       if (page?.smester_id && page?.smester_id.length > 0) {
         dispatch(
           getBusiness({
             ...page,
-          }),
+          })
         );
       } else {
         SemestersAPI.getDefaultSemester({
@@ -71,7 +73,7 @@ const ListOfBusiness = ({
                 getBusiness({
                   ...page,
                   smester_id: res.data._id,
-                }),
+                })
               );
             }
           })
@@ -89,7 +91,7 @@ const ListOfBusiness = ({
       defaultTime({
         filter: { campus_id: infoUser.manager.campus_id },
         callback: (res) => {
-          if (res.status === 'ok') {
+          if (res.status === "ok") {
             const data = {
               ...page,
               smester_id: res.result._id,
@@ -98,71 +100,74 @@ const ListOfBusiness = ({
             dispatch(getBusiness(data));
           }
         },
-      }),
+      })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   const columns = [
     {
-      title: 'Mã',
-      dataIndex: 'code_request',
+      title: "Mã",
+      dataIndex: "code_request",
       width: 50,
-      fixed: 'left',
+      fixed: "left",
     },
     {
-      title: 'Tên doanh nghiệp',
-      dataIndex: 'name',
+      title: "Tên doanh nghiệp",
+      dataIndex: "name",
       width: 150,
-      fixed: 'left',
+      fixed: "left",
     },
     {
-      title: 'Vị trí thực tập',
-      dataIndex: 'internshipPosition',
+      title: "Vị trí thực tập",
+      dataIndex: "internshipPosition",
     },
     {
-      title: 'Số lượng',
-      dataIndex: 'amount',
+      title: "Số lượng",
+      dataIndex: "amount",
     },
 
     {
-      title: 'Địa chỉ thực tập',
-      dataIndex: 'address',
+      title: "Địa chỉ thực tập",
+      dataIndex: "address",
     },
     {
-      title: 'Ngành',
-      dataIndex: 'majors',
+      title: "Ngành",
+      dataIndex: "majors",
       render: (val) => val?.name,
     },
     {
-      title: 'Yêu cầu',
-      dataIndex: 'request',
+      title: "Yêu cầu",
+      dataIndex: "request",
       width: 400,
     },
     {
-      title: 'Chi tiết',
-      dataIndex: 'description',
+      title: "Chi tiết",
+      dataIndex: "description",
       width: 400,
     },
     {
-      title: 'Sửa',
+      title: "Sửa",
       width: 80,
       render: (val, key) => {
         return (
-          <Button type="primary" onClick={(type) => openVisible(val?._id, (type = true))}>
+          <Button
+            type="primary"
+            onClick={(type) => openVisible(val?._id, (type = true))}
+          >
             Sửa
           </Button>
         );
       },
     },
     {
-      title: 'Xóa',
+      title: "Xóa",
       width: 80,
       render: (val, key) => {
         return (
           <Button
             style={{
-              color: '#fff',
-              background: '#ee4d2d',
+              color: "#fff",
+              background: "#ee4d2d",
             }}
             onClick={() => handleDelete(val)}
           >
@@ -172,8 +177,6 @@ const ListOfBusiness = ({
       },
     },
   ];
-
- 
 
   const openVisibleImport = () => {
     setVisibleImport(true);
@@ -202,11 +205,17 @@ const ListOfBusiness = ({
 
   return (
     <div className={styles.status}>
-      <Row style={isMobile ? {} : { alignItems: 'center', justifyContent: 'space-between' }}>
+      <Row
+        style={
+          isMobile
+            ? {}
+            : { alignItems: "center", justifyContent: "space-between" }
+        }
+      >
         <Col xs={24} sm={24} md={24} lg={8} span={8}>
           <h2
             style={{
-              color: 'black',
+              color: "black",
             }}
             className="mb-2"
           >
@@ -214,14 +223,16 @@ const ListOfBusiness = ({
           </h2>
         </Col>
         <Col
-          style={{ display: 'flex', alignItems: 'center' }}
+          style={{ display: "flex", alignItems: "center" }}
           xs={24}
           sm={24}
           md={24}
           lg={8}
           span={8}
         >
-          <p style={{ whiteSpace: 'nowrap', paddingRight: 20, margin: 0 }}>Học kỳ:</p>
+          <p style={{ whiteSpace: "nowrap", paddingRight: 20, margin: 0 }}>
+            Học kỳ:
+          </p>
           <Select
             className="filter-status"
             placeholder="Chọn kỳ"
@@ -231,11 +242,15 @@ const ListOfBusiness = ({
                 smester_id: val,
               })
             }
-            style={{ width: '100%' }}
-            defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ''}
+            style={{ width: "100%" }}
+            defaultValue={
+              defaultSemester && defaultSemester?._id
+                ? defaultSemester?._id
+                : ""
+            }
           >
             {!defaultSemester?._id && (
-              <Option value={''} disabled>
+              <Option value={""} disabled>
                 Chọn kỳ
               </Option>
             )}
@@ -254,19 +269,21 @@ const ListOfBusiness = ({
           lg={8}
           span={8}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
           <Button onClick={openVisibleImport} type="primary">
             Import Doanh nghiệp
           </Button>
           <Button
-            onClick={(val = {}, type) => openVisible((val = ''), (type = false))}
+            onClick={(val = {}, type) =>
+              openVisible((val = ""), (type = false))
+            }
             style={{
-              color: '#fff',
-              background: '#ee4d2d',
+              color: "#fff",
+              background: "#ee4d2d",
             }}
           >
             Thêm Doanh nghiệp
@@ -286,7 +303,7 @@ const ListOfBusiness = ({
               });
             },
           }}
-          scroll={{ x: 'calc(900px + 50%)' }}
+          scroll={{ x: "calc(900px + 50%)" }}
           rowKey="_id"
           loading={loading}
           columns={columns}
@@ -310,9 +327,9 @@ const ListOfBusiness = ({
           dataSource={listBusiness?.list}
           expandable={{
             expandedRowRender: (record) => (
-              <div style={{ marginTop: '10px' }}>
+              <div style={{ marginTop: "10px" }}>
                 {window.innerWidth < 1023 && window.innerWidth > 739 ? (
-                  ''
+                  ""
                 ) : (
                   <>
                     <p className="list-detail">Email: {record.email}</p>
@@ -356,13 +373,17 @@ const ListOfBusiness = ({
                     smester_id: val,
                   })
                 }
-                defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ''}
+                defaultValue={
+                  defaultSemester && defaultSemester?._id
+                    ? defaultSemester?._id
+                    : ""
+                }
                 style={{
-                  width: '100%',
+                  width: "100%",
                 }}
               >
                 {!defaultSemester?._id && (
-                  <Option value={''} disabled>
+                  <Option value={""} disabled>
                     Chọn kỳ
                   </Option>
                 )}
@@ -376,7 +397,7 @@ const ListOfBusiness = ({
             </Col>
           </Row>
 
-          <Row style={{ alignItems: 'center', marginTop: 20 }}>
+          <Row style={{ alignItems: "center", marginTop: 20 }}>
             <Col span={6}>
               <p>Ngành:</p>
             </Col>
@@ -385,7 +406,7 @@ const ListOfBusiness = ({
                 className="filter-status"
                 onChange={(val) => setMajorImport(val)}
                 style={{
-                  width: '100%',
+                  width: "100%",
                 }}
                 placeholder="Chọn ngành"
               >
@@ -410,11 +431,14 @@ const ListOfBusiness = ({
             <br />
             <div>
               <b className={text.red}>Lưu ý</b>
-              <p className={text.red}>* Giữ nguyên định dạng file mẫu xlsx không thay đổi</p>
-              <p  className={text.red}>* Chỉ cập thêm công tin đúng theo các cột trong file excel mẫu</p>
-             
+              <p className={text.red}>
+                * Giữ nguyên định dạng file mẫu xlsx không thay đổi
+              </p>
+              <p className={text.red}>
+                * Chỉ cập thêm công tin đúng theo các cột trong file excel mẫu
+              </p>
             </div>
-            <DownloadFile keys='business' name='doanh nghiệp'/>
+            <DownloadFile keys="business" name="doanh nghiệp" />
           </div>
         </Drawer>
       </div>
@@ -422,15 +446,19 @@ const ListOfBusiness = ({
         <Drawer
           title={
             paramsUpdate && paramsUpdate?.type
-              ? 'Sửa thông tin doanh nghiệp'
-              : 'Thêm mới doanh nghiệp'
+              ? "Sửa thông tin doanh nghiệp"
+              : "Thêm mới doanh nghiệp"
           }
           placement="left"
           onClose={closeVisible}
           visible={visible}
           width="70%"
         >
-          <FormBusiness paramsUpdate={paramsUpdate} closeVisible={closeVisible} visible={visible} />
+          <FormBusiness
+            paramsUpdate={paramsUpdate}
+            closeVisible={closeVisible}
+            visible={visible}
+          />
         </Drawer>
       </div>
     </div>
@@ -444,13 +472,15 @@ ListOfBusiness.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ auth: { infoUser }, semester, major, business, global }) => ({
-  infoUser,
-  listSemesters: semester.listSemesters,
-  semester,
-  defaultSemester: semester.defaultSemester,
-  listMajors: major.listMajor,
-  listBusiness: business.listBusiness,
-  loading: business.loading,
-  isMobile: global.isMobile,
-}))(ListOfBusiness);
+export default connect(
+  ({ auth: { infoUser }, semester, major, business, global }) => ({
+    infoUser,
+    listSemesters: semester.listSemesters,
+    semester,
+    defaultSemester: semester.defaultSemester,
+    listMajors: major.listMajor,
+    listBusiness: business.listBusiness,
+    loading: business.loading,
+    isMobile: global.isMobile,
+  })
+)(ListOfBusiness);
