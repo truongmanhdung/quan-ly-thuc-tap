@@ -25,6 +25,7 @@ import PrivateSupperAdmin from './private/privateSupperAdmin';
 import Narrows from '../pages/major/narrows';
 import { getLocal } from '../ultis/storage';
 import Profile from '../pages/profile/Profile';
+import RequestFromStudent from '../pages/RequestFromStudent';
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -179,6 +180,14 @@ const Router = () => {
           element={
             <Privateadmin>
               <ListOfBusiness />
+            </Privateadmin>
+          }
+        />
+           <Route
+          path="request-from-student"
+          element={
+            <Privateadmin>
+              <RequestFromStudent />
             </Privateadmin>
           }
         />

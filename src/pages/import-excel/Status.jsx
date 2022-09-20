@@ -40,7 +40,6 @@ const Status = ({
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
-  let navigate = useNavigate();
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
