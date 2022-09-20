@@ -82,6 +82,9 @@ function LayoutWebsite({ isMobile }) {
                       <Menu.Item key="11" icon={<FolderViewOutlined className="icon-link" />}>
                         <NavLink to="form-register">Thời gian đăng ký</NavLink>
                       </Menu.Item>
+                      <Menu.Item key="13" icon={<FolderViewOutlined className="icon-link" />}>
+                        <NavLink to="request-student">Danh Sách Đổi Form</NavLink>
+                      </Menu.Item>
                     </>
                   ) : (
                     <>

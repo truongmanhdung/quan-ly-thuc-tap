@@ -25,6 +25,7 @@ import PrivateSupperAdmin from './private/privateSupperAdmin';
 import Narrows from '../pages/major/narrows';
 import { getLocal } from '../ultis/storage';
 import Profile from '../pages/profile/Profile';
+import ListConfirmStudent from '../pages/confirmStudentList/ListConfirmStudent';
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -180,6 +181,14 @@ const Router = () => {
             <Privateadmin>
               <ListOfBusiness />
             </Privateadmin>
+          }
+        />
+         <Route
+          path="request-student"
+          element={
+            
+              <ListConfirmStudent/>
+           
           }
         />
       </Route>
