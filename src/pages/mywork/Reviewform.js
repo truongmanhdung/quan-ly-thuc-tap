@@ -835,6 +835,7 @@ const Reviewform = ({
           closeModal={onCloseModal}
           studentId={studentdetail}
           onShowModal={onShowModal}
+          infoUser={infoUser}
         />
       )}
     </div>
