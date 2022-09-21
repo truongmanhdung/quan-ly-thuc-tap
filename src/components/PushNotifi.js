@@ -11,9 +11,8 @@ export const sendMessageDevice = async (infoUser, message) => {
     );
     const body = {
       registration_ids,
-      title: `[Phòng QHDN] - Thông báo ${message}`,
-      note: `[Phòng QHDN] - Thông báo sinh viên ${infoUser?.name} - mã sinh viên ${infoUser?.mssv} 
-        đã ${message}. Sinh viên kiểm tra mail thường xuyên để nắm rõ được trạng thái của mình. Phòng QHDN xin cảm ơn !!!`,
+      title: `Thông báo ${message}`,
+      note: `Thông báo sinh viên ${infoUser?.name} - mã sinh viên ${infoUser?.mssv} đã ${message}. Sinh viên kiểm tra mail thường xuyên để nắm rõ được trạng thái của mình. Phòng QHDN xin cảm ơn !!!`,
       imageUrl: "ic_launcher.png",
     };
 
