@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Layout, Menu, BackTop } from 'antd';
-import { ArrowUpOutlined, InsertRowAboveOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, InsertRowAboveOutlined, PullRequestOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import {
   ProfileOutlined,
   UserOutlined,
@@ -82,8 +82,8 @@ function LayoutWebsite({ isMobile }) {
                       <Menu.Item key="11" icon={<FolderViewOutlined className="icon-link" />}>
                         <NavLink to="form-register">Thời gian đăng ký</NavLink>
                       </Menu.Item>
-                      <Menu.Item key="13" icon={<FolderViewOutlined className="icon-link" />}>
-                        <NavLink to="request-student">Danh Sách Đổi Form</NavLink>
+                      <Menu.Item key="12" icon={<PullRequestOutlined />}>
+                        <NavLink to="request-from-student">Yêu cầu từ sinh viên</NavLink>
                       </Menu.Item>
                     </>
                   ) : (
@@ -110,7 +110,6 @@ function LayoutWebsite({ isMobile }) {
                   <Menu.Item key="1" icon={<UserOutlined className="icon-link" />}>
                     <NavLink to="info-student">Thông tin sinh viên</NavLink>
                   </Menu.Item>
-
                   <Menu.Item key="3">
                     <NavLink to="/support-student">Đăng ký thực tập</NavLink>
                   </Menu.Item>

@@ -1,12 +1,10 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, Col, Drawer, Input, message, Row, Select, Table, Modal, Descriptions } from 'antd';
+import { Button, Col, Drawer, Input, Row, Select, Table,} from 'antd';
 import Column from 'antd/lib/table/Column';
 import * as FileSaver from 'file-saver';
-import _ from 'lodash';
 import { array, object } from 'prop-types';
 import { useEffect, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import style from '../../common/styles/status.module.css';
 import text from '../../common/styles/downFile.module.css';
@@ -20,12 +18,10 @@ import { defaultTime, getSemesters } from '../../features/semesters/semestersSli
 import {
   getAllStudent,
   getDataExport,
-  resetStudentAction,
 } from '../../features/StudentSlice/StudentSlice';
 import { filterStatuss } from '../../ultis/selectOption';
 import { getLocal } from '../../ultis/storage';
 const { Option } = Select;
-const { confirm } = Modal;
 const Status = ({
   // listStudent: { list, total },
   listAllStudent: { list, total },
@@ -40,7 +36,6 @@ const Status = ({
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
-  let navigate = useNavigate();
   const [chooseIdStudent, setChooseIdStudent] = useState([]);
   const [listIdStudent, setListIdStudent] = useState([]);
   const [page, setPage] = useState({
@@ -56,6 +51,7 @@ const Status = ({
   useEffect(() => {
     setChooseIdStudent([]);
     dispatch(getAllStudent(page));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   useEffect(() => {
@@ -74,44 +70,6 @@ const Status = ({
     
   };
 
-  const resetStudent = async (val, record) => {
-    confirm({
-      title: 'Bạn có chắc chắn muốn reset trạng thái sinh viên ?',
-      okText: 'Có',
-      cancelText: 'Không',
-      onOk() {
-        const id = _.get(record, '_id', false);
-        try {
-          dispatch(
-            resetStudentAction({
-              id: id,
-              callback: dispatch(
-                defaultTime({
-                  filter: { campus_id: infoUser.manager.campus_id },
-                  callback: (res) => {
-                    if (res.status === 'ok') {
-                      const data = {
-                        ...page,
-                        ...filter,
-                        smester_id: res.result._id,
-                        campus_id: infoUser.manager.campus_id,
-                      };
-                      setChooseIdStudent([]);
-                      dispatch(getAllStudent(data));
-                      message.success('Thành công');
-                    }
-                  },
-                }),
-              ),
-            }),
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      onCancel() {},
-    });
-  };
 
   const columns = [
     {
@@ -262,22 +220,6 @@ const Status = ({
             </span>
           );
         }
-      },
-    },
-    {
-      title: 'Reset trạng thái',
-      render: (val, key) => {
-        return (
-          <Button
-            style={{
-              color: '#fff',
-              background: '#ee4d2d',
-            }}
-            onClick={() => resetStudent(val, key)}
-          >
-            Reset
-          </Button>
-        );
       },
     },
   ];
