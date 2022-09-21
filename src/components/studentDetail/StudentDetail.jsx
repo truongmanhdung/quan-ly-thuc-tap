@@ -25,6 +25,7 @@ import {
 import "./studentDetail.css";
 import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { fetchManager } from "../../features/managerSlice/managerSlice";
+import { sendMessageDevice } from "../PushNotifi";
 const optionCheck = [1, 5, 8, 3];
 const { Option } = Select;
 const { TextArea } = Input;
@@ -201,21 +202,30 @@ const StudentDetail = (props) => {
         setStudent(data);
         message.success("Thay đổi thời gian form thành công");
         setIsLoading(false);
+        sendMessageDevice(student, "thay đổi thời gian form thành công")
       }
     }
   };
 
   // chỉnh sửa thông tin từng trường sinh viên
   const onFinish = (values) => {
+    let messageCheck = "";
     values._id = studentId;
     if (values.internshipTime) {
       values.internshipTime = values.internshipTime._d;
+      messageCheck = "cập nhật thời gian bắt đầu thực tập thành công"
     } else if (values.endInternShipTime) {
       values.endInternShipTime = values.endInternShipTime._d;
+      messageCheck = "cập nhật thời gian kết thúc thực tập thành công"
+    } else if(values.attitudePoint){
+      messageCheck = "cập nhật điểm thái độ thành công"
+    }else if(values.resultScore){
+      messageCheck = "cập nhật điểm kết quả thành công"
     }
     StudentAPI.updateStudent(values).then((res) => {
       if (res.status === 200) {
         message.success("Thành công");
+        sendMessageDevice(student, messageCheck)
         setStudent(res.data);
         onCloseFormField();
       } else {
@@ -273,6 +283,7 @@ const StudentDetail = (props) => {
       getDataStudent();
       setIsEditReviewer(false);
       message.success("Thành công");
+      sendMessageDevice(student, "người review các form của sinh viên đã được thay đổi")
     }
   };
 
@@ -292,6 +303,7 @@ const StudentDetail = (props) => {
         status: statusUpdate,
         textNote: note,
       });
+
       if (data.listStudentChangeStatus.length > 0) {
         getDataStudent();
         setStatusUpdate(false);
@@ -299,6 +311,8 @@ const StudentDetail = (props) => {
         setIsShowSelectStatus(false);
         setIsShowNote(false);
         message.success("Thành công");
+        const messageCheck = "cập nhật trạng thái thành công"
+        sendMessageDevice(student, messageCheck)
       }
     }
   };
@@ -315,6 +329,7 @@ const StudentDetail = (props) => {
       setIsSetNote(false);
       getDataStudent();
       message.success("Cập nhật ghi chú thành công");
+      sendMessageDevice(student, "cập nhật ghi chú thành công")
     }
   };
 
@@ -327,6 +342,7 @@ const StudentDetail = (props) => {
       getDataStudent();
       setIsEditBusiness(false);
       message.success("Thành công");
+      sendMessageDevice(student, "công ty thực tập của sinh viên đã được thay đổi")
     }
   };
 

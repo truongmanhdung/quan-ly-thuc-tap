@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import ReportFormAPI from "../../API/ReportFormAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
+import { sendMessageDevice } from "../../components/PushNotifi";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
 import { getLocal } from "../../ultis/storage";
@@ -93,6 +94,7 @@ const Formrp = ({ studentById }) => {
               message.success(res.data.message);
               setFile("");
               form.resetFields();
+              sendMessageDevice(infoUser, "nộp biểu mẫu thành công");
             })
             .catch((err) => {
               const dataErr = err.response.data;
