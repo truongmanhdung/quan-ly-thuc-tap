@@ -518,3 +518,4 @@ export default connect(
     isMobile: global.isMobile,
   }),
 )(SupportStudent);
+  

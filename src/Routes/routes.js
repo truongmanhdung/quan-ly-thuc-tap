@@ -183,14 +183,14 @@ const Router = () => {
             </Privateadmin>
           }
         />
-         <Route
-          path="request-student"
+           <Route
+          path="request-from-student"
           element={
-            
-              <ListConfirmStudent/>
-           
-          }
-        />
+            <Privateadmin>
+                            <ListConfirmStudent/>
+            </Privateadmin>}
+            />
+     
       </Route>
       <Route path="/404" element={<Notfound />} />
     </Routes>
