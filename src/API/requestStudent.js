@@ -9,10 +9,12 @@ const requestApi = {
     return axiosClient.get(url)
   },
   resetStudentRequest(val){
-    const url = '/resetStudent'
-    return axiosClient(url, val)
+    const url = `/resetStudent/${val.userId}`
+    return axiosClient.patch(url, val)
+  },
+  removeRequestApi(id){
+    const url = `/removeRequest/${id}`
+    return axiosClient.delete(url)
   }
-
-
 };
 export default requestApi;

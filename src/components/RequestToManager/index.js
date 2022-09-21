@@ -81,7 +81,7 @@ const RequestToManager = (props) => {
     }
     return '';
   };
-
+console.log(data);
   const viewCv = () => {
     return (
       <>

@@ -12,6 +12,15 @@ export const getRequest = createAsyncThunk('request/getRequest', async () => {
   return data;
 });
 
+export const resetStudentRequestModel = createAsyncThunk(
+  "request/resetStudentRequestModel",
+  async ({val, callback}) =>{
+    const { data } = await requestApi.resetStudentRequest(val);
+    if (callback) callback(data)
+    return data
+  }
+)
+
 const semesterSlice = createSlice({
   name: 'request',
   initialState: {
@@ -45,6 +54,19 @@ const semesterSlice = createSlice({
     builder.addCase(getRequest.rejected, (state) => {
       state.loading = false;
     });
+
+    builder.addCase(resetStudentRequestModel.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(resetStudentRequestModel.fulfilled, (state, { payload }) => {
+      state.loading = false;
+    });
+    builder.addCase(resetStudentRequestModel.rejected, (state) => {
+      state.loading = false;
+    });
+
+
+
   },
 });
 
