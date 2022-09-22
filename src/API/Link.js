@@ -4,7 +4,7 @@ const axiosClient = axios.create({
   // Localhost
   // baseURL: "http://localhost:8000/api",
   // DEV
-  baseURL: "http://hbgreen.com.vn/api",
+  baseURL: "http://3.0.249.70:8000/api",
   // Main
   // baseURL: "http://139.180.196.74:8000/api",
 });

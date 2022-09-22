@@ -3,7 +3,6 @@ import { array, bool, object } from "prop-types";
 import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { connect, useDispatch } from "react-redux";
-import SemestersAPI from "../../API/SemestersAPI";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import text from "../../common/styles/downFile.module.css";
 import {
@@ -24,7 +23,6 @@ const { Column } = Table;
 const WaitBusiness = ({
   infoUser,
   listSemesters,
-  semester,
   defaultSemester,
   listMajors,
   listBusiness,
@@ -33,7 +31,7 @@ const WaitBusiness = ({
   const dispatch = useDispatch();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [majorImport, setMajorImport] = React.useState("");
-  const [idSemester, setIdSemester] = useState({});
+  const [idSemester, setIdSemester] = useState("");
   const [paramsUpdate, setParamUpdate] = useState({});
   const [loading, setLoading] = useState(false);
   const [visibleImport, setVisibleImport] = useState(false);
@@ -50,7 +48,6 @@ const WaitBusiness = ({
     dispatch(getListMajor());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
-
   useEffect(() => {
     dispatch(
       defaultTime({
@@ -68,6 +65,7 @@ const WaitBusiness = ({
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, selectedRowKeys]);
+
   const columns = [
     {
       title: "Mã",
@@ -135,7 +133,7 @@ const WaitBusiness = ({
   };
 
   const start = () => {
-    if (Object.keys(idSemester).length === 0) {
+    if (idSemester.length === 0) {
       message.error("Vui lòng chọn kỳ học");
     } else {
       setLoading(true); // ajax request after empty completing
@@ -206,20 +204,12 @@ const WaitBusiness = ({
             className="filter-status"
             placeholder="Chọn kỳ"
             onChange={(val) => {
-              setIdSemester({ ...page, smester_id: val });
+              setIdSemester({ smester_id: val });
             }}
-            style={{ width: "100%" }}
-            defaultValue={
-              defaultSemester && defaultSemester?._id
-                ? defaultSemester?._id
-                : ""
-            }
+            style={{ width: "30%" }}
+            defaultValue=""
           >
-            {!defaultSemester?._id && (
-              <Option value={""} disabled>
-                Chọn kỳ
-              </Option>
-            )}
+            <Option value="">Chọn kỳ</Option>
             {listSemesters &&
               listSemesters?.map((item, index) => (
                 <Option value={item._id} key={index}>
@@ -421,25 +411,6 @@ const WaitBusiness = ({
             </div>
             <DownloadFile keys="business" name="doanh nghiệp" />
           </div>
-        </Drawer>
-      </div>
-      <div>
-        <Drawer
-          title={
-            paramsUpdate && paramsUpdate?.type
-              ? "Sửa thông tin doanh nghiệp"
-              : "Thêm mới doanh nghiệp"
-          }
-          placement="left"
-          onClose={closeVisible}
-          visible={visible}
-          width="70%"
-        >
-          <FormBusiness
-            paramsUpdate={paramsUpdate}
-            closeVisible={closeVisible}
-            visible={visible}
-          />
         </Drawer>
       </div>
     </div>

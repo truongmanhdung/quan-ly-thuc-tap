@@ -26,6 +26,7 @@ import Narrows from "../pages/major/narrows";
 import { getLocal } from "../ultis/storage";
 import Profile from "../pages/profile/Profile";
 import ListConfirmStudent from "../pages/confirmStudentList/ListConfirmStudent";
+import WaitBusiness from "../pages/business/WaitBusiness";
 // import Company from "../pages/company/company";
 const Router = () => {
   return (
@@ -180,6 +181,14 @@ const Router = () => {
           element={
             <Privateadmin>
               <ListOfBusiness />
+            </Privateadmin>
+          }
+        />
+        <Route
+          path="wait-company"
+          element={
+            <Privateadmin>
+              <WaitBusiness />
             </Privateadmin>
           }
         />
