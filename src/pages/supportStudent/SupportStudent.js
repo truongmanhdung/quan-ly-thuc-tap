@@ -14,6 +14,7 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import RegisterInternAPI from "../../API/RegisterInternAPI";
 import CountDownCustorm from "../../components/CountDownCustorm";
+import { sendMessageDevice } from "../../components/PushNotifi";
 import { getBusiness } from "../../features/businessSlice/businessSlice";
 import { getListMajor } from "../../features/majorSlice/majorSlice";
 import { getNarow } from "../../features/narrow";
@@ -123,6 +124,10 @@ const SupportStudent = ({
                 setValue(2);
                 setSpin(false);
               });
+              sendMessageDevice(
+                infoUser,
+                "đăng ký form nhờ nhà trường hỗ trợ thành công"
+              );
             })
             .catch(async (err) => {
               const dataErr = await err.response.data;
@@ -229,6 +234,10 @@ const SupportStudent = ({
         setSpin(true);
         const resData = await RegisterInternAPI.upload({ ...data, CV: null });
         message.success(resData.data.message);
+        sendMessageDevice(
+          infoUser,
+          "đăng ký form tự tìm nơi thực tập thành công"
+        );
         setSpin(false);
       } else if (value === 1) {
         await guardarArchivo(file, data);
