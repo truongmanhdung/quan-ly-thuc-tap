@@ -4,8 +4,10 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { sendRequest } from '../../features/requestStudentSlice/requestStudentSlice';
 import styles from './index.module.css';
+
 const type = ['narrow', 'form', 'report'];
 const RequestToManager = (props) => {
+const [form] = Form.useForm();
   const { studentById } = props;
   const [visible, setVisible] = React.useState(false);
   const [data, setData] = React.useState({});
@@ -81,7 +83,6 @@ const RequestToManager = (props) => {
     }
     return '';
   };
-console.log(data);
   const viewCv = () => {
     return (
       <>
@@ -218,12 +219,15 @@ console.log(data);
       }))
   }
   const callback =(val) => {
-    if (val) {
-      setVisible(false)
-      message.success('Gửi yêu cầu thành công!')
+    if (val.success) {
+      message.success(val.message)
     }else{
-      message.error('Có lỗi sảy ra')
+      message.error(val.message)
     }
+    form.resetFields()
+    setVisible(false)
+
+
   }
   return (
     <div>
@@ -261,7 +265,10 @@ console.log(data);
         footer={false}
         onOk={false}
         visible={visible}
-        onCancel={() => setVisible(false)}
+        onCancel={() => {
+          form.resetFields()
+          setVisible(false)
+        }}
       >
         {data.type === 'narrow' && viewCv()}
         {data.type === 'form' && viewForm()}
@@ -276,6 +283,7 @@ console.log(data);
                 type: data?.type,
                 userId: data?._id
               })}
+              form={form}
               // onFinishFailed={onFinishFailed}
               autoComplete="off"
               style={{
@@ -298,7 +306,10 @@ console.log(data);
                     margin: 'auto'
                   }}
                 >
-                  <Button type="primary" danger onClick={() => setText(false)}>
+                  <Button type="primary" danger onClick={() =>  {
+                    form.resetFields()
+                    setText(false)
+                  }}>
                     Huỷ
                   </Button>
                   <Button type="primary" htmlType="submit">
