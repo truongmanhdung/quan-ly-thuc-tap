@@ -9,6 +9,7 @@ import {
 } from '../../features/requestStudentSlice/requestStudentSlice';
 import moment from 'moment/moment';
 import requestApi from '../../API/requestStudent';
+import { sendMessageDevice } from '../../components/PushNotifi';
 
 const ListConfirmStudent = (props) => {
   const { data } = props;
@@ -32,7 +33,7 @@ const ListConfirmStudent = (props) => {
         if (val === 'narrow') {
           return 'Form CV';
         } else if (val === 'form') {
-          return 'Form báo cáo';
+          return 'Form biểu mẫu';
         } else {
           return 'Form báo cáo';
         }
@@ -78,6 +79,7 @@ const ListConfirmStudent = (props) => {
       type: value.type,
       userId: value.userId._id,
     };
+    sendMessageDevice(value.userId, "yêu cầu chỉnh sửa của bạn đã được cán bộ xác nhận");
     dispatch(
       resetStudentRequestModel({
         val: data,
@@ -89,11 +91,9 @@ const ListConfirmStudent = (props) => {
     requestApi.removeRequestApi(value).then(res => callback(res.data))
   };
   const callback = (res) => {
-    console.log('====================================');
-    console.log(res);
-    console.log('====================================');
     if (res.success) {
       dispatch(getRequest());
+      
       message.success(res.message);
     } else {
       message.error(res.message);
