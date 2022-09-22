@@ -3,7 +3,7 @@ import requestApi from '../../API/requestStudent';
 
 export const sendRequest = createAsyncThunk('request/sendRequest', async ({ val, callback }) => {
   const { data } = await requestApi.requestOfStudent(val);
-  if (data.success) callback(data.success);
+  if (callback) callback(data);
   return data;
 });
 
