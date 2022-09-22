@@ -10,10 +10,23 @@ export const insertBusiness = createAsyncThunk(
 export const getBusiness = createAsyncThunk(
   "business/getBusiness",
   async (action) => {
-    const {data} = await BusinessAPI.get(action)
-    return data
+    const { data } = await BusinessAPI.get(action);
+    return data;
   }
-)
+);
+
+export const updateWaitBusiness = createAsyncThunk(
+  "business/updateWaitBusiness",
+  async ({ listIdBusiness, smester_id, callback }) => {
+    const { data } = await BusinessAPI.updateMany({
+      listIdBusiness,
+      smester_id,
+    });
+    if (callback) callback();
+    return data;
+  }
+);
+
 const businessSlice = createSlice({
   name: "business",
   initialState: {
@@ -23,8 +36,8 @@ const businessSlice = createSlice({
   },
   reducers: {
     getBusinessStudent: (state, action) => {
-      state.listBusiness = action.payload
-    }
+      state.listBusiness = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getBusiness.fulfilled, (state, action) => {
@@ -38,7 +51,6 @@ const businessSlice = createSlice({
       state.error = "Thất bại";
     });
 
-
     builder.addCase(insertBusiness.fulfilled, (state, action) => {
       state.loading = false;
       state.listBusiness = action.payload;
@@ -49,8 +61,18 @@ const businessSlice = createSlice({
     builder.addCase(insertBusiness.rejected, (state, action) => {
       state.error = "Không đúng định dạng";
     });
+
+    builder.addCase(updateWaitBusiness.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateWaitBusiness.fulfilled, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(updateWaitBusiness.rejected, (state, action) => {
+      state.error = "Update business fail";
+    });
   },
 });
 
-export const { getBusinessStudent } = businessSlice.actions
+export const { getBusinessStudent } = businessSlice.actions;
 export default businessSlice.reducer;
