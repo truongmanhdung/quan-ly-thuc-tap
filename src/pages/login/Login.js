@@ -7,6 +7,7 @@ import { Select, Empty, message } from 'antd';
 import { useNavigate } from 'react-router';
 import { getListCumpus } from '../../features/cumpusSlice/cumpusSlice';
 import { defaultTime } from '../../features/semesters/semestersSlice';
+import { gapi } from 'gapi-script';
 const { Option } = Select;
 
 const Login = () => {
@@ -17,6 +18,16 @@ const Login = () => {
   const handleFailure = (result) => {
     message.error('error');
   };
+
+  useEffect(() => {
+    const initClient = () => {
+          gapi.client.init({
+          clientId: '924910567674-nu6j33eh8241bj0enhcqcrstc1vputag.apps.googleusercontent.com',
+          scope: ''
+        });
+     };
+     gapi.load('client:auth2', initClient);
+ });
 
   const handleLogin = (googleData) => {
     dispatch(
@@ -82,10 +93,11 @@ const Login = () => {
         <GoogleLogin
           disabled={cumpus === '' ? true : false}
           className={styles.button_login}
-          clientId="116205081385-umqm7s5qlspf4s0tc4jke7tafpvgj2k7.apps.googleusercontent.com"
+          clientId="924910567674-nu6j33eh8241bj0enhcqcrstc1vputag.apps.googleusercontent.com"
           buttonText="Login With Google"
           onSuccess={handleLogin}
           onFailure={handleFailure}
+          isSignedIn={true}
         />
       </div>
     </div>
