@@ -40,10 +40,11 @@ const RequestToManager = (props) => {
     } = studentById;
     let valueForm = [];
     type.forEach((res) => {
+
       if (studentById[res]) {
         return valueForm.push({
           type: res,
-          link: studentById[res],
+          link:  res === 'narrow' ? studentById['CV'] : studentById[res],
           address,
           business,
           dream,
