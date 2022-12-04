@@ -313,7 +313,6 @@ const ReviewCV = ({ listBusiness, listMajors, isMobile }) => {
     } catch (error) {
       message.error("Thất bại");
     }
-    // console.log({status, textNote});
   };
   const typePingTimeoutRef = useRef(null);
   const handleNote = ({target}) => {
