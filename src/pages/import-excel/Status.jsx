@@ -305,28 +305,27 @@ const Status = ({
     list &&
       list.map((item) => {
         const newObject = {};
-        newObject["Kỳ học"] = item["smester_id"]?.name;
-        newObject["Cơ sở"] = item["campus_id"]?.name;
-        newObject["MSSV"] = item["mssv"];
-        newObject["Họ tên"] = item["name"];
-        newObject["Email"] = item["email"];
-        newObject["Ngành"] = item["majors"]?.name;
-        newObject["Mã ngành"] = item["majors"]?.majorCode;
-        newObject["CV"] = item["CV"];
-        newObject["Biên bản"] = item["form"];
-        newObject["Báo cáo"] = item["report"];
-        newObject["Người review"] = item["reviewer"];
-        newObject["Số điện thoại"] =
-          item["phoneNumber"] === null ? null : "0" + item["phoneNumber"];
-        newObject["Tên công ty"] = item["business"]?.name;
-        newObject["Địa chỉ công ty"] = item["business"]?.address;
-        newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
-        newObject["Mã số thuế"] = item["taxCode"];
-        newObject["Điểm thái độ"] = item["attitudePoint"];
-        newObject["Điểm kết quả"] = item["resultScore"];
-        newObject["Thời gian thực tập"] = item["internshipTime"];
-        newObject["Hình thức"] = item["support"];
-        newObject["Ghi chú"] = item["note"];
+        newObject['Kỳ học'] = item['smester_id']?.name;
+        newObject['Cơ sở'] = item['campus_id']?.name;
+        newObject['MSSV'] = item['mssv'];
+        newObject['Họ tên'] = item['name'];
+        newObject['Email'] = item['email'];
+        newObject['Ngành'] = item['majors']?.name;
+        newObject['Mã ngành'] = item['majors']?.majorCode;
+        newObject['CV'] = item['CV'];
+        newObject['Biên bản'] = item['form'];
+        newObject['Báo cáo'] = item['report'];
+        newObject['Người review'] = item['reviewer'];
+        newObject['Số điện thoại'] = item['phoneNumber'] === null ? null : '0' + item['phoneNumber'];
+        newObject['Tên công ty'] = item?.nameCompany ? item['nameCompany'] :  item['business']?.name;
+        newObject['Địa chỉ công ty'] = item?.addressCompany ? item['addressCompany'] : item['business']?.address;
+        newObject['Vị trí thực tập'] = item?.dream ? item['dream'] : item['business']?.internshipPosition;
+        newObject['Mã số thuế'] = item['taxCode'];
+        newObject['Điểm thái độ'] = item['attitudePoint'];
+        newObject['Điểm kết quả'] = item['resultScore'];
+        newObject['Thời gian thực tập'] = item['internshipTime'];
+        newObject['Hình thức'] = item['support'];
+        newObject['Ghi chú'] = item['note'];
         return newData.push(newObject);
       });
     // eslint-disable-next-line array-callback-return
