@@ -1,26 +1,30 @@
-import { EyeOutlined } from '@ant-design/icons';
-import { Button, Col, Drawer, Input, Row, Select, Table,} from 'antd';
-import Column from 'antd/lib/table/Column';
-import * as FileSaver from 'file-saver';
-import { array, object } from 'prop-types';
-import { useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import * as XLSX from 'xlsx';
-import style from '../../common/styles/status.module.css';
-import text from '../../common/styles/downFile.module.css';
-import DownloadFile from '../../components/ExcelDocument/DownloadFile';
-import UpFile from '../../components/ExcelDocument/UpFile';
-import StudentDetail from '../../components/studentDetail/StudentDetail';
-import { getListMajor } from '../../features/majorSlice/majorSlice';
-import { fetchManager } from '../../features/managerSlice/managerSlice';
-import { updateReviewerListStudent } from '../../features/reviewerStudent/reviewerSlice';
-import { defaultTime, getSemesters } from '../../features/semesters/semestersSlice';
+import { EyeOutlined } from "@ant-design/icons";
+import { Button, Col, Drawer, Input, message, Row, Select, Table } from "antd";
+import Column from "antd/lib/table/Column";
+import * as FileSaver from "file-saver";
+import { array, object } from "prop-types";
+import { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import * as XLSX from "xlsx";
+import style from "../../common/styles/status.module.css";
+import text from "../../common/styles/downFile.module.css";
+import DownloadFile from "../../components/ExcelDocument/DownloadFile";
+import UpFile from "../../components/ExcelDocument/UpFile";
+import StudentDetail from "../../components/studentDetail/StudentDetail";
+import { getListMajor } from "../../features/majorSlice/majorSlice";
+import { fetchManager } from "../../features/managerSlice/managerSlice";
+import { updateReviewerListStudent } from "../../features/reviewerStudent/reviewerSlice";
+import {
+  defaultTime,
+  getSemesters,
+} from "../../features/semesters/semestersSlice";
 import {
   getAllStudent,
   getDataExport,
-} from '../../features/StudentSlice/StudentSlice';
-import { filterStatuss } from '../../ultis/selectOption';
-import { getLocal } from '../../ultis/storage';
+} from "../../features/StudentSlice/StudentSlice";
+import { filterStatuss } from "../../ultis/selectOption";
+import { getLocal } from "../../ultis/storage";
+import confirm from "antd/lib/modal/confirm";
 const { Option } = Select;
 const Status = ({
   // listStudent: { list, total },
@@ -32,7 +36,7 @@ const Status = ({
   isMobile,
 }) => {
   const infoUser = getLocal();
-  const [studentdetail, setStudentDetail] = useState('');
+  const [studentdetail, setStudentDetail] = useState("");
   const [modal, setModal] = useState(false);
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
@@ -42,16 +46,18 @@ const Status = ({
     page: 1,
     limit: 20,
     campus_id:
-      infoUser && infoUser.manager && infoUser.manager.campus_id ? infoUser.manager.campus_id : '',
-    smester_id: defaultSemester?._id ? defaultSemester?._id : '',
+      infoUser && infoUser.manager && infoUser.manager.campus_id
+        ? infoUser.manager.campus_id
+        : "",
+    smester_id: defaultSemester?._id ? defaultSemester?._id : "",
   });
-  const [majorImport, setMajorImport] = useState('');
+  const [majorImport, setMajorImport] = useState("");
   const [filter, setFiler] = useState();
 
   useEffect(() => {
     setChooseIdStudent([]);
     dispatch(getAllStudent(page));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   useEffect(() => {
@@ -67,20 +73,18 @@ const Status = ({
 
   const onCloseModal = () => {
     setModal(false);
-    
   };
-
 
   const columns = [
     {
-      title: 'MSSV',
-      dataIndex: 'mssv',
+      title: "MSSV",
+      dataIndex: "mssv",
       width: 100,
-      fixed: 'left',
+      fixed: "left",
       render: (val, key) => {
         return (
           <p
-            style={{ margin: 0, cursor: 'pointer', color: 'blue' }}
+            style={{ margin: 0, cursor: "pointer", color: "blue" }}
             onClick={() => onShowDetail(val, key)}
           >
             {val}
@@ -89,59 +93,63 @@ const Status = ({
       },
     },
     {
-      title: 'Họ và Tên',
-      dataIndex: 'name',
+      title: "Họ và Tên",
+      dataIndex: "name",
       width: 150,
-      fixed: 'left',
+      fixed: "left",
       render: (val, key) => {
-        return <p style={{ textAlign: 'left', margin: 0 }}>{val}</p>;
+        return <p style={{ textAlign: "left", margin: 0 }}>{val}</p>;
       },
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: "Email",
+      dataIndex: "email",
       width: 200,
     },
     {
-      title: 'Điện thoại',
-      dataIndex: 'phoneNumber',
-      render: (text) => text === null ? null : `0${text}`,
+      title: "Điện thoại",
+      dataIndex: "phoneNumber",
+      render: (text) => (text === null ? null : `0${text}`),
       width: 160,
     },
     {
-      title: 'Ngành',
-      dataIndex: 'majors',
+      title: "Ngành",
+      dataIndex: "majors",
       width: 100,
       render: (val) => val?.name,
     },
     {
-      title: 'Phân loại',
-      dataIndex: 'support',
+      title: "Phân loại",
+      dataIndex: "support",
       width: 90,
       render: (val) => {
         if (val === 1) {
-          return 'Hỗ trợ';
+          return "Hỗ trợ";
         } else if (val === 0) {
-          return 'Tự tìm';
+          return "Tự tìm";
         } else {
-          return '';
+          return "";
         }
       },
     },
     {
-      title: 'CV',
-      dataIndex: 'CV',
+      title: "CV",
+      dataIndex: "CV",
       width: 50,
       render: (val) =>
-        val ? <EyeOutlined className="icon-cv" onClick={() => window.open(val)} /> : '',
+        val ? (
+          <EyeOutlined className="icon-cv" onClick={() => window.open(val)} />
+        ) : (
+          ""
+        ),
     },
     {
-      title: 'Người review',
-      dataIndex: 'reviewer',
+      title: "Người review",
+      dataIndex: "reviewer",
       width: 230,
       render: (val) => {
         if (val) {
-          const name = val.split('@');
+          const name = val.split("@");
           return name[0];
         } else {
           return val;
@@ -149,73 +157,73 @@ const Status = ({
       },
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'statusCheck',
+      title: "Trạng thái",
+      dataIndex: "statusCheck",
       render: (status, student) => {
         if (status === 0) {
           return (
-            <span className="status-fail" style={{ color: 'orange' }}>
+            <span className="status-fail" style={{ color: "orange" }}>
               Chờ kiểm tra
             </span>
           );
         } else if (status === 1) {
           return (
-            <span className="status-up" style={{ color: 'grey' }}>
+            <span className="status-up" style={{ color: "grey" }}>
               Sửa lại CV
             </span>
           );
         } else if (status === 2) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               {student.support === 0 ? " Chờ nộp biên bản" : " Nhận CV"}
             </span>
           );
         } else if (status === 3) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Trượt
             </span>
           );
         } else if (status === 4) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
-              {student?.form ? 'Đã nộp biên bản': 'Chờ nộp biên bản'}  <br />
+            <span className="status-fail" style={{ color: "red" }}>
+              {student?.form ? "Đã nộp biên bản" : "Chờ nộp biên bản"} <br />
             </span>
           );
         } else if (status === 5) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Sửa biên bản <br />
             </span>
           );
         } else if (status === 6) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Đang thực tập <br />
             </span>
           );
         } else if (status === 7) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
-              {student?.report ? 'Đã nộp báo cáo': 'Chờ nộp báo cáo'}
-               <br />
+            <span className="status-fail" style={{ color: "red" }}>
+              {student?.report ? "Đã nộp báo cáo" : "Chờ nộp báo cáo"}
+              <br />
             </span>
           );
         } else if (status === 8) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Sửa báo cáo <br />
             </span>
           );
         } else if (status === 9) {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Hoàn thành <br />
             </span>
           );
         } else {
           return (
-            <span className="status-fail" style={{ color: 'red' }}>
+            <span className="status-fail" style={{ color: "red" }}>
               Chưa đăng ký
             </span>
           );
@@ -235,7 +243,7 @@ const Status = ({
       [key]: value,
     };
 
-    if (value === '' || value === 11) {
+    if (value === "" || value === 11) {
       delete newValue[key];
     }
 
@@ -247,21 +255,32 @@ const Status = ({
   };
 
   const comfirms = () => {
-    dispatch(
-      updateReviewerListStudent({
-        val: {
-          listIdStudent: listIdStudent,
-          email: infoUser?.manager?.email,
-        },
-        callback: () => {
-          
-          dispatch(getAllStudent({ ...page, ...filter }))
-          setChooseIdStudent([])
-          setListIdStudent([])
-        },
-      }),
-    );
-    alert('Thêm thành công ');
+    confirm({
+      title: "Bạn có muốn nhận danh sách sinh viên?",
+      okText: 'Xác nhận',
+      cancelText: 'Huỷ',
+      onOk() {
+        dispatch(
+          updateReviewerListStudent({
+            listIdStudent: listIdStudent,
+            email: infoUser?.manager?.email,
+            callback: (status) => {
+              if (status) {
+                dispatch(getAllStudent({ ...page, ...filter }));
+                setChooseIdStudent([]);
+                setListIdStudent([]);
+                message.success("Thành công")
+              }else{
+                message.error("Thất bại")
+              }
+       
+            },
+          })
+        );
+      },
+      onCancel() {}
+    });
+
   };
 
   const handleExport = () => {
@@ -274,54 +293,55 @@ const Status = ({
       getDataExport({
         filter: dataFilter,
         callback: (res) => exportToCSV(res),
-      }),
+      })
     );
   };
 
   const exportToCSV = (list) => {
     const fileType =
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    const fileExtension = '.xlsx';
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
     const newData = [];
     list &&
       list.map((item) => {
         const newObject = {};
-        newObject['Kỳ học'] = item['smester_id']?.name;
-        newObject['Cơ sở'] = item['campus_id']?.name;
-        newObject['MSSV'] = item['mssv'];
-        newObject['Họ tên'] = item['name'];
-        newObject['Email'] = item['email'];
-        newObject['Ngành'] = item['majors']?.name;
-        newObject['Mã ngành'] = item['majors']?.majorCode;
-        newObject['CV'] = item['CV'];
-        newObject['Biên bản'] = item['form'];
-        newObject['Báo cáo'] = item['report'];
-        newObject['Người review'] = item['reviewer'];
-        newObject['Số điện thoại'] = item['phoneNumber'] === null ? null : '0' + item['phoneNumber'];
-        newObject['Tên công ty'] = item['business']?.name;
-        newObject['Địa chỉ công ty'] = item['business']?.address;
-        newObject['Vị trí thực tập'] = item['business']?.internshipPosition;
-        newObject['Mã số thuế'] = item['taxCode'];
-        newObject['Điểm thái độ'] = item['attitudePoint'];
-        newObject['Điểm kết quả'] = item['resultScore'];
-        newObject['Thời gian thực tập'] = item['internshipTime'];
-        newObject['Hình thức'] = item['support'];
-        newObject['Ghi chú'] = item['note'];
+        newObject["Kỳ học"] = item["smester_id"]?.name;
+        newObject["Cơ sở"] = item["campus_id"]?.name;
+        newObject["MSSV"] = item["mssv"];
+        newObject["Họ tên"] = item["name"];
+        newObject["Email"] = item["email"];
+        newObject["Ngành"] = item["majors"]?.name;
+        newObject["Mã ngành"] = item["majors"]?.majorCode;
+        newObject["CV"] = item["CV"];
+        newObject["Biên bản"] = item["form"];
+        newObject["Báo cáo"] = item["report"];
+        newObject["Người review"] = item["reviewer"];
+        newObject["Số điện thoại"] =
+          item["phoneNumber"] === null ? null : "0" + item["phoneNumber"];
+        newObject["Tên công ty"] = item["business"]?.name;
+        newObject["Địa chỉ công ty"] = item["business"]?.address;
+        newObject["Vị trí thực tập"] = item["business"]?.internshipPosition;
+        newObject["Mã số thuế"] = item["taxCode"];
+        newObject["Điểm thái độ"] = item["attitudePoint"];
+        newObject["Điểm kết quả"] = item["resultScore"];
+        newObject["Thời gian thực tập"] = item["internshipTime"];
+        newObject["Hình thức"] = item["support"];
+        newObject["Ghi chú"] = item["note"];
         return newData.push(newObject);
       });
     // eslint-disable-next-line array-callback-return
     newData.map((item) => {
-      if (item['Hình thức'] === 1) {
-        item['Hình thức'] = 'Hỗ trợ';
-      } else if (item['Hình thức'] === 0) {
-        item['Hình thức'] = 'Tự tìm';
+      if (item["Hình thức"] === 1) {
+        item["Hình thức"] = "Hỗ trợ";
+      } else if (item["Hình thức"] === 0) {
+        item["Hình thức"] = "Tự tìm";
       } else {
       }
     });
 
     const ws = XLSX.utils.json_to_sheet(newData);
-    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
-    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileExtension);
   };
@@ -342,7 +362,7 @@ const Status = ({
     closeVisible,
   };
 
-  if (page.smester_id === '') {
+  if (page.smester_id === "") {
     parentMethods = {
       majorImport,
       ...page,
@@ -358,14 +378,18 @@ const Status = ({
         <Col span={8} className="d-flex">
           <Select
             style={{
-              width: '100%',
+              width: "100%",
             }}
             onChange={(val) => setPage({ ...filter, ...page, smester_id: val })}
             placeholder="Chọn kỳ`"
-            defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ''}
+            defaultValue={
+              defaultSemester && defaultSemester?._id
+                ? defaultSemester?._id
+                : ""
+            }
           >
             {!defaultSemester?._id && (
-              <Option value={''} disabled>
+              <Option value={""} disabled>
                 Chọn kỳ
               </Option>
             )}
@@ -381,16 +405,16 @@ const Status = ({
         {!isMobile && (
           <>
             <div
-              style={isMobile ? { display: 'none' } : { display: 'flex' }}
+              style={isMobile ? { display: "none" } : { display: "flex" }}
               className={style.btn_export}
             >
               <Button
                 variant="warning"
                 style={{
                   marginRight: 20,
-                  color: '#fff',
-                  background: '#ee4d2d',
-                  minWidth: '90px',
+                  color: "#fff",
+                  background: "#ee4d2d",
+                  minWidth: "90px",
                 }}
                 className={style.button}
                 // onClick={(e) => exportToCSV(getListAllStudent)}
@@ -422,8 +446,8 @@ const Status = ({
                 <div className={style.div}>
                   <Select
                     className="select-branch"
-                    style={{ width: '95%', position: 'relative' }}
-                    onChange={(val) => handleStandardTableChange('majors', val)}
+                    style={{ width: "95%", position: "relative" }}
+                    onChange={(val) => handleStandardTableChange("majors", val)}
                     placeholder="Lọc theo ngành"
                     defaultValue=""
                   >
@@ -443,8 +467,10 @@ const Status = ({
                 <div className={style.div}>
                   <Select
                     className="filter-status"
-                    style={{ width: '100%' }}
-                    onChange={(val) => handleStandardTableChange('statusCheck', val)}
+                    style={{ width: "100%" }}
+                    onChange={(val) =>
+                      handleStandardTableChange("statusCheck", val)
+                    }
                     defaultValue={11}
                     placeholder="Lọc theo trạng thái"
                   >
@@ -466,16 +492,18 @@ const Status = ({
               <Col span={12}>
                 <div className={style.div}>
                   <Input
-                    style={{ width: '95%' }}
+                    style={{ width: "95%" }}
                     placeholder="Tìm kiếm theo mã sinh viên"
-                    onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
+                    onChange={(val) =>
+                      handleStandardTableChange("mssv", val.target.value.trim())
+                    }
                   />
                 </div>
               </Col>
               <Col span={12}>
                 <Button
                   style={{
-                    width: '100%',
+                    width: "100%",
                   }}
                   type="primary"
                   onClick={handleSearch}
@@ -488,8 +516,8 @@ const Status = ({
                 <Col span={12}>
                   <Button
                     style={{
-                      width: '95%',
-                      marginTop: '10px',
+                      width: "95%",
+                      marginTop: "10px",
                     }}
                     type="primary"
                     onClick={() => comfirms()}
@@ -510,7 +538,7 @@ const Status = ({
                   variant="warning"
                   className={style.button}
                   style={{
-                    width: '95%',
+                    width: "95%",
                   }}
                   onClick={openVisible}
                 >
@@ -523,7 +551,7 @@ const Status = ({
                   variant="warning"
                   className={style.button}
                   style={{
-                    width: '100%',
+                    width: "100%",
                   }}
                   onClick={handleExport}
                 >
@@ -542,16 +570,18 @@ const Status = ({
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <span style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Ngành : </span>
+                <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                  Ngành :{" "}
+                </span>
                 <Select
                   className="select-branch"
-                  style={{ width: '100%' }}
-                  onChange={(val) => handleStandardTableChange('majors', val)}
+                  style={{ width: "100%" }}
+                  onChange={(val) => handleStandardTableChange("majors", val)}
                   placeholder="Lọc theo ngành"
                   defaultValue=""
                 >
@@ -571,16 +601,20 @@ const Status = ({
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <span style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Trạng thái:</span>
+                <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                  Trạng thái:
+                </span>
                 <Select
                   className="filter-status"
-                  style={{ width: '100%' }}
-                  onChange={(val) => handleStandardTableChange('statusCheck', val)}
+                  style={{ width: "100%" }}
+                  onChange={(val) =>
+                    handleStandardTableChange("statusCheck", val)
+                  }
                   defaultValue={11}
                   placeholder="Lọc theo trạng thái"
                 >
@@ -596,16 +630,20 @@ const Status = ({
             <Col xs={24} sm={12} md={12} lg={8} xl={8}>
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <span style={{ whiteSpace: 'nowrap', marginRight: '10px' }}>Tìm Kiếm:</span>
+                <span style={{ whiteSpace: "nowrap", marginRight: "10px" }}>
+                  Tìm Kiếm:
+                </span>
                 <Input
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   placeholder="Tìm kiếm theo mã sinh viên"
-                  onChange={(val) => handleStandardTableChange('mssv', val.target.value.trim())}
+                  onChange={(val) =>
+                    handleStandardTableChange("mssv", val.target.value.trim())
+                  }
                 />
               </div>
             </Col>
@@ -613,8 +651,8 @@ const Status = ({
             <Col span={24}>
               <Button
                 style={{
-                  color: '#fff',
-                  background: '#ee4d2d',
+                  color: "#fff",
+                  background: "#ee4d2d",
                 }}
                 onClick={handleSearch}
               >
@@ -624,9 +662,9 @@ const Status = ({
               {chooseIdStudent.length > 0 && (
                 <Button
                   style={{
-                    color: '#fff',
-                    background: '#ee4d2d',
-                    marginLeft: '20px',
+                    color: "#fff",
+                    background: "#ee4d2d",
+                    marginLeft: "20px",
                   }}
                   onClick={() => comfirms()}
                 >
@@ -641,7 +679,7 @@ const Status = ({
       {window.innerWidth > 1024 ? (
         <Table
           rowSelection={{
-            type: 'checkbox',
+            type: "checkbox",
             ...rowSelection,
           }}
           pagination={{
@@ -661,12 +699,12 @@ const Status = ({
           loading={loading}
           columns={columns}
           dataSource={list}
-          scroll={{ x: 'calc(700px + 50%)' }}
+          scroll={{ x: "calc(700px + 50%)" }}
         />
       ) : (
         <Table
           rowSelection={{
-            type: 'checkbox',
+            type: "checkbox",
             ...rowSelection,
           }}
           pagination={{
@@ -683,7 +721,7 @@ const Status = ({
                 defaultTime({
                   filter: { campus_id: infoUser.manager.campus_id },
                   callback: (res) => {
-                    if (res.status === 'ok') {
+                    if (res.status === "ok") {
                       const data = {
                         page: page,
                         limit: pageSize,
@@ -695,7 +733,7 @@ const Status = ({
                       dispatch(getAllStudent(data));
                     }
                   },
-                }),
+                })
               );
             },
           }}
@@ -710,7 +748,7 @@ const Status = ({
             render={(val, key) => {
               return (
                 <p
-                  style={{ margin: 0, cursor: 'pointer', color: 'blue' }}
+                  style={{ margin: 0, cursor: "pointer", color: "blue" }}
                   onClick={() => onShowDetail(val, key)}
                 >
                   {val}
@@ -729,67 +767,67 @@ const Status = ({
             render={(status) => {
               if (status === 0) {
                 return (
-                  <span className="status-fail" style={{ color: 'orange' }}>
+                  <span className="status-fail" style={{ color: "orange" }}>
                     Chờ kiểm tra
                   </span>
                 );
               } else if (status === 1) {
                 return (
-                  <span className="status-up" style={{ color: 'grey' }}>
+                  <span className="status-up" style={{ color: "grey" }}>
                     Sửa lại CV
                   </span>
                 );
               } else if (status === 2) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Nhận CV
                   </span>
                 );
               } else if (status === 3) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Trượt
                   </span>
                 );
               } else if (status === 4) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Đã nộp biên bản <br />
                   </span>
                 );
               } else if (status === 5) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Sửa biên bản <br />
                   </span>
                 );
               } else if (status === 6) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Đang thực tập <br />
                   </span>
                 );
               } else if (status === 7) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Đã nộp báo cáo <br />
                   </span>
                 );
               } else if (status === 8) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Sửa báo cáo <br />
                   </span>
                 );
               } else if (status === 9) {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Hoàn thành <br />
                   </span>
                 );
               } else {
                 return (
-                  <span className="status-fail" style={{ color: 'red' }}>
+                  <span className="status-fail" style={{ color: "red" }}>
                     Chưa đăng ký
                   </span>
                 );
@@ -809,7 +847,12 @@ const Status = ({
       )}
 
       <div>
-        <Drawer title="Thêm Sinh Viên" placement="left" onClose={closeVisible} visible={visible}>
+        <Drawer
+          title="Thêm Sinh Viên"
+          placement="left"
+          onClose={closeVisible}
+          visible={visible}
+        >
           <Row>
             <Col span={6}>
               <p className={style.pDrawer}>Học Kỳ : </p>
@@ -817,14 +860,20 @@ const Status = ({
             <Col span={18}>
               <Select
                 style={{
-                  width: '100%',
+                  width: "100%",
                 }}
-                onChange={(val) => setPage({ ...filter, ...page, smester_id: val })}
+                onChange={(val) =>
+                  setPage({ ...filter, ...page, smester_id: val })
+                }
                 placeholder="Chọn kỳ"
-                defaultValue={defaultSemester && defaultSemester?._id ? defaultSemester?._id : ''}
+                defaultValue={
+                  defaultSemester && defaultSemester?._id
+                    ? defaultSemester?._id
+                    : ""
+                }
               >
                 {!defaultSemester?._id && (
-                  <Option value={''} disabled>
+                  <Option value={""} disabled>
                     Chọn kỳ
                   </Option>
                 )}
@@ -850,7 +899,7 @@ const Status = ({
             <Col span={18}>
               <Select
                 style={{
-                  width: '100%',
+                  width: "100%",
                 }}
                 onChange={(val) => setMajorImport(val)}
                 placeholder="Chọn ngành"
@@ -869,11 +918,14 @@ const Status = ({
             <br />
             <div>
               <b className={text.red}>Lưu ý</b>
-              <p className={text.red}>* Giữ nguyên định dạng file mẫu xlsx không thay đổi</p>
-              <p  className={text.red}>* Chỉ cập thêm công tin đúng theo các cột trong file excel mẫu</p>
-             
+              <p className={text.red}>
+                * Giữ nguyên định dạng file mẫu xlsx không thay đổi
+              </p>
+              <p className={text.red}>
+                * Chỉ cập thêm công tin đúng theo các cột trong file excel mẫu
+              </p>
             </div>
-            <DownloadFile keys='status' name='sinh viên'/>
+            <DownloadFile keys="status" name="sinh viên" />
           </div>
         </Drawer>
       </div>
@@ -889,14 +941,16 @@ Status.propTypes = {
   listMajors: array,
 };
 
-export default connect(({ students, semester, manager, business, major, global }) => ({
-  listStudent: students.listStudent,
-  listAllStudent: students.listAllStudent,
-  listSemesters: semester.listSemesters,
-  defaultSemester: semester.defaultSemester,
-  loading: students.loading,
-  listManager: manager.listManager,
-  listBusiness: business.listBusiness,
-  listMajors: major.listMajor,
-  ...global,
-}))(Status);
+export default connect(
+  ({ students, semester, manager, business, major, global }) => ({
+    listStudent: students.listStudent,
+    listAllStudent: students.listAllStudent,
+    listSemesters: semester.listSemesters,
+    defaultSemester: semester.defaultSemester,
+    loading: students.loading,
+    listManager: manager.listManager,
+    listBusiness: business.listBusiness,
+    listMajors: major.listMajor,
+    ...global,
+  })
+)(Status);
