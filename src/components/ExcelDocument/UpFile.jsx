@@ -85,7 +85,8 @@ const UpFile = ({ keys, parentMethods }) => {
                     newObject["majors"] = majorImport;
                     newObject["description"] = item["Mô tả"];
                     newObject["request"] = item["Yêu cầu ứng viên"];
-                    newObject["code_request"] = item["Mã ứng tuyển"];
+                    newObject["code_request"] = item["Mã tuyển dụng"];
+                    newObject["benefish"] = item["Quyền lợi"];
                     newObject["campus_id"] = manager.campus_id;
                     newObject["smester_id"] = smester_id;
                     return datas.push(newObject);
