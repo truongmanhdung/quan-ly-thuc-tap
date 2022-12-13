@@ -15,6 +15,15 @@ export const getBusiness = createAsyncThunk(
   }
 );
 
+export const getDataBusinessExport = createAsyncThunk(
+  'business/getDataBusinessExport',
+  async ({ filter, callback }) => {
+    const { data } = await BusinessAPI.get(filter);
+    if (callback) callback(data.list);
+    return data;
+  },
+);
+
 export const updateWaitBusiness = createAsyncThunk(
   "business/updateWaitBusiness",
   async ({ listIdBusiness, smester_id, callback }) => {
@@ -70,6 +79,15 @@ const businessSlice = createSlice({
     });
     builder.addCase(updateWaitBusiness.rejected, (state, action) => {
       state.error = "Update business fail";
+    });
+
+     ///export
+
+    builder.addCase(getDataBusinessExport.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(getDataBusinessExport.fulfilled, (state, { payload }) => {
+      state.loading = false;
     });
   },
 });

@@ -5,7 +5,7 @@ import { connect, useDispatch } from "react-redux";
 import SemestersAPI from "../../API/SemestersAPI";
 import UpFile from "../../components/ExcelDocument/UpFile";
 import text from "../../common/styles/downFile.module.css";
-import { getBusiness } from "../../features/businessSlice/businessSlice";
+import { getBusiness, getDataBusinessExport } from "../../features/businessSlice/businessSlice";
 import { getListMajor } from "../../features/majorSlice/majorSlice";
 import {
   defaultTime,
@@ -16,6 +16,8 @@ import BusinessAPI from "../../API/Business";
 import { useMutation } from "react-query";
 import FormBusiness from "./FormBusiness";
 import DownloadFile from "../../components/ExcelDocument/DownloadFile";
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 
 const { Option } = Select;
 const { Column } = Table;
@@ -202,6 +204,45 @@ const ListOfBusiness = ({
     setVisible(false);
   };
 
+  const handleExport = () => {
+    const dataFilter = {
+      smester_id: page.smester_id,
+      campus_id: page.campus_id,
+    };
+    dispatch(
+      getDataBusinessExport({
+        filter: dataFilter,
+        callback: (res) => exportToCSV(res),
+      }),
+    );
+  };
+
+  const exportToCSV = (list) => {
+    const fileType =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
+    const newData = [];
+    list &&
+      list.map((item) => {
+        const newObject = {};
+        newObject['Tên doanh nghiệp'] = item['name'];
+        newObject['Vị trí thực tập'] = item['internshipPosition'];
+        newObject['Số lượng tuyển'] = item['amount'];
+        newObject['Địa chỉ thực tập'] = item['address'];
+        newObject['Ngành'] = item['majors']?.name;
+        newObject['Yêu cầu'] = item['request']
+        newObject['Chi tiết'] = item['description'];
+        return newData.push(newObject);
+      });
+    // eslint-disable-next-line array-callback-return
+
+    const ws = XLSX.utils.json_to_sheet(newData);
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileExtension);
+  };
+  
   return (
     <div className={styles.status}>
       <Row
@@ -215,6 +256,7 @@ const ListOfBusiness = ({
           <h2
             style={{
               color: "black",
+              marginTop: 10
             }}
             className="mb-2"
           >
@@ -222,7 +264,7 @@ const ListOfBusiness = ({
           </h2>
         </Col>
         <Col
-          style={{ display: "flex", alignItems: "center" }}
+          style={{ display: "flex", alignItems: "center" , marginTop: 10}}
           xs={24}
           sm={24}
           md={24}
@@ -271,10 +313,21 @@ const ListOfBusiness = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-evenly",
+            flexWrap: "wrap",
+            marginTop: 10
           }}
         >
           <Button onClick={openVisibleImport} type="primary">
-            Import Doanh nghiệp
+            Import
+          </Button>
+          <Button
+            onClick={handleExport}
+            style={{
+              color: "#fff",
+              background: "#ee4d2d",
+            }}
+            >
+            Export
           </Button>
           <Button
             onClick={(val = {}, type) =>
