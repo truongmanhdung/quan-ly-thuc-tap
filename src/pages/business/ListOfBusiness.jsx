@@ -145,6 +145,11 @@ const ListOfBusiness = ({
       width: 400,
     },
     {
+      title: 'Quyền lợi',
+      dataIndex: 'benefish',
+      width: 400,
+    },
+    {
       title: "Sửa",
       width: 80,
       render: (val, key) => {
@@ -302,7 +307,7 @@ const ListOfBusiness = ({
               });
             },
           }}
-          scroll={{ x: "calc(900px + 50%)" }}
+          scroll={{ x: "calc(1200px + 50%)" }}
           rowKey="_id"
           loading={loading}
           columns={columns}

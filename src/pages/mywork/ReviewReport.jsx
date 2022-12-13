@@ -8,7 +8,7 @@ import {
   updateStatusListStudent,
 } from '../../features/reviewerStudent/reviewerSlice';
 import { filterStatusReport } from '../../ultis/selectOption';
-import { omit } from 'lodash';
+import _, { omit } from 'lodash';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { statusConfigReport } from '../../ultis/constConfig';
@@ -19,11 +19,13 @@ import StudentDetail from '../../components/studentDetail/StudentDetail';
   import { getListMajor } from '../../features/majorSlice/majorSlice';
 import moment from 'moment';
 import { defaultTime } from '../../features/semesters/semestersSlice';
+import {signTheContractValues} from '../../ultis'
 const { Column } = Table;
 
 const { Option } = Select;
 
 const ReviewReport = ({ isMobile, listMajors }) => {
+
   const dispatch = useDispatch();
   const { infoUser } = useSelector((state) => state.auth);
   const {
@@ -181,6 +183,12 @@ const ReviewReport = ({ isMobile, listMajors }) => {
         ) : (
           ''
         ),
+    },
+    {
+      title: 'HĐLĐ',
+      dataIndex: 'signTheContract',
+      width: 100,
+      render: (val) => _.get(_.find(signTheContractValues, ['type', val], {}), 'value', '')
     },
     {
       title: 'Ghi chú',
