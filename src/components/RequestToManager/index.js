@@ -1,16 +1,18 @@
-import { EyeOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, message, Modal, Row } from 'antd';
-import React from 'react';
-import { useDispatch } from 'react-redux';
-import { sendRequest } from '../../features/requestStudentSlice/requestStudentSlice';
-import styles from './index.module.css';
-const type = ['narrow', 'form', 'report'];
+import { EyeOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Form, Input, message, Modal, Row } from "antd";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { sendRequest } from "../../features/requestStudentSlice/requestStudentSlice";
+import styles from "./index.module.css";
+
+const type = ["narrow", "form", "report"];
 const RequestToManager = (props) => {
+  const [form] = Form.useForm();
   const { studentById } = props;
   const [visible, setVisible] = React.useState(false);
   const [data, setData] = React.useState({});
   const [text, setText] = React.useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const getListForm = () => {
     const {
       _id,
@@ -38,10 +40,11 @@ const RequestToManager = (props) => {
     } = studentById;
     let valueForm = [];
     type.forEach((res) => {
+
       if (studentById[res]) {
         return valueForm.push({
           type: res,
-          link: studentById[res],
+          link:  res === 'narrow' ? studentById['CV'] : studentById[res],
           address,
           business,
           dream,
@@ -70,18 +73,17 @@ const RequestToManager = (props) => {
     return valueForm;
   };
   const getTitle = (type) => {
-    if (type === 'narrow') {
-      return 'Form Đăng ký thực tập';
+    if (type === "narrow") {
+      return "Form Đăng ký thực tập";
     }
-    if (type === 'form') {
-      return 'Form Biên Bản';
+    if (type === "form") {
+      return "Form Biên Bản";
     }
-    if (type === 'report') {
-      return 'Form Báo Cáo';
+    if (type === "report") {
+      return "Form Báo Cáo";
     }
-    return '';
+    return "";
   };
-console.log(data);
   const viewCv = () => {
     return (
       <>
@@ -113,7 +115,7 @@ console.log(data);
             )}
           </Col>
           <Col span={12}>
-            <p>{data?.support === 1 ? 'Hỗ trợ' : 'Tự tìm'}</p>
+            <p>{data?.support === 1 ? "Hỗ trợ" : "Tự tìm"}</p>
             <p>{data?.mssv}</p>
             <p>{data?.name}</p>
             <p>{data?.email}</p>
@@ -147,6 +149,66 @@ console.log(data);
             )}
           </Col>
         </Row>
+        <div style={{}} className={styles.button}>
+          {text && (
+            <Form
+              name="basic"
+              initialValues={{ remember: true }}
+              onFinish={(val) =>
+                onFinish({
+                  ...val,
+                  type: data?.type,
+                  userId: data?._id,
+                })
+              }
+              form={form}
+              // onFinishFailed={onFinishFailed}
+              autoComplete="off"
+              style={{
+                width: "100%",
+              }}
+            >
+              <Form.Item
+                name="description"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input.TextArea />
+              </Form.Item>
+
+              <Form.Item>
+                <div
+                  style={{
+                    width: "50%",
+                    justifyContent: "space-between",
+                    display: "flex",
+                    margin: "auto",
+                  }}
+                >
+                  <Button
+                    type="primary"
+                    danger
+                    onClick={() => {
+                      form.resetFields();
+                      setText(false);
+                    }}
+                  >
+                    Huỷ
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Gửi
+                  </Button>
+                </div>
+              </Form.Item>
+            </Form>
+          )}
+        </div>
+        {!text && (
+          <Button type="primary" danger onClick={() => setText(true)}>
+            Gửi yêu cầu hỗ trợ
+          </Button>
+        )}
       </>
     );
   };
@@ -166,7 +228,7 @@ console.log(data);
           <p>Biên bản thực tập</p>
         </Col>
         <Col span={12}>
-          <p>{data?.support === 1 ? 'Hỗ trợ' : 'Tự tìm'}</p>
+          <p>{data?.support === 1 ? "Hỗ trợ" : "Tự tìm"}</p>
           <p>{data?.mssv}</p>
           <p>{data?.name}</p>
           <p>{data?.email}</p>
@@ -177,7 +239,11 @@ console.log(data);
           <p>{data?.internshipTime}</p>
           {Object.keys(data).length !== 0 && (
             <p>
-              <Button icon={<EyeOutlined />} type="link" onClick={() => window.open(data.link)} />
+              <Button
+                icon={<EyeOutlined />}
+                type="link"
+                onClick={() => window.open(data.link)}
+              />
             </p>
           )}
         </Col>
@@ -198,38 +264,47 @@ console.log(data);
         </Col>
         <Col span={12}>
           <p>{data?.name}</p>
-          <p>{data?.support === 1 ? data?.business?.name : data?.nameCompany}</p>
+          <p>
+            {data?.support === 1 ? data?.business?.name : data?.nameCompany}
+          </p>
           <p>{data?.resultScore}</p>
           <p>{data?.attitudePoint}</p>
           <p>{data?.internshipTime}</p>
           <p>{data?.endInternShipTime}</p>
 
           {Object.keys(data).length !== 0 && (
-            <Button icon={<EyeOutlined />} type="link" onClick={() => window.open(data.link)} />
+            <Button
+              icon={<EyeOutlined />}
+              type="link"
+              onClick={() => window.open(data.link)}
+            />
           )}
         </Col>
       </Row>
     );
   };
-  const onFinish = val =>{
-      dispatch(sendRequest({
+  const onFinish = (val) => {
+    dispatch(
+      sendRequest({
         val: val,
-        callback
-      }))
-  }
-  const callback =(val) => {
-    if (val) {
-      setVisible(false)
-      message.success('Gửi yêu cầu thành công!')
-    }else{
-      message.error('Có lỗi sảy ra')
+        callback,
+      })
+    );
+  };
+  const callback = (val) => {
+    if (val.success) {
+      message.success(val.message);
+    } else {
+      message.error(val.message);
     }
-  }
+    form.resetFields();
+    setVisible(false);
+  };
   return (
     <div>
       <Row
         style={{
-          margin: '0 20px',
+          margin: "0 20px",
         }}
         gutter={16}
       >
@@ -240,8 +315,8 @@ console.log(data);
                 <Card
                   hoverable
                   style={{
-                    height: '100px',
-                    border: '1px solid',
+                    height: "100px",
+                    border: "1px solid",
                   }}
                   title={false}
                   bordered={false}
@@ -261,60 +336,14 @@ console.log(data);
         footer={false}
         onOk={false}
         visible={visible}
-        onCancel={() => setVisible(false)}
+        onCancel={() => {
+          form.resetFields();
+          setVisible(false);
+        }}
       >
-        {data.type === 'narrow' && viewCv()}
-        {data.type === 'form' && viewForm()}
-        {data.type === 'report' && viewReport()}
-        <div style={{}} className={styles.button}>
-          {text && (
-            <Form
-              name="basic"
-              initialValues={{ remember: true }}
-              onFinish={val => onFinish({
-                ...val,
-                type: data?.type,
-                userId: data?._id
-              })}
-              // onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              style={{
-                width: '100%',
-              }}
-            >
-              <Form.Item
-                name="description"
-                rules={[{ required: true, message: 'Please input your username!' }]}
-              >
-                <Input.TextArea />
-              </Form.Item>
-
-              <Form.Item >
-                <div
-                  style={{
-                    width: '50%',
-                    justifyContent: 'space-between',
-                    display: 'flex',
-                    margin: 'auto'
-                  }}
-                >
-                  <Button type="primary" danger onClick={() => setText(false)}>
-                    Huỷ
-                  </Button>
-                  <Button type="primary" htmlType="submit">
-                    Gửi
-                  </Button>
-                </div>
-              </Form.Item>
-            </Form>
-          )}
-
-          {!text && (
-            <Button type="primary" danger onClick={() => setText(true)}>
-              Gửi yêu cầu hỗ trợ
-            </Button>
-          )}
-        </div>
+        {data.type === "narrow" && viewCv()}
+        {data.type === "form" && viewForm()}
+        {data.type === "report" && viewReport()}
       </Modal>
     </div>
   );

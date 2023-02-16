@@ -22,9 +22,13 @@ const BusinessAPI = {
     return axiosClient.delete(url);
   },
   update(params) {
-    const {val:id,...data} = params
+    const { val: id, ...data } = params;
     const url = `/business/${id}`;
     return axiosClient.patch(url, data);
+  },
+  updateMany(params) {
+    const url = `/business`;
+    return axiosClient.patch(url, params);
   },
 };
 export default BusinessAPI;

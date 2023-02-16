@@ -8,6 +8,7 @@ import {
   DatePicker,
   Upload,
   InputNumber,
+  Radio,
 } from "antd";
 import moment from "moment";
 import { object } from "prop-types";
@@ -18,7 +19,7 @@ import CountDownCustorm from "../../components/CountDownCustorm";
 import { sendMessageDevice } from "../../components/PushNotifi";
 import { getStudentId } from "../../features/StudentSlice/StudentSlice";
 import { getTimeForm } from "../../features/timeDateSlice/timeDateSlice";
-
+import { signTheContractValues } from "../../ultis";
 import styles from "./ReportForm.module.css";
 
 const formItemLayout = {
@@ -170,6 +171,7 @@ const ReportForm = ({ infoUser, studentById }) => {
         campus_id: infoUser.student.campus_id,
         checkTime: check,
         _id: infoUser.student._id,
+        signTheContract: values.signTheContract,
       };
 
       if (values.upload === undefined || values.upload === null) {
@@ -179,7 +181,6 @@ const ReportForm = ({ infoUser, studentById }) => {
         setSpin(false);
         return;
       }
-
       await guardarArchivo(file, newData);
     } catch (error) {
       const dataErr = await error.response.data;
@@ -204,6 +205,7 @@ const ReportForm = ({ infoUser, studentById }) => {
       },
     ],
   };
+
   return (
     <>
       {check ? (
@@ -226,7 +228,11 @@ const ReportForm = ({ infoUser, studentById }) => {
                   </p>
                 </Form.Item>
                 <Form.Item name="nameCompany" label="Tên doanh nghiệp">
-                  <p className={styles.text_form_label}>{studentById?.business ? studentById?.business?.name.toUpperCase() : studentById?.nameCompany.toUpperCase()}</p>
+                  <p className={styles.text_form_label}>
+                    {studentById?.business
+                      ? studentById?.business?.name.toUpperCase()
+                      : studentById?.nameCompany.toUpperCase()}
+                  </p>
                 </Form.Item>
                 <Form.Item
                   name="resultScore"
@@ -267,6 +273,26 @@ const ReportForm = ({ infoUser, studentById }) => {
                     max={10}
                     placeholder="Nhập điểm thái độ thực tập"
                   />
+                </Form.Item>
+
+                <Form.Item
+                  name="signTheContract"
+                  label="Đề xuất kí HĐLĐ với Doanh nghiệp"
+                  help="Vui lòng nhập điểm phẩy bằng dấu chấm VD: 9.5."
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn câu trả lời",
+                    },
+                  ]}
+                >
+                  <Radio.Group>
+                    {signTheContractValues.map((res, i) => (
+                      <Radio value={res.type} key={i}>
+                        {res.value}
+                      </Radio>
+                    ))}
+                  </Radio.Group>
                 </Form.Item>
                 <Form.Item
                   label="Thời gian bắt đầu thực tập"

@@ -21,7 +21,7 @@ export const updateReviewerListStudent = createAsyncThunk(
   "student/updateReviewerListStudent",
   async ({listIdStudent, email, callback}) => {
     const { data } = await StudentAPI.updateReviewerSudent({listIdStudent, email});
-    if (callback) callback()
+    if (callback) callback(true)
     return data;
   }
 );

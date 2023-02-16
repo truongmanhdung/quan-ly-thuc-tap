@@ -62,9 +62,14 @@ function LayoutWebsite({ isMobile }) {
                       <Menu.Item key="4" icon={<ProfileOutlined className="icon-link" />}>
                         <NavLink to="/status">Danh sách đăng ký</NavLink>
                       </Menu.Item>
-                      <Menu.Item key="111" icon={<BankOutlined />}>
-                        <NavLink to="company">Danh sách Công Ty</NavLink>
-                      </Menu.Item>
+                      <SubMenu key="sub-business" icon={<BankOutlined />} title="Danh sách công ty">
+                        <Menu.Item key="111">
+                          <NavLink to="company">Chính thức</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="112">
+                          <NavLink to="wait-company">Chờ xác nhận</NavLink>
+                        </Menu.Item>
+                      </SubMenu>
                       <SubMenu key="sub1" icon={<UnorderedListOutlined />} title="Reviews">
                         <Menu.Item key="9">
                           <NavLink to="review-cv"> CV</NavLink>

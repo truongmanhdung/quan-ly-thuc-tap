@@ -14,7 +14,7 @@ const requestApi = {
   },
   removeRequestApi(id){
     const url = `/removeRequest/${id}`
-    return axiosClient.delete(url)
+    return axiosClient.patch(url)
   }
 };
 export default requestApi;

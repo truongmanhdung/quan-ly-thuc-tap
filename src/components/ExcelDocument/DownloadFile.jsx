@@ -16,7 +16,7 @@ const DownloadFile = ({keys, name}) => {
     ];
     const dataBS = [
       [],
-      ['STT', 'Nhóm ngành', 'Tên Doanh nghiệp', 'Địa chỉ doanh nghiệp', 'Vị trí tuyển dụng', 'Số lượng', 'Mô tả', 'Yêu cầu ứng viên', 'Mã ứng tuyển'],
+      ['STT', 'Nhóm ngành', 'Tên Doanh nghiệp', 'Địa chỉ doanh nghiệp', 'Vị trí tuyển dụng', 'Số lượng', 'Mô tả', 'Yêu cầu ứng viên', 'Mã tuyển dụng', 'Quyền lợi'],
     ];
     const worksheetSV = XLSX.utils.aoa_to_sheet(dataSV);
     const worksheetBS = XLSX.utils.aoa_to_sheet(dataBS);
