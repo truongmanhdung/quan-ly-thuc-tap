@@ -70,7 +70,7 @@ const Formrp = ({ studentById }) => {
 
   function guardarArchivo(files, data) {
     const file = files; //the file
-    const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzu7yBh9NkX-lnct-mKixNyqtC1c8Las9tGixv42i9o_sMYfCvbTqGhC5Ps8NowC12N/exec
+    const urlGGDriveCV = `https://script.google.com/macros/s/AKfycbzxKWUNnzXiG_VKSEXbYTeBppWHrSzFUGCX431yK5rz7va85wFOZuunkiE2EJJfBaCg/exec
      `;
 
     var reader = new FileReader(); //this for convert to Base64

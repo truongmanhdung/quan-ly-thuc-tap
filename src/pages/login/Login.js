@@ -16,7 +16,8 @@ const Login = () => {
   const navigate = useNavigate();
   const { listCumpus } = useSelector((state) => state.cumpus);
   const handleFailure = (result) => {
-    message.error('error');
+    console.log("result", result)
+    message.error('Có lỗi xảy ra');
   };
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const Login = () => {
  });
 
   const handleLogin = (googleData) => {
+    console.log("ggData", googleData);
     dispatch(
       defaultTime({
         filter: { campus_id: cumpus },
@@ -93,7 +95,9 @@ const Login = () => {
         <GoogleLogin
           disabled={cumpus === '' ? true : false}
           className={styles.button_login}
-          clientId="924910567674-nu6j33eh8241bj0enhcqcrstc1vputag.apps.googleusercontent.com"
+
+          clientId="650354261161-f7lhh1o5130u6cvfdjcafh399mt4mo5u.apps.googleusercontent.com"
+
           buttonText="Login With Google"
           onSuccess={handleLogin}
           onFailure={handleFailure}
