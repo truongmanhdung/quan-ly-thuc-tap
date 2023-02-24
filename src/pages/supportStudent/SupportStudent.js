@@ -73,15 +73,15 @@ const SupportStudent = ({
     dispatch(
       getTimeForm({
         typeNumber: value,
-        semester_id: infoUser.student.smester_id,
-        campus_id: infoUser.student?.campus_id,
+        semester_id: infoUser?.student?.smester_id,
+        campus_id: infoUser?.student?.campus_id,
       })
     );
     dispatch(
       getBusiness({
-        campus_id: infoUser.student?.campus_id,
-        smester_id: infoUser.student?.smester_id,
-        majors: infoUser.student?.majors,
+        campus_id: infoUser?.student?.campus_id,
+        smester_id: infoUser?.student?.smester_id,
+        majors: infoUser?.student?.majors,
         status: 1,
       })
     );
@@ -90,7 +90,7 @@ const SupportStudent = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
-    infoUser.student?.smester_id,
+    infoUser?.student?.smester_id,
     spin,
     studentById.student?.campus_id,
     studentById.student?.majors,
@@ -222,10 +222,10 @@ const SupportStudent = ({
         user_code: infoUser?.student?.mssv,
         email: infoUser?.student?.email,
         typeNumber: value,
-        semester_id: infoUser.student.smester_id,
+        semester_id: infoUser?.student.smester_id,
         checkTime: check,
-        campus_id: infoUser.student?.campus_id,
-        _id: infoUser.student._id,
+        campus_id: infoUser?.student?.campus_id,
+        _id: infoUser?.student._id,
       };
 
       console.log(data);
