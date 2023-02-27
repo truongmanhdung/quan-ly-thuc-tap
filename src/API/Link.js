@@ -1,9 +1,12 @@
 import axios from "axios";
 import { getLocal } from "../ultis/storage";
 const axiosClient = axios.create({
-
-  baseURL: "https://thuctap.poly.edu.vn/api",
-
+  // Localhost
+  baseURL: "http://localhost:8000/api",
+  // DEV
+  // baseURL: "http://3.0.249.70:8000/api",
+  // Main
+  // baseURL: "http://139.180.196.74:8000/api",
 });
 
 axiosClient.interceptors.request.use((req) => {
