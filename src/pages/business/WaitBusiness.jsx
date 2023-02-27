@@ -158,7 +158,6 @@ const WaitBusiness = ({
     });
   };
   const onSelectChange = (newSelectedRowKeys) => {
-    console.log("selectedRowKeys changed: ", selectedRowKeys);
 
     setSelectedRowKeys(newSelectedRowKeys);
   };

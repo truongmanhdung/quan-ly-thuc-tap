@@ -144,11 +144,11 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
               </p>
               <p>
                 Trạng thái SV : {/* eslint-disable-next-line array-callback-return */}
-                {optionStatus.map((index) => {
+                <span style={{color: "#F99011"}}>{optionStatus.map((index) => {
                   if (index.value === statusForm) {
                     return index.title;
                   }
-                })}{' '}
+                })}{' '}</span>
               </p>
             </div>
             <div className=" pt-2"> 

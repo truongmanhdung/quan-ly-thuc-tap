@@ -8,6 +8,7 @@ const axiosClient = axios.create({
   // Main
   // baseURL: "http://139.180.196.74:8000/api",
 });
+
 axiosClient.interceptors.request.use((req) => {
   const token = getLocal();
   req.headers["Authorization"] = "Bearer " + token.accessToken;
@@ -22,5 +23,6 @@ axiosClient.interceptors.response.use(
     return error.response;
   }
 );
+
 
 export { axiosClient };

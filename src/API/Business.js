@@ -28,7 +28,6 @@ const BusinessAPI = {
   },
   updateMany(params) {
     const url = `/business`;
-    console.log(params);
     return axiosClient.patch(url, params);
   },
 };

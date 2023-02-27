@@ -195,7 +195,6 @@ const SupportStudent = ({
       : [];
 
   const getIdbusiness = (id) => {
-    console.log(id);
     if (!id) {
       setOptBusines("");
     }
@@ -228,7 +227,6 @@ const SupportStudent = ({
         _id: infoUser?.student._id,
       };
 
-      console.log(data);
 
       if (value === 0) {
         setSpin(true);
@@ -389,9 +387,7 @@ const SupportStudent = ({
                         >
                           {list?.map((item) => (
                             <Option key={item._id} value={item._id}>
-                              {item.code_request +
-                                "-" +
-                                item.name +
+                              {item.name +
                                 "-" +
                                 item.internshipPosition}
                             </Option>
