@@ -51,23 +51,23 @@ function InfoStudent({ studentById, listBusiness: { list, total }, loading }) {
   const [page, setPage] = useState({
     page: 1,
     limit: 5,
-    campus_id: infoUser.student.campus_id,
-    smester_id: infoUser.student.smester_id,
-    majors: infoUser.student.majors,
+    campus_id: infoUser?.student?.campus_id,
+    smester_id: infoUser?.student?.smester_id,
+    majors: infoUser?.student?.majors,
   });
   const [dateNow] = useState(Date.now());
   const { time } = useSelector((state) => state.time.formTime);
   const dispatch = useDispatch();
   useEffect(() => {
-    const string = `typeNumber=${4}&semester_id=${infoUser.student.smester_id}&campus_id=${
-      infoUser.student.campus_id
+    const string = `typeNumber=${4}&semester_id=${infoUser?.student?.smester_id}&campus_id=${
+      infoUser?.student?.campus_id
     }`;
     const url = `/settime/find-one?${string}`;
     axiosClient
       .get(url, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${infoUser.accessToken}`,
+          Authorization: `Bearer ${infoUser?.accessToken}`,
         },
       })
       .then((res) => {
