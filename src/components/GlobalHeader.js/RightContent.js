@@ -7,6 +7,8 @@ import {
   FolderViewOutlined,
   UnorderedListOutlined,
   CalendarOutlined,
+  UsergroupAddOutlined,
+  InsertRowAboveOutlined,
 } from "@ant-design/icons";
 import { Menu, Dropdown, Button, Avatar, Drawer } from "antd";
 
@@ -100,70 +102,94 @@ const Rightcontent = () => {
             <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
               {isAdmin ? (
                 <>
-                  <Menu.Item
-                    key="4"
-                    icon={<ProfileOutlined className="icon-link" />}
-                  >
-                    <NavLink onClick={offMenuMoble} to="">
-                      Danh sách đăng ký
-                    </NavLink>
-                  </Menu.Item>
-                  <Menu.Item
-                    key="4"
-                    icon={<ProfileOutlined className="icon-link" />}
-                  >
-                    <NavLink onClick={offMenuMoble} to="company">
-                      Danh sách công ty
-                    </NavLink>
-                  </Menu.Item>
-                  <SubMenu
-                    key="sub1"
-                    icon={<UnorderedListOutlined />}
-                    title="Reviews"
-                  >
-                    <Menu.Item key="9">
-                      <NavLink onClick={offMenuMoble} to="review-cv">
-                        CV
+                  {infoUser?.manager?.role === 1 ? (
+                    <>
+                    <Menu.Item
+                      key="4"
+                      icon={<ProfileOutlined className="icon-link" />}
+                    >
+                      <NavLink onClick={offMenuMoble} to="">
+                        Danh sách đăng ký
                       </NavLink>
                     </Menu.Item>
-                    <Menu.Item key="10">
-                      <NavLink onClick={offMenuMoble} to="review-form">
-                        Biên bản
+                    <Menu.Item
+                      key="4"
+                      icon={<ProfileOutlined className="icon-link" />}
+                    >
+                      <NavLink onClick={offMenuMoble} to="company">
+                        Danh sách công ty
                       </NavLink>
                     </Menu.Item>
-                    <Menu.Item key="12">
-                      <NavLink onClick={offMenuMoble} to="review-report">
-                        Báo cáo
+                    <SubMenu
+                      key="sub1"
+                      icon={<UnorderedListOutlined />}
+                      title="Reviews"
+                    >
+                      <Menu.Item key="9">
+                        <NavLink onClick={offMenuMoble} to="review-cv">
+                          CV
+                        </NavLink>
+                      </Menu.Item>
+                      <Menu.Item key="10">
+                        <NavLink onClick={offMenuMoble} to="review-form">
+                          Biên bản
+                        </NavLink>
+                      </Menu.Item>
+                      <Menu.Item key="12">
+                        <NavLink onClick={offMenuMoble} to="review-report">
+                          Báo cáo
+                        </NavLink>
+                      </Menu.Item>
+                    </SubMenu>
+                    <SubMenu
+                      key="sub2"
+                      icon={<UnorderedListOutlined />}
+                      title="Ngành học"
+                    >
+                      <Menu.Item key="123">
+                        <NavLink to="major">Danh sách ngành học</NavLink>
+                      </Menu.Item>
+                      <Menu.Item key="109">
+                        <NavLink to="narrows">Ngành hẹp</NavLink>
+                      </Menu.Item>
+                    </SubMenu>
+                    <Menu.Item
+                      key="125"
+                      icon={<CalendarOutlined className="icon-link" />}
+                    >
+                      <NavLink to="semesters">Tạo kỳ học</NavLink>
+                    </Menu.Item>
+                    <Menu.Item
+                      key="11"
+                      icon={<FolderViewOutlined className="icon-link" />}
+                    >
+                      <NavLink onClick={offMenuMoble} to="form-register">
+                        Thời gian đăng ký
                       </NavLink>
                     </Menu.Item>
-                  </SubMenu>
-                  <SubMenu
-                    key="sub2"
-                    icon={<UnorderedListOutlined />}
-                    title="Ngành học"
-                  >
-                    <Menu.Item key="123">
-                      <NavLink to="major">Danh sách ngành học</NavLink>
-                    </Menu.Item>
-                    <Menu.Item key="109">
-                      <NavLink to="narrows">Ngành hẹp</NavLink>
-                    </Menu.Item>
-                  </SubMenu>
-                  <Menu.Item
-                    key="125"
-                    icon={<CalendarOutlined className="icon-link" />}
-                  >
-                    <NavLink to="semesters">Tạo kỳ học</NavLink>
-                  </Menu.Item>
-                  <Menu.Item
-                    key="11"
-                    icon={<FolderViewOutlined className="icon-link" />}
-                  >
-                    <NavLink onClick={offMenuMoble} to="form-register">
-                      Thời gian đăng ký
-                    </NavLink>
-                  </Menu.Item>
+                  </>
+                  ) : (
+                    <>
+                    <Menu.Item key="124" icon={<UsergroupAddOutlined />}>
+                        <NavLink to="/employee-manager">Danh sách nhân viên</NavLink>
+                      </Menu.Item>
+                      <Menu.Item key="125s" icon={<InsertRowAboveOutlined />}>
+                        <NavLink to="/campus-manager">Danh sách cơ sở</NavLink>
+                      </Menu.Item>
+                      <SubMenu key="sub2" icon={<UnorderedListOutlined />} title="Ngành học">
+                        <Menu.Item key="123">
+                          <NavLink to="major">Danh sách ngành học</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="109">
+                          <NavLink to="narrows">Ngành hẹp</NavLink>
+                        </Menu.Item>
+                      </SubMenu>
+                    
+                    </>
+                  )
+    }
                 </>
+              
               ) : (
                 <>
                   <Menu.Item

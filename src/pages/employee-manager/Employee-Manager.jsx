@@ -1,59 +1,75 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Button, Table, message, Space, Form, Drawer } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch,  } from 'react-redux';
-import { createManager, fetchManager, removeManager, updateManager } from '../../features/managerSlice/managerSlice';
-import { getListCumpus } from '../../features/cumpusSlice/cumpusSlice';
-import FormManager from './formManager';
-import _ from 'lodash';
+import { Button, Table, message, Space, Form, Drawer } from "antd";
+import React, { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import {
+  createManager,
+  fetchManager,
+  removeManager,
+  updateManager,
+} from "../../features/managerSlice/managerSlice";
+import { getListCumpus } from "../../features/cumpusSlice/cumpusSlice";
+import FormManager from "./formManager";
+import _ from "lodash";
+import { getLocal } from "../../ultis/storage";
 const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [current, setCurrent] = useState({});
   const [form] = Form.useForm();
 
-
   const columns = [
     {
-      title: 'Tên nhân viên',
-      dataIndex: 'name',
+      title: "Tên nhân viên",
+      dataIndex: "name",
       width: 100,
     },
     {
-      title: 'Email nhân viên',
-      dataIndex: 'email',
+      title: "Email nhân viên",
+      dataIndex: "email",
       width: 100,
     },
     {
-      title: 'Cơ sở đang làm việc',
-      dataIndex: ['campus_id', 'name'],
+      title: "Cơ sở đang làm việc",
+      dataIndex: ["campus_id", "name"],
       width: 100,
     },
     {
-      title: 'Quyền hạn quản lý',
-      dataIndex: 'role',
+      title: "Quyền hạn quản lý",
+      dataIndex: "role",
       width: 100,
-      render: (val) => (val === 1 ? 'Cán Bộ' : 'Quản Lí'),
+      render: (val) => (val === 1 ? "Cán Bộ" : "Quản Lí"),
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: "Action",
+      key: "action",
       width: 100,
       render: (text, record) => (
         <Space size="middle">
           <Button
             type="primary"
-            onClick={() => handleModal('edit', record)}
+            onClick={() => handleModal("edit", record)}
+            disabled={isDisbledAction(record)}
           >
             Sửa
           </Button>
-          <Button type="primary" danger onClick={() => dispatch(removeManager({
-            id: record._id,
-            callback: cbMessage
-          }))}>
-            {' '}
-            Xoá{' '}
+
+          <Button
+            disabled={isDisbledAction(record)}
+            type="primary"
+            danger
+            onClick={() =>
+              dispatch(
+                removeManager({
+                  id: record._id,
+                  callback: cbMessage,
+                })
+              )
+            }
+          >
+            {" "}
+            Xoá{" "}
           </Button>
         </Space>
       ),
@@ -62,16 +78,16 @@ const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
   useEffect(() => {
     dispatch(fetchManager());
     dispatch(getListCumpus());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleModal = (val, record) => {
     switch (val) {
-      case 'add':
-        setTitle('Thêm');
+      case "add":
+        setTitle("Thêm");
         setVisible(true);
         break;
-      case 'edit':
-        setTitle('Sửa');
+      case "edit":
+        setTitle("Sửa");
         setCurrent(record);
         form.setFieldsValue({
           ...record,
@@ -89,21 +105,22 @@ const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
       createManager({
         dataForm: val,
         callback: cbMessage,
-      }),
+      })
     );
-    form.resetFields()
-    setVisible(false)
-
+    form.resetFields();
+    setVisible(false);
   };
 
   const handleUpdate = (val) => {
-    dispatch(updateManager({
-      dataForm: val,
-      callback: cbMessage
-    }))
-    setCurrent({})
-    form.resetFields()
-    setVisible(false)
+    dispatch(
+      updateManager({
+        dataForm: val,
+        callback: cbMessage,
+      })
+    );
+    setCurrent({});
+    form.resetFields();
+    setVisible(false);
   };
 
   const cbMessage = (val) => {
@@ -123,14 +140,23 @@ const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
     listCumpus: listCumpus,
     current: current,
   };
+
+  const isDisbledAction = (record) => {
+    const {campus_id, role, _id} = getLocal().manager
+    if (campus_id === record.campus_id._id && role >= record.role &&  _id !== record._id ) {
+      return false
+    }
+
+    return true;
+  };
   return (
     <>
       <div className="status">
         <div className="flex-header">
           <h4>Quản lý nhân viên</h4>
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: "flex" }}>
             <Button
-              onClick={() => handleModal('add')}
+              onClick={() => handleModal("add")}
               variant="warning"
               style={{ marginRight: 10, height: 36 }}
             >
@@ -161,5 +187,5 @@ const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
 export default connect(({ manager, cumpus }) => ({
   listManager: manager.listManager,
   listCumpus: cumpus.listCumpus,
-  loading: manager.loading
+  loading: manager.loading,
 }))(EmployeeManager);
