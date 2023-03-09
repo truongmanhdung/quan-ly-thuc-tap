@@ -3,6 +3,7 @@ import { Button, Table, message, Space, Form, Input, Drawer } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createMajor, getListMajor, updateMajor } from '../../features/majorSlice/majorSlice';
+import { getLocal } from '../../ultis/storage';
 const Major = () => {
   const dispatch = useDispatch();
   const [hideForm, setHideForm] = useState(false);
@@ -30,11 +31,9 @@ const Major = () => {
       key: 'action',
       width: 100,
       render: (text, record) => (
-        <Space size="middle">
-          <a style={{ color: 'blue' }} onClick={() => getDataEdit('update', record)}>
+          <Button disabled={isDisbledAction()}  style={{ color: 'blue' }} onClick={() => getDataEdit('update', record)}>
             Sửa
-          </a>
-        </Space>
+          </Button>
       ),
     },
   ];
@@ -62,6 +61,15 @@ const Major = () => {
       );
     }
   };
+
+  const isDisbledAction = () => {
+    const {campus_id} = getLocal().manager
+    if (campus_id !== "63ee3550acfff2c018071e84") {
+      return true;
+    }
+
+    return false;
+  }
 
   const cbHandleAdd = (status, mess) => {
     dispatch(getListMajor());

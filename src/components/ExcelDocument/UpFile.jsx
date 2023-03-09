@@ -39,16 +39,16 @@ const UpFile = ({ keys, parentMethods }) => {
         const ws = wb.Sheets[wsname];
         /* Convert array of arrays */
         const fileData = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        let headers = fileData[0];
+
+        let headers = fileData[0].map(res => res.trim());
         fileData.splice(0, 1);
         if (headers.length === 0) {
-          headers = fileData[0];
+          headers = fileData[0].map(res => res.trim());
         }
         const rows = [];
-
         fileData.forEach((item) => {
           let rowData = {};
-          item.forEach((element, index) => {
+          item.forEach((element, index, key) => {
             rowData[headers[index]] = element;
           });
           rows.push(rowData);

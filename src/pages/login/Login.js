@@ -31,7 +31,6 @@ const Login = () => {
  });
 
   const handleLogin = (googleData) => {
-    console.log("ggData", googleData);
     dispatch(
       defaultTime({
         filter: { campus_id: cumpus },
