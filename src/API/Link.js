@@ -1,12 +1,7 @@
 import axios from "axios";
 import { getLocal } from "../ultis/storage";
 const axiosClient = axios.create({
-  // Localhost
-  baseURL: "http://localhost:8000/api",
-  // DEV
-  // baseURL: "http://3.0.249.70:8000/api",
-  // Main
-  // baseURL: "http://139.180.196.74:8000/api",
+  baseURL: "https://thuctap.poly.edu.vn/api",
 });
 
 axiosClient.interceptors.request.use((req) => {

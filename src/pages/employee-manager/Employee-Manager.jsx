@@ -143,10 +143,9 @@ const EmployeeManager = ({ listManager = [], listCumpus, loading }) => {
 
   const isDisbledAction = (record) => {
     const {campus_id, role, _id} = getLocal().manager
-    if (campus_id === record.campus_id._id && role >= record.role &&  _id !== record._id ) {
+    if (campus_id === record?.campus_id?._id && role >= record?.role &&  _id !== record?._id ) {
       return false
     }
-
     return true;
   };
   return (
